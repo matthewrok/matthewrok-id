@@ -6,62 +6,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#100907">
   <meta name="description" content="Matthew Joki — Dragon Kingdom, Rise of Kingdoms.">
+
   <title>Matthew Joki | Dragon Kingdom</title>
 
+  <!-- GOOGLE FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- MAIN CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
+
+  <!-- BACKGROUND EFFECTS -->
   <div class="bg"></div>
   <div class="embers" id="embers"></div>
 
-  <!-- LOGIN / REGISTER -->
+  <!-- =================================
+       LOGIN / REGISTER
+  ================================== -->
+
   <main id="authScreen" class="auth-screen">
+
     <div class="auth-card">
+
       <div class="dragon-emblem">♛</div>
+
       <h1>MATTHEW JOKI</h1>
-      <p class="creator">CREATOR: MATTHEW-raditya</p>
-      <p class="kicker">KINGDOM MEMBER ACCESS</p>
+
+      <p class="creator">
+        CREATOR: MATTHEW-raditya
+      </p>
+
+      <p class="kicker">
+        KINGDOM MEMBER ACCESS
+      </p>
 
       <form id="authForm">
+
         <div id="nameField" class="field hidden">
-          <label>Nama lengkap</label>
-          <input id="fullName" type="text" placeholder="Nama kamu" autocomplete="name">
+          <label for="fullName">Nama lengkap</label>
+          <input
+            id="fullName"
+            type="text"
+            placeholder="Nama kamu"
+            autocomplete="name"
+          >
         </div>
 
         <div class="field">
-          <label>Email</label>
-          <input id="email" type="email" placeholder="nama@email.com" required autocomplete="email">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="nama@email.com"
+            required
+            autocomplete="email"
+          >
         </div>
 
         <div class="field">
-          <label>Password</label>
-          <input id="password" type="password" placeholder="Minimal 6 karakter" required minlength="6" autocomplete="current-password">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Minimal 6 karakter"
+            required
+            minlength="6"
+            autocomplete="current-password"
+          >
         </div>
 
-        <button id="submitButton" class="btn btn-gold btn-full" type="submit">LOGIN</button>
+        <button
+          id="submitButton"
+          class="btn btn-gold btn-full"
+          type="submit"
+        >
+          LOGIN
+        </button>
+
       </form>
 
       <div id="authMessage" aria-live="polite"></div>
 
       <div class="auth-switch">
         <span id="switchText">Belum punya akun?</span>
-        <button id="switchMode" type="button">Daftar sekarang</button>
+
+        <button id="switchMode" type="button">
+          Daftar sekarang
+        </button>
       </div>
+
     </div>
+
   </main>
 
-  <!-- WEBSITE -->
+  <!-- =================================
+       MAIN WEBSITE
+  ================================== -->
+
   <div id="site" class="hidden">
 
+    <!-- HEADER -->
     <header>
+
       <div class="container nav">
+
         <a class="brand" href="#">
           <span class="brand-icon">♛</span>
+
           <span>
             MATTHEW JOKI
             <small>CREATOR: MATTHEW-raditya</small>
@@ -69,317 +127,800 @@
         </a>
 
         <nav class="nav-links">
+
           <a href="#">HOME</a>
-          <a href="#about">ABOUT MATTHEW</a>
-          <a href="#service">MATTHEW JOKI</a>
-          <a href="calculator-resource.html">CALCULATOR</a>
-          <a href="requirements-city-hall.html">REQUIREMENTS</a>
+
+          <a href="#about">
+            ABOUT MATTHEW
+          </a>
+
+          <a href="#service">
+            MATTHEW JOKI
+          </a>
+
+          <a href="calculator-resource.html">
+            CALCULATOR
+          </a>
+
+          <a href="requirements-city-hall.html">
+            REQUIREMENTS
+          </a>
+
           <span id="navUser" class="nav-user"></span>
-          <button id="logout" class="btn btn-outline">LOGOUT</button>
+
+          <button id="logout" class="btn btn-outline" type="button">
+            LOGOUT
+          </button>
+
         </nav>
+
       </div>
+
     </header>
 
-    <!-- HERO -->
+    <!-- =================================
+         DRAGON KINGDOM HERO
+    ================================== -->
+
     <section class="hero">
-      <div class="hero-image"></div>
-      <div class="hero-content container">
-        <div class="eyebrow">THE DRAGON GUARDS THIS KINGDOM</div>
-        <p class="welcome-text">WELCOME TO</p>
-        <h1>MATTHEW<br>JOKI</h1>
+
+      <!-- NEW DRAGON IMAGE -->
+      <div class="hero-image" aria-hidden="true"></div>
+
+      <div class="hero-content">
+
+        <div class="eyebrow">
+          THE DRAGON GUARDS THIS KINGDOM
+        </div>
+
+        <p class="welcome-text">
+          WELCOME TO
+        </p>
+
+        <h1>
+          MATTHEW<br>
+          JOKI
+        </h1>
+
         <p class="hero-description">
           A kingdom built with trust, strength, and dedication.
           Welcome to the world of Matthew.
         </p>
-        <a href="#about" class="btn btn-gold">ABOUT MATTHEW →</a>
+
+        <a href="#about" class="btn btn-gold">
+          ABOUT MATTHEW →
+        </a>
+
       </div>
+
     </section>
 
-    <!-- KINGDOM FEATURES -->
+    <!-- =================================
+         KINGDOM FEATURES
+    ================================== -->
+
     <section class="container kingdom-section">
+
       <div class="feature-grid">
 
-        <a class="feature-card" href="calculator-resource.html">
+        <!-- TRADING POST CALCULATOR -->
+        <a
+          class="feature-card"
+          href="calculator-resource.html"
+        >
+
           <div class="feature-icon">⚖</div>
-          <h2>TRADING POST TAX CALCULATOR</h2>
-          <p>Hitung pajak Trading Post dan ketahui jumlah resource yang diterima.</p>
-          <span class="feature-link">BUKA CALCULATOR →</span>
+
+          <h2>
+            TRADING POST TAX CALCULATOR
+          </h2>
+
+          <p>
+            Hitung pajak Trading Post dan ketahui
+            jumlah resource yang diterima.
+          </p>
+
+          <span class="feature-link">
+            BUKA CALCULATOR →
+          </span>
+
         </a>
 
-        <a class="feature-card" href="requirements-city-hall.html">
+        <!-- CITY HALL REQUIREMENTS -->
+        <a
+          class="feature-card"
+          href="requirements-city-hall.html"
+        >
+
           <div class="feature-icon">♜</div>
-          <h2>CITY HALL REQUIREMENTS</h2>
-          <p>Lihat persyaratan upgrade City Hall Rise of Kingdoms level 1–25.</p>
-          <span class="feature-link">LIHAT REQUIREMENTS →</span>
+
+          <h2>
+            CITY HALL REQUIREMENTS
+          </h2>
+
+          <p>
+            Lihat persyaratan upgrade City Hall
+            Rise of Kingdoms level 1–25.
+          </p>
+
+          <span class="feature-link">
+            LIHAT REQUIREMENTS →
+          </span>
+
         </a>
 
       </div>
+
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="section container reveal">
-      <div class="eyebrow">THE STORY BEHIND THE KINGDOM</div>
-      <h2 class="section-title">ABOUT MATTHEW</h2>
+    <!-- =================================
+         ABOUT MATTHEW
+    ================================== -->
+
+    <section
+      id="about"
+      class="section container reveal"
+    >
+
+      <div class="eyebrow">
+        THE STORY BEHIND THE KINGDOM
+      </div>
+
+      <h2 class="section-title">
+        ABOUT MATTHEW
+      </h2>
+
       <div class="line"></div>
 
       <div class="royal-card">
-        <h3>A LITTLE ABOUT ME</h3>
+
+        <h3>
+          A LITTLE ABOUT ME
+        </h3>
+
         <p>
           Halo, saya Matthew. Selamat datang di website personal saya.
           Saya percaya bahwa kesuksesan tidak datang secara instan,
           melainkan melalui proses, konsistensi, dan kemauan untuk terus berkembang.
+
           <br><br>
+
           Bagi saya, setiap pengalaman adalah kesempatan untuk belajar,
           setiap tantangan adalah kesempatan untuk bertumbuh,
           dan setiap kepercayaan adalah sesuatu yang harus dijaga.
         </p>
+
       </div>
+
     </section>
 
-    <!-- SERVICE -->
-    <section id="service" class="section container reveal">
-      <div class="eyebrow">OUR JOURNEY</div>
-      <h2 class="section-title">MATTHEW JOKI</h2>
+    <!-- =================================
+         MATTHEW JOKI SERVICE
+    ================================== -->
+
+    <section
+      id="service"
+      class="section container reveal"
+    >
+
+      <div class="eyebrow">
+        OUR JOURNEY
+      </div>
+
+      <h2 class="section-title">
+        MATTHEW JOKI
+      </h2>
+
       <div class="line"></div>
 
       <div class="royal-card">
-        <h3>PROFESSIONAL JOKI SERVICE</h3>
+
+        <h3>
+          PROFESSIONAL JOKI SERVICE
+        </h3>
+
         <p>
           Matthew Joki berdiri sejak Januari 2025 dan terus berkembang
           hingga saat ini sebagai layanan joki profesional.
+
           <br><br>
+
           Dengan mengutamakan kualitas, tanggung jawab, konsistensi,
           dan kepercayaan, Matthew Joki berkomitmen memberikan pelayanan
           terbaik kepada setiap pelanggan.
         </p>
 
         <div class="pills">
-          <span class="pill">EST. JANUARY 2025</span>
-          <span class="pill">PROFESSIONAL SERVICE</span>
-          <span class="pill">ACTIVE</span>
+
+          <span class="pill">
+            EST. JANUARY 2025
+          </span>
+
+          <span class="pill">
+            PROFESSIONAL SERVICE
+          </span>
+
+          <span class="pill">
+            ACTIVE
+          </span>
+
         </div>
+
       </div>
+
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section container reveal">
-      <div class="eyebrow">LET'S CONNECT</div>
-      <h2 class="section-title">CONTACT MATTHEW</h2>
+    <!-- =================================
+         CONTACT
+    ================================== -->
+
+    <section
+      id="contact"
+      class="section container reveal"
+    >
+
+      <div class="eyebrow">
+        LET'S CONNECT
+      </div>
+
+      <h2 class="section-title">
+        CONTACT MATTHEW
+      </h2>
+
       <div class="line"></div>
 
       <div class="royal-card">
-        <h3>HAVE SOMETHING TO DISCUSS?</h3>
+
+        <h3>
+          HAVE SOMETHING TO DISCUSS?
+        </h3>
+
         <p>
           Punya pertanyaan atau ingin mengetahui lebih lanjut mengenai
           layanan Matthew Joki? Hubungi saya melalui WhatsApp.
         </p>
-        <a class="wa" target="_blank" rel="noopener"
-          href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20mengenai%20layanan%20Matthew%20Joki.">
+
+        <a
+          class="wa"
+          target="_blank"
+          rel="noopener"
+          href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20mengenai%20layanan%20Matthew%20Joki."
+        >
           CONTACT VIA WHATSAPP
         </a>
+
       </div>
+
     </section>
 
-    <!-- ADMIN -->
-    <section id="adminPanel" class="admin-panel container hidden">
-      <h2>♛ ADMIN DASHBOARD</h2>
-      <p id="memberMessage">Memuat data member...</p>
+    <!-- =================================
+         ADMIN DASHBOARD
+    ================================== -->
+
+    <section
+      id="adminPanel"
+      class="admin-panel container hidden"
+    >
+
+      <h2>
+        ♛ ADMIN DASHBOARD
+      </h2>
+
+      <p id="memberMessage">
+        Memuat data member...
+      </p>
 
       <div class="table-wrapper">
+
         <table>
+
           <thead>
-            <tr><th>Nama</th><th>Role</th><th>Tanggal daftar</th></tr>
+            <tr>
+              <th>Nama</th>
+              <th>Role</th>
+              <th>Tanggal daftar</th>
+            </tr>
           </thead>
+
           <tbody id="memberRows"></tbody>
+
         </table>
+
       </div>
+
     </section>
 
+    <!-- =================================
+         FOOTER
+    ================================== -->
+
     <footer>
+
       © 2026 MATTHEW JOKI
+
       <br>
+
       CREATOR: MATTHEW-raditya
+
       <br>
+
       THE DRAGON GUARDS THIS KINGDOM
+
     </footer>
+
   </div>
 
-  <script>
-    const SUPABASE_URL = "https://aqiwrgnxwtphhwikqtmn.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
-    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <!-- =================================
+       JAVASCRIPT
+  ================================== -->
 
-    const authScreen = document.getElementById("authScreen");
-    const site = document.getElementById("site");
-    const authForm = document.getElementById("authForm");
-    const nameField = document.getElementById("nameField");
-    const fullName = document.getElementById("fullName");
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const submitButton = document.getElementById("submitButton");
-    const authMessage = document.getElementById("authMessage");
+  <script>
+    /* SUPABASE CONFIGURATION */
+
+    const SUPABASE_URL =
+      "https://aqiwrgnxwtphhwikqtmn.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+    /* ELEMENT REFERENCES */
+
+    const authScreen =
+      document.getElementById("authScreen");
+
+    const site =
+      document.getElementById("site");
+
+    const authForm =
+      document.getElementById("authForm");
+
+    const nameField =
+      document.getElementById("nameField");
+
+    const fullName =
+      document.getElementById("fullName");
+
+    const email =
+      document.getElementById("email");
+
+    const password =
+      document.getElementById("password");
+
+    const submitButton =
+      document.getElementById("submitButton");
+
+    const authMessage =
+      document.getElementById("authMessage");
+
+
+    /* AUTH MODE */
 
     let mode = "login";
 
-    document.getElementById("switchMode").addEventListener("click", () => {
-      mode = mode === "login" ? "register" : "login";
-      nameField.classList.toggle("hidden", mode !== "register");
-      fullName.required = mode === "register";
-      submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
-      document.getElementById("switchText").textContent =
-        mode === "login" ? "Belum punya akun?" : "Sudah punya akun?";
-      document.getElementById("switchMode").textContent =
-        mode === "login" ? "Daftar sekarang" : "Login";
-      authMessage.textContent = "";
-    });
+
+    /* SWITCH LOGIN / REGISTER */
+
+    document
+      .getElementById("switchMode")
+      .addEventListener("click", () => {
+
+        mode = mode === "login"
+          ? "register"
+          : "login";
+
+        nameField.classList.toggle(
+          "hidden",
+          mode !== "register"
+        );
+
+        fullName.required =
+          mode === "register";
+
+        fullName.autocomplete =
+          "name";
+
+        password.autocomplete =
+          mode === "login"
+            ? "current-password"
+            : "new-password";
+
+        submitButton.textContent =
+          mode === "login"
+            ? "LOGIN"
+            : "CREATE ACCOUNT";
+
+        document
+          .getElementById("switchText")
+          .textContent =
+            mode === "login"
+              ? "Belum punya akun?"
+              : "Sudah punya akun?";
+
+        document
+          .getElementById("switchMode")
+          .textContent =
+            mode === "login"
+              ? "Daftar sekarang"
+              : "Login";
+
+        showMessage("");
+
+      });
+
+
+    /* AUTH MESSAGE */
 
     function showMessage(message, type = "") {
+
       authMessage.textContent = message;
+
       authMessage.className = type;
+
     }
 
-    authForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      submitButton.disabled = true;
-      submitButton.textContent = "PLEASE WAIT...";
-      showMessage("");
 
-      try {
-        if (mode === "register") {
-          const { data, error } = await db.auth.signUp({
-            email: email.value.trim(),
-            password: password.value,
-            options: {
-              data: { full_name: fullName.value.trim() },
-              emailRedirectTo: "https://matthewrok.my.id"
+    /* LOGIN AND REGISTER */
+
+    authForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+          "PLEASE WAIT...";
+
+        showMessage("");
+
+        try {
+
+          if (mode === "register") {
+
+            const { data, error } =
+              await db.auth.signUp({
+
+                email: email.value.trim(),
+
+                password: password.value,
+
+                options: {
+
+                  data: {
+                    full_name: fullName.value.trim()
+                  },
+
+                  emailRedirectTo:
+                    "https://matthewrok.my.id"
+
+                }
+
+              });
+
+            if (error) {
+              throw error;
             }
-          });
 
-          if (error) throw error;
+            showMessage(
+              data.session
+                ? "Pendaftaran berhasil!"
+                : "Pendaftaran berhasil. Periksa email untuk konfirmasi.",
+              "success"
+            );
+
+          } else {
+
+            const { error } =
+              await db.auth.signInWithPassword({
+
+                email: email.value.trim(),
+
+                password: password.value
+
+              });
+
+            if (error) {
+              throw error;
+            }
+
+          }
+
+        } catch (error) {
 
           showMessage(
-            data.session
-              ? "Pendaftaran berhasil!"
-              : "Pendaftaran berhasil. Periksa email untuk konfirmasi.",
-            "success"
+            error.message || "Terjadi kesalahan.",
+            "error"
           );
-        } else {
-          const { error } = await db.auth.signInWithPassword({
-            email: email.value.trim(),
-            password: password.value
-          });
-          if (error) throw error;
+
+        } finally {
+
+          submitButton.disabled = false;
+
+          submitButton.textContent =
+            mode === "login"
+              ? "LOGIN"
+              : "CREATE ACCOUNT";
+
         }
-      } catch (error) {
-        showMessage(error.message || "Terjadi kesalahan.", "error");
-      } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
+
       }
-    });
+    );
+
+
+    /* INTERSECTION OBSERVER */
+
+    const observer =
+      new IntersectionObserver(
+        (entries) => {
+
+          entries.forEach((entry) => {
+
+            if (entry.isIntersecting) {
+
+              entry.target.classList.add("show");
+
+              observer.unobserve(entry.target);
+
+            }
+
+          });
+
+        },
+        {
+          threshold: 0.12
+        }
+      );
+
+
+    /* SHOW USER WEBSITE */
 
     async function showUser(user) {
+
       if (!user) {
+
         authScreen.classList.remove("hidden");
+
         site.classList.add("hidden");
+
         return;
+
       }
 
-      const { data: profile, error } = await db
-        .from("profiles")
-        .select("full_name, role")
-        .eq("id", user.id)
-        .single();
+      const { data: profile, error } =
+        await db
+          .from("profiles")
+          .select("full_name, role")
+          .eq("id", user.id)
+          .single();
 
       if (error || !profile) {
-        showMessage("Profil belum tersedia. Coba login kembali.", "error");
+
+        showMessage(
+          "Profil belum tersedia. Coba login kembali.",
+          "error"
+        );
+
         await db.auth.signOut();
+
         return;
+
       }
 
       authScreen.classList.add("hidden");
+
       site.classList.remove("hidden");
 
-      document.getElementById("navUser").textContent =
-        profile.full_name || user.email;
+      document
+        .getElementById("navUser")
+        .textContent =
+          profile.full_name || user.email;
 
-      const adminPanel = document.getElementById("adminPanel");
+
+      /* ADMIN ACCESS */
+
+      const adminPanel =
+        document.getElementById("adminPanel");
 
       if (profile.role === "admin") {
+
         adminPanel.classList.remove("hidden");
+
         loadMembers();
+
       } else {
+
         adminPanel.classList.add("hidden");
+
       }
 
-      document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+      /* REVEAL ANIMATIONS */
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((element) => {
+
+          observer.observe(element);
+
+        });
+
     }
+
+
+    /* LOAD ADMIN MEMBERS */
 
     async function loadMembers() {
-      const rows = document.getElementById("memberRows");
-      const message = document.getElementById("memberMessage");
+
+      const rows =
+        document.getElementById("memberRows");
+
+      const message =
+        document.getElementById("memberMessage");
 
       rows.innerHTML = "";
-      message.textContent = "Memuat data member...";
 
-      const { data, error } = await db
-        .from("profiles")
-        .select("full_name, role, created_at")
-        .order("created_at", { ascending: false });
+      message.textContent =
+        "Memuat data member...";
 
-      if (error) {
-        message.textContent = "Gagal memuat data: " + error.message;
-        return;
-      }
-
-      message.textContent = "Total akun: " + data.length;
-
-      data.forEach(member => {
-        const tr = document.createElement("tr");
-
-        [member.full_name || "Tanpa nama", member.role,
-          new Date(member.created_at).toLocaleDateString("id-ID")]
-          .forEach(value => {
-            const td = document.createElement("td");
-            td.textContent = value;
-            tr.appendChild(td);
+      const { data, error } =
+        await db
+          .from("profiles")
+          .select("full_name, role, created_at")
+          .order("created_at", {
+            ascending: false
           });
 
+      if (error) {
+
+        message.textContent =
+          "Gagal memuat data: " + error.message;
+
+        return;
+
+      }
+
+      message.textContent =
+        "Total akun: " + data.length;
+
+      data.forEach((member) => {
+
+        const tr =
+          document.createElement("tr");
+
+        const values = [
+
+          member.full_name || "Tanpa nama",
+
+          member.role || "-",
+
+          member.created_at
+            ? new Date(
+                member.created_at
+              ).toLocaleDateString("id-ID")
+            : "-"
+
+        ];
+
+        values.forEach((value) => {
+
+          const td =
+            document.createElement("td");
+
+          td.textContent = value;
+
+          tr.appendChild(td);
+
+        });
+
         rows.appendChild(tr);
+
       });
+
     }
 
-    document.getElementById("logout").addEventListener("click", async () => {
-      await db.auth.signOut();
-    });
 
-    db.auth.onAuthStateChange((event, session) => {
-      if (event === "INITIAL_SESSION") return;
-      setTimeout(() => showUser(session?.user || null), 0);
-    });
+    /* LOGOUT */
 
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("show");
+    document
+      .getElementById("logout")
+      .addEventListener("click", async () => {
+
+        const { error } =
+          await db.auth.signOut();
+
+        if (error) {
+
+          showMessage(
+            "Gagal logout: " + error.message,
+            "error"
+          );
+
+        }
+
       });
-    }, { threshold: 0.12 });
+
+
+    /* AUTH STATE LISTENER */
+
+    db.auth.onAuthStateChange(
+      (event, session) => {
+
+        if (event === "INITIAL_SESSION") {
+          return;
+        }
+
+        setTimeout(() => {
+
+          showUser(
+            session?.user || null
+          );
+
+        }, 0);
+
+      }
+    );
+
+
+    /* CHECK EXISTING SESSION */
 
     (async () => {
-      const { data: { session } } = await db.auth.getSession();
-      await showUser(session?.user || null);
+
+      const {
+        data: { session },
+        error
+      } = await db.auth.getSession();
+
+      if (error) {
+
+        showMessage(
+          "Gagal memeriksa sesi login.",
+          "error"
+        );
+
+        return;
+
+      }
+
+      await showUser(
+        session?.user || null
+      );
+
     })();
 
-    // Efek bara api dekoratif
-    const emberBox = document.getElementById("embers");
+
+    /* DECORATIVE FIRE EMBERS */
+
+    const emberBox =
+      document.getElementById("embers");
 
     for (let i = 0; i < 35; i++) {
-      const ember = document.createElement("span");
+
+      const ember =
+        document.createElement("span");
+
       ember.className = "ember";
-      ember.style.left = Math.random() * 100 + "%";
-      ember.style.animationDelay = Math.random() * 12 + "s";
-      ember.style.animationDuration = (7 + Math.random() * 10) + "s";
+
+      ember.style.left =
+        Math.random() * 100 + "%";
+
+      ember.style.animationDelay =
+        Math.random() * 12 + "s";
+
+      ember.style.animationDuration =
+        (7 + Math.random() * 10) + "s";
+
       emberBox.appendChild(ember);
+
     }
+
   </script>
+
 </body>
 </html>
