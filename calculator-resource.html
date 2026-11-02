@@ -20,7 +20,7 @@ body {
 }
 
 .container {
-  max-width: 680px;
+  max-width: 720px;
   margin: 25px auto;
 }
 
@@ -60,7 +60,7 @@ label {
 
 select, input {
   width: 100%;
-  padding: 14px;
+  padding: 13px;
   border-radius: 9px;
   border: 1px solid #625476;
   background: #171525;
@@ -69,7 +69,7 @@ select, input {
   outline: none;
 }
 
-input:focus, select:focus {
+select:focus, input:focus {
   border-color: #e6b85c;
 }
 
@@ -89,35 +89,50 @@ input:focus, select:focus {
   margin-top: 5px;
 }
 
-.quick-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-  margin-top: 12px;
-}
-
-button {
-  border: 0;
-  border-radius: 9px;
-  background: linear-gradient(135deg, #e7bd65, #a66b27);
-  color: #211609;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 13px 5px;
-}
-
-button:hover { filter: brightness(1.12); }
-
 .resource-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+  margin-top: 15px;
 }
+
+.resource-card {
+  padding: 13px;
+  background: #211e32;
+  border: 1px solid #51445f;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.resource-card label {
+  margin: 0 0 10px;
+  color: #f2c46d;
+}
+
+.quick-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+button {
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #e7bd65, #a66b27);
+  color: #211609;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 3px;
+}
+
+button:hover { filter: brightness(1.12); }
 
 .clear-button {
   width: 100%;
-  margin-top: 17px;
+  margin-top: 18px;
+  padding: 13px;
   background: #64343b;
   color: white;
   border: 1px solid #a45a63;
@@ -126,7 +141,8 @@ button:hover { filter: brightness(1.12); }
 .calculate-button {
   width: 100%;
   padding: 16px;
-  margin-top: 15px;
+  margin-top: 12px;
+  font-size: 15px;
 }
 
 .result {
@@ -136,45 +152,67 @@ button:hover { filter: brightness(1.12); }
   border-radius: 12px;
   background: #172e27;
   border: 1px solid #438b65;
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
 .result h2 {
   margin-top: 0;
   color: #8ee0a9;
-  font-size: 20px;
 }
 
-.result-item {
-  margin: 17px 0;
+.result h3 {
+  color: #f5c76e;
+  margin-bottom: 8px;
 }
 
-.result-item span {
-  display: block;
-  color: #c5c5c5;
-  font-size: 13px;
+.detail-card {
+  padding: 13px 0;
+  border-bottom: 1px solid #ffffff25;
 }
 
-.result-value {
-  font-size: 25px;
-  font-weight: bold;
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.detail-row strong {
+  text-align: right;
   overflow-wrap: anywhere;
 }
 
-.net-value { color: #8ee0a9; }
-.tax-value { color: #ffb0a7; }
-.total-value { color: #f5c76e; }
+.net {
+  color: #8ee0a9;
+}
+
+.tax {
+  color: #ffaaa1;
+}
+
+.total-card {
+  margin-top: 18px;
+  padding: 16px;
+  background: #263e31;
+  border-radius: 10px;
+}
+
+.total-card strong {
+  font-size: 23px;
+  color: #8ee0a9;
+  overflow-wrap: anywhere;
+}
 
 .graph-title {
-  margin-top: 28px;
+  color: #f5c76e;
+  margin-top: 25px;
   padding-top: 18px;
   border-top: 1px solid #ffffff25;
-  color: #f5c76e;
-  font-size: 16px;
 }
 
 .graph-row {
-  margin-top: 18px;
+  margin-top: 17px;
 }
 
 .graph-label {
@@ -186,45 +224,21 @@ button:hover { filter: brightness(1.12); }
 }
 
 .graph-track {
-  width: 100%;
   height: 17px;
-  border-radius: 20px;
   background: #ffffff18;
+  border-radius: 20px;
   overflow: hidden;
 }
 
 .graph-bar {
   height: 100%;
-  width: 0;
   border-radius: 20px;
-  transition: width .6s ease;
+  transition: width .5s ease;
 }
 
 .gross-bar { background: #e7bd65; }
 .tax-bar { background: #d76d65; }
 .net-bar { background: #59bd83; }
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 18px;
-  color: #c7c0d0;
-  font-size: 12px;
-}
-
-.legend span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
 
 .note {
   color: #bcb5ca;
@@ -241,11 +255,12 @@ footer {
 }
 
 @media(max-width: 480px) {
-  .panel { padding: 19px; }
-  .resource-grid { gap: 10px; }
-  .quick-buttons { gap: 6px; }
-  .quick-buttons button { font-size: 11px; }
-  .result-value { font-size: 22px; }
+  .panel { padding: 17px; }
+  .resource-grid { gap: 9px; }
+  .resource-card { padding: 9px; }
+  .quick-buttons { gap: 3px; }
+  button { font-size: 10px; }
+  .detail-row { font-size: 12px; }
 }
 </style>
 </head>
@@ -261,7 +276,7 @@ footer {
 
 <p class="subtitle">
 Rise of Kingdoms Trading Post<br>
-Hitung resource bersih setelah dipotong pajak.
+Hitung pajak dan resource bersih setiap jenis resource.
 </p>
 
 <label for="level">Level Trading Post</label>
@@ -272,41 +287,55 @@ Persentase Pajak
 <strong id="tax">23%</strong>
 </div>
 
-<label>Pengisian Otomatis</label>
-
-<div class="quick-buttons">
-<button type="button" data-quick="10000000">10 JUTA</button>
-<button type="button" data-quick="100000000">100 JUTA</button>
-<button type="button" data-quick="500000000">500 JUTA</button>
-</div>
-
 <div class="resource-grid">
 
-<div>
+<div class="resource-card">
 <label for="food">FOOD</label>
 <input id="food" class="resource-input" inputmode="numeric" placeholder="0">
+
+<div class="quick-buttons">
+<button type="button" data-target="food" data-add="10000000">10 JUTA</button>
+<button type="button" data-target="food" data-add="100000000">100 JUTA</button>
+<button type="button" data-target="food" data-add="500000000">500 JUTA</button>
+</div>
 </div>
 
-<div>
+<div class="resource-card">
 <label for="wood">WOOD</label>
 <input id="wood" class="resource-input" inputmode="numeric" placeholder="0">
+
+<div class="quick-buttons">
+<button type="button" data-target="wood" data-add="10000000">10 JUTA</button>
+<button type="button" data-target="wood" data-add="100000000">100 JUTA</button>
+<button type="button" data-target="wood" data-add="500000000">500 JUTA</button>
+</div>
 </div>
 
-<div>
+<div class="resource-card">
 <label for="stone">STONE</label>
 <input id="stone" class="resource-input" inputmode="numeric" placeholder="0">
+
+<div class="quick-buttons">
+<button type="button" data-target="stone" data-add="10000000">10 JUTA</button>
+<button type="button" data-target="stone" data-add="100000000">100 JUTA</button>
+<button type="button" data-target="stone" data-add="500000000">500 JUTA</button>
+</div>
 </div>
 
-<div>
+<div class="resource-card">
 <label for="gold">GOLD</label>
 <input id="gold" class="resource-input" inputmode="numeric" placeholder="0">
+
+<div class="quick-buttons">
+<button type="button" data-target="gold" data-add="10000000">10 JUTA</button>
+<button type="button" data-target="gold" data-add="100000000">100 JUTA</button>
+<button type="button" data-target="gold" data-add="500000000">500 JUTA</button>
+</div>
 </div>
 
 </div>
 
-<button type="button" class="clear-button" id="clear">
-CLEAR
-</button>
+<button type="button" class="clear-button" id="clear">CLEAR</button>
 
 <button type="button" class="calculate-button" id="calculate">
 HITUNG RESOURCE
@@ -316,65 +345,58 @@ HITUNG RESOURCE
 
 <h2>Hasil Perhitungan</h2>
 
-<div class="result-item">
-<span>Total Resource Awal</span>
-<div class="result-value total-value" id="grossResult">0</div>
-</div>
+<div id="resourceDetails"></div>
 
-<div class="result-item">
-<span>Total Pajak</span>
-<div class="result-value tax-value" id="taxResult">0</div>
-</div>
+<div class="total-card">
+<div>Total Resource Awal</div>
+<strong id="grossResult">0</strong>
 
-<div class="result-item">
-<span>Resource Bersih Diterima</span>
-<div class="result-value net-value" id="netResult">0</div>
+<div style="margin-top:12px">Total Pajak</div>
+<strong id="taxResult" style="color:#ffaaa1">0</strong>
+
+<div style="margin-top:12px">Total Resource Bersih</div>
+<strong id="netResult">0</strong>
 </div>
 
 <div class="graph-title">Grafik Perbandingan Resource</div>
 
 <div class="graph-row">
-  <div class="graph-label">
-    <span>Resource Awal</span>
-    <b id="grossLabel">0</b>
-  </div>
-  <div class="graph-track">
-    <div class="graph-bar gross-bar" id="grossBar"></div>
-  </div>
+<div class="graph-label">
+<span>Resource Awal</span>
+<b id="grossLabel">0</b>
+</div>
+<div class="graph-track">
+<div class="graph-bar gross-bar" id="grossBar"></div>
+</div>
 </div>
 
 <div class="graph-row">
-  <div class="graph-label">
-    <span>Pajak</span>
-    <b id="taxLabel">0</b>
-  </div>
-  <div class="graph-track">
-    <div class="graph-bar tax-bar" id="taxBar"></div>
-  </div>
+<div class="graph-label">
+<span>Pajak</span>
+<b id="taxLabel">0</b>
+</div>
+<div class="graph-track">
+<div class="graph-bar tax-bar" id="taxBar"></div>
+</div>
 </div>
 
 <div class="graph-row">
-  <div class="graph-label">
-    <span>Resource Bersih</span>
-    <b id="netLabel">0</b>
-  </div>
-  <div class="graph-track">
-    <div class="graph-bar net-bar" id="netBar"></div>
-  </div>
+<div class="graph-label">
+<span>Resource Bersih</span>
+<b id="netLabel">0</b>
 </div>
-
-<div class="legend">
-  <span><i class="dot" style="background:#e7bd65"></i> Resource awal</span>
-  <span><i class="dot" style="background:#d76d65"></i> Pajak</span>
-  <span><i class="dot" style="background:#59bd83"></i> Bersih</span>
+<div class="graph-track">
+<div class="graph-bar net-bar" id="netBar"></div>
+</div>
 </div>
 
 </div>
 
 <p class="note">
-* Total FOOD, WOOD, STONE, dan GOLD digabung untuk perhitungan.
-Pajak dihitung dari jumlah resource awal. Hasil merupakan estimasi;
-pembulatan dalam game dapat menyebabkan selisih kecil.
+* Tombol penambah bekerja hanya pada kolom resource masing-masing.
+Setiap klik menambahkan jumlah ke nilai sebelumnya.
+Perhitungan pajak menggunakan total resource gabungan.
+Hasil per jenis resource dibulatkan ke bawah.
 </p>
 
 </section>
@@ -394,6 +416,13 @@ const levelInput = document.getElementById("level");
 const taxDisplay = document.getElementById("tax");
 const inputs = [...document.querySelectorAll(".resource-input")];
 const result = document.getElementById("result");
+
+const names = {
+  food: "FOOD",
+  wood: "WOOD",
+  stone: "STONE",
+  gold: "GOLD"
+};
 
 function formatNumber(value) {
   return Math.floor(value).toLocaleString("id-ID");
@@ -427,15 +456,14 @@ inputs.forEach(input => {
   });
 });
 
-// Tombol cepat mengisi keempat kolom dengan nilai yang sama.
-document.querySelectorAll("[data-quick]").forEach(button => {
+// Setiap tombol hanya menambah nilai pada resource miliknya.
+document.querySelectorAll("[data-target]").forEach(button => {
   button.addEventListener("click", () => {
-    const value = Number(button.dataset.quick);
+    const target = document.getElementById(button.dataset.target);
+    const addition = Number(button.dataset.add);
+    const current = parseNumber(target.value);
 
-    inputs.forEach(input => {
-      input.value = formatNumber(value);
-    });
-
+    target.value = formatNumber(current + addition);
     result.style.display = "none";
   });
 });
@@ -446,38 +474,58 @@ document.getElementById("clear").addEventListener("click", () => {
 });
 
 document.getElementById("calculate").addEventListener("click", () => {
-  const totalGross = inputs.reduce(
-    (sum, input) => sum + parseNumber(input.value), 0
-  );
+  const rate = taxRates[levelInput.value] / 100;
+
+  const resources = inputs.map(input => {
+    const gross = parseNumber(input.value);
+    const tax = Math.floor(gross * rate);
+    const net = gross - tax;
+
+    return {
+      name: names[input.id],
+      gross,
+      tax,
+      net
+    };
+  });
+
+  const totalGross = resources.reduce((sum, item) => sum + item.gross, 0);
 
   if (totalGross <= 0) {
     alert("Masukkan jumlah resource terlebih dahulu!");
     return;
   }
 
-  const taxRate = taxRates[levelInput.value] / 100;
-  const totalTax = Math.floor(totalGross * taxRate);
-  const totalNet = totalGross - totalTax;
+  const totalTax = resources.reduce((sum, item) => sum + item.tax, 0);
+  const totalNet = resources.reduce((sum, item) => sum + item.net, 0);
 
-  document.getElementById("grossResult").textContent =
-    formatNumber(totalGross);
+  document.getElementById("resourceDetails").innerHTML =
+    resources.map(item => `
+      <div class="detail-card">
+        <h3>${item.name}</h3>
+        <div class="detail-row">
+          <span>Resource Awal</span>
+          <strong>${formatNumber(item.gross)}</strong>
+        </div>
+        <div class="detail-row">
+          <span>Pajak (${rate * 100}%)</span>
+          <strong class="tax">${formatNumber(item.tax)}</strong>
+        </div>
+        <div class="detail-row">
+          <span>Resource Bersih</span>
+          <strong class="net">${formatNumber(item.net)}</strong>
+        </div>
+      </div>
+    `).join("");
 
-  document.getElementById("taxResult").textContent =
-    formatNumber(totalTax);
+  document.getElementById("grossResult").textContent = formatNumber(totalGross);
+  document.getElementById("taxResult").textContent = formatNumber(totalTax);
+  document.getElementById("netResult").textContent = formatNumber(totalNet);
 
-  document.getElementById("netResult").textContent =
-    formatNumber(totalNet);
+  document.getElementById("grossLabel").textContent = formatNumber(totalGross);
+  document.getElementById("taxLabel").textContent = formatNumber(totalTax);
+  document.getElementById("netLabel").textContent = formatNumber(totalNet);
 
-  document.getElementById("grossLabel").textContent =
-    formatNumber(totalGross);
-
-  document.getElementById("taxLabel").textContent =
-    formatNumber(totalTax);
-
-  document.getElementById("netLabel").textContent =
-    formatNumber(totalNet);
-
-  // Grafik menggunakan resource awal sebagai skala 100%.
   document.getElementById("grossBar").style.width = "100%";
   document.getElementById("taxBar").style.width =
     (totalTax / totalGross * 100) + "%";
