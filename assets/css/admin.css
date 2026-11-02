@@ -1,0 +1,52 @@
+.admin-container {
+    width: min(1100px, 94%);
+    margin: 40px auto;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.admin-card {
+    background: #102541;
+    border: 1px solid rgba(214, 173, 85, 0.3);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+}
+
+.admin-table-wrapper {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 13px;
+    border-bottom: 1px solid #34516f;
+    text-align: left;
+}
+
+.admin-table th {
+    color: #d6ad55;
+}
+
+.admin-status {
+    color: #65d69a;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .admin-container {
+        margin: 25px auto;
+    }
+}
