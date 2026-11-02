@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071a38">
+  <meta name="description" content="Matthew — dunia strategi Rise of Kingdoms. Bangun kerajaan, susun strategi, dan taklukkan medan perang.">
+  <title>MATTHEW | Rise of Kingdoms</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+    :root{--navy:#06152e;--blue:#0c2d5b;--electric:#4da9ff;--ice:#cceaff;--gold:#e9c77b;--white:#f4f8ff}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--navy);color:var(--white);font-family:Manrope,Arial,sans-serif;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .bg{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 72% 25%,#174d83 0,transparent 35%),radial-gradient(ellipse at 12% 70%,#102f5d 0,transparent 40%),linear-gradient(135deg,#061329,#0a2850 55%,#06152e)}
+    .bg:after{content:"";position:absolute;inset:0;opacity:.17;background-image:linear-gradient(30deg,transparent 48%,#8dcaff 49%,transparent 50%),linear-gradient(150deg,transparent 48%,#8dcaff 49%,transparent 50%);background-size:90px 90px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+    .glow{position:absolute;width:460px;height:460px;border-radius:50%;filter:blur(100px);background:#1677d5;opacity:.17;top:12%;right:-180px}
+    header{height:82px;display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:auto;padding:0 28px}
+    .brand{font-family:Cinzel,serif;font-weight:800;letter-spacing:4px;color:#fff;font-size:20px}
+    .brand span{color:var(--gold)}
+    nav{display:flex;gap:34px;font-size:12px;text-transform:uppercase;letter-spacing:1.6px;color:#c5d8ee}
+    nav a:hover{color:var(--gold)}
+    .nav-cta,.button{border:1px solid rgba(233,199,123,.65);padding:12px 19px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;transition:.25s}
+    .nav-cta:hover,.button:hover{background:var(--gold);color:#071a38;transform:translateY(-2px)}
+    .hero{max-width:1180px;min-height:680px;margin:auto;padding:90px 28px 100px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:35px;position:relative}
+    .eyebrow{color:var(--gold);font-size:11px;letter-spacing:4px;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:13px}
+    .eyebrow:before{content:"";height:1px;width:38px;background:var(--gold)}
+    h1{font-family:Cinzel,serif;font-size:clamp(54px,8vw,100px);line-height:.98;letter-spacing:2px;margin:25px 0 18px;text-shadow:0 8px 40px #0008}
+    h1 span{display:block;color:var(--ice);font-size:.46em;letter-spacing:8px;margin-top:18px}
+    .intro{max-width:520px;color:#b6cce4;line-height:1.9;font-size:14px;margin:24px 0 34px}
+    .actions{display:flex;gap:14px;flex-wrap:wrap}
+    .button.primary{background:linear-gradient(110deg,#e9c77b,#fff0c6);color:#091c38;border:0}
+    .button.secondary{border-color:#5a91c4;color:#d6ecff}
+    .visual{height:470px;position:relative;display:grid;place-items:center}
+    .ring{position:absolute;width:390px;height:390px;border:1px solid #8bcaff55;border-radius:50%;box-shadow:0 0 80px #168bdf22,inset 0 0 70px #168bdf15}
+    .ring:before,.ring:after{content:"";position:absolute;inset:22px;border:1px dashed #9ed7ff55;border-radius:50%}
+    .ring:after{inset:-25px;border-color:#e9c77b44}
+    .crest{width:270px;height:330px;clip-path:polygon(50% 0,91% 15%,86% 70%,50% 100%,14% 70%,9% 15%);background:linear-gradient(145deg,#b6e4ff,#236aa9 34%,#071a38 75%);border:2px solid #e9c77b;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;filter:drop-shadow(0 20px 45px #000b)}
+    .crest:before{content:"";position:absolute;inset:12px;clip-path:inherit;border:2px solid #f2d58e;background:linear-gradient(160deg,#ffffff18,transparent 60%)}
+    .crest .crown{font-size:70px;filter:drop-shadow(0 6px 10px #001)}
+    .crest strong{font-family:Cinzel,serif;letter-spacing:5px;font-size:28px;color:#fff;text-shadow:0 3px 8px #001}
+    .crest small{font-size:9px;letter-spacing:4px;color:#f4d994;margin-top:10px}
+    .orbit{position:absolute;color:#d5ecff;font-size:10px;letter-spacing:3px;text-transform:uppercase}
+    .orbit.one{top:35px;right:8px}.orbit.two{bottom:42px;left:0;color:var(--gold)}
+    .stats{border-top:1px solid #8ccaff30;border-bottom:1px solid #8ccaff30;max-width:1124px;margin:0 auto 110px;padding:25px 10px;display:grid;grid-template-columns:repeat(3,1fr);text-align:center}
+    .stats div+div{border-left:1px solid #8ccaff30}
+    .stats strong{font-family:Cinzel,serif;color:var(--gold);font-size:24px;display:block;margin-bottom:5px}
+    .stats span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9db9d6}
+    section.content{max-width:1124px;margin:0 auto;padding:0 28px 110px}
+    .section-head{text-align:center;margin-bottom:42px}
+    .section-head .eyebrow{justify-content:center}
+    h2{font-family:Cinzel,serif;font-size:clamp(29px,4vw,43px);margin-top:16px}
+    .section-head p{color:#a9c2dd;font-size:13px;margin-top:13px;line-height:1.8}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{padding:29px 25px;background:linear-gradient(145deg,#17457580,#071a38cc);border:1px solid #80c5ff35;min-height:190px;position:relative;overflow:hidden}
+    .card:after{content:"";position:absolute;width:120px;height:120px;border:1px solid #e9c77b30;transform:rotate(45deg);right:-70px;bottom:-70px}
+    .card .icon{font-size:27px;margin-bottom:18px}
+    .card h3{font-family:Cinzel,serif;color:#e9d49f;font-size:17px;margin-bottom:10px}
+    .card p{font-size:12px;line-height:1.8;color:#a9c2dd}
+    .contact{max-width:1124px;margin:0 auto 80px;padding:55px 30px;text-align:center;border:1px solid #d9bd7a55;background:linear-gradient(120deg,#103968cc,#071a38ee);position:relative}
+    .contact h2{margin:0 0 13px}.contact p{color:#b2c9e1;font-size:13px;margin-bottom:27px}
+    footer{border-top:1px solid #8ccaff25;padding:25px 28px;text-align:center;color:#7693b2;font-size:10px;letter-spacing:2px}
+    footer b{color:var(--gold);font-weight:700}
+    @media(max-width:760px){header{height:70px;padding:0 20px}nav{display:none}.nav-cta{padding:10px 12px;font-size:9px}.hero{grid-template-columns:1fr;padding:70px 23px 45px;text-align:center;gap:5px}.eyebrow{justify-content:center}h1{font-size:68px}.intro{margin:20px auto 28px}.actions{justify-content:center}.visual{height:380px}.ring{width:300px;height:300px}.crest{width:215px;height:270px}.crest .crown{font-size:54px}.crest strong{font-size:23px}.orbit.one{right:0;top:10px}.orbit.two{left:0;bottom:12px}.stats{margin:0 20px 80px;padding:20px 0}.stats strong{font-size:19px}.stats span{font-size:8px;letter-spacing:1px}.cards{grid-template-columns:1fr}.content{padding-bottom:75px!important}.contact{margin:0 20px 60px;padding:40px 20px}}
+  </style>
+</head>
+<body>
+  <div class="bg"><div class="glow"></div></div>
+  <header>
+    <a class="brand" href="#">MAT<span>THEW</span></a>
+    <nav><a href="#home">Beranda</a><a href="#tentang">Tentang</a><a href="#keunggulan">Keunggulan</a><a href="#kontak">Kontak</a></nav>
+    <a class="nav-cta" href="#kontak">Hubungi Matthew</a>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div>
+        <div class="eyebrow">Rise of Kingdoms • Strategy Realm</div>
+        <h1>RULE<br>THE <span>KINGDOM</span></h1>
+        <p class="intro">Selamat datang di dunia Matthew — tempat strategi ditempa, kerajaan dibangun, dan setiap keputusan menentukan kejayaan. Siapkan pasukanmu. Kisah besar dimulai dari sini.</p>
+        <div class="actions">
+          <a class="button primary" href="#tentang">Jelajahi Dunia</a>
+          <a class="button secondary" href="#kontak">Hubungi Pemilik</a>
+        </div>
+      </div>
+      <div class="visual" aria-label="Lambang kerajaan Matthew">
+        <div class="ring"></div>
+        <span class="orbit one">Wisdom • Honor • Glory</span>
+        <span class="orbit two">Est. by Matthew</span>
+        <div class="crest"><div class="crown">♛</div><strong>MATTHEW</strong><small>RISE OF KINGDOMS</small></div>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div><strong>STRATEGY</strong><span>Think Like a Leader</span></div>
+      <div><strong>HONOR</strong><span>Fight With Purpose</span></div>
+      <div><strong>GLORY</strong><span>Build Your Legacy</span></div>
+    </div>
+
+    <section class="content" id="tentang">
+      <div class="section-head">
+        <div class="eyebrow">The Kingdom Awaits</div>
+        <h2>LEGENDA DIMULAI DI SINI</h2>
+        <p>Sebuah ruang bagi para penggemar Rise of Kingdoms yang menyukai strategi,<br>perjuangan, dan perjalanan membangun peradaban.</p>
+      </div>
+      <div class="cards" id="keunggulan">
+        <article class="card"><div class="icon">⚔️</div><h3>Strategi & Pertempuran</h3><p>Rencanakan setiap langkah, kenali kekuatan pasukan, dan hadapi medan perang dengan taktik terbaik.</p></article>
+        <article class="card"><div class="icon">🏰</div><h3>Bangun Kerajaan</h3><p>Kembangkan peradabanmu, tingkatkan kekuatan, dan jadikan setiap pencapaian sebagai bagian dari kisahmu.</p></article>
+        <article class="card"><div class="icon">👑</div><h3>Warisan Matthew</h3><p>Berawal dari ambisi, tumbuh dengan konsistensi, dan terus melangkah menuju kejayaan.</p></article>
+      </div>
+    </section>
+
+    <section class="contact" id="kontak">
+      <div class="eyebrow" style="justify-content:center">Your Journey Starts Now</div>
+      <h2>SIAP MEMBANGUN KEJAYAAN?</h2>
+      <p>Terhubung dengan Matthew dan mulai perjalananmu.</p>
+      <!-- Ganti tanda # di bawah dengan tautan WhatsApp/Discord milik Anda -->
+      <a class="button primary" href="mailto:hello@example.com">Hubungi Matthew</a>
+    </section>
+  </main>
+  <footer>© 2026 <b>MATTHEW</b> • FAN-INSPIRED RISE OF KINGDOMS LANDING PAGE</footer>
+</body>
+  </html>
