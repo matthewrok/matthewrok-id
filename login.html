@@ -1,1 +1,38 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100907">
+  <meta name="description" content="Login ke website Matthew Joki — Dragon Kingdom.">
+  <title>Login | Matthew Joki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/supabase.js"></script>
+  <script defer src="assets/js/auth.js"></script>
+</head>
+<body>
+  <main class="auth-shell">
+    <a class="back-link" href="index.html">← Kembali ke beranda</a>
+    <section class="auth-container">
+      <div class="crown" aria-hidden="true">♛</div>
+      <p class="eyebrow">THE DRAGON KINGDOM</p>
+      <h1>LOGIN</h1>
+      <p class="intro">Masuk ke akun Matthew Joki kamu.</p>
+      <form id="loginForm" class="auth-form">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" minlength="6" required>
+        <button id="loginButton" type="submit">MASUK KE KERAJAAN</button>
+      </form>
+      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+      <p class="auth-link">Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
+    </section>
+    <footer>© <span data-current-year>2026</span> MATTHEW JOKI · CREATOR: MATTHEW-raditya</footer>
+  </main>
+</body>
+</html>
