@@ -340,24 +340,73 @@ header {
   background: #160a07;
 }
 
+/* DRAGON HERO - LARGE CHARACTER */
+
+.hero {
+  min-height: 760px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
 .hero-image {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
+
+  background-image:
     linear-gradient(
       90deg,
-      rgba(10, 5, 4, .88) 0%,
-      rgba(10, 5, 4, .58) 40%,
-      rgba(10, 5, 4, .10) 100%
+      rgba(10, 5, 4, .92) 0%,
+      rgba(10, 5, 4, .55) 32%,
+      rgba(10, 5, 4, .05) 70%
     ),
     linear-gradient(
       0deg,
       #100907 0%,
       transparent 35%
     ),
-    url("../../dragon-kingdom.png") center 38% / cover no-repeat;
+    url("../../dragon-kingdom.png");
+
+  background-repeat: no-repeat;
+  background-size: cover, cover, auto 115%;
+  background-position: center, center, 75% center;
+
   transform: scale(1.02);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 550px;
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+
+/* MOBILE */
+
+@media (max-width: 850px) {
+  .hero {
+    min-height: 720px;
+  }
+
+  .hero-image {
+    background-image:
+      linear-gradient(
+        0deg,
+        #100907 0%,
+        rgba(10, 5, 4, .3) 55%,
+        rgba(10, 5, 4, .1) 100%
+      ),
+      url("../../dragon-kingdom.png");
+
+    background-size: cover, auto 75%;
+    background-position: center, 65% top;
+  }
+
+  .hero-content {
+    padding-top: 350px;
+  }
 }
 
 .hero-content {
