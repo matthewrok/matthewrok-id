@@ -41,3 +41,43 @@ h1 { margin: 4px 0 8px; text-align: center; color: var(--gold); font: 700 clamp(
 .auth-link a { margin-left: 4px; font-weight: 600; }
 footer { margin-top: 25px; color: #a99583; text-align: center; font-size: 10px; letter-spacing: .5px; }
 @media (max-width: 400px) { .auth-shell { width: min(100% - 22px, 500px); padding-top: 18px; } .auth-container { padding: 23px 18px; } }
+
+
+/* CRIMSON ROYAL AUTH THEME */
+:root { --bg:#120305; --panel:rgba(48,7,15,.96); --gold:#e9c98a; --orange:#ff7c87; --text:#fff4f1; --muted:#d8bfc0; --border:rgba(233,201,138,.34); }
+body {
+  background:
+    radial-gradient(ellipse at 50% 5%,rgba(173,14,39,.62),transparent 43%),
+    linear-gradient(145deg,#190306,#090103 78%);
+}
+.auth-container {
+  position:relative;
+  overflow:hidden;
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(52,7,16,.98),rgba(17,3,7,.98));
+  border-color:rgba(233,201,138,.4);
+  box-shadow:0 28px 90px rgba(0,0,0,.55),0 0 45px rgba(177,12,38,.14);
+}
+.auth-container::before {
+  content:"蛇";
+  position:absolute;
+  top:8px;
+  left:-26px;
+  color:rgba(255,91,109,.8);
+  font:18px serif;
+  text-shadow:0 0 12px rgba(255,50,76,.8);
+  animation:authSerpent 13s linear infinite;
+  pointer-events:none;
+}
+@keyframes authSerpent {
+  0% { left:-26px; opacity:0; transform:rotate(0); }
+  8%,90% { opacity:.9; }
+  50% { transform:rotate(9deg); }
+  100% { left:calc(100% + 10px); opacity:0; transform:rotate(0); }
+}
+h1 { color:#fff0d9; text-shadow:0 0 28px rgba(239,66,88,.2); }
+.auth-form input { background:#170307; border-color:rgba(233,201,138,.28); }
+.auth-form input:focus { border-color:#ff6674; box-shadow:0 0 0 3px rgba(239,66,88,.15); }
+.auth-form button { background:linear-gradient(135deg,#f0d6a0,#b77b45); border-color:#f0d6a0; }
+.auth-form button:hover { box-shadow:0 0 25px rgba(239,66,88,.18); }
+@media (prefers-reduced-motion:reduce) { .auth-container::before { animation:none; } }
