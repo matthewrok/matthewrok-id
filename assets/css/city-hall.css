@@ -1,0 +1,40 @@
+.city-hall-container {
+    width: min(1000px, 92%);
+    margin: 50px auto;
+}
+
+.city-hall-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.city-hall-list {
+    display: grid;
+    gap: 18px;
+}
+
+.city-hall-item {
+    background: #102541;
+    border: 1px solid rgba(214, 173, 85, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.city-hall-item h2 {
+    color: #d6ad55;
+    margin-bottom: 12px;
+}
+
+.city-hall-item p {
+    margin: 6px 0;
+}
+
+.city-hall-item strong {
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .city-hall-container {
+        margin: 30px auto;
+    }
+}
