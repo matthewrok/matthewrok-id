@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#10101c">
-<title>Resource Tax Calculator | Dragon Kingdom</title>
+<title>Resource Tax Calculator</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -96,25 +96,18 @@ input:focus, select:focus {
   margin-top: 12px;
 }
 
-.quick-buttons button {
-  margin: 0;
-  padding: 12px 5px;
-  font-size: 13px;
-}
-
 button {
   border: 0;
   border-radius: 9px;
   background: linear-gradient(135deg, #e7bd65, #a66b27);
   color: #211609;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
+  padding: 13px 5px;
 }
 
-button:hover {
-  filter: brightness(1.12);
-}
+button:hover { filter: brightness(1.12); }
 
 .resource-grid {
   display: grid;
@@ -122,18 +115,9 @@ button:hover {
   gap: 14px;
 }
 
-.resource-item label {
-  margin-top: 18px;
-}
-
-.resource-item input {
-  font-weight: bold;
-}
-
 .clear-button {
   width: 100%;
   margin-top: 17px;
-  padding: 13px;
   background: #64343b;
   color: white;
   border: 1px solid #a45a63;
@@ -161,19 +145,85 @@ button:hover {
   font-size: 20px;
 }
 
+.result-item {
+  margin: 17px 0;
+}
+
+.result-item span {
+  display: block;
+  color: #c5c5c5;
+  font-size: 13px;
+}
+
 .result-value {
   font-size: 25px;
   font-weight: bold;
-  color: #a5efb9;
   overflow-wrap: anywhere;
 }
 
-.result-row {
+.net-value { color: #8ee0a9; }
+.tax-value { color: #ffb0a7; }
+.total-value { color: #f5c76e; }
+
+.graph-title {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #ffffff25;
+  color: #f5c76e;
+  font-size: 16px;
+}
+
+.graph-row {
+  margin-top: 18px;
+}
+
+.graph-label {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  border-bottom: 1px solid #ffffff20;
-  padding: 7px 0;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.graph-track {
+  width: 100%;
+  height: 17px;
+  border-radius: 20px;
+  background: #ffffff18;
+  overflow: hidden;
+}
+
+.graph-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 20px;
+  transition: width .6s ease;
+}
+
+.gross-bar { background: #e7bd65; }
+.tax-bar { background: #d76d65; }
+.net-bar { background: #59bd83; }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+  color: #c7c0d0;
+  font-size: 12px;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 .note {
@@ -195,6 +245,7 @@ footer {
   .resource-grid { gap: 10px; }
   .quick-buttons { gap: 6px; }
   .quick-buttons button { font-size: 11px; }
+  .result-value { font-size: 22px; }
 }
 </style>
 </head>
@@ -210,7 +261,7 @@ footer {
 
 <p class="subtitle">
 Rise of Kingdoms Trading Post<br>
-Hitung pajak pengiriman FOOD, WOOD, STONE, dan GOLD.
+Hitung resource bersih setelah dipotong pajak.
 </p>
 
 <label for="level">Level Trading Post</label>
@@ -221,7 +272,7 @@ Persentase Pajak
 <strong id="tax">23%</strong>
 </div>
 
-<label>Jumlah Resource Bersih</label>
+<label>Pengisian Otomatis</label>
 
 <div class="quick-buttons">
 <button type="button" data-quick="10000000">10 JUTA</button>
@@ -231,22 +282,22 @@ Persentase Pajak
 
 <div class="resource-grid">
 
-<div class="resource-item">
+<div>
 <label for="food">FOOD</label>
 <input id="food" class="resource-input" inputmode="numeric" placeholder="0">
 </div>
 
-<div class="resource-item">
+<div>
 <label for="wood">WOOD</label>
 <input id="wood" class="resource-input" inputmode="numeric" placeholder="0">
 </div>
 
-<div class="resource-item">
+<div>
 <label for="stone">STONE</label>
 <input id="stone" class="resource-input" inputmode="numeric" placeholder="0">
 </div>
 
-<div class="resource-item">
+<div>
 <label for="gold">GOLD</label>
 <input id="gold" class="resource-input" inputmode="numeric" placeholder="0">
 </div>
@@ -262,45 +313,87 @@ HITUNG RESOURCE
 </button>
 
 <div class="result" id="result" aria-live="polite">
+
 <h2>Hasil Perhitungan</h2>
-<div id="resultText"></div>
+
+<div class="result-item">
+<span>Total Resource Awal</span>
+<div class="result-value total-value" id="grossResult">0</div>
+</div>
+
+<div class="result-item">
+<span>Total Pajak</span>
+<div class="result-value tax-value" id="taxResult">0</div>
+</div>
+
+<div class="result-item">
+<span>Resource Bersih Diterima</span>
+<div class="result-value net-value" id="netResult">0</div>
+</div>
+
+<div class="graph-title">Grafik Perbandingan Resource</div>
+
+<div class="graph-row">
+  <div class="graph-label">
+    <span>Resource Awal</span>
+    <b id="grossLabel">0</b>
+  </div>
+  <div class="graph-track">
+    <div class="graph-bar gross-bar" id="grossBar"></div>
+  </div>
+</div>
+
+<div class="graph-row">
+  <div class="graph-label">
+    <span>Pajak</span>
+    <b id="taxLabel">0</b>
+  </div>
+  <div class="graph-track">
+    <div class="graph-bar tax-bar" id="taxBar"></div>
+  </div>
+</div>
+
+<div class="graph-row">
+  <div class="graph-label">
+    <span>Resource Bersih</span>
+    <b id="netLabel">0</b>
+  </div>
+  <div class="graph-track">
+    <div class="graph-bar net-bar" id="netBar"></div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><i class="dot" style="background:#e7bd65"></i> Resource awal</span>
+  <span><i class="dot" style="background:#d76d65"></i> Pajak</span>
+  <span><i class="dot" style="background:#59bd83"></i> Bersih</span>
+</div>
+
 </div>
 
 <p class="note">
-* Jumlah Resource Bersih adalah jumlah yang ingin diterima pemain tujuan.
-Kalkulator menghitung total resource dari keempat kolom, kemudian
-menghitung kebutuhan pengiriman berdasarkan pajak Trading Post.
-Hasil merupakan estimasi dan dapat berbeda akibat pembulatan dalam game.
+* Total FOOD, WOOD, STONE, dan GOLD digabung untuk perhitungan.
+Pajak dihitung dari jumlah resource awal. Hasil merupakan estimasi;
+pembulatan dalam game dapat menyebabkan selisih kecil.
 </p>
 
 </section>
 
-<footer>Dragon Kingdom © 2026</footer>
+<footer>Matthew-Raditya</footer>
 
 </main>
 
 <script>
 const taxRates = {
-  13: 23,
-  14: 22,
-  15: 21,
-  16: 20,
-  17: 19,
-  18: 18,
-  19: 17,
-  20: 16,
-  21: 15,
-  22: 14,
-  23: 12,
-  24: 10,
-  25: 8
+  13: 23, 14: 22, 15: 21, 16: 20, 17: 19,
+  18: 18, 19: 17, 20: 16, 21: 15, 22: 14,
+  23: 12, 24: 10, 25: 8
 };
 
 const levelInput = document.getElementById("level");
 const taxDisplay = document.getElementById("tax");
 const inputs = [...document.querySelectorAll(".resource-input")];
 const result = document.getElementById("result");
-const resultText = document.getElementById("resultText");
 
 function formatNumber(value) {
   return Math.floor(value).toLocaleString("id-ID");
@@ -308,11 +401,6 @@ function formatNumber(value) {
 
 function parseNumber(value) {
   return Number(value.replace(/\./g, "").replace(/[^\d]/g, "")) || 0;
-}
-
-function formatInput(input) {
-  const number = parseNumber(input.value);
-  input.value = number ? formatNumber(number) : "";
 }
 
 Object.keys(taxRates).forEach(level => {
@@ -333,23 +421,20 @@ levelInput.addEventListener("change", updateTax);
 
 inputs.forEach(input => {
   input.addEventListener("input", () => {
-    formatInput(input);
+    const number = parseNumber(input.value);
+    input.value = number ? formatNumber(number) : "";
     result.style.display = "none";
-  });
-
-  input.addEventListener("blur", () => {
-    formatInput(input);
   });
 });
 
+// Tombol cepat mengisi keempat kolom dengan nilai yang sama.
 document.querySelectorAll("[data-quick]").forEach(button => {
   button.addEventListener("click", () => {
-    inputs.forEach(input => {
-      input.value = "";
-    });
+    const value = Number(button.dataset.quick);
 
-    document.getElementById("food").value =
-      formatNumber(Number(button.dataset.quick));
+    inputs.forEach(input => {
+      input.value = formatNumber(value);
+    });
 
     result.style.display = "none";
   });
@@ -361,57 +446,46 @@ document.getElementById("clear").addEventListener("click", () => {
 });
 
 document.getElementById("calculate").addEventListener("click", () => {
-  const values = inputs.map(input => parseNumber(input.value));
-  const totalNet = values.reduce((sum, value) => sum + value, 0);
+  const totalGross = inputs.reduce(
+    (sum, input) => sum + parseNumber(input.value), 0
+  );
 
-  if (totalNet <= 0) {
+  if (totalGross <= 0) {
     alert("Masukkan jumlah resource terlebih dahulu!");
     return;
   }
 
-  const tax = taxRates[levelInput.value] / 100;
-  const multiplier = 1 - tax;
-  const totalSend = Math.ceil(totalNet / multiplier);
-  const totalTax = totalSend - totalNet;
+  const taxRate = taxRates[levelInput.value] / 100;
+  const totalTax = Math.floor(totalGross * taxRate);
+  const totalNet = totalGross - totalTax;
 
-  const resourceNames = ["FOOD", "WOOD", "STONE", "GOLD"];
+  document.getElementById("grossResult").textContent =
+    formatNumber(totalGross);
 
-  const breakdown = values.map((value, index) => {
-    const send = Math.ceil(value / multiplier);
-    const fee = send - value;
+  document.getElementById("taxResult").textContent =
+    formatNumber(totalTax);
 
-    return `
-      <div class="result-row">
-        <span>${resourceNames[index]}</span>
-        <b>${formatNumber(value)}</b>
-      </div>
-      <div class="result-row">
-        <span>${resourceNames[index]} dikirim</span>
-        <b>${formatNumber(send)}</b>
-      </div>
-    `;
-  }).join("");
+  document.getElementById("netResult").textContent =
+    formatNumber(totalNet);
 
-  resultText.innerHTML = `
-    <p>Trading Post Level: <b>${levelInput.value}</b></p>
-    <p>Pajak: <b>${tax * 100}%</b></p>
+  document.getElementById("grossLabel").textContent =
+    formatNumber(totalGross);
 
-    <p>Total Resource Bersih:</p>
-    <div class="result-value">${formatNumber(totalNet)}</div>
+  document.getElementById("taxLabel").textContent =
+    formatNumber(totalTax);
 
-    <p>Total Resource yang Harus Dikirim:</p>
-    <div class="result-value">${formatNumber(totalSend)}</div>
+  document.getElementById("netLabel").textContent =
+    formatNumber(totalNet);
 
-    <p>Total Pajak:</p>
-    <b>${formatNumber(totalTax)}</b>
-
-    <hr style="border-color:#ffffff30;margin:18px 0">
-    <b>Rincian Resource</b>
-    ${breakdown}
-  `;
+  // Grafik menggunakan resource awal sebagai skala 100%.
+  document.getElementById("grossBar").style.width = "100%";
+  document.getElementById("taxBar").style.width =
+    (totalTax / totalGross * 100) + "%";
+  document.getElementById("netBar").style.width =
+    (totalNet / totalGross * 100) + "%";
 
   result.style.display = "block";
-  result.scrollIntoView({behavior: "smooth", block: "nearest"});
+  result.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
 updateTax();
