@@ -1,1 +1,53 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100907">
+  <meta name="description" content="Daftar syarat upgrade City Hall level 1 sampai 25 di Rise of Kingdoms.">
+  <title>City Hall Requirements | Matthew Joki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/requirements.css">
+  <script defer src="assets/js/requirements.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span>♛</span><span>MATTHEW JOKI<small>DRAGON KINGDOM</small></span></a>
+  <nav><a href="index.html">Beranda</a><a href="calculator-resource.html">Resource Calculator</a></nav>
+</header>
+<main class="page">
+  <section class="hero">
+    <p class="eyebrow">RISE OF KINGDOMS · BUILDING GUIDE</p>
+    <h1>CITY HALL<br><em>REQUIREMENTS</em></h1>
+    <p class="intro">Cek bangunan prasyarat, kebutuhan resource, waktu dasar, dan kapasitas pasukan untuk upgrade City Hall level 1–25.</p>
+    <div class="stats"><div><strong>1–25</strong><span>Level City Hall</span></div><div><strong>4</strong><span>Jenis resource</span></div><div><strong>Live checklist</strong><span>Tandai progresmu</span></div></div>
+  </section>
+  <section class="panel">
+    <div class="tools">
+      <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Cari level atau bangunan..." aria-label="Cari level atau bangunan"></label>
+      <label class="filter-label" for="levelFilter">Tampilkan level</label>
+      <select id="levelFilter"><option value="all">Semua level</option><option value="early">Level 1–10</option><option value="mid">Level 11–20</option><option value="late">Level 21–25</option></select>
+      <button id="resetProgress" class="secondary" type="button">Reset checklist</button>
+    </div>
+    <p class="hint">Centang level yang sudah kamu selesaikan. Progres tersimpan di browser perangkat ini.</p>
+    <div class="progress"><div class="progress-top"><span>Progres upgrade</span><strong id="progressText">0 / 25 selesai</strong></div><div class="track"><div id="progressBar"></div></div></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Selesai</th><th>Level</th><th>Bangunan prasyarat</th><th>Biaya upgrade (Food · Wood · Stone)</th><th>Waktu dasar</th><th>Kapasitas pasukan</th></tr></thead>
+        <tbody id="requirementsRows"></tbody>
+      </table>
+    </div>
+    <div id="emptyState" class="empty hidden">Tidak ada level yang cocok dengan pencarianmu.</div>
+    <p class="disclaimer">Catatan: biaya dan waktu di atas adalah nilai dasar sebelum bonus kecepatan bangunan, bantuan aliansi, buff, atau item percepatan. Periksa persyaratan di dalam game sebelum memulai upgrade; data game dapat berubah.</p>
+  </section>
+  <section class="source-note">
+    <h2>Tips upgrade</h2>
+    <p>Prioritaskan bangunan yang menjadi prasyarat City Hall berikutnya. Untuk level tinggi, siapkan resource dan blueprint lebih awal. City Hall 25 tidak otomatis membuka pasukan T5; riset dan persyaratan bangunan lainnya tetap diperlukan.</p>
+    <p class="source">Referensi data: <a href="https://riseofkingdomsguides.com/rise-of-kingdoms-city-hall-requirements-and-cost/" target="_blank" rel="noopener">Rise of Kingdoms Guides — City Hall requirements and cost</a>.</p>
+  </section>
+</main>
+<footer>© <span data-current-year>2026</span> MATTHEW JOKI · THE DRAGON GUARDS THIS KINGDOM</footer>
+</body>
+</html>
