@@ -1,425 +1,226 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050b1d">
-<title>Matthew | Official Website</title>
-<meta name="description" content="Website resmi Matthew Joki. Layanan joki profesional sejak Januari 2025.">
+<title>Matthew Joki | Official Website</title>
+<meta name="description" content="Matthew Joki — layanan joki profesional sejak Januari 2025.">
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root {
-  --navy: #050b1d;
-  --blue: #102d69;
-  --gold: #d9b76e;
-  --white: #f5f5f5;
+  --navy:#050b1d;
+  --blue:#102d69;
+  --gold:#d9b76e;
+  --white:#f5f5f5;
 }
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html { scroll-behavior: smooth; }
-
+* {margin:0;padding:0;box-sizing:border-box}
+html {scroll-behavior:smooth}
 body {
-  font-family: 'Poppins', sans-serif;
-  color: var(--white);
-  background: var(--navy);
-  overflow-x: hidden;
+  font-family:Poppins,sans-serif;
+  color:var(--white);
+  background:var(--navy);
+  min-height:100vh;
+  overflow-x:hidden;
 }
-
-/* BACKGROUND BERGERAK */
 .background {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
+  position:fixed;inset:0;z-index:-3;
   background:
-    radial-gradient(ellipse at 20% 20%, #173b79 0%, transparent 45%),
-    radial-gradient(ellipse at 80% 80%, #18234e 0%, transparent 45%),
-    linear-gradient(135deg, #030817, #0b1b3b, #050b1d);
-  background-size: 200% 200%;
-  animation: bgMove 12s ease infinite;
+    radial-gradient(ellipse at 20% 20%,#173b79 0%,transparent 45%),
+    radial-gradient(ellipse at 80% 80%,#18234e 0%,transparent 45%),
+    linear-gradient(135deg,#030817,#0b1b3b,#050b1d);
+  background-size:200% 200%;
+  animation:bgMove 13s ease infinite;
 }
-
 @keyframes bgMove {
-  0%,100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,100%{background-position:0 50%}
+  50%{background-position:100% 50%}
 }
-
 .orb {
-  position: fixed;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: #2866d5;
-  filter: blur(110px);
-  opacity: .18;
-  z-index: -1;
-  animation: float 10s ease-in-out infinite alternate;
+  position:fixed;width:280px;height:280px;border-radius:50%;
+  background:#2866d5;filter:blur(110px);opacity:.2;
+  z-index:-2;animation:float 10s ease-in-out infinite alternate;
 }
-
-.orb.one { top: 10%; left: -100px; }
-.orb.two { bottom: 5%; right: -100px; animation-delay: 2s; }
-
+.orb.one{top:10%;left:-100px}
+.orb.two{bottom:5%;right:-100px;animation-delay:2s}
 @keyframes float {
-  from { transform: translate(0,0); }
-  to { transform: translate(100px,80px); }
+  to{transform:translate(100px,80px)}
 }
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none}
+h1,h2,h3,.brand{font-family:Cinzel,serif}
+button,input{font-family:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
 
-#particles {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
+/* LOGIN AND REGISTER */
+.auth-wrap {
+  min-height:100vh;display:flex;align-items:center;
+  justify-content:center;padding:22px;
 }
-
-/* LOGIN */
-#loginPage {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 25px;
+.auth-card {
+  width:100%;max-width:430px;padding:38px 30px;
+  text-align:center;border:1px solid #d9b76e66;
+  border-radius:22px;background:#050c20c9;
+  backdrop-filter:blur(18px);
+  box-shadow:0 0 55px #1955be33;
+  animation:appear 1s ease both;
 }
-
-.login-box {
-  width: 100%;
-  max-width: 410px;
-  padding: 45px 32px;
-  text-align: center;
-  border: 1px solid rgba(217,183,110,.4);
-  border-radius: 22px;
-  background: rgba(5,12,32,.72);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 0 50px rgba(25,85,190,.2);
-  animation: appear 1.2s ease both;
-}
-
 @keyframes appear {
-  from { opacity: 0; transform: translateY(35px) scale(.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from{opacity:0;transform:translateY(30px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
 }
-
-.crown {
-  font-size: 40px;
-  color: var(--gold);
-  margin-bottom: 12px;
+.crown{font-size:39px;color:var(--gold);margin-bottom:10px}
+.auth-card h1{font-size:29px;letter-spacing:3px;color:var(--gold)}
+.subtitle{font-size:10px;letter-spacing:4px;color:#b9c5df;margin:10px 0 27px}
+.field{margin:13px 0}
+.field input {
+  width:100%;padding:14px 15px;border-radius:10px;
+  border:1px solid #d9b76e55;background:#ffffff0c;
+  color:white;outline:none;transition:.3s;
 }
-
-h1, h2, .brand {
-  font-family: 'Cinzel', serif;
+.field input:focus{border-color:var(--gold);box-shadow:0 0 15px #d9b76e33}
+.primary {
+  width:100%;padding:14px;border:0;border-radius:10px;
+  color:#10182b;font-weight:700;
+  background:linear-gradient(110deg,#b68b42,#f4dda0,#b68b42);
+  background-size:200%;transition:.3s;
 }
-
-.login-box h1 {
-  font-size: 29px;
-  letter-spacing: 3px;
-  color: var(--gold);
+.primary:hover{background-position:right;transform:translateY(-2px);box-shadow:0 5px 25px #d9b76e44}
+.switch {
+  margin-top:20px;color:#c8d4e9;font-size:12px;
 }
-
-.subtitle {
-  font-size: 11px;
-  letter-spacing: 4px;
-  color: #b9c5df;
-  margin: 10px 0 30px;
+.switch button {
+  border:0;background:none;color:var(--gold);
+  text-decoration:underline;font-size:12px;
 }
+.message{font-size:12px;line-height:1.7;margin-top:14px;min-height:18px;color:#f4d58d}
+.note{font-size:10px;color:#9eabc4;margin-top:18px;line-height:1.7}
 
-.input-group { margin-bottom: 17px; }
-
-.input-group input {
-  width: 100%;
-  padding: 15px 17px;
-  border-radius: 10px;
-  border: 1px solid rgba(217,183,110,.35);
-  background: rgba(255,255,255,.06);
-  color: white;
-  outline: none;
-  font-family: inherit;
-  transition: .3s;
-}
-
-.input-group input:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 15px rgba(217,183,110,.2);
-}
-
-button, .gold-button {
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-  font-weight: 600;
-}
-
-.login-button {
-  width: 100%;
-  padding: 15px;
-  border-radius: 10px;
-  color: #10182b;
-  background: linear-gradient(110deg, #b68b42, #f4dda0, #b68b42);
-  background-size: 200%;
-  transition: .4s;
-}
-
-.login-button:hover {
-  background-position: right;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 25px rgba(217,183,110,.3);
-}
-
-#error {
-  color: #ff8c8c;
-  font-size: 12px;
-  margin-top: 15px;
-  min-height: 18px;
-}
-
-/* WEBSITE UTAMA */
-#mainPage { display: none; }
-
+/* MAIN WEBSITE */
+#mainPage{display:none}
 nav {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 19px 8%;
-  background: rgba(3,9,25,.85);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(217,183,110,.18);
+  position:sticky;top:0;z-index:10;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 8%;background:#030919dd;
+  backdrop-filter:blur(15px);border-bottom:1px solid #d9b76e33;
 }
-
-.brand {
-  color: var(--gold);
-  letter-spacing: 2px;
-  font-size: 20px;
+.brand{font-size:20px;color:var(--gold);letter-spacing:2px}
+.navlinks{display:flex;align-items:center;gap:20px}
+nav a,.logout {
+  color:#dce4f6;text-decoration:none;font-size:12px;
+  background:none;border:0;transition:.3s;
 }
-
-nav a {
-  color: #dce4f6;
-  text-decoration: none;
-  font-size: 13px;
-  margin-left: 23px;
-  transition: .3s;
-}
-
-nav a:hover { color: var(--gold); }
-
+nav a:hover,.logout:hover{color:var(--gold)}
 .hero {
-  min-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 80px 20px;
+  min-height:80vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:75px 20px;
 }
-
-.eyebrow {
-  color: var(--gold);
-  letter-spacing: 5px;
-  font-size: 12px;
-  margin-bottom: 20px;
-}
-
+.eyebrow{color:var(--gold);letter-spacing:5px;font-size:11px;margin-bottom:20px}
 .hero h1 {
-  font-size: clamp(42px, 8vw, 85px);
-  letter-spacing: 5px;
-  color: white;
-  text-shadow: 0 0 35px rgba(60,120,255,.3);
-  animation: glow 3s infinite alternate;
+  font-size:clamp(42px,8vw,82px);letter-spacing:5px;
+  animation:glow 3s infinite alternate;
 }
-
 @keyframes glow {
-  from { text-shadow: 0 0 15px #244d94; }
-  to { text-shadow: 0 0 40px #477bd4; }
+  from{text-shadow:0 0 15px #244d94}
+  to{text-shadow:0 0 40px #477bd4}
 }
-
-.hero p {
-  max-width: 650px;
-  line-height: 2;
-  color: #bdc9df;
-  margin: 25px auto 30px;
-  font-size: 14px;
+.hero p,.card p {
+  max-width:680px;color:#bdc9df;line-height:2;
+  font-size:14px;margin:22px auto;
 }
-
-.gold-button {
-  display: inline-block;
-  padding: 14px 27px;
-  border-radius: 30px;
-  background: linear-gradient(110deg, #a77b35, #f0d58f);
-  color: #10182b;
-  text-decoration: none;
-  transition: .3s;
+.gold-button,.whatsapp {
+  display:inline-block;padding:14px 27px;border-radius:30px;
+  text-decoration:none;font-weight:600;transition:.3s;
 }
-
-.gold-button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(217,183,110,.25);
-}
-
-section.content {
-  padding: 85px 8%;
-  text-align: center;
-}
-
-.section-title {
-  color: var(--gold);
-  font-size: clamp(27px, 5vw, 40px);
-  margin-bottom: 17px;
-}
-
-.line {
-  width: 65px;
-  height: 2px;
-  margin: 0 auto 35px;
-  background: var(--gold);
-}
-
+.gold-button{background:linear-gradient(110deg,#a77b35,#f0d58f);color:#10182b}
+.gold-button:hover,.whatsapp:hover{transform:translateY(-4px);box-shadow:0 8px 25px #d9b76e44}
+section.content{padding:75px 8%;text-align:center}
+.section-title{color:var(--gold);font-size:clamp(26px,5vw,39px);margin-bottom:17px}
+.line{width:65px;height:2px;background:var(--gold);margin:0 auto 35px}
 .card {
-  max-width: 780px;
-  margin: auto;
-  padding: 38px;
-  border: 1px solid rgba(217,183,110,.25);
-  border-radius: 18px;
-  background: rgba(255,255,255,.045);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 15px 45px rgba(0,0,0,.15);
-  transition: .4s;
+  max-width:790px;margin:auto;padding:35px;
+  border:1px solid #d9b76e44;border-radius:18px;
+  background:#ffffff0a;backdrop-filter:blur(12px);
+  transition:.4s;
 }
-
-.card:hover {
-  transform: translateY(-7px);
-  border-color: var(--gold);
-}
-
-.card h3 {
-  color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: 23px;
-  margin-bottom: 18px;
-}
-
-.card p {
-  color: #c5cee0;
-  line-height: 2;
-  font-size: 14px;
-}
-
-.info {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 25px;
-}
-
+.card:hover{transform:translateY(-6px);border-color:var(--gold)}
+.card h3{color:var(--gold);font-size:22px;margin-bottom:15px}
+.info{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:22px}
 .info span {
-  padding: 10px 17px;
-  border: 1px solid rgba(217,183,110,.3);
-  border-radius: 30px;
-  color: var(--gold);
-  font-size: 12px;
+  padding:9px 16px;border:1px solid #d9b76e55;
+  border-radius:30px;color:var(--gold);font-size:11px;
 }
+.whatsapp{background:#168b57;color:white;margin-top:15px}
+.member-panel{max-width:790px;margin:0 auto 30px;text-align:left}
+.member-panel h3{color:var(--gold);margin-bottom:15px}
+.member-panel p{color:#c5cee0;font-size:13px;line-height:1.8}
+.member-list{width:100%;border-collapse:collapse;margin-top:15px;font-size:12px}
+.member-list th,.member-list td{padding:12px 8px;border-bottom:1px solid #ffffff22;text-align:left;overflow-wrap:anywhere}
+.member-list th{color:var(--gold)}
+footer{text-align:center;padding:28px 15px;color:#8491aa;font-size:11px;border-top:1px solid #d9b76e22}
+.reveal{opacity:0;transform:translateY(30px);transition:.8s}
+.reveal.show{opacity:1;transform:translateY(0)}
 
-.contact-card { max-width: 600px; }
-
-.whatsapp {
-  display: inline-block;
-  margin-top: 25px;
-  padding: 15px 28px;
-  border-radius: 30px;
-  background: #168b57;
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  transition: .3s;
-}
-
-.whatsapp:hover {
-  background: #20ad70;
-  transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(32,173,112,.3);
-}
-
-footer {
-  text-align: center;
-  padding: 28px 15px;
-  color: #8491aa;
-  font-size: 11px;
-  border-top: 1px solid rgba(217,183,110,.15);
-}
-
-/* ANIMASI SCROLL */
-.reveal {
-  opacity: 0;
-  transform: translateY(35px);
-  transition: opacity .9s ease, transform .9s ease;
-}
-
-.reveal.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media(max-width:650px) {
-  nav {
-    padding: 16px 5%;
-    flex-direction: column;
-    gap: 13px;
-  }
-
-  nav a { margin: 0 7px; font-size: 11px; }
-  .hero { min-height: 78vh; }
-  .hero h1 { letter-spacing: 2px; }
-  section.content { padding: 65px 6%; }
-  .card { padding: 27px 20px; }
+@media(max-width:650px){
+  nav{padding:15px 5%;flex-direction:column;gap:13px}
+  .navlinks{gap:13px;flex-wrap:wrap;justify-content:center}
+  nav a,.logout{font-size:11px}
+  .hero h1{letter-spacing:2px}
+  section.content{padding:60px 6%}
+  .card{padding:25px 18px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="background"></div>
 <div class="orb one"></div>
 <div class="orb two"></div>
 <canvas id="particles"></canvas>
 
-<!-- LOGIN -->
-<div id="loginPage">
-  <div class="login-box">
+<!-- LOGIN / REGISTER -->
+<div id="authPage" class="auth-wrap">
+  <div class="auth-card">
     <div class="crown">♛</div>
     <h1>MATTHEW</h1>
     <div class="subtitle">PRIVATE ACCESS</div>
 
-    <form id="loginForm">
-      <div class="input-group">
-        <input id="username" type="text" placeholder="Masukkan nama" required>
+    <form id="authForm">
+      <div id="nameField" class="field hidden">
+        <input id="fullName" type="text" placeholder="Nama lengkap" autocomplete="name">
       </div>
-
-      <div class="input-group">
-        <input id="password" type="password" placeholder="Masukkan password" required>
+      <div class="field">
+        <input id="email" type="email" placeholder="Alamat email" required autocomplete="email">
       </div>
-
-      <button class="login-button" type="submit">ENTER WEBSITE</button>
+      <div class="field">
+        <input id="password" type="password" placeholder="Password (minimal 6 karakter)" required minlength="6" autocomplete="current-password">
+      </div>
+      <button id="submitBtn" class="primary" type="submit">LOGIN</button>
     </form>
 
-    <div id="error"></div>
+    <div id="authMessage" class="message" role="status"></div>
+    <div class="switch">
+      <span id="switchText">Belum punya akun?</span>
+      <button id="switchMode" type="button">Register</button>
+    </div>
+    <div class="note">MATTHEW JOKI · OFFICIAL WEBSITE</div>
   </div>
 </div>
 
-<!-- WEBSITE -->
+<!-- MAIN WEBSITE -->
 <div id="mainPage">
-
   <nav>
     <div class="brand">MATTHEW.</div>
-    <div>
+    <div class="navlinks">
       <a href="#about">About</a>
       <a href="#service">Service</a>
       <a href="#contact">Contact</a>
+      <button class="logout" id="logoutBtn">Logout</button>
     </div>
   </nav>
 
@@ -427,10 +228,8 @@ footer {
     <div class="eyebrow">WELCOME TO MY PERSONAL WEBSITE</div>
     <h1>MATTHEW</h1>
     <p>
-      Setiap perjalanan memiliki cerita.
-      Setiap usaha memiliki tujuan.
-      Dan setiap pencapaian dimulai dari keberanian
-      untuk terus melangkah.
+      Setiap perjalanan memiliki cerita. Setiap usaha memiliki tujuan.
+      Dan setiap pencapaian dimulai dari keberanian untuk terus melangkah.
       Selamat datang di ruang personal saya.
     </p>
     <a href="#about" class="gold-button">EXPLORE MORE</a>
@@ -440,14 +239,12 @@ footer {
     <div class="eyebrow">GET TO KNOW ME</div>
     <h2 class="section-title">About Matthew</h2>
     <div class="line"></div>
-
     <div class="card">
       <h3>A Little About Me</h3>
       <p>
         Halo, saya Matthew. Selamat datang di website personal saya.
         Saya percaya bahwa kesuksesan tidak datang secara instan,
-        melainkan melalui proses, konsistensi, dan kemauan untuk
-        terus berkembang.
+        melainkan melalui proses, konsistensi, dan kemauan untuk terus berkembang.
         <br><br>
         Bagi saya, setiap pengalaman adalah kesempatan untuk belajar,
         setiap tantangan adalah kesempatan untuk bertumbuh,
@@ -462,7 +259,6 @@ footer {
     <div class="eyebrow">OUR JOURNEY</div>
     <h2 class="section-title">Matthew Joki</h2>
     <div class="line"></div>
-
     <div class="card">
       <h3>Professional Joki Service</h3>
       <p>
@@ -470,10 +266,9 @@ footer {
         hingga saat ini sebagai layanan joki profesional.
         <br><br>
         Dengan mengutamakan kualitas, tanggung jawab, konsistensi,
-        dan kepercayaan, Matthew Joki berkomitmen memberikan
-        pelayanan terbaik kepada setiap pelanggan.
+        dan kepercayaan, Matthew Joki berkomitmen memberikan pelayanan
+        terbaik kepada setiap pelanggan.
       </p>
-
       <div class="info">
         <span>EST. JANUARY 2025</span>
         <span>PROFESSIONAL SERVICE</span>
@@ -482,22 +277,49 @@ footer {
     </div>
   </section>
 
+  <section class="content reveal" id="memberArea">
+    <div class="eyebrow">YOUR ACCOUNT</div>
+    <h2 class="section-title">Member Area</h2>
+    <div class="line"></div>
+    <div class="card">
+      <h3 id="welcomeName">Welcome</h3>
+      <p id="accountEmail"></p>
+      <p id="accountRole"></p>
+    </div>
+  </section>
+
+  <section class="content reveal hidden" id="adminArea">
+    <div class="eyebrow">PRIVATE CONTROL PANEL</div>
+    <h2 class="section-title">Admin Dashboard</h2>
+    <div class="line"></div>
+    <div class="card member-panel">
+      <h3>Registered Members</h3>
+      <p>Daftar akun yang terdaftar di website Matthew.</p>
+      <div id="memberStatus" class="message">Memuat data...</div>
+      <div style="overflow-x:auto">
+        <table class="member-list">
+          <thead>
+            <tr><th>Nama</th><th>Email</th><th>Role</th></tr>
+          </thead>
+          <tbody id="memberRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <section class="content reveal" id="contact">
     <div class="eyebrow">LET'S CONNECT</div>
     <h2 class="section-title">Contact Matthew</h2>
     <div class="line"></div>
-
-    <div class="card contact-card">
+    <div class="card">
       <h3>Have Something to Discuss?</h3>
       <p>
-        Punya pertanyaan atau ingin mengetahui lebih lanjut
-        mengenai layanan Matthew Joki?
-        Silakan hubungi saya melalui WhatsApp.
+        Punya pertanyaan atau ingin mengetahui lebih lanjut mengenai
+        layanan Matthew Joki? Silakan hubungi saya melalui WhatsApp.
       </p>
-
       <a class="whatsapp"
-         href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20mengenai%20layanan%20Matthew%20Joki."
-         target="_blank" rel="noopener">
+        href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20mengenai%20layanan%20Matthew%20Joki."
+        target="_blank" rel="noopener">
         CONTACT VIA WHATSAPP
       </a>
     </div>
@@ -505,93 +327,271 @@ footer {
 
   <footer>
     © 2026 MATTHEW. ALL RIGHTS RESERVED.
-    <br><br>
-    DESIGNED WITH ELEGANCE.
+    <br><br>DESIGNED WITH ELEGANCE.
   </footer>
-
 </div>
 
 <script>
-// LOGIN DEMO - BUKAN AUTENTIKASI AMAN
-document.getElementById("loginForm").addEventListener("submit", function(e) {
+// SUPABASE CONFIGURATION
+const SUPABASE_URL = "https://aqiwrgnxwtphhwikqtmn.supabase.co";
+const SUPABASE_KEY = "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let isRegister = false;
+let currentUser = null;
+
+// ELEMENTS
+const authPage = document.getElementById("authPage");
+const mainPage = document.getElementById("mainPage");
+const authForm = document.getElementById("authForm");
+const authMessage = document.getElementById("authMessage");
+const nameField = document.getElementById("nameField");
+const submitBtn = document.getElementById("submitBtn");
+
+// SWITCH LOGIN / REGISTER
+document.getElementById("switchMode").addEventListener("click", () => {
+  isRegister = !isRegister;
+  nameField.classList.toggle("hidden", !isRegister);
+  document.getElementById("fullName").required = isRegister;
+  submitBtn.textContent = isRegister ? "CREATE ACCOUNT" : "LOGIN";
+  document.getElementById("switchText").textContent =
+    isRegister ? "Sudah punya akun?" : "Belum punya akun?";
+  document.getElementById("switchMode").textContent =
+    isRegister ? "Login" : "Register";
+  authMessage.textContent = "";
+});
+
+// LOGIN AND REGISTER
+authForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const user = document.getElementById("username").value.trim();
-  const pass = document.getElementById("password").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const fullName = document.getElementById("fullName").value.trim();
 
-  if (user.toLowerCase() === "admin" && pass === "admin") {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("mainPage").style.display = "block";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "PLEASE WAIT...";
+  authMessage.textContent = "";
 
-    window.scrollTo({top: 0, behavior: "smooth"});
-    revealObserver.observeAll();
-  } else {
-    document.getElementById("error").textContent =
-      "Nama atau password salah. Silakan coba lagi.";
+  try {
+    if (isRegister) {
+      if (!fullName) throw new Error("Masukkan nama lengkap.");
+
+      const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName },
+          emailRedirectTo: window.location.origin
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        authMessage.textContent = "Pendaftaran berhasil!";
+        await showDashboard(data.user);
+      } else {
+        authMessage.textContent =
+          "Pendaftaran berhasil. Periksa email untuk konfirmasi sebelum login.";
+      }
+
+    } else {
+      const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      await showDashboard(data.user);
+    }
+
+  } catch (error) {
+    authMessage.textContent = error.message || "Terjadi kesalahan.";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = isRegister ? "CREATE ACCOUNT" : "LOGIN";
   }
 });
 
-// ANIMASI PARTIKEL
+// LOAD PROFILE AND CHECK ROLE FROM DATABASE
+async function showDashboard(user) {
+  const { data: profile, error } = await db
+    .from("profiles")
+    .select("id, full_name, role")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    throw new Error("Profil tidak dapat dimuat: " + error.message);
+  }
+
+  currentUser = user;
+
+  authPage.style.display = "none";
+  mainPage.style.display = "block";
+
+  document.getElementById("welcomeName").textContent =
+    "Welcome, " + (profile.full_name || "Matthew");
+
+  document.getElementById("accountEmail").textContent =
+    "Email: " + user.email;
+
+  document.getElementById("accountRole").textContent =
+    "Account type: " + profile.role.toUpperCase();
+
+  const adminArea = document.getElementById("adminArea");
+
+  if (profile.role === "admin") {
+    adminArea.classList.remove("hidden");
+    await loadMembers();
+  } else {
+    adminArea.classList.add("hidden");
+  }
+
+  observeReveals();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+// ADMIN: LOAD MEMBER LIST
+async function loadMembers() {
+  const status = document.getElementById("memberStatus");
+  const rows = document.getElementById("memberRows");
+
+  status.textContent = "Memuat data member...";
+  rows.replaceChildren();
+
+  const { data, error } = await db
+    .from("profiles")
+    .select("full_name, role, created_at")
+    .order("created_at", {ascending:false});
+
+  if (error) {
+    status.textContent = "Gagal memuat member: " + error.message;
+    return;
+  }
+
+  status.textContent = "Total akun: " + data.length;
+
+  data.forEach(member => {
+    const tr = document.createElement("tr");
+
+    [member.full_name || "-", member.role].forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    });
+
+    rows.appendChild(tr);
+  });
+}
+
+// LOGOUT
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  const { error } = await db.auth.signOut();
+
+  if (error) {
+    alert("Logout gagal: " + error.message);
+    return;
+  }
+
+  currentUser = null;
+  mainPage.style.display = "none";
+  authPage.style.display = "flex";
+  authForm.reset();
+  authMessage.textContent = "";
+  isRegister = false;
+  nameField.classList.add("hidden");
+  document.getElementById("fullName").required = false;
+  submitBtn.textContent = "LOGIN";
+  document.getElementById("switchText").textContent = "Belum punya akun?";
+  document.getElementById("switchMode").textContent = "Register";
+  window.scrollTo(0,0);
+});
+
+// RESTORE EXISTING SESSION
+async function initialize() {
+  const { data, error } = await db.auth.getSession();
+
+  if (error) {
+    authMessage.textContent = "Tidak dapat memeriksa sesi login.";
+    return;
+  }
+
+  if (data.session) {
+    try {
+      await showDashboard(data.session.user);
+    } catch (err) {
+      authMessage.textContent = err.message;
+    }
+  }
+}
+
+db.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT") {
+    currentUser = null;
+    mainPage.style.display = "none";
+    authPage.style.display = "flex";
+  }
+});
+
+initialize();
+
+// PARTICLE ANIMATION
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
-
 let particles = [];
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-for (let i = 0; i < 65; i++) {
+for (let i=0; i<65; i++) {
   particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 2 + .5,
-    speed: Math.random() * .5 + .15,
-    opacity: Math.random() * .6 + .2
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    size:Math.random()*2+0.5,
+    speed:Math.random()*0.5+0.15,
+    opacity:Math.random()*0.6+0.2
   });
 }
 
 function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
   particles.forEach(p => {
     p.y -= p.speed;
-
     if (p.y < -5) {
       p.y = canvas.height + 5;
-      p.x = Math.random() * canvas.width;
+      p.x = Math.random()*canvas.width;
     }
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
     ctx.fillStyle = `rgba(220,195,130,${p.opacity})`;
     ctx.fill();
   });
 
   requestAnimationFrame(animateParticles);
 }
-
 animateParticles();
 
-// ANIMASI SCROLL
-const revealObserver = {
-  observeAll: function() {
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-  }
-};
-
+// SCROLL ANIMATION
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("show");
-    }
+    if (entry.isIntersecting) entry.target.classList.add("show");
   });
-}, {threshold: .12});
+},{threshold:0.1});
 
+function observeReveals() {
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+}
 </script>
 </body>
 </html>
+```
