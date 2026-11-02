@@ -1,7 +1,7 @@
-```css
+
 /* =========================================
    MATTHEW JOKI - DRAGON KINGDOM
-   CSS disesuaikan dengan index.html
+   FINAL CSS
 ========================================= */
 
 :root {
@@ -91,9 +91,11 @@ input {
     transform: translateY(0) scale(.5);
     opacity: 0;
   }
+
   15% {
     opacity: .9;
   }
+
   100% {
     transform: translateY(-105vh) scale(1.5);
     opacity: 0;
@@ -689,4 +691,3 @@ footer {
     padding: 28px 22px;
   }
 }
-```
