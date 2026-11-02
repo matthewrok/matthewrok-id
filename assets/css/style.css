@@ -12,8 +12,8 @@
   --red-light: #e43a20;
   --orange: #ff7628;
   --gold: #e9bd65;
-  --text: #f7ead7;
-  --muted: #c2ad9b;
+  --text: #fff3e5;
+  --muted: #d6c1af;
   --border: rgba(233, 189, 101, .3);
 }
 
@@ -91,11 +91,9 @@ input {
     transform: translateY(0) scale(.5);
     opacity: 0;
   }
-
   15% {
     opacity: .9;
   }
-
   100% {
     transform: translateY(-105vh) scale(1.5);
     opacity: 0;
@@ -349,16 +347,16 @@ header {
   background:
     linear-gradient(
       90deg,
-      rgba(10, 5, 4, .96) 0%,
-      rgba(10, 5, 4, .72) 40%,
-      rgba(10, 5, 4, .12) 100%
+      rgba(10, 5, 4, .88) 0%,
+      rgba(10, 5, 4, .58) 40%,
+      rgba(10, 5, 4, .10) 100%
     ),
     linear-gradient(
       0deg,
       #100907 0%,
       transparent 35%
     ),
-    url("../images/dragon-kingdom.png") center 38% / cover no-repeat;
+    url("../../dragon-kingdom.png") center 38% / cover no-repeat;
   transform: scale(1.02);
 }
 
@@ -371,7 +369,7 @@ header {
 
 .welcome-text {
   margin-top: 20px;
-  color: var(--muted);
+  color: #e5cbb5;
   font-size: 15px;
   letter-spacing: 5px;
 }
@@ -388,7 +386,7 @@ header {
 .hero-description {
   max-width: 490px;
   margin-bottom: 30px;
-  color: #f0dcca;
+  color: #fff0df;
   font-size: 16px;
 }
 
@@ -433,7 +431,7 @@ header {
 }
 
 .feature-card p {
-  color: var(--muted);
+  color: #dfc9b7;
   font-size: 14px;
 }
 
@@ -485,7 +483,7 @@ header {
 }
 
 .royal-card p {
-  color: var(--muted);
+  color: #dfc9b7;
   font-size: 15px;
 }
 
@@ -619,10 +617,10 @@ footer {
       linear-gradient(
         180deg,
         rgba(10, 5, 4, .12) 0%,
-        rgba(10, 5, 4, .65) 55%,
+        rgba(10, 5, 4, .58) 55%,
         #100907 100%
       ),
-      url("../images/dragon-kingdom.png") center center / cover no-repeat;
+      url("../../dragon-kingdom.png") center center / cover no-repeat;
   }
 
   .hero-content {
