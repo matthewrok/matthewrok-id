@@ -12,8 +12,8 @@ body {
   min-height: 100vh;
   padding: 25px 16px;
   background:
-    radial-gradient(circle at top, #342044, #10101c 65%);
-  color: #f5f0ff;
+    radial-gradient(circle at top, #3b170f, #100907 65%);
+  color: #fff3e5;
   font-family: Arial, sans-serif;
 }
 
