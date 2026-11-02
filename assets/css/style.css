@@ -958,3 +958,160 @@ footer {
     font-size: 13px;
   }
 }
+
+
+/* =========================================
+   CRIMSON SERPENT REDESIGN
+   Elegant red + premium gaming + royal fantasy
+========================================= */
+:root {
+  --bg: #120305;
+  --panel: #210609;
+  --panel-light: #33090f;
+  --red: #8f1020;
+  --red-light: #df2438;
+  --orange: #ff6b68;
+  --gold: #e9c98a;
+  --text: #fff4f1;
+  --muted: #d8bfc0;
+  --border: rgba(233, 201, 138, .28);
+}
+body {
+  background: #120305;
+}
+.bg {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(155, 12, 32, .58), transparent 52%),
+    radial-gradient(ellipse at 100% 65%, rgba(93, 5, 22, .32), transparent 42%),
+    #120305;
+}
+.auth-screen {
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(173, 14, 39, .62), transparent 48%),
+    linear-gradient(145deg, #190306, #090103 78%);
+}
+.auth-card,
+.royal-card,
+.feature-card,
+.admin-panel .table-wrapper {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.auth-card {
+  border-color: rgba(233, 201, 138, .45);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(48, 7, 15, .97), rgba(17, 3, 7, .98));
+  box-shadow: 0 28px 90px rgba(0,0,0,.55), 0 0 45px rgba(177, 12, 38, .14);
+}
+.auth-card::before,
+.feature-card::before,
+.royal-card::before {
+  content: "蛇";
+  position: absolute;
+  z-index: -1;
+  top: 7px;
+  left: -30px;
+  color: rgba(255, 88, 103, .8);
+  font-family: serif;
+  font-size: 18px;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(255, 50, 76, .8);
+  animation: serpentGlide 12s linear infinite;
+  pointer-events: none;
+}
+.feature-card::before { top: 8px; animation-duration: 10s; }
+.royal-card::before { top: 8px; animation-duration: 14s; }
+@keyframes serpentGlide {
+  0% { left: -24px; transform: rotate(0deg) scale(.85); opacity: 0; }
+  8% { opacity: .95; }
+  48% { transform: rotate(8deg) scale(1); }
+  92% { opacity: .95; }
+  100% { left: calc(100% + 12px); transform: rotate(0deg) scale(.85); opacity: 0; }
+}
+header {
+  background: rgba(15, 2, 6, .94);
+  border-bottom-color: rgba(233, 201, 138, .25);
+  box-shadow: 0 8px 30px rgba(0,0,0,.2);
+}
+.brand, .brand-icon, .auth-card h1, .section-title, .feature-card h2,
+.royal-card h3, .admin-panel h2 {
+  color: var(--gold);
+}
+.nav-links a:hover { color: #ff6674; }
+.hero {
+  min-height: 760px;
+  align-items: center;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 34%, rgba(207, 21, 48, .44), transparent 38%),
+    radial-gradient(ellipse at 50% 100%, rgba(83, 5, 22, .7), transparent 56%),
+    linear-gradient(145deg, #31050d 0%, #170307 55%, #090103 100%);
+}
+.hero-image { display: none; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border: 1px solid rgba(233, 201, 138, .17);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.hero::after {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(255, 70, 88, .14), transparent 42%),
+    linear-gradient(90deg, transparent, rgba(233, 201, 138, .025), transparent);
+}
+.hero-content {
+  width: min(900px, 90%);
+  padding: 100px 0;
+}
+.hero .eyebrow {
+  color: #ff9298;
+  border-color: rgba(233, 201, 138, .38);
+}
+.welcome-text { color: #f0c7c7; }
+.hero h1 {
+  color: #fff0d9;
+  font-size: clamp(58px, 10vw, 112px);
+  text-shadow: 0 5px 0 #560817, 0 0 42px rgba(255, 45, 73, .35);
+}
+.hero-description { margin-inline: auto; }
+.btn-gold {
+  border-color: #f0d6a0;
+  background: linear-gradient(135deg, #f2d8a2, #b77b45);
+}
+.feature-card, .royal-card {
+  background:
+    linear-gradient(145deg, rgba(64, 9, 19, .96), rgba(20, 3, 8, .98));
+  border-color: rgba(233, 201, 138, .27);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.22);
+}
+.feature-card:hover, .royal-card:hover {
+  border-color: rgba(255, 93, 111, .8);
+  box-shadow: 0 16px 45px rgba(153, 9, 34, .22);
+}
+.feature-icon, .feature-link, .eyebrow { color: #ff7c87; }
+.line { background: linear-gradient(90deg, transparent, #a8132c, #e9c98a, #a8132c, transparent); }
+.pill { border-color: rgba(233, 201, 138, .35); }
+.wa {
+  background: linear-gradient(135deg, #a8122a, #570817);
+  border-color: rgba(233, 201, 138, .65);
+}
+footer { background: #090103; }
+.ember { background: #ff5268; box-shadow: 0 0 12px 3px rgba(255, 50, 80, .5); }
+@media (max-width: 850px) {
+  .hero { min-height: 650px; align-items: center; }
+  .hero-content { padding: 100px 0; }
+}
+@media (max-width: 600px) {
+  .hero { min-height: 620px; }
+  .hero-content { padding: 75px 0; }
+  .hero::before { inset: 12px; }
+  .hero h1 { font-size: clamp(46px, 13vw, 66px); }
+  .auth-card { padding: 28px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-card::before, .feature-card::before, .royal-card::before { animation: none; }
+}
