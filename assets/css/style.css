@@ -1,7 +1,8 @@
 
 /* =========================================
    MATTHEW JOKI - DRAGON KINGDOM
-   FINAL CSS
+   FINAL DESIGN
+   Dragon image: ../../dragon-character.png
 ========================================= */
 
 :root {
@@ -25,6 +26,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px;
 }
 
 body {
@@ -44,6 +46,10 @@ a {
 button,
 input {
   font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 .hidden {
@@ -91,9 +97,11 @@ input {
     transform: translateY(0) scale(.5);
     opacity: 0;
   }
+
   15% {
     opacity: .9;
   }
+
   100% {
     transform: translateY(-105vh) scale(1.5);
     opacity: 0;
@@ -132,6 +140,11 @@ h3,
   font-weight: 600;
   letter-spacing: 1px;
   transition: .25s ease;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: wait;
 }
 
 .btn-gold {
@@ -328,92 +341,89 @@ header {
   font-size: 12px;
 }
 
-/* HERO */
+/* =========================================
+   DRAGON KINGDOM HERO
+========================================= */
 
 .hero {
   position: relative;
-  min-height: 680px;
+  min-height: 760px;
   display: flex;
   align-items: center;
   overflow: hidden;
   isolation: isolate;
-  background: #160a07;
+  background:
+    radial-gradient(ellipse at 78% 45%, #54200f 0%, transparent 48%),
+    #100907;
 }
 
-/* DRAGON HERO - LARGE CHARACTER */
-
-.hero {
-  min-height: 760px;
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
+/* Dragon artwork */
 
 .hero-image {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
+  pointer-events: none;
 
   background-image:
     linear-gradient(
       90deg,
-      rgba(10, 5, 4, .92) 0%,
-      rgba(10, 5, 4, .55) 32%,
-      rgba(10, 5, 4, .05) 70%
+      rgba(10, 5, 4, .94) 0%,
+      rgba(10, 5, 4, .78) 25%,
+      rgba(10, 5, 4, .32) 52%,
+      rgba(10, 5, 4, .04) 78%
     ),
     linear-gradient(
       0deg,
       #100907 0%,
-      transparent 35%
+      rgba(16, 9, 7, .15) 35%,
+      transparent 70%
     ),
     url("../../dragon-character.png");
 
   background-repeat: no-repeat;
-  background-size: cover, cover, auto 115%;
-  background-position: center, center, 75% center;
+  background-size:
+    cover,
+    cover,
+    auto 118%;
 
-  transform: scale(1.02);
+  background-position:
+    center,
+    center,
+    88% center;
+
+  filter: saturate(1.12) contrast(1.06);
+}
+
+/* Warm dragon glow */
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at 78% 48%,
+      rgba(255, 91, 22, .15),
+      transparent 38%
+    );
+  mix-blend-mode: screen;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 550px;
-  padding-top: 70px;
+  max-width: 1120px;
+  width: 88%;
+  margin-inline: auto;
+  padding-top: 75px;
   padding-bottom: 90px;
 }
 
-/* MOBILE */
-
-@media (max-width: 850px) {
-  .hero {
-    min-height: 720px;
-  }
-
-  .hero-image {
-    background-image:
-      linear-gradient(
-        0deg,
-        #100907 0%,
-        rgba(10, 5, 4, .3) 55%,
-        rgba(10, 5, 4, .1) 100%
-      ),
-      url("../../dragon-kingdom.png");
-
-    background-size: cover, auto 75%;
-    background-position: center, 65% top;
-  }
-
-  .hero-content {
-    padding-top: 350px;
-  }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  padding-top: 70px;
-  padding-bottom: 90px;
+.hero .eyebrow {
+  text-shadow: 0 2px 12px #000;
 }
 
 .welcome-text {
@@ -429,7 +439,9 @@ header {
   font-size: clamp(55px, 9vw, 100px);
   line-height: 1.08;
   letter-spacing: 4px;
-  text-shadow: 0 5px 30px #000;
+  text-shadow:
+    0 5px 30px #000,
+    0 0 35px rgba(233, 189, 101, .18);
 }
 
 .hero-description {
@@ -437,6 +449,7 @@ header {
   margin-bottom: 30px;
   color: #fff0df;
   font-size: 16px;
+  text-shadow: 0 2px 10px #000;
 }
 
 /* KINGDOM FEATURE CARDS */
@@ -577,7 +590,9 @@ header {
 .reveal {
   opacity: 0;
   transform: translateY(25px);
-  transition: opacity .7s ease, transform .7s ease;
+  transition:
+    opacity .7s ease,
+    transform .7s ease;
 }
 
 .reveal.show {
@@ -643,7 +658,9 @@ footer {
   line-height: 2;
 }
 
-/* MOBILE */
+/* =========================================
+   TABLET
+========================================= */
 
 @media (max-width: 850px) {
   .nav {
@@ -658,25 +675,47 @@ footer {
   }
 
   .hero {
-    min-height: 650px;
+    min-height: 760px;
+    align-items: flex-start;
   }
 
   .hero-image {
-    background:
+    background-image:
       linear-gradient(
-        180deg,
-        rgba(10, 5, 4, .12) 0%,
-        rgba(10, 5, 4, .58) 55%,
-        #100907 100%
+        0deg,
+        #100907 0%,
+        rgba(10, 5, 4, .25) 48%,
+        rgba(10, 5, 4, .05) 100%
       ),
-      url("../../dragon-kingdom.png") center center / cover no-repeat;
+      url("../../dragon-character.png");
+
+    background-size:
+      cover,
+      auto 78%;
+
+    background-position:
+      center,
+      65% top;
+  }
+
+  .hero::after {
+    background:
+      radial-gradient(
+        ellipse at 65% 28%,
+        rgba(255, 91, 22, .12),
+        transparent 45%
+      );
   }
 
   .hero-content {
-    padding-top: 250px;
+    padding-top: 390px;
     padding-bottom: 70px;
   }
 }
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 600px) {
   .container {
@@ -701,18 +740,46 @@ footer {
   }
 
   .hero {
-    min-height: 620px;
+    min-height: 700px;
   }
 
   .hero-image {
-    background-position: 58% center;
+    background-image:
+      linear-gradient(
+        0deg,
+        #100907 0%,
+        rgba(10, 5, 4, .32) 48%,
+        rgba(10, 5, 4, .02) 100%
+      ),
+      url("../../dragon-character.png");
+
+    background-size:
+      cover,
+      auto 68%;
+
+    background-position:
+      center,
+      62% top;
   }
 
   .hero-content {
-    padding-top: 240px;
+    padding-top: 335px;
+    padding-bottom: 65px;
+  }
+
+  .hero .eyebrow {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .welcome-text {
+    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: 4px;
   }
 
   .hero h1 {
+    margin: 10px 0 17px;
     font-size: 58px;
   }
 
@@ -736,5 +803,18 @@ footer {
 
   .auth-card {
     padding: 28px 22px;
+  }
+}
+
+/* REDUCE MOTION ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
   }
 }
