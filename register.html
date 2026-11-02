@@ -1,1 +1,40 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100907">
+  <meta name="description" content="Buat akun Matthew Joki — Dragon Kingdom.">
+  <title>Daftar | Matthew Joki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/supabase.js"></script>
+  <script defer src="assets/js/auth.js"></script>
+</head>
+<body>
+  <main class="auth-shell">
+    <a class="back-link" href="index.html">← Kembali ke beranda</a>
+    <section class="auth-container">
+      <div class="crown" aria-hidden="true">♛</div>
+      <p class="eyebrow">JOIN THE DRAGON KINGDOM</p>
+      <h1>BUAT AKUN</h1>
+      <p class="intro">Daftar untuk menjadi bagian dari komunitas Matthew Joki.</p>
+      <form id="registerForm" class="auth-form">
+        <label for="registerName">Nama lengkap</label>
+        <input id="registerName" name="name" type="text" placeholder="Nama kamu" autocomplete="name" maxlength="80" required>
+        <label for="registerEmail">Email</label>
+        <input id="registerEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
+        <label for="registerPassword">Password</label>
+        <input id="registerPassword" name="password" type="password" placeholder="Minimal 6 karakter" autocomplete="new-password" minlength="6" required>
+        <button id="registerButton" type="submit">BUAT AKUN</button>
+      </form>
+      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+      <p class="auth-link">Sudah punya akun? <a href="login.html">Login di sini</a></p>
+    </section>
+    <footer>© <span data-current-year>2026</span> MATTHEW JOKI · CREATOR: MATTHEW-raditya</footer>
+  </main>
+</body>
+</html>
