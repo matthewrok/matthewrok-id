@@ -2,262 +2,128 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#050b1d">
-<title>Matthew Joki | Official Website</title>
-<meta name="description" content="Website resmi Matthew dan Matthew Joki. Layanan joki profesional sejak Januari 2025.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100907">
+  <meta name="description" content="Matthew Joki — Dragon Kingdom, Rise of Kingdoms.">
+  <title>Matthew Joki | Dragon Kingdom</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-:root {
-  --navy:#050b1d;
-  --blue:#15366f;
-  --gold:#dfbd76;
-  --white:#f7f7fb;
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; }
-body {
-  font-family:Poppins,sans-serif;
-  background:var(--navy);
-  color:var(--white);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-#particles {
-  position:fixed; inset:0; z-index:-1; pointer-events:none;
-}
-.bg {
-  position:fixed; inset:0; z-index:-3;
-  background:
-    radial-gradient(ellipse at 15% 20%,#183e7c 0%,transparent 45%),
-    radial-gradient(ellipse at 85% 80%,#252c62 0%,transparent 45%),
-    linear-gradient(135deg,#030817,#0c1b3a,#050b1d);
-  background-size:200% 200%;
-  animation:bgMove 14s ease infinite;
-}
-@keyframes bgMove {
-  0%,100% { background-position:0% 50%; }
-  50% { background-position:100% 50%; }
-}
-.orb {
-  position:fixed; width:300px; height:300px; border-radius:50%;
-  background:#2866d5; filter:blur(110px); opacity:.17; z-index:-2;
-  animation:float 12s ease-in-out infinite alternate;
-}
-.orb.a {top:5%;left:-130px}
-.orb.b {bottom:5%;right:-130px;animation-delay:2s}
-@keyframes float {
-  to {transform:translate(100px,80px)}
-}
-.hidden {display:none!important}
-.serif {font-family:Cinzel,serif}
-.gold {color:var(--gold)}
-.muted {color:#b9c5df;line-height:1.9}
-.container {width:min(1100px,90%);margin:auto}
-
-/* AUTH */
-#authScreen {
-  min-height:100vh; display:flex; align-items:center;
-  justify-content:center; padding:25px;
-}
-.auth-card {
-  width:100%;max-width:430px;padding:38px 30px;
-  border:1px solid #dfbd7655;border-radius:23px;
-  background:#07132bd9;backdrop-filter:blur(20px);
-  box-shadow:0 20px 80px #0007;
-  text-align:center;animation:appear 1s ease both;
-}
-@keyframes appear {
-  from {opacity:0;transform:translateY(35px) scale(.97)}
-  to {opacity:1;transform:translateY(0) scale(1)}
-}
-.crown {font-size:42px;color:var(--gold);margin-bottom:12px}
-.auth-card h1 {font:700 29px Cinzel,serif;letter-spacing:3px}
-.kicker {font-size:10px;letter-spacing:4px;color:#bdc9df;margin:10px 0 28px}
-.field {margin:13px 0;text-align:left}
-.field label {display:block;font-size:12px;color:#d9c18c;margin-bottom:7px}
-.field input {
-  width:100%;padding:14px 15px;border-radius:10px;
-  border:1px solid #dfbd7650;background:#ffffff0a;
-  color:white;outline:none;font:inherit;
-}
-.field input:focus {border-color:var(--gold);box-shadow:0 0 15px #dfbd7625}
-.btn {
-  border:0;border-radius:10px;padding:14px 20px;
-  font:600 13px Poppins,sans-serif;cursor:pointer;transition:.3s;
-}
-.btn-gold {
-  background:linear-gradient(110deg,#a77b35,#f2dda1,#b68b42);
-  background-size:200%;color:#10182b;
-}
-.btn-gold:hover {background-position:right;transform:translateY(-3px);box-shadow:0 8px 25px #dfbd7640}
-.btn-full {width:100%;margin-top:12px}
-.btn-outline {
-  border:1px solid #dfbd7680;color:var(--gold);
-  background:transparent;
-}
-.btn-outline:hover {background:#dfbd761a}
-.auth-switch {font-size:12px;color:#b9c5df;margin-top:20px}
-.auth-switch button {
-  background:none;border:0;color:var(--gold);cursor:pointer;
-  font:600 12px Poppins,sans-serif;
-}
-#authMessage {font-size:12px;line-height:1.7;margin-top:15px;min-height:20px}
-.success {color:#79e2aa}
-.error {color:#ff9292}
-
-/* MAIN */
-header {
-  position:sticky;top:0;z-index:5;
-  background:#03091de8;backdrop-filter:blur(15px);
-  border-bottom:1px solid #dfbd7625;
-}
-.nav {
-  min-height:72px;display:flex;align-items:center;
-  justify-content:space-between;gap:15px;
-}
-.brand {font:700 20px Cinzel,serif;color:var(--gold);letter-spacing:2px}
-.nav-links {display:flex;align-items:center;gap:22px}
-.nav a {color:#dce4f6;text-decoration:none;font-size:12px}
-.nav a:hover {color:var(--gold)}
-.nav-user {font-size:11px;color:#b9c5df}
-.hero {
-  min-height:75vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;padding:80px 20px;
-}
-.eyebrow {font-size:11px;letter-spacing:5px;color:var(--gold);margin-bottom:20px}
-.hero h1 {font:700 clamp(42px,9vw,88px) Cinzel,serif;letter-spacing:4px;animation:glow 3s infinite alternate}
-@keyframes glow {
-  from {text-shadow:0 0 12px #244d94}
-  to {text-shadow:0 0 40px #477bd4}
-}
-.hero p {max-width:670px;margin:24px auto 30px;font-size:14px;color:#bdc9df;line-height:2}
-.section {padding:85px 0;text-align:center}
-.section-title {font:600 clamp(27px,5vw,42px) Cinzel,serif;color:var(--gold)}
-.line {height:2px;width:65px;background:var(--gold);margin:20px auto 35px}
-.card {
-  max-width:800px;margin:auto;padding:35px;
-  border:1px solid #dfbd7640;border-radius:18px;
-  background:#ffffff08;backdrop-filter:blur(12px);
-  box-shadow:0 15px 45px #0003;transition:.4s;
-}
-.card:hover {transform:translateY(-6px);border-color:var(--gold)}
-.card h3 {font:600 23px Cinzel,serif;color:var(--gold);margin-bottom:18px}
-.card p {font-size:14px;line-height:2;color:#c5cee0}
-.pills {display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px}
-.pill {border:1px solid #dfbd7655;color:var(--gold);border-radius:30px;padding:9px 15px;font-size:11px}
-.wa {
-  display:inline-block;margin-top:25px;padding:14px 25px;
-  border-radius:30px;background:#168b57;color:white;
-  text-decoration:none;font-weight:600;font-size:13px;transition:.3s;
-}
-.wa:hover {background:#20ad70;transform:scale(1.04);box-shadow:0 0 25px #20ad7040}
-.reveal {opacity:0;transform:translateY(30px);transition:.8s}
-.reveal.show {opacity:1;transform:translateY(0)}
-footer {text-align:center;padding:28px 15px;color:#8491aa;font-size:11px;border-top:1px solid #dfbd7625}
-
-/* DASHBOARD */
-.dashboard {padding:45px 0 80px}
-.welcome {
-  padding:28px;border:1px solid #dfbd7640;border-radius:18px;
-  background:#ffffff08;margin-bottom:28px;
-}
-.welcome h2 {font:600 25px Cinzel,serif;color:var(--gold);margin-bottom:10px}
-.admin-panel {
-  padding:25px;border:1px solid #dfbd7640;border-radius:18px;
-  background:#ffffff08;margin-top:25px;overflow-x:auto;
-}
-.admin-panel h3 {font:600 20px Cinzel,serif;color:var(--gold);margin-bottom:18px}
-table {width:100%;border-collapse:collapse;text-align:left;font-size:12px}
-th,td {padding:13px;border-bottom:1px solid #ffffff17}
-th {color:var(--gold)}
-td {color:#dce4f6}
-.status {color:#79e2aa}
-.small {font-size:11px;color:#aab8d1}
-@media(max-width:650px) {
-  .nav {padding:14px 0;flex-direction:column}
-  .nav-links {gap:14px;flex-wrap:wrap;justify-content:center}
-  .nav a {font-size:11px}
-  .card {padding:25px 19px}
-  .section {padding:65px 0}
-  .hero h1 {letter-spacing:2px}
-  .auth-card {padding:32px 22px}
-}
-</style>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
-<div class="bg"></div>
-<div class="orb a"></div><div class="orb b"></div>
-<canvas id="particles"></canvas>
+  <div class="bg"></div>
+  <div class="embers" id="embers"></div>
 
-<!-- LOGIN / REGISTER -->
-<main id="authScreen">
-  <div class="auth-card">
-    <div class="crown">♛</div>
-    <h1>MATTHEW</h1>
-    <div class="kicker">PRIVATE MEMBER ACCESS</div>
+  <!-- LOGIN / REGISTER -->
+  <main id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="dragon-emblem">♛</div>
+      <h1>MATTHEW JOKI</h1>
+      <p class="creator">CREATOR: MATTHEW-raditya</p>
+      <p class="kicker">KINGDOM MEMBER ACCESS</p>
 
-    <form id="authForm">
-      <div id="nameField" class="field hidden">
-        <label>Nama lengkap</label>
-        <input id="fullName" type="text" placeholder="Nama kamu" autocomplete="name">
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input id="email" type="email" placeholder="nama@email.com" required autocomplete="email">
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input id="password" type="password" placeholder="Minimal 6 karakter" required minlength="6" autocomplete="current-password">
-      </div>
-      <button id="submitButton" class="btn btn-gold btn-full" type="submit">LOGIN</button>
-    </form>
+      <form id="authForm">
+        <div id="nameField" class="field hidden">
+          <label>Nama lengkap</label>
+          <input id="fullName" type="text" placeholder="Nama kamu" autocomplete="name">
+        </div>
 
-    <div id="authMessage" aria-live="polite"></div>
-    <div class="auth-switch">
-      <span id="switchText">Belum punya akun?</span>
-      <button id="switchMode" type="button">Daftar sekarang</button>
-    </div>
-  </div>
-</main>
+        <div class="field">
+          <label>Email</label>
+          <input id="email" type="email" placeholder="nama@email.com" required autocomplete="email">
+        </div>
 
-<!-- WEBSITE -->
-<div id="site" class="hidden">
-  <header>
-    <div class="container nav">
-      <div class="brand">MATTHEW.</div>
-      <div class="nav-links">
-        <a href="#about">About</a>
-        <a href="#service">Service</a>
-        <a href="#contact">Contact</a>
-        <span id="navUser" class="nav-user"></span>
-        <button id="logout" class="btn btn-outline">LOGOUT</button>
+        <div class="field">
+          <label>Password</label>
+          <input id="password" type="password" placeholder="Minimal 6 karakter" required minlength="6" autocomplete="current-password">
+        </div>
+
+        <button id="submitButton" class="btn btn-gold btn-full" type="submit">LOGIN</button>
+      </form>
+
+      <div id="authMessage" aria-live="polite"></div>
+
+      <div class="auth-switch">
+        <span id="switchText">Belum punya akun?</span>
+        <button id="switchMode" type="button">Daftar sekarang</button>
       </div>
     </div>
-  </header>
+  </main>
 
-  <section class="hero">
-    <div class="eyebrow">WELCOME TO MY PERSONAL WEBSITE</div>
-    <h1>MATTHEW</h1>
-    <p>
-      Setiap perjalanan memiliki cerita. Setiap usaha memiliki tujuan.
-      Setiap pencapaian dimulai dari keberanian untuk terus melangkah.
-      Selamat datang di ruang personal saya.
-    </p>
-    <a href="#about" class="btn btn-gold">EXPLORE MORE</a>
-  </section>
+  <!-- WEBSITE -->
+  <div id="site" class="hidden">
 
-  <div class="container">
-    <section id="about" class="section reveal">
-      <div class="eyebrow">GET TO KNOW ME</div>
-      <h2 class="section-title">About Matthew</h2>
+    <header>
+      <div class="container nav">
+        <a class="brand" href="#">
+          <span class="brand-icon">♛</span>
+          <span>
+            MATTHEW JOKI
+            <small>CREATOR: MATTHEW-raditya</small>
+          </span>
+        </a>
+
+        <nav class="nav-links">
+          <a href="#">HOME</a>
+          <a href="#about">ABOUT MATTHEW</a>
+          <a href="#service">MATTHEW JOKI</a>
+          <a href="calculator-resource.html">CALCULATOR</a>
+          <a href="requirements-city-hall.html">REQUIREMENTS</a>
+          <span id="navUser" class="nav-user"></span>
+          <button id="logout" class="btn btn-outline">LOGOUT</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-image"></div>
+      <div class="hero-content container">
+        <div class="eyebrow">THE DRAGON GUARDS THIS KINGDOM</div>
+        <p class="welcome-text">WELCOME TO</p>
+        <h1>MATTHEW<br>JOKI</h1>
+        <p class="hero-description">
+          A kingdom built with trust, strength, and dedication.
+          Welcome to the world of Matthew.
+        </p>
+        <a href="#about" class="btn btn-gold">ABOUT MATTHEW →</a>
+      </div>
+    </section>
+
+    <!-- KINGDOM FEATURES -->
+    <section class="container kingdom-section">
+      <div class="feature-grid">
+
+        <a class="feature-card" href="calculator-resource.html">
+          <div class="feature-icon">⚖</div>
+          <h2>TRADING POST TAX CALCULATOR</h2>
+          <p>Hitung pajak Trading Post dan ketahui jumlah resource yang diterima.</p>
+          <span class="feature-link">BUKA CALCULATOR →</span>
+        </a>
+
+        <a class="feature-card" href="requirements-city-hall.html">
+          <div class="feature-icon">♜</div>
+          <h2>CITY HALL REQUIREMENTS</h2>
+          <p>Lihat persyaratan upgrade City Hall Rise of Kingdoms level 1–25.</p>
+          <span class="feature-link">LIHAT REQUIREMENTS →</span>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section container reveal">
+      <div class="eyebrow">THE STORY BEHIND THE KINGDOM</div>
+      <h2 class="section-title">ABOUT MATTHEW</h2>
       <div class="line"></div>
-      <div class="card">
-        <h3>A Little About Me</h3>
+
+      <div class="royal-card">
+        <h3>A LITTLE ABOUT ME</h3>
         <p>
           Halo, saya Matthew. Selamat datang di website personal saya.
           Saya percaya bahwa kesuksesan tidak datang secara instan,
@@ -266,18 +132,18 @@ td {color:#dce4f6}
           Bagi saya, setiap pengalaman adalah kesempatan untuk belajar,
           setiap tantangan adalah kesempatan untuk bertumbuh,
           dan setiap kepercayaan adalah sesuatu yang harus dijaga.
-          <br><br>
-          Terima kasih sudah meluangkan waktu untuk mengenal saya.
         </p>
       </div>
     </section>
 
-    <section id="service" class="section reveal">
+    <!-- SERVICE -->
+    <section id="service" class="section container reveal">
       <div class="eyebrow">OUR JOURNEY</div>
-      <h2 class="section-title">Matthew Joki</h2>
+      <h2 class="section-title">MATTHEW JOKI</h2>
       <div class="line"></div>
-      <div class="card">
-        <h3>Professional Joki Service</h3>
+
+      <div class="royal-card">
+        <h3>PROFESSIONAL JOKI SERVICE</h3>
         <p>
           Matthew Joki berdiri sejak Januari 2025 dan terus berkembang
           hingga saat ini sebagai layanan joki profesional.
@@ -286,6 +152,7 @@ td {color:#dce4f6}
           dan kepercayaan, Matthew Joki berkomitmen memberikan pelayanan
           terbaik kepada setiap pelanggan.
         </p>
+
         <div class="pills">
           <span class="pill">EST. JANUARY 2025</span>
           <span class="pill">PROFESSIONAL SERVICE</span>
@@ -294,12 +161,14 @@ td {color:#dce4f6}
       </div>
     </section>
 
-    <section id="contact" class="section reveal">
+    <!-- CONTACT -->
+    <section id="contact" class="section container reveal">
       <div class="eyebrow">LET'S CONNECT</div>
-      <h2 class="section-title">Contact Matthew</h2>
+      <h2 class="section-title">CONTACT MATTHEW</h2>
       <div class="line"></div>
-      <div class="card">
-        <h3>Have Something to Discuss?</h3>
+
+      <div class="royal-card">
+        <h3>HAVE SOMETHING TO DISCUSS?</h3>
         <p>
           Punya pertanyaan atau ingin mengetahui lebih lanjut mengenai
           layanan Matthew Joki? Hubungi saya melalui WhatsApp.
@@ -311,248 +180,206 @@ td {color:#dce4f6}
       </div>
     </section>
 
-    <!-- Hanya terlihat oleh admin -->
-    <section id="adminPanel" class="admin-panel hidden">
-      <h3>♛ ADMIN DASHBOARD</h3>
-      <p class="small">Daftar akun member yang terdaftar di website.</p>
-      <div id="memberMessage" class="small" style="margin:15px 0"></div>
-      <table>
-        <thead>
-          <tr><th>Nama</th><th>Role</th><th>Tanggal daftar</th></tr>
-        </thead>
-        <tbody id="memberRows"></tbody>
-      </table>
+    <!-- ADMIN -->
+    <section id="adminPanel" class="admin-panel container hidden">
+      <h2>♛ ADMIN DASHBOARD</h2>
+      <p id="memberMessage">Memuat data member...</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Nama</th><th>Role</th><th>Tanggal daftar</th></tr>
+          </thead>
+          <tbody id="memberRows"></tbody>
+        </table>
+      </div>
     </section>
+
+    <footer>
+      © 2026 MATTHEW JOKI
+      <br>
+      CREATOR: MATTHEW-raditya
+      <br>
+      THE DRAGON GUARDS THIS KINGDOM
+    </footer>
   </div>
 
-  <footer>
-    © 2026 MATTHEW. ALL RIGHTS RESERVED.
-    <br><br>DESIGNED WITH ELEGANCE.
-  </footer>
-</div>
+  <script>
+    const SUPABASE_URL = "https://aqiwrgnxwtphhwikqtmn.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<script>
-// 1. KONFIGURASI SUPABASE
-const SUPABASE_URL = "https://aqiwrgnxwtphhwikqtmn.supabase.co";
-const SUPABASE_KEY = "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
+    const authScreen = document.getElementById("authScreen");
+    const site = document.getElementById("site");
+    const authForm = document.getElementById("authForm");
+    const nameField = document.getElementById("nameField");
+    const fullName = document.getElementById("fullName");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const submitButton = document.getElementById("submitButton");
+    const authMessage = document.getElementById("authMessage");
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let mode = "login";
 
-// 2. ELEMEN WEBSITE
-const authScreen = document.getElementById("authScreen");
-const site = document.getElementById("site");
-const authForm = document.getElementById("authForm");
-const nameField = document.getElementById("nameField");
-const fullName = document.getElementById("fullName");
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const submitButton = document.getElementById("submitButton");
-const authMessage = document.getElementById("authMessage");
-const switchMode = document.getElementById("switchMode");
-const switchText = document.getElementById("switchText");
+    document.getElementById("switchMode").addEventListener("click", () => {
+      mode = mode === "login" ? "register" : "login";
+      nameField.classList.toggle("hidden", mode !== "register");
+      fullName.required = mode === "register";
+      submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
+      document.getElementById("switchText").textContent =
+        mode === "login" ? "Belum punya akun?" : "Sudah punya akun?";
+      document.getElementById("switchMode").textContent =
+        mode === "login" ? "Daftar sekarang" : "Login";
+      authMessage.textContent = "";
+    });
 
-let mode = "login";
-let currentUser = null;
+    function showMessage(message, type = "") {
+      authMessage.textContent = message;
+      authMessage.className = type;
+    }
 
-// 3. GANTI MODE LOGIN / REGISTER
-switchMode.addEventListener("click", () => {
-  mode = mode === "login" ? "register" : "login";
-  nameField.classList.toggle("hidden", mode !== "register");
-  fullName.required = mode === "register";
-  submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
-  switchText.textContent = mode === "login" ? "Belum punya akun?" : "Sudah punya akun?";
-  switchMode.textContent = mode === "login" ? "Daftar sekarang" : "Login";
-  authMessage.textContent = "";
-  authMessage.className = "";
-});
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      submitButton.textContent = "PLEASE WAIT...";
+      showMessage("");
 
-// 4. PESAN STATUS
-function showMessage(message, type) {
-  authMessage.textContent = message;
-  authMessage.className = type || "";
-}
+      try {
+        if (mode === "register") {
+          const { data, error } = await db.auth.signUp({
+            email: email.value.trim(),
+            password: password.value,
+            options: {
+              data: { full_name: fullName.value.trim() },
+              emailRedirectTo: "https://matthewrok.my.id"
+            }
+          });
 
-// 5. REGISTER DAN LOGIN
-authForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  submitButton.disabled = true;
-  submitButton.textContent = "PLEASE WAIT...";
-  showMessage("", "");
+          if (error) throw error;
 
-  try {
-    if (mode === "register") {
-      const name = fullName.value.trim();
-      if (!name) throw new Error("Masukkan nama lengkap.");
-
-      const { data, error } = await db.auth.signUp({
-        email: email.value.trim(),
-        password: password.value,
-        options: {
-          data: { full_name: name },
-          emailRedirectTo: "https://matthewrok.my.id"
+          showMessage(
+            data.session
+              ? "Pendaftaran berhasil!"
+              : "Pendaftaran berhasil. Periksa email untuk konfirmasi.",
+            "success"
+          );
+        } else {
+          const { error } = await db.auth.signInWithPassword({
+            email: email.value.trim(),
+            password: password.value
+          });
+          if (error) throw error;
         }
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        showMessage("Pendaftaran berhasil! Selamat datang.", "success");
-      } else {
-        showMessage("Pendaftaran berhasil. Periksa email untuk konfirmasi sebelum login.", "success");
+      } catch (error) {
+        showMessage(error.message || "Terjadi kesalahan.", "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
       }
-    } else {
-      const { error } = await db.auth.signInWithPassword({
-        email: email.value.trim(),
-        password: password.value
+    });
+
+    async function showUser(user) {
+      if (!user) {
+        authScreen.classList.remove("hidden");
+        site.classList.add("hidden");
+        return;
+      }
+
+      const { data: profile, error } = await db
+        .from("profiles")
+        .select("full_name, role")
+        .eq("id", user.id)
+        .single();
+
+      if (error || !profile) {
+        showMessage("Profil belum tersedia. Coba login kembali.", "error");
+        await db.auth.signOut();
+        return;
+      }
+
+      authScreen.classList.add("hidden");
+      site.classList.remove("hidden");
+
+      document.getElementById("navUser").textContent =
+        profile.full_name || user.email;
+
+      const adminPanel = document.getElementById("adminPanel");
+
+      if (profile.role === "admin") {
+        adminPanel.classList.remove("hidden");
+        loadMembers();
+      } else {
+        adminPanel.classList.add("hidden");
+      }
+
+      document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    }
+
+    async function loadMembers() {
+      const rows = document.getElementById("memberRows");
+      const message = document.getElementById("memberMessage");
+
+      rows.innerHTML = "";
+      message.textContent = "Memuat data member...";
+
+      const { data, error } = await db
+        .from("profiles")
+        .select("full_name, role, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        message.textContent = "Gagal memuat data: " + error.message;
+        return;
+      }
+
+      message.textContent = "Total akun: " + data.length;
+
+      data.forEach(member => {
+        const tr = document.createElement("tr");
+
+        [member.full_name || "Tanpa nama", member.role,
+          new Date(member.created_at).toLocaleDateString("id-ID")]
+          .forEach(value => {
+            const td = document.createElement("td");
+            td.textContent = value;
+            tr.appendChild(td);
+          });
+
+        rows.appendChild(tr);
       });
-      if (error) throw error;
     }
-  } catch (error) {
-    showMessage(error.message || "Terjadi kesalahan. Coba lagi.", "error");
-  } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
-  }
-});
 
-// 6. TAMPILKAN HALAMAN SESUAI ROLE
-async function showUser(user) {
-  currentUser = user;
+    document.getElementById("logout").addEventListener("click", async () => {
+      await db.auth.signOut();
+    });
 
-  if (!user) {
-    authScreen.classList.remove("hidden");
-    site.classList.add("hidden");
-    return;
-  }
+    db.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION") return;
+      setTimeout(() => showUser(session?.user || null), 0);
+    });
 
-  const { data: profile, error } = await db
-    .from("profiles")
-    .select("full_name, role")
-    .eq("id", user.id)
-    .single();
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("show");
+      });
+    }, { threshold: 0.12 });
 
-  if (error || !profile) {
-    showMessage("Profil belum tersedia. Coba login kembali.", "error");
-    await db.auth.signOut();
-    return;
-  }
+    (async () => {
+      const { data: { session } } = await db.auth.getSession();
+      await showUser(session?.user || null);
+    })();
 
-  authScreen.classList.add("hidden");
-  site.classList.remove("hidden");
+    // Efek bara api dekoratif
+    const emberBox = document.getElementById("embers");
 
-  const displayName = profile.full_name || user.email;
-  document.getElementById("navUser").textContent = displayName;
-
-  const adminPanel = document.getElementById("adminPanel");
-  if (profile.role === "admin") {
-    adminPanel.classList.remove("hidden");
-    loadMembers();
-  } else {
-    adminPanel.classList.add("hidden");
-  }
-
-  setTimeout(() => {
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-  }, 100);
-}
-
-// 7. DAFTAR MEMBER - DATA DILINDUNGI RLS
-async function loadMembers() {
-  const rows = document.getElementById("memberRows");
-  const message = document.getElementById("memberMessage");
-  rows.innerHTML = "";
-  message.textContent = "Memuat data member...";
-
-  const { data, error } = await db
-    .from("profiles")
-    .select("full_name, role, created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    message.textContent = "Tidak dapat memuat daftar member: " + error.message;
-    return;
-  }
-
-  message.textContent = "Total akun terdaftar: " + data.length;
-
-  data.forEach(member => {
-    const tr = document.createElement("tr");
-    const nameCell = document.createElement("td");
-    const roleCell = document.createElement("td");
-    const dateCell = document.createElement("td");
-
-    nameCell.textContent = member.full_name || "Tanpa nama";
-    roleCell.textContent = member.role;
-    roleCell.className = member.role === "admin" ? "gold" : "status";
-    dateCell.textContent = new Date(member.created_at).toLocaleDateString("id-ID");
-
-    tr.append(nameCell, roleCell, dateCell);
-    rows.appendChild(tr);
-  });
-}
-
-// 8. LOGOUT
-document.getElementById("logout").addEventListener("click", async () => {
-  await db.auth.signOut();
-});
-
-// 9. PANTAU STATUS LOGIN
-db.auth.onAuthStateChange((event, session) => {
-  if (event === "INITIAL_SESSION") return;
-  setTimeout(() => showUser(session?.user || null), 0);
-});
-
-// 10. CEK SESI SAAT WEBSITE DIBUKA
-(async () => {
-  const { data: { session } } = await db.auth.getSession();
-  await showUser(session?.user || null);
-})();
-
-// 11. ANIMASI SCROLL
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add("show");
-  });
-}, { threshold: 0.12 });
-
-// 12. PARTIKEL CAHAYA
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let particles = [];
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-for (let i = 0; i < 65; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 2 + .5,
-    speed: Math.random() * .5 + .15,
-    opacity: Math.random() * .6 + .2
-  });
-}
-
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => {
-    p.y -= p.speed;
-    if (p.y < -5) {
-      p.y = canvas.height + 5;
-      p.x = Math.random() * canvas.width;
+    for (let i = 0; i < 35; i++) {
+      const ember = document.createElement("span");
+      ember.className = "ember";
+      ember.style.left = Math.random() * 100 + "%";
+      ember.style.animationDelay = Math.random() * 12 + "s";
+      ember.style.animationDuration = (7 + Math.random() * 10) + "s";
+      emberBox.appendChild(ember);
     }
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(220,195,130,${p.opacity})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-</script>
+  </script>
 </body>
 </html>
