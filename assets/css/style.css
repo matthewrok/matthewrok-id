@@ -1,18 +1,20 @@
 ```css
-/* ========================================
-   MATTHEW JOKI - DRAGON KINGDOM THEME
-======================================== */
+/* =========================================
+   MATTHEW JOKI - DRAGON KINGDOM
+   CSS disesuaikan dengan index.html
+========================================= */
 
 :root {
   --bg: #100907;
-  --bg-light: #1c100d;
+  --panel: #1b100d;
+  --panel-light: #28150f;
   --red: #a51d19;
-  --red-bright: #e43a20;
+  --red-light: #e43a20;
   --orange: #ff7628;
   --gold: #e9bd65;
   --text: #f7ead7;
-  --muted: #bba99a;
-  --border: rgba(233, 189, 101, 0.25);
+  --muted: #c2ad9b;
+  --border: rgba(233, 189, 101, .3);
 }
 
 * {
@@ -26,9 +28,10 @@ html {
 }
 
 body {
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.7;
   overflow-x: hidden;
 }
@@ -38,138 +41,106 @@ a {
   text-decoration: none;
 }
 
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
+button,
+input {
   font: inherit;
 }
 
-/* ========================================
-   NAVIGATION
-======================================== */
-
-.navbar {
-  width: 100%;
-  min-height: 76px;
-  padding: 15px 7%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  background: rgba(12, 7, 6, 0.94);
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  z-index: 10;
+.hidden {
+  display: none !important;
 }
 
-.logo {
-  color: var(--gold);
-  font-size: 23px;
-  font-weight: bold;
-  letter-spacing: 3px;
+.container {
+  width: min(1120px, 88%);
+  margin-inline: auto;
 }
 
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  list-style: none;
-}
+/* BACKGROUND */
 
-.nav-links a {
-  color: var(--text);
-  transition: 0.3s;
-}
-
-.nav-links a:hover {
-  color: var(--orange);
-}
-
-/* ========================================
-   HERO / DRAGON BACKGROUND
-======================================== */
-
-.hero {
-  min-height: 720px;
-  padding: 100px 8%;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
   background:
-    linear-gradient(
-      90deg,
-      rgba(10, 5, 4, 0.95) 0%,
-      rgba(10, 5, 4, 0.72) 42%,
-      rgba(10, 5, 4, 0.12) 100%
-    ),
-    linear-gradient(
-      180deg,
-      transparent 65%,
-      var(--bg) 100%
-    ),
-    url("../images/dragon-kingdom.png") center 38% / cover no-repeat,
-    #160a07;
+    radial-gradient(ellipse at 50% 0%, #40180f 0%, transparent 55%),
+    #100907;
 }
 
-.hero-content {
-  max-width: 650px;
-  position: relative;
-  z-index: 2;
+.embers {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
 }
 
-.hero-subtitle {
+.ember {
+  position: absolute;
+  bottom: -15px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 12px 3px rgba(255, 100, 25, .55);
+  animation: emberRise 9s linear infinite;
+}
+
+@keyframes emberRise {
+  0% {
+    transform: translateY(0) scale(.5);
+    opacity: 0;
+  }
+  15% {
+    opacity: .9;
+  }
+  100% {
+    transform: translateY(-105vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* TYPOGRAPHY */
+
+h1,
+h2,
+h3,
+.brand,
+.section-title {
+  font-family: "Cinzel", serif;
+}
+
+.eyebrow {
   color: var(--orange);
-  letter-spacing: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  font-size: 13px;
-  margin-bottom: 18px;
 }
 
-.hero h1 {
-  font-size: clamp(48px, 8vw, 88px);
-  line-height: 1.05;
-  color: var(--gold);
-  text-shadow: 0 5px 25px #000;
-  margin-bottom: 25px;
-}
-
-.hero p {
-  color: #f0d9c3;
-  font-size: 18px;
-  max-width: 560px;
-  margin-bottom: 30px;
-}
-
-.hero-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-/* ========================================
-   BUTTONS
-======================================== */
+/* BUTTONS */
 
 .btn {
-  display: inline-block;
-  padding: 13px 27px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
   border: 1px solid var(--gold);
-  background: linear-gradient(135deg, #8e1c15, #4a0c09);
-  color: #fff1d9;
-  font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
-  transition: 0.3s;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: .25s ease;
 }
 
-.btn:hover {
-  background: linear-gradient(135deg, #e43a20, #8e1c15);
-  box-shadow: 0 0 25px rgba(255, 91, 35, 0.45);
+.btn-gold {
+  background: linear-gradient(135deg, #f0cf83, #b77a2d);
+  color: #1b0d07;
+}
+
+.btn-gold:hover {
+  box-shadow: 0 0 25px rgba(233, 189, 101, .45);
   transform: translateY(-3px);
 }
 
@@ -179,298 +150,543 @@ button {
 }
 
 .btn-outline:hover {
-  background: rgba(233, 189, 101, 0.12);
+  background: var(--red);
+  color: white;
 }
 
-/* ========================================
-   GENERAL SECTIONS
-======================================== */
-
-section {
-  padding: 85px 8%;
+.btn-full {
+  width: 100%;
 }
 
-.section-heading {
-  text-align: center;
-  margin-bottom: 45px;
-}
+/* LOGIN AND REGISTER */
 
-.section-heading h2 {
-  font-size: clamp(30px, 5vw, 46px);
-  color: var(--gold);
-  margin-bottom: 12px;
-}
-
-.section-heading p {
-  color: var(--muted);
-}
-
-.section-heading::after {
-  content: "";
-  display: block;
-  width: 90px;
-  height: 3px;
-  margin: 20px auto 0;
-  background: linear-gradient(90deg, var(--red), var(--gold));
-}
-
-/* ========================================
-   ABOUT
-======================================== */
-
-.about-section {
-  background:
-    radial-gradient(ellipse at top, #35150e, transparent 65%),
-    var(--bg);
-}
-
-.about-content {
-  max-width: 850px;
-  margin: auto;
-  text-align: center;
-  color: var(--muted);
-  font-size: 17px;
-}
-
-/* ========================================
-   CARDS
-======================================== */
-
-.cards-container,
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 25px;
-}
-
-.card,
-.feature-card {
-  padding: 30px;
-  background: linear-gradient(145deg, #25130e, #120a08);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.card:hover,
-.feature-card:hover {
-  transform: translateY(-7px);
-  border-color: var(--orange);
-  box-shadow: 0 10px 35px rgba(190, 55, 20, 0.18);
-}
-
-.card h3,
-.feature-card h3 {
-  color: var(--gold);
-  font-size: 22px;
-  margin-bottom: 12px;
-}
-
-.card p,
-.feature-card p {
-  color: var(--muted);
-}
-
-/* ========================================
-   AUTHENTICATION
-======================================== */
-
-.auth-section {
-  min-height: 80vh;
+.auth-screen {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 50px 20px;
+  justify-content: center;
+  padding: 30px 18px;
   background:
-    radial-gradient(ellipse at center, #45180e, var(--bg) 70%);
+    linear-gradient(rgba(10, 5, 4, .75), rgba(10, 5, 4, .92)),
+    radial-gradient(ellipse at center, #672312, #100907 75%);
 }
 
 .auth-card {
-  width: 100%;
-  max-width: 450px;
+  width: min(440px, 100%);
   padding: 38px;
-  background: rgba(24, 12, 9, 0.96);
+  background: rgba(25, 13, 9, .96);
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 15px 60px rgba(0, 0, 0, 0.5);
-}
-
-.auth-card h2 {
+  box-shadow: 0 20px 70px #0009;
   text-align: center;
+}
+
+.dragon-emblem {
   color: var(--gold);
-  margin-bottom: 25px;
+  font-size: 52px;
+  line-height: 1.3;
+  text-shadow: 0 0 25px #e9a43d66;
 }
 
-.form-group {
-  margin-bottom: 18px;
+.auth-card h1 {
+  color: var(--gold);
+  font-size: 27px;
+  letter-spacing: 2px;
+  margin-top: 8px;
 }
 
-.form-group label {
-  display: block;
+.creator {
   color: var(--muted);
-  margin-bottom: 7px;
+  font-size: 10px;
+  letter-spacing: 2px;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.kicker {
+  color: var(--orange);
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin: 22px 0;
+}
+
+.field {
+  margin-bottom: 17px;
+  text-align: left;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.field input {
   width: 100%;
-  padding: 13px;
-  color: var(--text);
-  background: #100907;
+  padding: 13px 14px;
+  background: #0d0806;
+  color: white;
   border: 1px solid var(--border);
   border-radius: 5px;
   outline: none;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.field input:focus {
   border-color: var(--orange);
-  box-shadow: 0 0 10px rgba(255, 118, 40, 0.15);
+  box-shadow: 0 0 12px #ff762822;
 }
 
-.auth-card .btn {
-  width: 100%;
-  margin-top: 10px;
-}
-
-.auth-card p {
+.auth-switch {
+  margin-top: 22px;
   color: var(--muted);
+  font-size: 13px;
+}
+
+.auth-switch button {
+  border: none;
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+#authMessage {
+  margin-top: 15px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+#authMessage.success {
+  color: #8de0a0;
+}
+
+#authMessage.error {
+  color: #ff8176;
+}
+
+/* HEADER AND NAVIGATION */
+
+header {
+  position: relative;
+  z-index: 10;
+  background: rgba(12, 7, 5, .96);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gold);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.brand-icon {
+  font-size: 32px;
+}
+
+.brand small {
+  display: block;
+  color: var(--muted);
+  font-family: "Poppins", sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 17px;
+}
+
+.nav-links a {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  color: var(--text);
+  transition: .2s;
+}
+
+.nav-links a:hover {
+  color: var(--orange);
+}
+
+.nav-user {
+  color: var(--gold);
+  font-size: 12px;
+}
+
+/* HERO */
+
+.hero {
+  position: relative;
+  min-height: 680px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: #160a07;
+}
+
+.hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(10, 5, 4, .96) 0%,
+      rgba(10, 5, 4, .72) 40%,
+      rgba(10, 5, 4, .12) 100%
+    ),
+    linear-gradient(
+      0deg,
+      #100907 0%,
+      transparent 35%
+    ),
+    url("../images/dragon-kingdom.png") center 38% / cover no-repeat;
+  transform: scale(1.02);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+
+.welcome-text {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 15px;
+  letter-spacing: 5px;
+}
+
+.hero h1 {
+  margin: 12px 0 22px;
+  color: var(--gold);
+  font-size: clamp(55px, 9vw, 100px);
+  line-height: 1.08;
+  letter-spacing: 4px;
+  text-shadow: 0 5px 30px #000;
+}
+
+.hero-description {
+  max-width: 490px;
+  margin-bottom: 30px;
+  color: #f0dcca;
+  font-size: 16px;
+}
+
+/* KINGDOM FEATURE CARDS */
+
+.kingdom-section {
+  padding-top: 75px;
+  padding-bottom: 65px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.feature-card {
+  display: block;
+  padding: 32px;
+  background: linear-gradient(145deg, #29160f, #160c09);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  transition: .3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--orange);
+  box-shadow: 0 12px 35px #a532182c;
+}
+
+.feature-icon {
+  margin-bottom: 15px;
+  color: var(--gold);
+  font-size: 38px;
+}
+
+.feature-card h2 {
+  margin-bottom: 12px;
+  color: var(--gold);
+  font-size: 19px;
+}
+
+.feature-card p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.feature-link {
+  display: inline-block;
+  margin-top: 22px;
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ABOUT, SERVICE AND CONTACT */
+
+.section {
+  padding-top: 75px;
+  padding-bottom: 75px;
   text-align: center;
-  margin-top: 18px;
 }
 
-/* ========================================
-   ADMIN / DASHBOARD
-======================================== */
-
-.dashboard {
-  padding: 40px 7%;
+.section-title {
+  margin-top: 12px;
+  color: var(--gold);
+  font-size: clamp(30px, 5vw, 44px);
+  letter-spacing: 2px;
 }
 
-.dashboard-card {
-  padding: 25px;
-  background: var(--bg-light);
+.line {
+  width: 85px;
+  height: 3px;
+  margin: 20px auto 35px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+}
+
+.royal-card {
+  max-width: 850px;
+  margin: auto;
+  padding: 38px;
+  background: linear-gradient(145deg, #29160f, #160c09);
   border: 1px solid var(--border);
   border-radius: 8px;
-  margin-bottom: 20px;
+  box-shadow: 0 15px 45px #0003;
 }
 
-.dashboard-card h3 {
+.royal-card h3 {
+  margin-bottom: 17px;
   color: var(--gold);
-  margin-bottom: 12px;
+  font-size: 21px;
 }
 
-/* ========================================
-   FIRE / EMBER EFFECT
-======================================== */
-
-.embers {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 5;
+.royal-card p {
+  color: var(--muted);
+  font-size: 15px;
 }
 
-.ember {
-  position: absolute;
-  bottom: -20px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--orange);
-  box-shadow: 0 0 12px var(--orange);
-  animation: rise 8s linear infinite;
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.pill {
+  padding: 7px 13px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.wa {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 13px 23px;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  background: linear-gradient(135deg, #8e1c15, #4a0c09);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: .25s;
+}
+
+.wa:hover {
+  background: var(--red-light);
+  box-shadow: 0 0 20px #e43a2055;
+}
+
+/* REVEAL ANIMATION */
+
+.reveal {
   opacity: 0;
+  transform: translateY(25px);
+  transition: opacity .7s ease, transform .7s ease;
 }
 
-.ember:nth-child(1) { left: 10%; animation-delay: 0s; }
-.ember:nth-child(2) { left: 25%; animation-delay: 2s; }
-.ember:nth-child(3) { left: 45%; animation-delay: 4s; }
-.ember:nth-child(4) { left: 65%; animation-delay: 1s; }
-.ember:nth-child(5) { left: 85%; animation-delay: 3s; }
-
-@keyframes rise {
-  0% {
-    transform: translateY(0) scale(0.5);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.9;
-  }
-  100% {
-    transform: translateY(-100vh) scale(1.5);
-    opacity: 0;
-  }
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* ========================================
-   FOOTER
-======================================== */
+/* ADMIN DASHBOARD */
+
+.admin-panel {
+  padding-top: 50px;
+  padding-bottom: 60px;
+}
+
+.admin-panel h2 {
+  margin-bottom: 15px;
+  color: var(--gold);
+}
+
+.admin-panel p {
+  margin-bottom: 20px;
+  color: var(--muted);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+}
+
+th,
+td {
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  text-align: left;
+  font-size: 13px;
+}
+
+th {
+  background: #32180f;
+  color: var(--gold);
+}
+
+td {
+  color: var(--text);
+}
+
+/* FOOTER */
 
 footer {
-  padding: 30px 7%;
-  text-align: center;
+  padding: 30px 15px;
   background: #090504;
   border-top: 1px solid var(--border);
   color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 1px;
+  line-height: 2;
 }
 
-footer strong {
-  color: var(--gold);
-}
+/* MOBILE */
 
-/* ========================================
-   RESPONSIVE / MOBILE
-======================================== */
-
-@media (max-width: 768px) {
-  .navbar {
+@media (max-width: 850px) {
+  .nav {
     flex-direction: column;
-    padding: 18px;
+    padding-top: 17px;
+    padding-bottom: 17px;
   }
 
   .nav-links {
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 12px 18px;
+    gap: 12px 16px;
   }
 
   .hero {
     min-height: 650px;
-    padding: 80px 7%;
+  }
+
+  .hero-image {
     background:
       linear-gradient(
         180deg,
-        rgba(10, 5, 4, 0.25),
-        rgba(10, 5, 4, 0.88) 75%,
-        var(--bg)
+        rgba(10, 5, 4, .12) 0%,
+        rgba(10, 5, 4, .65) 55%,
+        #100907 100%
       ),
-      url("../images/dragon-kingdom.png") center / cover no-repeat,
-      #160a07;
+      url("../images/dragon-kingdom.png") center center / cover no-repeat;
   }
 
   .hero-content {
-    margin-top: 180px;
+    padding-top: 250px;
+    padding-bottom: 70px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
   }
 
-  .hero p {
-    font-size: 16px;
+  .brand {
+    font-size: 15px;
   }
 
-  section {
-    padding: 60px 6%;
+  .nav-links {
+    gap: 10px 13px;
   }
 
-  .cards-container,
-  .features-grid {
+  .nav-links a {
+    font-size: 10px;
+  }
+
+  .nav-links .btn {
+    padding: 7px 12px;
+    font-size: 10px;
+  }
+
+  .hero {
+    min-height: 620px;
+  }
+
+  .hero-image {
+    background-position: 58% center;
+  }
+
+  .hero-content {
+    padding-top: 240px;
+  }
+
+  .hero h1 {
+    font-size: 58px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .feature-grid {
     grid-template-columns: 1fr;
   }
 
-  .auth-card {
+  .feature-card,
+  .royal-card {
     padding: 25px;
+  }
+
+  .section {
+    padding-top: 55px;
+    padding-bottom: 55px;
+  }
+
+  .auth-card {
+    padding: 28px 22px;
   }
 }
 ```
