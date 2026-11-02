@@ -1,24 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050b1d">
+<title>Matthew | Official Website</title>
+<meta name="description" content="Website resmi Matthew Joki. Layanan joki profesional sejak Januari 2025.">
 
-<title>MATTHEW | Rise of Kingdoms</title>
-
-<meta name="description"
-content="Welcome to MATTHEW — a royal gaming experience dedicated to strategy, leadership, and the Rise of Kingdoms universe.">
-
-<meta name="theme-color" content="#071225">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --navy: #071225;
-  --navy-light: #0d1e39;
-  --blue: #2864ff;
-  --gold: #e9c77b;
-  --white: #f5f7ff;
-  --muted: #a7b4ce;
+  --navy: #050b1d;
+  --blue: #102d69;
+  --gold: #d9b76e;
+  --white: #f5f5f5;
 }
 
 * {
@@ -27,636 +23,575 @@ content="Welcome to MATTHEW — a royal gaming experience dedicated to strategy,
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--navy);
+  font-family: 'Poppins', sans-serif;
   color: var(--white);
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.7;
+  background: var(--navy);
   overflow-x: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* BACKGROUND BERGERAK */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse at 20% 20%, #173b79 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 80%, #18234e 0%, transparent 45%),
+    linear-gradient(135deg, #030817, #0b1b3b, #050b1d);
+  background-size: 200% 200%;
+  animation: bgMove 12s ease infinite;
 }
 
-.container {
-  width: min(1100px, 90%);
-  margin: auto;
+@keyframes bgMove {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
-/* NAVIGATION */
-
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(7,18,37,.9);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(233,199,123,.15);
+.orb {
+  position: fixed;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: #2866d5;
+  filter: blur(110px);
+  opacity: .18;
+  z-index: -1;
+  animation: float 10s ease-in-out infinite alternate;
 }
 
-nav {
-  min-height: 76px;
+.orb.one { top: 10%; left: -100px; }
+.orb.two { bottom: 5%; right: -100px; animation-delay: 2s; }
+
+@keyframes float {
+  from { transform: translate(0,0); }
+  to { transform: translate(100px,80px); }
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* LOGIN */
+#loginPage {
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: center;
+  padding: 25px;
 }
 
-.logo {
-  font-size: 23px;
-  font-weight: 900;
+.login-box {
+  width: 100%;
+  max-width: 410px;
+  padding: 45px 32px;
+  text-align: center;
+  border: 1px solid rgba(217,183,110,.4);
+  border-radius: 22px;
+  background: rgba(5,12,32,.72);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 50px rgba(25,85,190,.2);
+  animation: appear 1.2s ease both;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(35px) scale(.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.crown {
+  font-size: 40px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+h1, h2, .brand {
+  font-family: 'Cinzel', serif;
+}
+
+.login-box h1 {
+  font-size: 29px;
   letter-spacing: 3px;
-}
-
-.logo span {
   color: var(--gold);
 }
 
-.nav-links {
-  display: flex;
-  gap: 28px;
-  align-items: center;
+.subtitle {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #b9c5df;
+  margin: 10px 0 30px;
 }
 
-.nav-links a {
-  color: var(--muted);
-  font-size: 13px;
+.input-group { margin-bottom: 17px; }
+
+.input-group input {
+  width: 100%;
+  padding: 15px 17px;
+  border-radius: 10px;
+  border: 1px solid rgba(217,183,110,.35);
+  background: rgba(255,255,255,.06);
+  color: white;
+  outline: none;
+  font-family: inherit;
   transition: .3s;
 }
 
-.nav-links a:hover {
-  color: var(--gold);
+.input-group input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(217,183,110,.2);
 }
 
-.menu-btn {
-  display: none;
+button, .gold-button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  color: #10182b;
+  background: linear-gradient(110deg, #b68b42, #f4dda0, #b68b42);
+  background-size: 200%;
+  transition: .4s;
+}
+
+.login-button:hover {
+  background-position: right;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 25px rgba(217,183,110,.3);
+}
+
+#error {
+  color: #ff8c8c;
+  font-size: 12px;
+  margin-top: 15px;
+  min-height: 18px;
+}
+
+/* WEBSITE UTAMA */
+#mainPage { display: none; }
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 19px 8%;
+  background: rgba(3,9,25,.85);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(217,183,110,.18);
+}
+
+.brand {
   color: var(--gold);
-  background: none;
-  border: 1px solid #344563;
-  border-radius: 8px;
-  padding: 8px 12px;
+  letter-spacing: 2px;
   font-size: 20px;
 }
 
-/* HERO */
+nav a {
+  color: #dce4f6;
+  text-decoration: none;
+  font-size: 13px;
+  margin-left: 23px;
+  transition: .3s;
+}
+
+nav a:hover { color: var(--gold); }
 
 .hero {
-  position: relative;
-  min-height: 650px;
+  min-height: 85vh;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse at 80% 45%,
-      rgba(40,100,255,.22), transparent 48%),
-    linear-gradient(135deg, #071225, #0b1a35 65%, #071225);
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  width: 350px;
-  height: 350px;
-  right: 8%;
-  top: 20%;
-  border: 1px solid rgba(233,199,123,.16);
-  border-radius: 50%;
-  box-shadow:
-    0 0 70px rgba(40,100,255,.12),
-    inset 0 0 70px rgba(40,100,255,.08);
-  animation: float 7s ease-in-out infinite;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 720px;
-  padding: 100px 0;
-  animation: enter 1s ease both;
+  text-align: center;
+  padding: 80px 20px;
 }
 
 .eyebrow {
   color: var(--gold);
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-size: 11px;
-  font-weight: bold;
-  margin-bottom: 22px;
+  letter-spacing: 5px;
+  font-size: 12px;
+  margin-bottom: 20px;
 }
 
-h1 {
-  font-size: clamp(46px, 9vw, 88px);
-  line-height: 1.04;
-  letter-spacing: -3px;
-  margin-bottom: 24px;
+.hero h1 {
+  font-size: clamp(42px, 8vw, 85px);
+  letter-spacing: 5px;
+  color: white;
+  text-shadow: 0 0 35px rgba(60,120,255,.3);
+  animation: glow 3s infinite alternate;
 }
 
-h1 span {
-  display: block;
-  color: var(--gold);
-  text-shadow: 0 0 35px rgba(233,199,123,.15);
+@keyframes glow {
+  from { text-shadow: 0 0 15px #244d94; }
+  to { text-shadow: 0 0 40px #477bd4; }
 }
 
 .hero p {
-  max-width: 540px;
-  color: var(--muted);
-  font-size: 16px;
-  margin-bottom: 34px;
+  max-width: 650px;
+  line-height: 2;
+  color: #bdc9df;
+  margin: 25px auto 30px;
+  font-size: 14px;
 }
 
-.buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-}
-
-.btn {
+.gold-button {
   display: inline-block;
-  padding: 13px 23px;
-  border-radius: 7px;
-  font-size: 13px;
-  font-weight: bold;
+  padding: 14px 27px;
+  border-radius: 30px;
+  background: linear-gradient(110deg, #a77b35, #f0d58f);
+  color: #10182b;
+  text-decoration: none;
   transition: .3s;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #f0d79b, #d9ad50);
-  color: #101a2b;
-  box-shadow: 0 5px 25px rgba(233,199,123,.12);
+.gold-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(217,183,110,.25);
 }
 
-.btn-outline {
-  border: 1px solid rgba(233,199,123,.4);
-  color: var(--gold);
-}
-
-.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(40,100,255,.22);
-}
-
-/* SECTION */
-
-section {
-  padding: 95px 0;
-  scroll-margin-top: 75px;
-}
-
-.section-label {
-  color: var(--gold);
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 12px;
+section.content {
+  padding: 85px 8%;
+  text-align: center;
 }
 
 .section-title {
-  font-size: clamp(29px, 5vw, 43px);
-  line-height: 1.2;
-  margin-bottom: 16px;
+  color: var(--gold);
+  font-size: clamp(27px, 5vw, 40px);
+  margin-bottom: 17px;
 }
 
-.section-desc {
-  color: var(--muted);
-  max-width: 570px;
-  margin-bottom: 38px;
-}
-
-/* FEATURE CARDS */
-
-.features {
-  background: #09162b;
-  border-top: 1px solid rgba(255,255,255,.04);
-  border-bottom: 1px solid rgba(255,255,255,.04);
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.line {
+  width: 65px;
+  height: 2px;
+  margin: 0 auto 35px;
+  background: var(--gold);
 }
 
 .card {
-  padding: 30px 24px;
-  background: linear-gradient(145deg,
-    rgba(19,39,72,.85),
-    rgba(10,23,44,.8));
-  border: 1px solid rgba(233,199,123,.13);
-  border-radius: 13px;
-  transition: .35s;
+  max-width: 780px;
+  margin: auto;
+  padding: 38px;
+  border: 1px solid rgba(217,183,110,.25);
+  border-radius: 18px;
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 15px 45px rgba(0,0,0,.15);
+  transition: .4s;
 }
 
 .card:hover {
   transform: translateY(-7px);
-  border-color: rgba(233,199,123,.55);
-  box-shadow: 0 15px 40px rgba(0,0,0,.2);
-}
-
-.card-icon {
-  font-size: 30px;
-  margin-bottom: 17px;
+  border-color: var(--gold);
 }
 
 .card h3 {
   color: var(--gold);
-  font-size: 19px;
-  margin-bottom: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 23px;
+  margin-bottom: 18px;
 }
 
 .card p {
-  color: var(--muted);
+  color: #c5cee0;
+  line-height: 2;
   font-size: 14px;
 }
 
-/* ABOUT */
-
-.about-grid {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  align-items: center;
-  gap: 55px;
+.info {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 25px;
 }
 
-.about-panel {
-  padding: 35px;
-  border-radius: 14px;
-  border: 1px solid rgba(233,199,123,.2);
-  background:
-    radial-gradient(circle at top right,
-      rgba(40,100,255,.2), transparent 55%),
-    #0b1930;
-}
-
-.about-panel .big-mark {
+.info span {
+  padding: 10px 17px;
+  border: 1px solid rgba(217,183,110,.3);
+  border-radius: 30px;
   color: var(--gold);
-  font-size: 64px;
-  font-weight: 900;
-  letter-spacing: 5px;
+  font-size: 12px;
 }
 
-.about-panel p {
-  color: var(--muted);
-  font-size: 14px;
+.contact-card { max-width: 600px; }
+
+.whatsapp {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 15px 28px;
+  border-radius: 30px;
+  background: #168b57;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: .3s;
 }
 
-/* CTA */
-
-.cta {
-  text-align: center;
-  background:
-    radial-gradient(ellipse at center,
-      rgba(40,100,255,.15), transparent 65%);
+.whatsapp:hover {
+  background: #20ad70;
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(32,173,112,.3);
 }
-
-.cta .section-desc {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* FOOTER */
 
 footer {
-  padding: 28px 0;
-  border-top: 1px solid rgba(233,199,123,.12);
-  color: var(--muted);
-  font-size: 12px;
   text-align: center;
+  padding: 28px 15px;
+  color: #8491aa;
+  font-size: 11px;
+  border-top: 1px solid rgba(217,183,110,.15);
 }
 
-footer span {
-  color: var(--gold);
-}
-
-/* ANIMATION */
-
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-18px); }
-}
-
+/* ANIMASI SCROLL */
 .reveal {
   opacity: 0;
-  transform: translateY(22px);
-  transition: opacity .7s ease, transform .7s ease;
+  transform: translateY(35px);
+  transition: opacity .9s ease, transform .9s ease;
 }
 
-.reveal.visible {
+.reveal.show {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* MOBILE */
-
-@media (max-width: 720px) {
+@media(max-width:650px) {
   nav {
-    min-height: 68px;
-  }
-
-  .menu-btn {
-    display: block;
-  }
-
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 68px;
-    left: 0;
-    right: 0;
-    padding: 24px 5%;
-    background: #09162b;
-    border-bottom: 1px solid rgba(233,199,123,.2);
+    padding: 16px 5%;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+    gap: 13px;
   }
 
-  .nav-links.open {
-    display: flex;
-  }
-
-  .hero {
-    min-height: 570px;
-  }
-
-  .hero::before {
-    width: 230px;
-    height: 230px;
-    right: -90px;
-    top: 20%;
-  }
-
-  .hero-content {
-    padding: 85px 0;
-  }
-
-  h1 {
-    letter-spacing: -1.5px;
-  }
-
-  .hero p {
-    font-size: 14px;
-  }
-
-  section {
-    padding: 70px 0;
-  }
-
-  .card-grid,
-  .about-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .about-grid {
-    gap: 30px;
-  }
-
-  .card {
-    padding: 25px;
-  }
-
-  .about-panel {
-    padding: 25px;
-  }
-
-  .buttons {
-    gap: 10px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
-    scroll-behavior: auto !important;
-  }
+  nav a { margin: 0 7px; font-size: 11px; }
+  .hero { min-height: 78vh; }
+  .hero h1 { letter-spacing: 2px; }
+  section.content { padding: 65px 6%; }
+  .card { padding: 27px 20px; }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <nav class="container">
-    <a class="logo" href="#home">MATTHEW<span>.</span></a>
+<div class="background"></div>
+<div class="orb one"></div>
+<div class="orb two"></div>
+<canvas id="particles"></canvas>
 
-    <button class="menu-btn"
-      id="menuBtn"
-      aria-label="Open navigation"
-      aria-expanded="false">☰</button>
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="crown">♛</div>
+    <h1>MATTHEW</h1>
+    <div class="subtitle">PRIVATE ACCESS</div>
 
-    <div class="nav-links" id="navLinks">
-      <a href="#home">HOME</a>
-      <a href="#features">FEATURES</a>
-      <a href="#about">ABOUT</a>
-      <a href="#contact">CONTACT</a>
+    <form id="loginForm">
+      <div class="input-group">
+        <input id="username" type="text" placeholder="Masukkan nama" required>
+      </div>
+
+      <div class="input-group">
+        <input id="password" type="password" placeholder="Masukkan password" required>
+      </div>
+
+      <button class="login-button" type="submit">ENTER WEBSITE</button>
+    </form>
+
+    <div id="error"></div>
+  </div>
+</div>
+
+<!-- WEBSITE -->
+<div id="mainPage">
+
+  <nav>
+    <div class="brand">MATTHEW.</div>
+    <div>
+      <a href="#about">About</a>
+      <a href="#service">Service</a>
+      <a href="#contact">Contact</a>
     </div>
   </nav>
-</header>
 
-<main>
+  <header class="hero">
+    <div class="eyebrow">WELCOME TO MY PERSONAL WEBSITE</div>
+    <h1>MATTHEW</h1>
+    <p>
+      Setiap perjalanan memiliki cerita.
+      Setiap usaha memiliki tujuan.
+      Dan setiap pencapaian dimulai dari keberanian
+      untuk terus melangkah.
+      Selamat datang di ruang personal saya.
+    </p>
+    <a href="#about" class="gold-button">EXPLORE MORE</a>
+  </header>
 
-<section class="hero" id="home">
-  <div class="container">
-    <div class="hero-content">
-      <div class="eyebrow">The Royal Gaming Experience</div>
+  <section class="content reveal" id="about">
+    <div class="eyebrow">GET TO KNOW ME</div>
+    <h2 class="section-title">About Matthew</h2>
+    <div class="line"></div>
 
-      <h1>
-        RULE THE
-        <span>KINGDOM.</span>
-      </h1>
-
+    <div class="card">
+      <h3>A Little About Me</h3>
       <p>
-        Strategy. Leadership. Legacy.
-        Welcome to MATTHEW, where every decision
-        shapes your journey and every victory
-        becomes part of your story.
+        Halo, saya Matthew. Selamat datang di website personal saya.
+        Saya percaya bahwa kesuksesan tidak datang secara instan,
+        melainkan melalui proses, konsistensi, dan kemauan untuk
+        terus berkembang.
+        <br><br>
+        Bagi saya, setiap pengalaman adalah kesempatan untuk belajar,
+        setiap tantangan adalah kesempatan untuk bertumbuh,
+        dan setiap kepercayaan adalah sesuatu yang harus dijaga.
+        <br><br>
+        Terima kasih sudah meluangkan waktu untuk mengenal saya.
+      </p>
+    </div>
+  </section>
+
+  <section class="content reveal" id="service">
+    <div class="eyebrow">OUR JOURNEY</div>
+    <h2 class="section-title">Matthew Joki</h2>
+    <div class="line"></div>
+
+    <div class="card">
+      <h3>Professional Joki Service</h3>
+      <p>
+        Matthew Joki berdiri sejak Januari 2025 dan terus berkembang
+        hingga saat ini sebagai layanan joki profesional.
+        <br><br>
+        Dengan mengutamakan kualitas, tanggung jawab, konsistensi,
+        dan kepercayaan, Matthew Joki berkomitmen memberikan
+        pelayanan terbaik kepada setiap pelanggan.
       </p>
 
-      <div class="buttons">
-        <a href="#features" class="btn btn-primary">
-          EXPLORE MORE ↗
-        </a>
-
-        <a href="#about" class="btn btn-outline">
-          OUR STORY
-        </a>
+      <div class="info">
+        <span>EST. JANUARY 2025</span>
+        <span>PROFESSIONAL SERVICE</span>
+        <span>ACTIVE</span>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="features" id="features">
-  <div class="container">
-    <div class="section-label reveal">The Royal Standard</div>
+  <section class="content reveal" id="contact">
+    <div class="eyebrow">LET'S CONNECT</div>
+    <h2 class="section-title">Contact Matthew</h2>
+    <div class="line"></div>
 
-    <h2 class="section-title reveal">
-      Built for Greatness.
-    </h2>
-
-    <p class="section-desc reveal">
-      Discover the principles behind a kingdom
-      built on strategy, ambition, and excellence.
-    </p>
-
-    <div class="card-grid">
-
-      <article class="card reveal">
-        <div class="card-icon">⚔️</div>
-        <h3>Strategic Mind</h3>
-        <p>
-          Every move matters. Think ahead,
-          adapt to challenges, and turn
-          difficult situations into opportunities.
-        </p>
-      </article>
-
-      <article class="card reveal">
-        <div class="card-icon">👑</div>
-        <h3>Royal Leadership</h3>
-        <p>
-          Great kingdoms are built through
-          discipline, teamwork, and the courage
-          to lead when it matters most.
-        </p>
-      </article>
-
-      <article class="card reveal">
-        <div class="card-icon">🏆</div>
-        <h3>Legendary Legacy</h3>
-        <p>
-          Pursue excellence, celebrate progress,
-          and create a legacy that stands
-          beyond every battle.
-        </p>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="container about-grid">
-
-    <div class="reveal">
-      <div class="section-label">About Matthew</div>
-
-      <h2 class="section-title">
-        More Than a Game.<br>
-        It's a Mindset.
-      </h2>
-
-      <p class="section-desc">
-        MATTHEW is a personal gaming identity
-        inspired by the world of Rise of Kingdoms.
-        A space for strategy, creativity,
-        and the pursuit of something legendary.
+    <div class="card contact-card">
+      <h3>Have Something to Discuss?</h3>
+      <p>
+        Punya pertanyaan atau ingin mengetahui lebih lanjut
+        mengenai layanan Matthew Joki?
+        Silakan hubungi saya melalui WhatsApp.
       </p>
 
-      <a href="#contact" class="btn btn-outline">
-        CONNECT WITH US →
+      <a class="whatsapp"
+         href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20mengenai%20layanan%20Matthew%20Joki."
+         target="_blank" rel="noopener">
+        CONTACT VIA WHATSAPP
       </a>
     </div>
+  </section>
 
-    <div class="about-panel reveal">
-      <div class="big-mark">M.</div>
+  <footer>
+    © 2026 MATTHEW. ALL RIGHTS RESERVED.
+    <br><br>
+    DESIGNED WITH ELEGANCE.
+  </footer>
 
-      <div class="section-label">Our Philosophy</div>
-
-      <h3>Power with Purpose.</h3>
-
-      <p>
-        Build wisely. Lead boldly.
-        Leave a legacy worth remembering.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-<section class="cta" id="contact">
-  <div class="container reveal">
-
-    <div class="section-label">Your Journey Starts Here</div>
-
-    <h2 class="section-title">
-      Ready to Rise?
-    </h2>
-
-    <p class="section-desc">
-      Every legend begins with a single step.
-      Make yours count.
-    </p>
-
-    <a href="#home" class="btn btn-primary">
-      BACK TO THE TOP ↑
-    </a>
-
-  </div>
-</section>
-
-</main>
-
-<footer>
-  <div class="container">
-    © <span id="year"></span> MATTHEW.
-    Crafted with ambition.
-    <br>
-    <span>RULE THE KINGDOM.</span>
-  </div>
-</footer>
+</div>
 
 <script>
-const menuBtn = document.getElementById("menuBtn");
-const navLinks = document.getElementById("navLinks");
+// LOGIN DEMO - BUKAN AUTENTIKASI AMAN
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-menuBtn.addEventListener("click", () => {
-  const isOpen = navLinks.classList.toggle("open");
-  menuBtn.setAttribute("aria-expanded", isOpen);
-  menuBtn.textContent = isOpen ? "✕" : "☰";
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value;
+
+  if (user.toLowerCase() === "admin" && pass === "admin") {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+
+    window.scrollTo({top: 0, behavior: "smooth"});
+    revealObserver.observeAll();
+  } else {
+    document.getElementById("error").textContent =
+      "Nama atau password salah. Silakan coba lagi.";
+  }
 });
 
-navLinks.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("open");
-    menuBtn.setAttribute("aria-expanded", "false");
-    menuBtn.textContent = "☰";
+// ANIMASI PARTIKEL
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+for (let i = 0; i < 65; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 2 + .5,
+    speed: Math.random() * .5 + .15,
+    opacity: Math.random() * .6 + .2
   });
-});
+}
 
-document.getElementById("year").textContent =
-  new Date().getFullYear();
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+    p.y -= p.speed;
+
+    if (p.y < -5) {
+      p.y = canvas.height + 5;
+      p.x = Math.random() * canvas.width;
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(220,195,130,${p.opacity})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+// ANIMASI SCROLL
+const revealObserver = {
+  observeAll: function() {
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  }
+};
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-      observer.unobserve(entry.target);
+      entry.target.classList.add("show");
     }
   });
-}, { threshold: 0.12 });
+}, {threshold: .12});
 
-document.querySelectorAll(".reveal").forEach(element => {
-  observer.observe(element);
-});
 </script>
-
 </body>
-  </html>
+</html>
