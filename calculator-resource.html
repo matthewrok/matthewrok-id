@@ -1,1 +1,301 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10101c">
+  <title>Resource Tax Calculator | Dragon Kingdom</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 25px 16px;
+      background: radial-gradient(circle at top, #342044, #10101c 65%);
+      color: #f5f0ff;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+    }
+
+    .back {
+      display: inline-block;
+      color: #e6b85c;
+      text-decoration: none;
+      margin-bottom: 25px;
+    }
+
+    .panel {
+      background: rgba(28, 25, 43, .96);
+      border: 1px solid #69502d;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 15px 45px #0008;
+    }
+
+    h1 {
+      text-align: center;
+      color: #f2c46d;
+      margin: 0 0 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #bcb5ca;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 9px;
+      border: 1px solid #625476;
+      background: #171525;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #e6b85c;
+    }
+
+    .tax-info {
+      margin-top: 18px;
+      padding: 15px;
+      background: #352b20;
+      border: 1px solid #8b6836;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .tax-info strong {
+      color: #f5c76e;
+      font-size: 25px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 22px;
+      border: 0;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #e7bd65, #a66b27);
+      color: #211609;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(1.12); }
+
+    .result {
+      display: none;
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #172e27;
+      border: 1px solid #438b65;
+      line-height: 1.8;
+    }
+
+    .result h2 {
+      margin-top: 0;
+      color: #8ee0a9;
+      font-size: 19px;
+    }
+
+    .result-value {
+      font-size: 27px;
+      font-weight: bold;
+      color: #a5efb9;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      color: #bcb5ca;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 22px;
+    }
+
+    footer {
+      text-align: center;
+      color: #898197;
+      margin-top: 25px;
+      font-size: 13px;
+    }
+
+    @media(max-width: 480px) {
+      .panel { padding: 20px; }
+      .container { margin-top: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <a class="back" href="index.html">← Kembali ke Beranda</a>
+
+    <section class="panel">
+      <h1>🐉 Resource Tax Calculator</h1>
+      <p class="subtitle">
+        Rise of Kingdoms Trading Post<br>
+        Hitung pajak pengiriman resource berdasarkan level Trading Post.
+      </p>
+
+      <label for="mode">Mode Kalkulator</label>
+      <select id="mode">
+        <option value="receive">Saya ingin penerima mendapatkan jumlah tertentu</option>
+        <option value="send">Saya ingin menghitung hasil dari jumlah yang dikirim</option>
+      </select>
+
+      <label for="level">Level Trading Post</label>
+      <select id="level"></select>
+
+      <div class="tax-info">
+        Persentase Pajak<br>
+        <strong id="tax">35%</strong>
+      </div>
+
+      <label for="amount" id="amountLabel">
+        Jumlah resource yang ingin diterima
+      </label>
+      <input
+        type="number"
+        id="amount"
+        min="1"
+        step="1"
+        placeholder="Contoh: 1000000"
+      >
+
+      <button type="button" id="calculate">
+        HITUNG RESOURCE
+      </button>
+
+      <div class="result" id="result" aria-live="polite">
+        <h2>Hasil Perhitungan</h2>
+        <div id="resultText"></div>
+      </div>
+
+      <p class="note">
+        * Perhitungan menggunakan tarif pajak standar Trading Post.
+        Hasil merupakan estimasi berdasarkan rumus jumlah dikirim ×
+        (1 − pajak). Pembulatan dalam game dapat menyebabkan selisih kecil.
+        Pastikan kapasitas pengiriman mencukupi.
+      </p>
+    </section>
+
+    <footer>
+      Dragon Kingdom © 2026
+    </footer>
+  </main>
+
+  <script>
+    const taxRates = [
+      35, 34, 33, 32, 31,
+      30, 29, 28, 27, 26,
+      25, 24, 23, 22, 21,
+      20, 19, 18, 17, 16,
+      15, 14, 12, 10, 8
+    ];
+
+    const levelInput = document.getElementById("level");
+    const modeInput = document.getElementById("mode");
+    const amountInput = document.getElementById("amount");
+    const amountLabel = document.getElementById("amountLabel");
+    const taxDisplay = document.getElementById("tax");
+    const result = document.getElementById("result");
+    const resultText = document.getElementById("resultText");
+
+    function formatNumber(value) {
+      return Math.floor(value).toLocaleString("id-ID");
+    }
+
+    taxRates.forEach((rate, index) => {
+      const option = document.createElement("option");
+      option.value = index + 1;
+      option.textContent = `Level ${index + 1} — Pajak ${rate}%`;
+      levelInput.appendChild(option);
+    });
+
+    function updateTax() {
+      const level = Number(levelInput.value);
+      const tax = taxRates[level - 1];
+
+      taxDisplay.textContent = tax + "%";
+
+      amountLabel.textContent =
+        modeInput.value === "receive"
+          ? "Jumlah resource yang ingin diterima"
+          : "Jumlah resource yang akan dikirim";
+
+      amountInput.placeholder =
+        modeInput.value === "receive"
+          ? "Contoh: 1000000"
+          : "Contoh: 1000000";
+
+      result.style.display = "none";
+    }
+
+    levelInput.addEventListener("change", updateTax);
+    modeInput.addEventListener("change", updateTax);
+
+    document.getElementById("calculate").addEventListener("click", () => {
+      const amount = Number(amountInput.value);
+      const level = Number(levelInput.value);
+      const tax = taxRates[level - 1] / 100;
+      const multiplier = 1 - tax;
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Masukkan jumlah resource yang valid!");
+        amountInput.focus();
+        return;
+      }
+
+      let sent;
+      let received;
+
+      if (modeInput.value === "receive") {
+        received = Math.floor(amount);
+        sent = Math.ceil(received / multiplier);
+      } else {
+        sent = Math.floor(amount);
+        received = Math.floor(sent * multiplier);
+      }
+
+      const lost = sent - received;
+
+      resultText.innerHTML = `
+        <p>Level Trading Post: <b>${level}</b></p>
+        <p>Pajak: <b>${tax * 100}%</b></p>
+        <p>Resource dikirim:</p>
+        <div class="result-value">${formatNumber(sent)}</div>
+        <p>Resource diterima (estimasi):</p>
+        <div class="result-value">${formatNumber(received)}</div>
+        <p>Resource terpotong pajak:</p>
+        <b>${formatNumber(lost)}</b>
+      `;
+
+      result.style.display = "block";
+      result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    updateTax();
+  </script>
+</body>
+</html>
+
