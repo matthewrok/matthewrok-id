@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               await loadMembers();
             } catch (error) {
               console.error("Role update failed:", error);
-              showNotice("Role gagal diubah. Pastikan migrasi admin_set_member_role sudah aktif dan kebijakan Supabase benar.", true);
+              showNotice("Role gagal diubah: " + (error?.message || "Kesalahan tidak diketahui") + ". Periksa detail di atas jika masih gagal.", true);
               save.disabled = false;
               select.disabled = false;
               save.textContent = previousText;
