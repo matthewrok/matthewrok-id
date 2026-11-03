@@ -1,70 +1,81 @@
-# MATTHEW JOKI — Dragon Kingdom
+# Matthew Joki — Dragon Kingdom
 
-Website resmi Matthew Joki untuk layanan dan komunitas **Rise of Kingdoms**.
+Website resmi **Matthew Joki** untuk layanan dan panduan *Rise of Kingdoms*.
 
 🌐 **Website:** https://matthewrok.my.id/  
-📦 **Repository:** https://github.com/matthewrok/matthewrok-id  
-🚀 **Hosting:** GitHub Pages dengan custom domain.
+📦 **Repository:** https://github.com/matthewrok/matthewrok-id
 
-## Fitur website
+## Daftar fitur
 
-- **Beranda** — profil Matthew, informasi layanan, dan ulasan client.
-- **Login & registrasi** — autentikasi menggunakan Supabase; registrasi memerlukan verifikasi email.
-- **Reset kata sandi** — alur pemulihan akun.
-- **Calculator Resource** — alat bantu perhitungan resource.
-- **Requirements City Hall** — informasi kebutuhan upgrade City Hall di Rise of Kingdoms.
-- **Lacak Progress** — client memasukkan kode random/token unik untuk melihat status dan progres pesanan.
-- **Ulasan client** — menampilkan rating dan ulasan yang diizinkan untuk publik.
-- **Support Matthew** — informasi dukungan.
-- **Admin Dashboard** — pengelolaan role member, pesanan/progres client, dan moderasi ulasan. Halaman admin memerlukan role admin.
+| Area | Fitur |
+| --- | --- |
+| Beranda | Profil Matthew, daftar paket joki, navigasi, dan pengumuman berjalan RGB |
+| Akun | Login, registrasi dengan verifikasi email, akses visitor, dan pemulihan kata sandi |
+| Tools | Calculator Resource dan Requirements City Hall |
+| Layanan | Produk joki, pembuatan pesanan, pelacakan progres menggunakan kode/token unik |
+| Komunitas | Ulasan client dan Support Matthew |
+| Admin | Pengelolaan anggota/role, notifikasi, voucher, progres pesanan, dan moderasi ulasan sesuai modul yang tersedia |
+
+### Pengumuman berjalan
+
+Ticker di beranda mengambil **notifikasi terbaru yang aktif untuk target “Semua pengunjung”** dari tabel Supabase `site_notifications`. Pesan yang dinonaktifkan atau kedaluwarsa tidak ditampilkan. Pengaturan teks dilakukan dari **Admin Dashboard → Pusat Notifikasi**.
+
+Jika ticker tidak tampil, periksa koneksi Supabase, kolom tabel, dan kebijakan RLS agar pengunjung anonim hanya dapat membaca data pengumuman publik yang memang ditujukan untuk semua pengunjung. Jangan membuka akses publik ke data notifikasi member atau data admin.
 
 ## Struktur repository
 
 ```text
 .
-├── index.html                    # Beranda
-├── login.html                    # Login
-├── register.html                 # Registrasi
-├── reset-password.html           # Reset kata sandi
-├── email-confirmed.html          # Konfirmasi/verifikasi email
-├── calculator-resource.html      # Calculator Resource
-├── requirements-city-hall.html   # Requirements City Hall
-├── joki-matthew.html             # Lacak Progress dengan kode random
-├── support-matthew.html          # Support Matthew
+├── index.html
+├── login.html
+├── register.html
+├── reset-password.html
+├── email-confirmed.html
+├── calculator-resource.html
+├── requirements-city-hall.html
+├── joki-matthew.html
+├── support-matthew.html
 ├── admin/
-│   ├── dashboard.html            # Dashboard admin dan manajemen role
-│   └── joki-progress.html        # Kelola token, progres, dan moderasi ulasan
+│   ├── dashboard.html
+│   └── joki-progress.html
 ├── assets/
-│   ├── css/                      # Stylesheet halaman dan tema
-│   ├── js/                       # JavaScript halaman, auth, Supabase, admin
-│   └── images/                   # Artwork, gambar, dan QRIS
-├── supabase/
-│   ├── admin-role-management.sql  # Setup pengelolaan role admin
-│   ├── joki-progress-setup.sql   # Setup database dan RPC progres joki
-│   ├── joki-reviews-setup.sql    # Setup rating dan ulasan client
-│   └── visitor-logs-setup.sql    # Setup log kunjungan visitor
-├── robots.txt                    # Aturan crawler
-├── sitemap.xml                  # Sitemap
-├── CNAME                         # Custom domain GitHub Pages
-└── README.md                     # Dokumentasi repository
+│   ├── css/       # Gaya halaman dan tema bersama
+│   ├── js/        # Logika halaman, autentikasi, admin, dan Supabase
+│   └── images/    # Aset gambar jika digunakan
+├── supabase/      # Skrip SQL setup/migrasi yang tersedia
+├── docs/          # Dokumentasi pemeliharaan
+├── CNAME
+├── robots.txt
+├── sitemap.xml
+└── README.md
 ```
+
+> Halaman HTML utama sengaja tetap di root. Jangan memindah atau mengganti nama halaman tanpa memperbarui tautan, canonical URL, callback autentikasi, sitemap, dan rute GitHub Pages yang terkait.
 
 ## Teknologi
 
 - HTML5, CSS3, dan JavaScript
-- [Supabase](https://supabase.com/) untuk autentikasi dan database
-- [GitHub Pages](https://pages.github.com/) untuk publikasi website
+- Supabase untuk autentikasi, database, dan fitur dinamis
+- GitHub Pages untuk hosting situs statis dengan custom domain
 
-## Pengembangan dan pemeliharaan
+## Panduan pengembangan
 
-1. Perubahan website dipublikasikan dari branch `main` melalui GitHub Pages.
-2. Halaman HTML utama tetap berada di root agar URL dan jalur relatif yang sudah digunakan tetap berfungsi.
-3. File CSS, JavaScript, dan gambar disimpan di `assets/css/`, `assets/js/`, dan `assets/images/`.
-4. SQL setup Supabase disimpan di `supabase/`; jalankan hanya jika diperlukan dan setelah memeriksa skema/policy yang ada.
-5. Jangan menghapus atau mengganti nama `CNAME` tanpa memperbarui konfigurasi domain GitHub Pages.
-6. Sebelum menghapus file, periksa referensinya pada HTML, CSS, JavaScript, dan konfigurasi. Hindari perubahan massal yang bisa memutus login, verifikasi email, pelacakan token, atau akses admin.
-7. Kunci publishable Supabase yang dipakai frontend bukan pengganti kebijakan keamanan. Jangan pernah memasukkan `service_role key`, kata sandi, token privat, atau rahasia lain ke file publik.
+1. Gunakan branch terpisah untuk perubahan besar; gabungkan ke `main` setelah ditinjau.
+2. Letakkan stylesheet di `assets/css/`, skrip browser di `assets/js/`, dan aset visual di folder aset yang sesuai.
+3. Gunakan nama file deskriptif dengan huruf kecil dan tanda hubung, misalnya `home-announcement.js`.
+4. Perhatikan jalur aset: jalur berawalan `/` mengarah ke root domain, sedangkan jalur relatif mengikuti lokasi halaman HTML.
+5. Sebelum menghapus atau memindahkan file, cari semua referensinya di HTML, CSS, JavaScript, sitemap, konfigurasi, dan callback Supabase.
+6. Setelah perubahan, periksa konsol browser, tautan internal, autentikasi, halaman visitor, fitur admin, dan tampilan mobile. Jangan menyatakan pengujian berhasil sebelum benar-benar dijalankan.
+7. Perubahan di `main` akan dipublikasikan oleh GitHub Pages sesuai konfigurasi repository. Waktu pembaruan dapat bervariasi.
 
-## Catatan keamanan
+## Supabase dan keamanan
 
-Pemeriksaan role pada antarmuka admin harus didukung oleh kebijakan **Row Level Security (RLS)** dan kontrol akses di database. Jangan menganggap menyembunyikan tautan admin saja sebagai perlindungan data.
+- File `assets/js/supabase.js` menggunakan publishable key untuk aplikasi browser. Publishable key bukan pengganti kebijakan keamanan database.
+- Jangan menyimpan `service_role key`, password, access token privat, atau rahasia server di repository publik.
+- Terapkan dan audit Row Level Security (RLS) pada tabel. Pemeriksaan role di antarmuka saja tidak cukup untuk melindungi data.
+- Untuk pengumuman ticker, akses anonim harus dibatasi pada notifikasi aktif, belum kedaluwarsa, dan ber-audience `all`. Jangan memberikan akses baca publik ke pengumuman khusus member.
+- Skrip SQL di `supabase/` adalah dokumentasi setup. Tinjau isi dan dampaknya sebelum menjalankannya; jangan mengulang skrip migrasi tanpa memastikan aman untuk skema saat ini.
+
+## Pemeliharaan struktur
+
+Perapihan dilakukan secara konservatif: halaman publik tetap di root agar URL lama tidak rusak, sedangkan CSS, JavaScript, SQL, dan dokumentasi ditempatkan berdasarkan jenisnya. Catatan teknis tambahan diletakkan di folder `docs/`.
