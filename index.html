@@ -812,8 +812,13 @@
       .getElementById("logout")
       .addEventListener("click", async () => {
 
-        const { error } =
-          await db.auth.signOut();
+        if (sessionStorage.getItem("matthewVisitorName")) {
+          sessionStorage.removeItem("matthewVisitorName");
+          localStorage.removeItem("matthewLastActivity");
+          window.location.replace("login.html");
+          return;
+        }
+        const { error } = await db.auth.signOut();
 
         if (error) {
 
