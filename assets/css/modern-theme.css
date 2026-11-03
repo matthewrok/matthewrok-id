@@ -582,3 +582,44 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
  .hero-product-strip{width:100%;margin:22px 0 0}
  .hero-product-strip .joki-product-card{flex-basis:210px}
 }
+
+
+/* KINGDOM TOOLS — horizontal service cards, responsive on mobile */
+.kingdom-section{max-width:1240px;margin-inline:auto}
+.kingdom-section .feature-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  align-items:stretch;
+}
+.kingdom-section .feature-card{
+  min-width:0;min-height:190px;padding:20px 17px;
+  grid-template-columns:42px minmax(0,1fr);column-gap:12px;
+  border-radius:15px;
+}
+.kingdom-section .feature-icon{
+  width:40px;height:40px;border-radius:12px;font-size:20px;
+}
+.kingdom-section .feature-card h2{
+  font-size:12px;line-height:1.45;overflow-wrap:anywhere;
+}
+.kingdom-section .feature-card p{font-size:11px;line-height:1.65}
+.kingdom-section .feature-link{font-size:9px;margin-top:12px;letter-spacing:.5px}
+@media(max-width:760px){
+  .kingdom-section{padding-top:34px;padding-bottom:48px;overflow:hidden}
+  .kingdom-section .feature-grid{
+    display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;
+    padding:4px 2px 14px;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:thin;
+  }
+  .kingdom-section .feature-card{
+    flex:0 0 min(76vw,270px);min-height:170px;
+    padding:17px 15px;scroll-snap-align:start;
+    grid-template-columns:38px minmax(0,1fr);column-gap:10px;
+  }
+  .kingdom-section .feature-icon{width:36px;height:36px;font-size:18px}
+  .kingdom-section .feature-card h2{font-size:12px}
+}
+@media(min-width:761px) and (max-width:1020px){
+  .kingdom-section .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
