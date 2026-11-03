@@ -64,7 +64,18 @@
           <p id="ratingFeedback" class="rating-feedback" aria-live="polite">Belum ada rating dipilih</p>
           <label for="reviewText">Ulasan (opsional)</label>
           <textarea id="reviewText" rows="3" maxlength="700" placeholder="Ceritakan pengalamanmu menggunakan layanan ini..."></textarea>
-          <label class="review-consent"><input id="reviewConsent" type="checkbox"> Saya mengizinkan nama saya dan ulasan ditampilkan di website.</label>
+          <fieldset class="review-identity">
+            <legend>Nama yang ditampilkan pada ulasan</legend>
+            <label class="review-identity-option">
+              <input type="radio" name="reviewIdentity" value="named" checked>
+              <span><strong>Tampilkan Nama</strong><small>Nama client akan ditampilkan. Gmail tetap dirahasiakan.</small></span>
+            </label>
+            <label class="review-identity-option">
+              <input type="radio" name="reviewIdentity" value="anonymous">
+              <span><strong>Anonim Matthew</strong><small>Nama asli dan Gmail tidak ditampilkan.</small></span>
+            </label>
+            <label id="reviewConsentWrap" class="review-consent"><input id="reviewConsent" type="checkbox" required> Saya menyetujui nama saya ditampilkan bersama ulasan.</label>
+          </fieldset>
           <button id="submitReview" class="btn btn-gold" type="submit">KIRIM ULASAN</button>
           <p id="reviewMessage" class="message" aria-live="polite"></p>
         </form>
