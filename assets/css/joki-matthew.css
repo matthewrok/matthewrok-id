@@ -49,3 +49,11 @@ th{background:#32101a;color:var(--gilt)}
 .review-stars,.star-picker label.is-active{color:var(--gilt)}
 .review-card p,.review-card-top strong{color:var(--text)}
 footer{color:var(--faint);border-color:var(--line)}
+
+
+/* Clear selected rating feedback */
+.star-picker label.is-active{color:#d9a441;text-shadow:0 0 10px rgba(255,196,74,.28)}
+.star-picker label.is-current{color:#fff0a6;text-shadow:0 0 12px rgba(255,220,120,.8);transform:scale(1.16)}
+.star-picker label:focus-visible{outline:2px solid var(--gilt);outline-offset:4px;border-radius:4px}
+.rating-feedback{display:inline-flex;align-items:center;min-height:30px;margin:-7px 0 16px;padding:5px 11px;border:1px solid var(--line-2);border-radius:20px;background:rgba(255,255,255,.04);color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.3px;transition:all .18s ease}
+.rating-feedback.has-rating{border-color:rgba(232,194,122,.55);background:rgba(232,194,122,.12);color:#ffe2a0}
