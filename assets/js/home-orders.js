@@ -33,11 +33,31 @@
     if(visitorName)return {name:visitorName,email:"",isVisitor:true};
     return null;
   }
-  function openOrder(code){
-    const p=products[code],identity=getIdentity();
+  async function resolveIdentity(){
+    let identity=getIdentity();
+    if(identity?.name)return identity;
+    // HomeApp profile loading can race with a fast tap; resolve the active Supabase session directly.
+    if(db){
+      const {data:{user},error}=await db.auth.getUser();
+      if(!error&&user){
+        const {data:profile}=await db.from("profiles").select("full_name,role").eq("id",user.id).maybeSingle();
+        if(profile){
+          identity={name:profile.full_name||user.email||"Client",email:user.email||"",isVisitor:false};
+          window.HomeApp=window.HomeApp||{};
+          window.HomeApp.currentIdentity=identity;
+          return identity;
+        }
+      }
+    }
+    const visitorName=sessionStorage.getItem("matthewVisitorName");
+    return visitorName?{name:visitorName,email:"",isVisitor:true}:null;
+  }
+  async function openOrder(code){
+    const p=products[code];
     if(!p){console.error("[Joki Order] Kode produk tidak valid:",code);return;}
-    if(!identity?.name){alert("Silakan login terlebih dahulu untuk memesan produk.");return;}
-    if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login sebagai member untuk memesan dan menggunakan voucher.");return;}
+    const identity=await resolveIdentity();
+    if(!identity?.name){alert("Sesi login belum terbaca. Muat ulang halaman atau login kembali.");return;}
+    if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login dengan akun terverifikasi untuk memesan.");return;}
     selected=code;
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
@@ -47,8 +67,14 @@
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
     updateTotal();modal?.classList.remove("hidden");
   }
-  document.querySelectorAll("[data-order-product]").forEach(button=>{
-    button.addEventListener("click",event=>{event.preventDefault();openOrder(button.dataset.orderProduct);});
+  document.addEventListener("click",event=>{
+    const button=event.target.closest("[data-order-product]");
+    if(!button)return;
+    event.preventDefault();
+    openOrder(button.dataset.orderProduct).catch(error=>{
+      console.error("[Joki Order] Gagal membuka formulir:",error);
+      alert("Formulir pesanan gagal dibuka. Muat ulang halaman dan coba lagi.");
+    });
   });
   function syncVisitorRestrictions(){
     const visitor=!!getIdentity()?.isVisitor;
@@ -62,6 +88,7 @@
     if(voucherButton){voucherButton.disabled=visitor;voucherButton.title=visitor?"Voucher hanya untuk member":"Cek voucher";}
   }
   syncVisitorRestrictions();
+  window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
   quantity?.addEventListener("input",updateTotal);
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
