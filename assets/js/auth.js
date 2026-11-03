@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        sessionStorage.removeItem("matthewVisitorName");
         if (rememberField?.checked) localStorage.setItem("matthewRememberedEmail", email);
         else localStorage.removeItem("matthewRememberedEmail");
         showMessage("Login berhasil. Membuka kerajaan...", "success");
@@ -155,10 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("registerEmail").value.trim();
       const password = document.getElementById("registerPassword").value;
       try {
-        const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/index.html" } });
+        const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed.html" } });
         if (error) throw error;
-        if (data.session) { showMessage("Pendaftaran berhasil. Mengalihkan...", "success"); window.location.assign("index.html"); }
-        else { showMessage("Pendaftaran berhasil. Silakan cek email untuk konfirmasi sebelum login.", "success"); registerForm.reset(); setBusy(registerForm, false, "BUAT AKUN"); }
+        if (data.session) await client.auth.signOut({ scope: "local" });
+        showMessage("Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual.", "success");
+        registerForm.reset();
+        setBusy(registerForm, false, "BUAT AKUN");
       } catch (error) { showMessage(error.message || "Pendaftaran gagal. Coba lagi.", "error"); setBusy(registerForm, false, "BUAT AKUN"); }
     });
   }

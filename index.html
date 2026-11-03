@@ -20,6 +20,7 @@
 
   <!-- MAIN CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/auth-visitor.css">
 
   <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -97,6 +98,19 @@
         </button>
 
       </form>
+
+      <div class="visitor-divider"><span>ATAU</span></div>
+      <section class="home-visitor" aria-labelledby="visitorTitle">
+        <div class="home-visitor-mark" aria-hidden="true">♟</div>
+        <h2 id="visitorTitle">MASUK SEBAGAI VISITOR</h2>
+        <p>Jelajahi website tanpa membuat akun. Cukup masukkan nama kamu.</p>
+        <form id="homeVisitorForm">
+          <label for="homeVisitorName">Nama pengunjung</label>
+          <input id="homeVisitorName" name="visitorName" type="text" minlength="2" maxlength="60" autocomplete="name" placeholder="Masukkan nama kamu" required>
+          <button class="btn btn-outline btn-full" id="homeVisitorButton" type="submit">MASUK SEBAGAI TAMU</button>
+        </form>
+        <small>Akses visitor bersifat sementara dan berakhir setelah 30 menit tidak aktif.</small>
+      </section>
 
       <div id="authMessage" aria-live="polite"></div>
 
@@ -575,7 +589,7 @@
                   },
 
                   emailRedirectTo:
-                    "https://matthewrok.my.id"
+                    "https://matthewrok.my.id/email-confirmed.html"
 
                 }
 
@@ -585,10 +599,11 @@
               throw error;
             }
 
+            if (data.session) {
+              await db.auth.signOut({ scope: "local" });
+            }
             showMessage(
-              data.session
-                ? "Pendaftaran berhasil!"
-                : "Pendaftaran berhasil. Periksa email untuk konfirmasi.",
+              "Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual.",
               "success"
             );
 
@@ -606,6 +621,7 @@
             if (error) {
               throw error;
             }
+            sessionStorage.removeItem("matthewVisitorName");
 
           }
 
@@ -629,6 +645,35 @@
 
       }
     );
+
+
+    /* VISITOR ACCESS — no Supabase Auth account/session */
+    const homeVisitorForm = document.getElementById("homeVisitorForm");
+    homeVisitorForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const visitorInput = document.getElementById("homeVisitorName");
+      const visitorName = visitorInput.value.trim().replace(/\\s+/g, " ");
+      const visitorButton = document.getElementById("homeVisitorButton");
+      if (visitorName.length < 2) {
+        showMessage("Nama wajib diisi minimal 2 karakter.", "error");
+        return;
+      }
+      visitorButton.disabled = true;
+      visitorButton.textContent = "MENYIAPKAN AKSES...";
+      try {
+        const { error } = await db.from("visitor_logs").insert({ visitor_name: visitorName });
+        if (error) throw error;
+        sessionStorage.setItem("matthewVisitorName", visitorName);
+        localStorage.setItem("matthewLastActivity", String(Date.now()));
+        showMessage("Akses visitor berhasil disiapkan.", "success");
+        await showUser(null);
+      } catch (error) {
+        console.error("Visitor access error:", error);
+        showMessage("Akses visitor belum dapat dicatat. Coba lagi beberapa saat.", "error");
+        visitorButton.disabled = false;
+        visitorButton.textContent = "MASUK SEBAGAI TAMU";
+      }
+    });
 
 
     /* INTERSECTION OBSERVER */
