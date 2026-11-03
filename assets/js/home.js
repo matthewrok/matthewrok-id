@@ -88,6 +88,7 @@
 
     if (!user) {
       const visitorName = sessionStorage.getItem("matthewVisitorName");
+      app.currentIdentity = visitorName ? { name: visitorName, email: "", isVisitor: true } : null;
       if (visitorName) {
         authScreen?.classList.add("hidden");
         site?.classList.remove("hidden");
@@ -114,6 +115,7 @@
       return;
     }
 
+    app.currentIdentity = { name: profile.full_name || user.email || "Client", email: user.email || "", isVisitor: false };
     authScreen?.classList.add("hidden");
     site?.classList.remove("hidden");
 
