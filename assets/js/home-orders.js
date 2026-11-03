@@ -61,6 +61,10 @@
       $("jokiOrderMessage").textContent="Jumlah karakter harus antara 1 sampai 20.";
       return;
     }
+    // Buka tab kosong saat klik masih dianggap interaksi pengguna oleh browser mobile.
+    // URL WhatsApp baru diisi setelah RPC selesai agar tidak diblokir popup blocker.
+    let whatsappTab=null;
+    try{whatsappTab=window.open("about:blank","_blank");}catch(_e){}
     button.disabled=true;button.textContent="MENYIMPAN PESANAN...";
     $("jokiOrderMessage").textContent="Membuat nomor order unik...";
     try{
@@ -83,7 +87,17 @@
         "https://matthewrok.my.id/joki-matthew.html","","Terima kasih."
       ].join("\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";
-      window.location.href="https://wa.me/6285894152856?text="+encodeURIComponent(message);
+      const whatsappUrl="https://wa.me/6285894152856?text="+encodeURIComponent(message);
+      if(whatsappTab&&!whatsappTab.closed){
+        whatsappTab.location.href=whatsappUrl;
+        $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. WhatsApp dibuka di tab baru. Jika belum terbuka, gunakan tombol di bawah.";
+        button.disabled=false;button.textContent="BUKA WHATSAPP ↗";
+        button.onclick=()=>{window.open(whatsappUrl,"_blank");};
+      }else{
+        // Fallback same-tab jika browser menolak tab baru.
+        $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. Mengalihkan ke WhatsApp...";
+        window.location.assign(whatsappUrl);
+      }
     }catch(error){
       console.error("[Joki Order]",error);
       $("jokiOrderMessage").textContent=error.message||"Pesanan gagal dibuat. Silakan coba kembali.";
