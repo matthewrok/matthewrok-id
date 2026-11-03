@@ -126,36 +126,19 @@
           </span>
         </a>
 
-        <nav class="nav-links">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="siteMenu">
+          <span></span><span></span><span></span>
+        </button>
 
-          <a href="#">HOME</a>
-
-          <a href="#about">
-            ABOUT MATTHEW
-          </a>
-
-          <a href="#service">
-            MATTHEW JOKI
-          </a>
-
-          <a href="calculator-resource.html">
-            CALCULATOR
-          </a>
-
-          <a href="requirements-city-hall.html">
-            REQUIREMENTS
-          </a>
-
-          <a href="joki-matthew.html">
-            JOKI PROGRESS
-          </a>
-
+        <nav class="nav-links" id="siteMenu" aria-label="Navigasi utama">
+          <a href="#">Home</a>
+          <a href="#about">About Matthew</a>
+          <a href="#service">Matthew Joki</a>
+          <a href="calculator-resource.html">Calculator Resource</a>
+          <a href="requirements-city-hall.html">Requirements City Hall</a>
+          <a href="joki-matthew.html">Joki Progress</a>
           <span id="navUser" class="nav-user"></span>
-
-          <button id="logout" class="btn btn-outline" type="button">
-            LOGOUT
-          </button>
-
+          <button id="logout" class="btn btn-outline" type="button">Logout</button>
         </nav>
 
       </div>
@@ -911,6 +894,31 @@
       emberBox.appendChild(ember);
 
     }
+
+    /* RESPONSIVE THREE-DOT NAVIGATION MENU */
+    (() => {
+      const toggle = document.getElementById("menuToggle");
+      const menu = document.getElementById("siteMenu");
+      if (!toggle || !menu) return;
+      const closeMenu = () => {
+        menu.classList.remove("menu-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Buka menu navigasi");
+      };
+      toggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const isOpen = menu.classList.toggle("menu-open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        toggle.setAttribute("aria-label", isOpen ? "Tutup menu navigasi" : "Buka menu navigasi");
+      });
+      menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+      document.addEventListener("click", (event) => {
+        if (!menu.contains(event.target) && !toggle.contains(event.target)) closeMenu();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") { closeMenu(); toggle.focus(); }
+      });
+    })();
 
   </script>
 
