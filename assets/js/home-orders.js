@@ -36,7 +36,8 @@
   function openOrder(code){
     const p=products[code],identity=getIdentity();
     if(!p){console.error("[Joki Order] Kode produk tidak valid:",code);return;}
-    if(!identity?.name){alert("Silakan login terlebih dahulu untuk memesan produk.");return;}\n    if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login sebagai member untuk memesan dan menggunakan voucher.");return;}
+    if(!identity?.name){alert("Silakan login terlebih dahulu untuk memesan produk.");return;}
+    if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login sebagai member untuk memesan dan menggunakan voucher.");return;}
     selected=code;
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
