@@ -50,6 +50,37 @@
       console.error(error);
     } finally { setBusy($("lookupButton"), false, "MEMERIKSA...", "CEK PROGRES"); }
   });
+  // Interactive star rating: selecting star N fills stars 1 through N.
+  const starPicker = document.querySelector(".star-picker");
+  if (starPicker) {
+    const starLabels = [...starPicker.querySelectorAll("label[for^='rating']")];
+    const paintStars = rating => {
+      starLabels.forEach(label => {
+        const value = Number(label.htmlFor.replace("rating", ""));
+        label.classList.toggle("is-active", value <= rating);
+        label.setAttribute("aria-checked", String(value === rating));
+      });
+    };
+    starLabels.forEach(label => {
+      label.addEventListener("click", () => {
+        const input = document.getElementById(label.htmlFor);
+        if (input) {
+          input.checked = true;
+          paintStars(Number(input.value));
+        }
+      });
+      label.addEventListener("mouseenter", () => paintStars(Number(label.htmlFor.replace("rating", ""))));
+    });
+    starPicker.addEventListener("mouseleave", () => {
+      const selected = starPicker.querySelector("input[name='rating']:checked");
+      paintStars(selected ? Number(selected.value) : 0);
+    });
+    starPicker.querySelectorAll("input[name='rating']").forEach(input => {
+      input.addEventListener("change", () => paintStars(Number(input.value)));
+    });
+    paintStars(0);
+  }
+
   $("reviewForm").addEventListener("submit", async event => {
     event.preventDefault();
     const token = $("progressToken").value.trim().toUpperCase();
