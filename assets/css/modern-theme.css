@@ -502,3 +502,46 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 .joki-order-total{border:1px solid rgba(233,201,138,.35)!important;border-radius:9px!important;background:linear-gradient(120deg,rgba(143,16,32,.28),rgba(51,9,15,.65))!important}
 .joki-order-total strong{color:var(--gold)!important}
 .joki-order-close{border:1px solid var(--border)!important;background:#26070d!important;color:var(--gold)!important;border-radius:7px!important}
+
+
+/* FINAL OVERRIDE — order cards and modal follow the site's navy / blue / cyan theme */
+.joki-products .eyebrow,.joki-products .joki-product-tier{color:#8fb0ff!important}
+.joki-product-rail{scrollbar-color:#557cff #101a30!important}
+.joki-product-card,.joki-product-card.is-featured{
+  background:linear-gradient(145deg,#142344,#0a1225)!important;
+  border:1px solid rgba(139,169,255,.25)!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.28)!important;
+}
+.joki-product-card::before{background:linear-gradient(90deg,transparent,#557cff,#6ee7ff,transparent)!important}
+.joki-product-card:hover{border-color:#6ee7ff!important;box-shadow:0 18px 42px rgba(49,87,223,.2)!important}
+.joki-product-card h3,.joki-product-price{color:#c5d7ff!important}
+.joki-product-subtitle,.joki-product-specs span,.joki-product-note{color:#a9b6d0!important}
+.joki-product-specs strong{color:#f3f6ff!important}
+.joki-product-divider{background:linear-gradient(90deg,transparent,#6e91ff,transparent)!important}
+.joki-product-ribbon{background:linear-gradient(135deg,#6c8dff,#3157df)!important;color:#fff!important}
+.joki-order-button{
+  border:1px solid rgba(139,169,255,.48)!important;border-radius:10px!important;
+  background:linear-gradient(135deg,#557cff,#3157df)!important;color:#fff!important;
+  box-shadow:0 8px 22px rgba(49,87,223,.22)!important;
+}
+.joki-order-button:hover{border-color:#6ee7ff!important;box-shadow:0 12px 26px rgba(49,87,223,.34)!important}
+.joki-order-modal{background:rgba(2,6,16,.82)!important}
+.joki-order-dialog{
+  border:1px solid rgba(139,169,255,.35)!important;border-radius:18px!important;
+  background:linear-gradient(145deg,#142344,#080f20)!important;
+  box-shadow:0 28px 90px #000b,0 0 40px rgba(49,87,223,.16)!important;color:var(--text)!important;
+}
+.joki-order-dialog .eyebrow{color:var(--cyan)!important}
+.joki-order-dialog h2{color:#dce6ff!important;font-family:inherit!important;letter-spacing:.2px!important}
+.joki-order-lead,.joki-order-disclaimer,.joki-order-message{color:var(--muted)!important}
+.joki-order-identity,.joki-order-selected{
+  border:1px solid var(--theme-border)!important;border-radius:11px!important;background:#0b1428!important;
+}
+.joki-order-identity span,.joki-order-selected span,.joki-order-total span,.joki-order-dialog label{color:#a9b6d0!important}
+.joki-order-identity strong,.joki-order-selected strong{color:#e5edff!important}
+.joki-order-identity small{color:#9eb5e8!important}
+.joki-order-dialog input{border:1px solid var(--theme-border)!important;border-radius:10px!important;background:#080f20!important;color:var(--text)!important}
+.joki-order-dialog input:focus{outline:none;border-color:var(--cyan)!important;box-shadow:0 0 0 3px rgba(110,231,255,.12)!important}
+.joki-order-total{border:1px solid rgba(110,231,255,.25)!important;border-radius:11px!important;background:linear-gradient(120deg,rgba(49,87,223,.2),rgba(12,21,41,.85))!important}
+.joki-order-total strong{color:#9beaff!important}
+.joki-order-close{border:1px solid var(--theme-border)!important;background:#101a30!important;color:#c5d7ff!important;border-radius:9px!important}
