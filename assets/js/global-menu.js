@@ -12,6 +12,8 @@
         <a href="/requirements-city-hall.html"><span class="global-menu-icon">♜</span>Requirements City Hall</a>
         <a href="/joki-matthew.html"><span class="global-menu-icon">♛</span>Lacak Progress</a>
         <a href="/support-matthew.html"><span class="global-menu-icon">♡</span>Support Matthew</a>
+        <a href="/worker.html"><span class="global-menu-icon">♟</span>Daftar Worker</a>
+        <a href="/inbox.html"><span class="global-menu-icon">✉</span>Inbox Matthew</a>
         <div class="global-menu-divider"></div>
         <a href="/login.html"><span class="global-menu-icon">↪</span>Login Member / Visitor</a>
         <a href="/register.html"><span class="global-menu-icon">＋</span>Daftar Akun</a>
