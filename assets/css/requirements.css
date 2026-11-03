@@ -49,3 +49,22 @@ th { background:#410a17; }
 a { color:#f0d6a0; }
 footer { background:#090103; }
 @media (prefers-reduced-motion:reduce) { .hero::after { animation:none; } }
+
+/* MYSTIC DRAGON REALM V2 — CITY HALL DATABASE FINISHING PASS */
+:root{--bg:var(--ink);--panel:var(--raise);--panel2:var(--raise-2);--gold:var(--gilt);--orange:var(--crimson);--text:#f6eee9;--muted:#b4a5a6;--border:var(--line-2);--green:var(--jade)}
+body{font-family:var(--body);background:radial-gradient(ellipse at 50% 0,rgba(209,40,59,.2),transparent 46%),var(--ink)}
+.topbar{background:rgba(16,11,13,.94);border-color:var(--line)}
+.brand{font-family:var(--display);color:var(--gilt)}
+.brand small{font-family:var(--body)}
+.hero h1,.source-note h2{font-family:var(--display)}
+.panel,.source-note{background:linear-gradient(145deg,rgba(36,24,32,.97),rgba(16,11,13,.98));border-color:var(--line-2)}
+.stats div{background:rgba(36,24,32,.8);border-color:var(--line)}
+.search,select{background:var(--ink);border-color:var(--line-2);color:var(--text)}
+.search:focus-within,select:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(232,194,122,.14)}
+.secondary{border-color:var(--line-2);color:var(--gilt)}
+.secondary:hover{background:rgba(209,40,59,.16)}
+.track div{background:linear-gradient(90deg,var(--crimson-deep),var(--crimson),var(--gilt))}
+th{background:#32101a;color:var(--gilt)}
+.level-badge{border-color:var(--line-2);color:var(--gilt)}
+tbody tr.done{background:rgba(95,211,166,.07)}
+footer{background:transparent;border-color:var(--line);color:var(--faint)}
