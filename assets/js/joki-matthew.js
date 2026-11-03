@@ -5,12 +5,6 @@
   const showMessage = (id, text, type = "") => { const el = $(id); el.textContent = text; el.className = "message" + (type ? " " + type : ""); };
   const formatDate = value => value ? new Date(value).toLocaleString("id-ID", {dateStyle:"medium",timeStyle:"short"}) : "-";
   const setBusy = (button, busy, busyText, normalText) => { button.disabled = busy; button.textContent = busy ? busyText : normalText; };
-  // Database features require the Supabase client; the star picker above works independently.
-  if (!db) {
-    console.error("Supabase client belum siap. Fitur rating tetap aktif; fitur database dinonaktifkan.");
-    return;
-  }
-
   $("lookupForm").addEventListener("submit", async event => {
     event.preventDefault();
     const token = $("progressToken").value.trim().toUpperCase();
@@ -94,6 +88,12 @@
       input.addEventListener("change", () => paintStars(Number(input.value)));
     });
     paintStars(0);
+  }
+
+  // Database features require the Supabase client; the star picker above works independently.
+  if (!db) {
+    console.error("Supabase client belum siap. Fitur rating tetap aktif; fitur database dinonaktifkan.");
+    return;
   }
 
   $("reviewForm").addEventListener("submit", async event => {
