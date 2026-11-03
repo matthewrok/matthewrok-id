@@ -54,12 +54,20 @@
   const starPicker = document.querySelector(".star-picker");
   if (starPicker) {
     const starLabels = [...starPicker.querySelectorAll("label[for^='rating']")];
+    const ratingFeedback = document.getElementById("ratingFeedback");
+    const ratingNames = ["", "Kurang", "Cukup", "Baik", "Sangat Baik", "Sempurna"];
     const paintStars = rating => {
+      starPicker.dataset.rating = String(rating);
       starLabels.forEach(label => {
         const value = Number(label.htmlFor.replace("rating", ""));
         label.classList.toggle("is-active", value <= rating);
+        label.classList.toggle("is-current", value === rating);
         label.setAttribute("aria-checked", String(value === rating));
       });
+      if (ratingFeedback) {
+        ratingFeedback.textContent = rating ? `${rating} dari 5 bintang — ${ratingNames[rating]}` : "Belum ada rating dipilih";
+        ratingFeedback.classList.toggle("has-rating", rating > 0);
+      }
     };
     starLabels.forEach(label => {
       label.addEventListener("click", () => {
