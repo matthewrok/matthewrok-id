@@ -411,3 +411,9 @@ body:has(.calculate-button) .panel{margin-top:10px!important}
   .password-wrap{gap:5px}
   .password-wrap .password-toggle{height:28px!important;min-height:28px!important;padding:4px 6px!important;font-size:8px!important}
 }
+
+
+/* Hide global navigation menu on the member login page, including cached menu scripts. */
+body:has(#loginForm) .global-menu,
+body:has(#loginForm) .global-menu-trigger,
+body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!important;pointer-events:none!important}
