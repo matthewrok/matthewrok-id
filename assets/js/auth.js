@@ -95,6 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        const { data: currentUser } = await client.auth.getUser();
+        const { data: memberProfile, error: statusError } = await client.from("profiles").select("account_status").eq("id", currentUser.user.id).maybeSingle();
+        if (statusError) throw statusError;
+        if (memberProfile?.account_status === "suspended") { await client.auth.signOut(); throw new Error("Akun kamu sedang ditangguhkan oleh admin. Hubungi Matthew untuk bantuan."); }
         sessionStorage.removeItem("matthewVisitorName");
         if (rememberField?.checked) localStorage.setItem("matthewRememberedEmail", email);
         else localStorage.removeItem("matthewRememberedEmail");
