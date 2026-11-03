@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const message = document.getElementById("authMessage");
   const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
+  const visitorForm = document.getElementById("visitorForm");
 
   document.querySelectorAll("[data-current-year]").forEach(el => {
     el.textContent = new Date().getFullYear();
@@ -47,6 +48,32 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         showMessage(error.message || "Login gagal. Periksa email dan password.", "error");
         setBusy(loginForm, false, "MASUK KE KERAJAAN");
+      }
+    });
+  }
+
+
+  if (visitorForm) {
+    visitorForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      showMessage("");
+      setBusy(visitorForm, true, "MENCATAT KUNJUNGAN...");
+      const visitorName = document.getElementById("visitorName").value.trim().replace(/\\s+/g, " ");
+      if (visitorName.length < 2) {
+        showMessage("Nama wajib diisi minimal 2 karakter.", "error");
+        setBusy(visitorForm, false, "LANJUT SEBAGAI TAMU");
+        return;
+      }
+      try {
+        const { error } = await client.from("visitor_logs").insert({ visitor_name: visitorName });
+        if (error) throw error;
+        sessionStorage.setItem("matthewVisitorName", visitorName);
+        showMessage("Berhasil masuk sebagai tamu. Mengalihkan ke beranda...", "success");
+        window.location.assign("index.html");
+      } catch (error) {
+        console.error("Visitor logging failed:", error);
+        showMessage("Belum bisa mencatat kunjungan. Silakan coba lagi beberapa saat.", "error");
+        setBusy(visitorForm, false, "LANJUT SEBAGAI TAMU");
       }
     });
   }

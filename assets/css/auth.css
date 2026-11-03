@@ -81,3 +81,10 @@ h1 { color:#fff0d9; text-shadow:0 0 28px rgba(239,66,88,.2); }
 .auth-form button { background:linear-gradient(135deg,#f0d6a0,#b77b45); border-color:#f0d6a0; }
 .auth-form button:hover { box-shadow:0 0 25px rgba(239,66,88,.18); }
 @media (prefers-reduced-motion:reduce) { .auth-container::before { animation:none; } }
+
+/* GUEST VISITOR LOGIN */
+.guest-divider{display:flex;align-items:center;gap:14px;margin:24px 0 18px;color:#b99b9b;font-size:10px;letter-spacing:2px}
+.guest-divider::before,.guest-divider::after{content:"";height:1px;flex:1;background:rgba(233,201,138,.25)}
+.visitor-form{padding-top:3px}
+.visitor-form h2{margin:0;color:var(--gold);text-align:center;font:700 17px "Cinzel",serif;letter-spacing:1px}
+.visitor-note{margin:0 0 4px;color:var(--muted);text-align:center;font-size:12px;line-height:1.7}

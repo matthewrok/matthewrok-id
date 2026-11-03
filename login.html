@@ -29,6 +29,14 @@
         <input id="loginPassword" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" minlength="6" required>
         <button id="loginButton" type="submit">MASUK KE KERAJAAN</button>
       </form>
+      <div class="guest-divider"><span>ATAU</span></div>
+      <form id="visitorForm" class="auth-form visitor-form">
+        <h2>MASUK SEBAGAI TAMU</h2>
+        <p class="visitor-note">Tidak perlu membuat akun. Isi nama kamu agar kunjungan tercatat sebagai visitor.</p>
+        <label for="visitorName">Nama</label>
+        <input id="visitorName" name="visitorName" type="text" placeholder="Masukkan nama kamu" autocomplete="name" minlength="2" maxlength="60" required>
+        <button id="visitorButton" type="submit">LANJUT SEBAGAI TAMU</button>
+      </form>
       <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
       <p class="auth-link">Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
     </section>
