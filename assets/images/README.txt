@@ -1,0 +1,1 @@
+The animated dragon and warrior hero is built from inline SVG in index.html and animated with CSS in ../css/style.css. No large image downloads are required.
