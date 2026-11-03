@@ -1257,3 +1257,64 @@ footer { background: #090103; }
   .dragon-hero .hero-description { font-size:14px; }
   .dragon-hero .hero-actions .btn { width:auto; }
 }
+
+
+/* =========================================
+   RESPONSIVE THREE-DOT MENU + LAYOUT POLISH
+   Shared site navigation; existing auth and page styles preserved.
+========================================= */
+header { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(14px); }
+.nav { position: relative; min-height: 76px; flex-direction: row; padding-top: 10px; padding-bottom: 10px; }
+.menu-toggle {
+  width: 46px; height: 46px; flex: 0 0 46px; display: inline-flex;
+  flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border: 1px solid var(--border); border-radius: 12px; background: rgba(31, 13, 10, .9);
+  color: var(--gold); cursor: pointer; transition: .2s ease;
+}
+.menu-toggle:hover, .menu-toggle:focus-visible { border-color: var(--gold); box-shadow: 0 0 18px rgba(233,189,101,.15); outline: none; }
+.menu-toggle span { width: 4px; height: 4px; display: block; border-radius: 50%; background: var(--gold); }
+.nav-links {
+  display: none; position: absolute; top: calc(100% - 2px); right: 0; z-index: 120;
+  width: min(340px, calc(100vw - 28px)); max-height: min(75vh, 560px); overflow-y: auto;
+  padding: 12px; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 4px;
+  flex-wrap: nowrap; border: 1px solid var(--border); border-radius: 14px;
+  background: rgba(18, 8, 6, .98); box-shadow: 0 18px 50px rgba(0,0,0,.55);
+}
+.nav-links.menu-open { display: flex; animation: menuDrop .16s ease-out; }
+.nav-links a { display: block; padding: 12px 14px; border-radius: 8px; font-size: 12px; letter-spacing: .3px; }
+.nav-links a:hover, .nav-links a:focus-visible { color: var(--gold); background: rgba(165,29,25,.22); outline: none; }
+.nav-user { display: block; padding: 10px 14px; overflow-wrap: anywhere; border-top: 1px solid rgba(233,189,101,.15); }
+.nav-links #logout { width: 100%; margin-top: 3px; }
+@keyframes menuDrop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* More consistent sizing and readable spacing on narrow screens */
+img, video, iframe { max-width: 100%; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
+.feature-card { min-width: 0; height: 100%; padding: clamp(20px, 2.4vw, 30px); overflow-wrap: anywhere; }
+.feature-card h2 { font-size: clamp(15px, 1.5vw, 19px); }
+.royal-card { width: 100%; }
+.table-wrapper { max-width: 100%; overflow-x: auto; }
+@media (max-width: 900px) {
+  .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav { min-height: 70px; }
+  .dragon-hero { min-height: 740px; }
+}
+@media (max-width: 600px) {
+  .container { width: min(92%, 540px); }
+  .nav { min-height: 66px; gap: 12px; }
+  .brand { max-width: calc(100% - 58px); white-space: normal; font-size: 13px; line-height: 1.35; letter-spacing: 1px; }
+  .brand-icon { font-size: 27px; }
+  .brand small { font-size: 8px; letter-spacing: .6px; }
+  .menu-toggle { width: 42px; height: 42px; flex-basis: 42px; border-radius: 10px; }
+  .nav-links { right: 0; width: min(320px, calc(100vw - 24px)); }
+  .feature-grid { grid-template-columns: minmax(0, 1fr); }
+  .feature-card, .royal-card { padding: 22px 18px; }
+  .section-title { overflow-wrap: anywhere; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero-actions .btn { max-width: 100%; font-size: 11px; padding: 11px 14px; }
+  .pills { gap: 8px; }
+  .pill { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .nav-links.menu-open { animation: none; } }
