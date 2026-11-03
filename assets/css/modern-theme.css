@@ -644,3 +644,24 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
  .nav-group-account .nav-user{margin:4px 8px}
  .nav-group-account #logout{margin-top:4px}
 }
+
+/* Refined group headings with a distinct typeface, accent glow, and arrow cue */
+.nav-group-title{font-family:"Trebuchet MS",Arial,sans-serif}
+.nav-group-arrows{display:none}
+@media(max-width:850px){
+ .nav-group-title{
+   display:flex;align-items:center;justify-content:space-between;gap:14px;
+   margin:2px 7px 5px;padding:8px 11px;
+   border:1px solid rgba(111,151,255,.25);border-radius:9px;
+   background:linear-gradient(100deg,rgba(58,91,174,.24),rgba(36,190,213,.08) 72%,rgba(14,24,48,.12));
+   box-shadow:inset 3px 0 0 #73a2ff,0 3px 14px rgba(41,88,190,.10);
+   color:#a9c5ff;font-family:"Arial Narrow","Trebuchet MS",sans-serif;
+   font-size:10px;font-weight:900;letter-spacing:1.8px;line-height:1.2;
+   text-shadow:0 0 12px rgba(103,157,255,.34)
+ }
+ .nav-group-arrows{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;color:#72e4ed;font-family:Arial,sans-serif;font-size:13px;font-weight:900;letter-spacing:0;text-shadow:0 0 10px rgba(74,222,232,.55)}
+ .nav-group:nth-child(2) .nav-group-title{box-shadow:inset 3px 0 0 #c49aff,0 3px 14px rgba(153,93,255,.10);color:#d5bdff;border-color:rgba(196,154,255,.24);background:linear-gradient(100deg,rgba(121,74,174,.20),rgba(36,190,213,.05))}
+ .nav-group:nth-child(3) .nav-group-title{box-shadow:inset 3px 0 0 #57dfc0,0 3px 14px rgba(51,208,177,.08);color:#9bf0d9;border-color:rgba(87,223,192,.20);background:linear-gradient(100deg,rgba(29,133,113,.18),rgba(36,190,213,.05))}
+ .nav-group:nth-child(4) .nav-group-title{box-shadow:inset 3px 0 0 #ffc779,0 3px 14px rgba(255,185,102,.08);color:#ffdda9;border-color:rgba(255,199,121,.20);background:linear-gradient(100deg,rgba(164,107,42,.17),rgba(36,190,213,.04))}
+ .nav-group:nth-child(5) .nav-group-title{box-shadow:inset 3px 0 0 #ff91b8,0 3px 14px rgba(255,115,165,.08);color:#ffc1d6;border-color:rgba(255,145,184,.20);background:linear-gradient(100deg,rgba(154,56,95,.17),rgba(36,190,213,.04))}
+}
