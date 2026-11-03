@@ -1610,3 +1610,108 @@ footer {
   }
   .feature-card, .btn, .wa { transition: none !important; }
 }
+
+
+/* =========================================================
+   HERO REPAIR — CLEAN ARTWORK / REAL UI LAYERS
+   Removes decorative glyphs that can read as duplicate icons.
+   Keeps all existing content, links, scripts and animations.
+========================================================= */
+.dragon-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #090609;
+}
+.dragon-hero .hero-cinematic-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.dragon-hero .hero-cinematic-art img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 64% 42%;
+  transform-origin: 64% 45%;
+}
+.dragon-hero .hero-cinematic-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      rgba(8, 3, 7, .99) 0%,
+      rgba(8, 3, 7, .94) 22%,
+      rgba(8, 3, 7, .72) 39%,
+      rgba(8, 3, 7, .18) 68%,
+      rgba(8, 3, 7, .08) 100%),
+    linear-gradient(0deg,
+      #090609 0%,
+      rgba(9, 6, 9, .78) 10%,
+      rgba(9, 6, 9, .12) 42%,
+      rgba(9, 6, 9, .12) 100%);
+}
+.dragon-hero .hero-content {
+  position: relative;
+  z-index: 3;
+}
+.dragon-hero .hero-aura,
+.dragon-hero .hero-sparks {
+  z-index: 2;
+  pointer-events: none;
+}
+.dragon-hero .hero-scroll {
+  z-index: 4;
+}
+.dragon-hero .hero-actions,
+.dragon-hero .hero-actions .btn {
+  position: relative;
+  z-index: 4;
+}
+.auth-card::before,
+.feature-card::before,
+.royal-card::before {
+  content: none !important;
+  animation: none !important;
+}
+@media (max-width: 850px) {
+  .dragon-hero .hero-cinematic-art img {
+    object-position: 66% 38%;
+  }
+  .dragon-hero .hero-cinematic-art::before {
+    background:
+      linear-gradient(0deg,
+        #090609 0%,
+        rgba(9, 6, 9, .94) 18%,
+        rgba(9, 6, 9, .46) 58%,
+        rgba(9, 6, 9, .08) 100%),
+      linear-gradient(90deg,
+        rgba(9, 6, 9, .42),
+        transparent 72%);
+  }
+  .dragon-hero .hero-content {
+    padding-top: 300px;
+  }
+}
+@media (max-width: 600px) {
+  .dragon-hero .hero-cinematic-art img {
+    object-position: 67% 36%;
+  }
+  .dragon-hero .hero-content {
+    padding-top: 275px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dragon-hero .hero-cinematic-art img {
+    animation: none !important;
+    transform: none !important;
+  }
+}
