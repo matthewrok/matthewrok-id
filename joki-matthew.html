@@ -41,7 +41,33 @@
       <div class="result-grid"><div><span>Nama client</span><strong id="resultClient">Client</strong></div><div><span>Pembaruan terakhir</span><strong id="resultUpdated">-</strong></div></div>
       <div class="note-box"><span>CATATAN ADMIN</span><p id="resultNote">Belum ada catatan.</p></div>
       <p class="privacy-note">Demi keamanan, halaman ini hanya menampilkan progres yang terkait dengan token yang dimasukkan.</p>
+      <section id="reviewSection" class="review-form-card hidden">
+        <div class="review-form-heading"><span class="eyebrow">CLIENT REVIEW</span><h3>Bagaimana pengalamanmu?</h3><p>Pesanan harus berstatus selesai sebelum kamu memberi penilaian.</p></div>
+        <form id="reviewForm">
+          <label>Nilai layanan Matthew</label>
+          <div class="star-picker" role="radiogroup" aria-label="Pilih rating bintang">
+            <input type="radio" id="rating5" name="rating" value="5" required><label for="rating5" title="5 bintang">★</label>
+            <input type="radio" id="rating4" name="rating" value="4"><label for="rating4" title="4 bintang">★</label>
+            <input type="radio" id="rating3" name="rating" value="3"><label for="rating3" title="3 bintang">★</label>
+            <input type="radio" id="rating2" name="rating" value="2"><label for="rating2" title="2 bintang">★</label>
+            <input type="radio" id="rating1" name="rating" value="1"><label for="rating1" title="1 bintang">★</label>
+          </div>
+          <label for="reviewText">Ulasan (opsional)</label>
+          <textarea id="reviewText" rows="3" maxlength="700" placeholder="Ceritakan pengalamanmu menggunakan layanan ini..."></textarea>
+          <label class="review-consent"><input id="reviewConsent" type="checkbox"> Saya mengizinkan nama saya dan ulasan ditampilkan di website.</label>
+          <button id="submitReview" class="btn btn-gold" type="submit">KIRIM ULASAN</button>
+          <p id="reviewMessage" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+      <div id="existingReview" class="existing-review hidden"></div>
     </article>
+  </section>
+
+  <section class="panel reviews-panel" aria-labelledby="reviewsTitle">
+    <div class="section-heading"><p class="eyebrow">TRUST & EXPERIENCE</p><h2 id="reviewsTitle">ULASAN CLIENT</h2><p>Penilaian dari client yang telah menyelesaikan pesanan.</p></div>
+    <div id="reviewSummary" class="review-summary"><strong>—</strong><span>Memuat rating client...</span></div>
+    <div id="publicReviews" class="public-reviews"><p class="hint">Memuat ulasan...</p></div>
+  </section>
   </section>
 
   <section class="admin-area">
