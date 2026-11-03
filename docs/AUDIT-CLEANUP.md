@@ -33,3 +33,12 @@ File dokumentasi di `assets/images/README.txt` dipertahankan sebagai catatan ase
 2. Periksa konsol browser pada halaman publik dan admin.
 3. Audit selector CSS yang berulang per halaman, lalu lakukan refactor bertahap dengan tangkapan layar pembanding.
 4. Tinjau kebijakan RLS Supabase secara terpisah dari pembersihan file frontend.
+
+
+## Verifikasi lanjutan — 4 November 2026
+
+- Ditemukan empat referensi CSS aktif ke `../images/dragon-character.png` setelah aset tersebut dihapus. Jalur itu tidak valid pada struktur repository saat ini.
+- Diperbaiki dengan menghapus hanya lapisan gambar yang rusak, sambil mempertahankan lapisan gradient pada deklarasi background agar teks/overlay tetap terbaca.
+- File diperiksa ulang dari branch `main`: sisa referensi `dragon-character.png` = 0.
+- Commit perbaikan: `9722fa755020dcfe0004e9372f1533a045bca0e6`.
+- Catatan batas verifikasi: pemeriksaan ini bersifat statis melalui GitHub. Situs live tidak dapat diakses oleh alat pemeriksaan pada sesi ini; browser visual, konsol, autentikasi, database/RLS, dan alur end-to-end belum dapat dinyatakan lulus.
