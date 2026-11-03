@@ -29,6 +29,7 @@
       $("reviewSection").classList.toggle("hidden", order.status !== "Selesai");
       $("reviewForm").reset();
       $("reviewMessage").textContent = "";
+      syncReviewIdentity();
       $("existingReview").classList.add("hidden");
       if (order.status === "Selesai") {
         const {data: priorReview, error: reviewLookupError} = await db.rpc("lookup_joki_review", {p_token: token});
@@ -96,11 +97,28 @@
     return;
   }
 
+  const syncReviewIdentity = () => {
+    const choice = document.querySelector('input[name="reviewIdentity"]:checked')?.value || "named";
+    const consentWrap = $("reviewConsentWrap");
+    const consent = $("reviewConsent");
+    const isNamed = choice === "named";
+    consentWrap.classList.toggle("hidden", !isNamed);
+    consent.required = isNamed;
+    if (!isNamed) consent.checked = false;
+  };
+  document.querySelectorAll('input[name="reviewIdentity"]').forEach(input => input.addEventListener("change", syncReviewIdentity));
+  syncReviewIdentity();
+
   $("reviewForm").addEventListener("submit", async event => {
     event.preventDefault();
     const token = $("progressToken").value.trim().toUpperCase();
     const rating = Number(new FormData($("reviewForm")).get("rating"));
     if (!rating) { showMessage("reviewMessage", "Pilih rating bintang terlebih dahulu.", "error"); return; }
+    const identityChoice = document.querySelector('input[name="reviewIdentity"]:checked')?.value || "named";
+    if (identityChoice === "named" && !$("reviewConsent").checked) {
+      showMessage("reviewMessage", "Centang persetujuan jika ingin menampilkan nama.", "error");
+      return;
+    }
     const button = $("submitReview");
     setBusy(button, true, "MENGIRIM...", "KIRIM ULASAN");
     try {
@@ -108,12 +126,12 @@
         p_token: token,
         p_rating: rating,
         p_review_text: $("reviewText").value.trim(),
-        p_display_name: $("reviewConsent").checked
+        p_display_name: identityChoice === "named"
       });
       if (error) throw error;
       showMessage("reviewMessage", "Terima kasih! Ulasanmu berhasil dikirim.", "success");
       $("reviewSection").classList.add("hidden");
-      $("existingReview").textContent = "Terima kasih! Kamu sudah memberi penilaian " + "★".repeat(rating) + "☆".repeat(5-rating);
+      $("existingReview").textContent = "Terima kasih! Ulasanmu berhasil dipublikasikan sebagai " + (identityChoice === "named" ? "nama client" : "Anonim Matthew") + ". " + "★".repeat(rating) + "☆".repeat(5-rating);
       $("existingReview").classList.remove("hidden");
     } catch (error) {
       showMessage("reviewMessage", error.message || "Ulasan belum dapat dikirim. Pastikan setup ulasan sudah dijalankan.", "error");
