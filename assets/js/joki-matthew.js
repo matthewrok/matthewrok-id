@@ -21,6 +21,9 @@
       const order = Array.isArray(data) ? data[0] : data;
       if (!order) { showMessage("lookupMessage", "Token tidak ditemukan. Periksa kembali token dari admin.", "error"); return; }
       $("resultService").textContent = order.service_name || "Layanan Joki";
+      $("resultOrderNumber").textContent = order.order_number || order.token || token;
+      $("resultQuantity").textContent = order.quantity ? order.quantity + " karakter" : "-";
+      $("resultTotal").textContent = Number(order.total_price) > 0 ? "Rp" + Number(order.total_price).toLocaleString("id-ID") : "Menunggu konfirmasi";
       $("resultStatus").textContent = order.status || "Menunggu";
       $("resultClient").textContent = order.client_name || "Client";
       $("resultPercent").textContent = Math.max(0, Math.min(100, Number(order.progress_percent) || 0)) + "%";
