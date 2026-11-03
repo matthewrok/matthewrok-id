@@ -61,6 +61,7 @@
     $("adminLoginForm").classList.add("hidden");
     showMessage("adminMessage", "Login admin berhasil.", "success");
     await loadOrders();
+    await loadAdminReviews();
     return true;
   }
   $("adminLoginForm").addEventListener("submit", async event => {
@@ -98,6 +99,26 @@
       const remove=document.createElement("button"); remove.className="action-btn"; remove.textContent="HAPUS"; remove.type="button"; remove.addEventListener("click",()=>deleteOrder(order));
       actions.append(edit,copy,remove); tr.append(tokenTd,clientTd,statusTd,percentTd,actions); tbody.append(tr);
     });
+  }
+  async function loadAdminReviews() {
+    if (!adminUserId) return;
+    const tbody = $("adminReviewRows"); tbody.replaceChildren();
+    const {data,error}=await db.from("joki_reviews").select("id,client_name,rating,review_text,created_at").order("created_at",{ascending:false});
+    if(error){const row=document.createElement("tr"),cell=document.createElement("td");cell.colSpan=5;cell.textContent="Gagal memuat ulasan: "+error.message;row.append(cell);tbody.append(row);return;}
+    if(!data?.length){const row=document.createElement("tr"),cell=document.createElement("td");cell.colSpan=5;cell.textContent="Belum ada rating atau ulasan.";row.append(cell);tbody.append(row);return;}
+    data.forEach(review=>{const row=document.createElement("tr"),name=document.createElement("td"),rating=document.createElement("td"),comment=document.createElement("td"),date=document.createElement("td"),action=document.createElement("td"),button=document.createElement("button");
+      name.textContent=review.client_name||"Client";rating.textContent="★".repeat(Number(review.rating))+"☆".repeat(5-Number(review.rating));comment.textContent=review.review_text||"(Tanpa komentar)";date.textContent=formatDate(review.created_at);
+      button.type="button";button.className="action-btn";button.textContent="HAPUS RATING";button.addEventListener("click",()=>deleteReview(review));action.append(button);row.append(name,rating,comment,date,action);tbody.append(row);
+    });
+  }
+  async function deleteReview(review) {
+    const reason=prompt("Alasan penghapusan (contoh: mengandung kata kasar / penghinaan):");
+    if(reason===null)return;
+    if(!reason.trim()){showMessage("adminMessage","Alasan penghapusan wajib diisi.","error");return;}
+    if(!confirm("Hapus rating "+review.rating+"/5 dari "+(review.client_name||"Client")+"?\\nAlasan: "+reason.trim()+"\\n\\nTindakan ini permanen."))return;
+    const {error}=await db.from("joki_reviews").delete().eq("id",review.id);
+    if(error){showMessage("adminMessage","Gagal menghapus rating: "+error.message,"error");return;}
+    showMessage("adminMessage","Rating/ulasan berhasil dihapus. Alasan: "+reason.trim(),"success");await loadAdminReviews();await loadPublicReviews();
   }
   function editOrder(order) {
     $("orderId").value=order.id; $("clientName").value=order.client_name; $("serviceName").value=order.service_name; $("orderStatus").value=order.status; $("orderPercent").value=order.progress_percent; $("percentLabel").textContent=order.progress_percent+"%"; $("orderNote").value=order.progress_note||"";
@@ -186,6 +207,7 @@
     }
   }
     $("refreshOrders").addEventListener("click",loadOrders);
+  $("refreshReviews").addEventListener("click",loadAdminReviews);
   db.auth.onAuthStateChange(() => { setTimeout(()=>{ if (!$("adminLoginForm").classList.contains("hidden")) return; checkAdmin(); },0); });
   checkAdmin().catch(console.error);
   loadPublicReviews();
