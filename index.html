@@ -749,10 +749,26 @@
 
       site.classList.remove("hidden");
 
-      document
-        .getElementById("navUser")
-        .textContent =
-          profile.full_name || user.email;
+      const navUser = document.getElementById("navUser");
+      navUser.replaceChildren();
+
+      const navEmail = document.createElement("span");
+      navEmail.className = "nav-user-email";
+      navEmail.textContent = user.email || profile.full_name || "Akun";
+      navUser.appendChild(navEmail);
+
+      const roleLabels = {
+        admin: "ADMIN",
+        member: "MEMBER",
+        SULTAN: "SULTAN",
+        MATTHEW: "MATTHEW",
+        PELANGGAN: "PELANGGAN"
+      };
+      const navRole = document.createElement("span");
+      navRole.className = "nav-user-role" + (profile.role === "admin" ? " is-admin" : "");
+      navRole.textContent = roleLabels[profile.role] || String(profile.role || "MEMBER").toUpperCase();
+      navRole.setAttribute("aria-label", "Role akun: " + navRole.textContent);
+      navUser.appendChild(navRole);
 
 
       /* ADMIN ACCESS */
