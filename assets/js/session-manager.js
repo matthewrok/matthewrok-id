@@ -4,12 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeout = 30 * 60 * 1000;
   const activityKey = "matthewLastActivity";
   let timer;
+  let activeSession = false;
   const loginPage = /(?:^|\/)login\.html$/.test(location.pathname);
 
   async function expireSession() {
     clearTimeout(timer);
-    const guest = sessionStorage.getItem("matthewVisitorName");
-    if (guest) sessionStorage.removeItem("matthewVisitorName");
+    if (!activeSession) return;
+    activeSession = false;
+    if (sessionStorage.getItem("matthewVisitorName")) sessionStorage.removeItem("matthewVisitorName");
     else await client.auth.signOut();
     localStorage.removeItem(activityKey);
     if (!loginPage) location.replace("login.html?reason=timeout");
@@ -17,7 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function initialize() {
     const { data } = await client.auth.getSession();
-    if (!data.session && !sessionStorage.getItem("matthewVisitorName")) return;
+    activeSession = Boolean(data.session || sessionStorage.getItem("matthewVisitorName"));
+    if (!activeSession) return;
     const last = Number(localStorage.getItem(activityKey) || Date.now());
     const remaining = timeout - (Date.now() - last);
     if (remaining <= 0) return expireSession();
@@ -26,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function activity() {
-    if (document.visibilityState !== "visible") return;
+    if (!activeSession || document.visibilityState !== "visible") return;
     localStorage.setItem(activityKey, String(Date.now()));
     clearTimeout(timer);
     timer = setTimeout(expireSession, timeout);
@@ -36,13 +39,19 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener(type, activity, { passive: true })
   );
   window.addEventListener("storage", event => {
-    if (event.key !== activityKey) return;
+    if (!activeSession || event.key !== activityKey) return;
     clearTimeout(timer);
     const remaining = timeout - (Date.now() - Number(event.newValue || 0));
-    timer = remaining <= 0 ? setTimeout(expireSession, 0) : setTimeout(expireSession, remaining);
+    timer = setTimeout(expireSession, Math.max(0, remaining));
   });
   client.auth.onAuthStateChange((_event, session) => {
-    if (session) activity();
+    if (session) {
+      activeSession = true;
+      activity();
+    } else if (!sessionStorage.getItem("matthewVisitorName")) {
+      activeSession = false;
+      clearTimeout(timer);
+    }
   });
   initialize();
 
