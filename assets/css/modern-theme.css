@@ -681,3 +681,10 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
  .nav-group-title .nav-group-arrows{transition:transform .2s ease}
  .nav-group-title[aria-expanded="false"] .nav-group-arrows{transform:translateY(0)}
 }
+
+/* Ensure collapsed menu items stay hidden despite other navigation display rules */
+.nav-group [hidden]{display:none!important}
+@media(max-width:850px){
+ .nav-group-title{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}
+ .nav-group.is-collapsed{gap:0}
+}
