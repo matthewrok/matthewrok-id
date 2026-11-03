@@ -554,3 +554,16 @@ select:focus,input:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(232,
 .tax-bar{background:linear-gradient(90deg,#8d1024,var(--warn))}
 .net-bar{background:linear-gradient(90deg,#348c60,var(--jade))}
 footer{color:var(--faint)}
+
+
+/* SHARED RESOURCE QUICK ADD */
+.quick-add-panel{margin-top:16px;padding:16px;border:1px solid var(--line-2);border-radius:12px;background:linear-gradient(145deg,rgba(36,24,32,.95),rgba(16,11,13,.98))}
+.quick-add-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;color:var(--gilt);font-size:13px}
+.quick-add-heading span{color:var(--muted);font-size:12px}
+.quick-add-heading b{color:var(--gilt)}
+.quick-add-panel p{margin:9px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
+.quick-add-panel .quick-buttons{margin-top:12px}
+.quick-add-panel .quick-buttons button{font-size:12px;padding:12px 6px}
+.resource-card.is-active{border-color:var(--gilt);box-shadow:0 0 0 2px rgba(232,194,122,.16),var(--shadow-gold)}
+.resource-card{cursor:pointer}
+@media(max-width:400px){.quick-add-panel{padding:12px}.quick-add-panel .quick-buttons button{font-size:10px;padding:11px 3px}}
