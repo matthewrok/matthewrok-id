@@ -567,3 +567,8 @@ footer{color:var(--faint)}
 .resource-card.is-active{border-color:var(--gilt);box-shadow:0 0 0 2px rgba(232,194,122,.16),var(--shadow-gold)}
 .resource-card{cursor:pointer}
 @media(max-width:400px){.quick-add-panel{padding:12px}.quick-add-panel .quick-buttons button{font-size:10px;padding:11px 3px}}
+
+
+/* STACK RESOURCE INPUTS VERTICALLY */
+.resource-grid{grid-template-columns:minmax(0,1fr)}
+.resource-card{width:100%}
