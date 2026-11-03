@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#100907">
+  <title>Pendaftaran Worker | MATTHEW JOKI</title>
+  <link rel="stylesheet" href="/assets/css/worker-inbox.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script defer src="/assets/js/session-manager.js"></script>
+  <script defer src="/assets/js/worker-application.js"></script>
+  <script defer src="/assets/js/global-menu.js"></script>
+</head>
+<body>
+  <main class="feature-shell">
+    <a class="back-link" href="/index.html">← Kembali ke website</a>
+    <header class="feature-heading"><span class="eyebrow">MATTHEW JOKI · THE DRAGON KINGDOM</span><h1>PENDAFTARAN <em>WORKER</em></h1><p>Kenali prosesnya, lengkapi informasi dengan jujur, dan tunggu hasil seleksi melalui Inbox akun kamu.</p></header>
+    <section class="feature-card" id="workerApplicationCard">
+      <div id="workerState" class="feature-state" role="status" aria-live="polite">Memeriksa sesi akun…</div>
+      <form id="workerApplicationForm" hidden>
+        <label>Nama lengkap<input name="applicant_name" minlength="2" maxlength="80" autocomplete="name" required></label>
+        <label>Jenis worker<select name="worker_type" required><option value="">Pilih jenis worker</option><option value="akun">Worker AKUN</option><option value="macul">Worker MACUL</option></select></label>
+        <label>Lama bermain Rise of Kingdoms<input name="play_duration" maxlength="120" placeholder="Contoh: 2 tahun 6 bulan" required></label>
+        <label>Kapasitas akun / kemampuan kerja<input name="account_capacity" maxlength="120" placeholder="Jelaskan jumlah akun atau kapasitas yang mampu ditangani" required></label>
+        <label>Nomor WhatsApp <small>(opsional)</small><input name="whatsapp_number" type="tel" maxlength="40" placeholder="Contoh: 08xxxxxxxxxx"></label>
+        <label class="consent-row"><input name="consent" type="checkbox" required><span>Saya menyatakan informasi yang diberikan benar dan bersedia mengikuti proses seleksi serta ketentuan kerja MATTHEW.</span></label>
+        <button class="primary-button" type="submit">KIRIM PENDAFTARAN</button>
+      </form>
+    </section>
+    <p class="feature-footnote">Pendaftaran hanya dapat dikirim menggunakan akun member dengan email yang sudah diverifikasi. Keputusan akan dikirim melalui Inbox, bukan dengan login otomatis.</p>
+  </main>
+</body>
+</html>
