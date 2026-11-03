@@ -545,3 +545,40 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 .joki-order-total{border:1px solid rgba(110,231,255,.25)!important;border-radius:11px!important;background:linear-gradient(120deg,rgba(49,87,223,.2),rgba(12,21,41,.85))!important}
 .joki-order-total strong{color:#9beaff!important}
 .joki-order-close{border:1px solid var(--theme-border)!important;background:#101a30!important;color:#c5d7ff!important;border-radius:9px!important}
+
+
+/* HERO PRODUCT STRIP — compact product cards in the marked area */
+.hero-product-strip{
+  position:relative;z-index:3;width:min(100%,1120px);margin:18px auto 0;
+  padding:0 0 8px;color:var(--text);
+}
+.hero-product-strip>.eyebrow,
+.hero-product-strip>.section-title,
+.hero-product-strip>.line,
+.hero-product-strip>.joki-products-intro,
+.hero-product-strip>.joki-product-note{display:none!important}
+.hero-product-strip .joki-product-rail{
+  display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:5px 2px 12px;
+  scroll-snap-type:x mandatory;scrollbar-width:thin;
+}
+.hero-product-strip .joki-product-card{
+  flex:0 0 220px;min-height:0;padding:12px 13px 11px;border-radius:12px;
+  scroll-snap-align:start;box-shadow:0 8px 22px #0005!important;
+}
+.hero-product-strip .joki-product-top{margin-bottom:5px}
+.hero-product-strip .joki-product-tier{font-size:8px;letter-spacing:1px}
+.hero-product-strip .joki-product-icon{width:27px;height:27px;font-size:14px}
+.hero-product-strip .joki-product-card h3{font-size:15px;margin:0}
+.hero-product-strip .joki-product-subtitle,
+.hero-product-strip .joki-product-specs,
+.hero-product-strip .joki-product-divider{display:none}
+.hero-product-strip .joki-product-price{margin:3px 0 8px;font-size:23px}
+.hero-product-strip .joki-product-price span{font-size:10px}
+.hero-product-strip .joki-order-button{min-height:32px;padding:7px 10px;font-size:8px;letter-spacing:1px}
+@media(max-width:600px){
+ .dragon-hero{min-height:0;padding:42px 6% 28px;display:flex;flex-direction:column;justify-content:center}
+ .dragon-hero .hero-content{padding:8px 0 0}
+ .dragon-hero .hero-trust{margin-top:18px}
+ .hero-product-strip{width:100%;margin:22px 0 0}
+ .hero-product-strip .joki-product-card{flex-basis:210px}
+}
