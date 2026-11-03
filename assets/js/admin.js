@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         membersBody.replaceChildren();
         membersResult.data.forEach(member => {
           const tr = document.createElement("tr");
-          tr.append(cell(member.full_name), cell(member.id === sessionData.session.user.id ? sessionData.session.user.email : "—"), cell(member.role || "member"));
+          tr.append(cell(member.full_name), cell(member.id), cell(member.role || "member"));
           membersBody.appendChild(tr);
         });
       }
