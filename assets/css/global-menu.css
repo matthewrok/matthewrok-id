@@ -1,0 +1,20 @@
+/* Global persistent three-dot navigation menu */
+:root{--global-menu-bg:#0b1325;--global-menu-line:rgba(142,174,255,.24);--global-menu-text:#eaf0ff;--global-menu-muted:#9cafd3}
+.global-menu{position:fixed;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:99999;font-family:inherit}
+.global-menu-trigger{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;padding:0;border:1px solid var(--global-menu-line);border-radius:15px;background:rgba(9,16,33,.94);color:#dce8ff;font-size:29px;line-height:1;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.28);backdrop-filter:blur(14px);transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.global-menu-trigger:hover,.global-menu-trigger[aria-expanded=true]{background:#142344;border-color:rgba(117,218,255,.58);transform:translateY(-1px)}
+.global-menu-trigger:focus-visible,.global-menu-panel a:focus-visible{outline:2px solid #7de7ff;outline-offset:3px}
+.global-menu-panel{position:absolute;top:calc(100% + 9px);right:0;width:min(310px,calc(100vw - 28px));max-height:min(76svh,620px);overflow:auto;padding:10px;border:1px solid var(--global-menu-line);border-radius:18px;background:rgba(8,14,29,.97);box-shadow:0 24px 70px rgba(0,0,0,.48);backdrop-filter:blur(20px);opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98);transform-origin:top right;transition:opacity .16s ease,transform .16s ease,visibility .16s}
+.global-menu-panel.is-open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.global-menu-heading{padding:10px 12px 12px;border-bottom:1px solid rgba(142,174,255,.14);margin-bottom:7px}
+.global-menu-heading strong{display:block;color:#f0f4ff;font-size:12px;letter-spacing:1.5px}
+.global-menu-heading span{display:block;margin-top:4px;color:var(--global-menu-muted);font-size:10px;letter-spacing:.6px}
+.global-menu-panel a{display:flex;align-items:center;gap:10px;min-height:43px;padding:10px 12px;border:1px solid transparent;border-radius:11px;color:var(--global-menu-text);text-decoration:none;font-size:13px;font-weight:600;transition:background .15s ease,border-color .15s ease}
+.global-menu-panel a:hover{background:rgba(66,100,166,.22);border-color:var(--global-menu-line)}
+.global-menu-panel a .global-menu-icon{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;flex:0 0 25px;border-radius:8px;background:rgba(107,147,255,.13);color:#9beaff;font-size:14px}
+.global-menu-panel .global-menu-divider{height:1px;margin:7px 5px;background:rgba(142,174,255,.14)}
+.global-menu-panel .global-menu-account{color:#a9bad9;font-size:12px}
+.global-menu-panel [hidden]{display:none!important}
+/* Replace the homepage's separate hamburger/link bar with this same global menu */
+body .menu-toggle,body .nav-links{display:none!important}
+@media(prefers-reduced-motion:reduce){.global-menu-trigger,.global-menu-panel,.global-menu-panel a{transition:none}}
