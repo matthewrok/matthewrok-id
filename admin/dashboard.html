@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Matthew</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100b12">
+  <title>Admin Dashboard | Matthew ROK</title>
+  <style>
+    :root{color-scheme:dark;--bg:#100b12;--panel:#1b121b;--line:#49303b;--gold:#e8c477;--red:#b92d3c;--muted:#b9aab5}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#32141e 0,transparent 48%),var(--bg);color:#f8edf0;font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+    .wrap{width:min(1100px,92%);margin:0 auto;padding:30px 0 56px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px}
+    .eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.18em}.top h1{margin:4px 0;font-size:clamp(26px,5vw,38px)}p{color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap}
+    a,button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:#fff;background:#241620;text-decoration:none}button.primary{background:linear-gradient(135deg,#a91f35,#6d1728);border-color:#d04a59}button:disabled{opacity:.55;cursor:wait}
+    .notice{padding:13px 15px;border-radius:10px;background:#251821;border:1px solid var(--line);margin:20px 0}.notice.error{border-color:#b92d3c;color:#ffb6bd}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.card{background:linear-gradient(145deg,#211621,#171017);border:1px solid var(--line);border-radius:15px;padding:19px}.label{color:var(--muted);font-size:13px}.value{font-size:32px;font-weight:800;color:var(--gold);margin-top:5px}.section{margin-top:28px}.section h2{font-size:19px}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:500px;background:#191119}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #382532}th{font-size:12px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase}td{color:#f3e9ee}tr:last-child td{border-bottom:0}.empty{padding:18px;color:var(--muted)}footer{margin-top:30px;color:var(--muted);font-size:12px}
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/assets/js/supabase.js"></script>
+  <script src="/assets/js/supabase.js"></script>
   <script defer src="/assets/js/session-manager.js"></script>
+  <script defer src="/assets/js/admin.js"></script>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    <p>Selamat datang di panel admin Matthew.</p>
+  <main class="wrap">
+    <header class="top">
+      <div><div class="eyebrow">MATTHEW ROK · CONTROL CENTER</div><h1>Admin Dashboard</h1><p id="adminWelcome">Memverifikasi akses admin…</p></div>
+      <div class="actions"><a href="/index.html">← Kembali ke website</a><button class="primary" id="logoutButton" type="button">Keluar</button></div>
+    </header>
+    <div id="adminNotice" class="notice" role="status" aria-live="polite">Memeriksa sesi dan izin akun…</div>
+    <section id="dashboardContent" hidden>
+      <div class="grid">
+        <article class="card"><div class="label">Total akun terdaftar</div><div class="value" id="memberCount">—</div></article>
+        <article class="card"><div class="label">Kunjungan tercatat</div><div class="value" id="visitorCount">—</div></article>
+        <article class="card"><div class="label">Pembaruan data</div><div class="value" style="font-size:16px;margin-top:14px" id="lastUpdated">Belum dimuat</div></article>
+      </div>
+      <section class="section"><h2>Anggota terbaru</h2><div class="table-wrap"><table><thead><tr><th>Nama</th><th>Email</th><th>Role</th></tr></thead><tbody id="membersBody"><tr><td colspan="3">Memuat anggota…</td></tr></tbody></table></div></section>
+      <section class="section"><h2>Kunjungan tamu terbaru</h2><div class="table-wrap"><table><thead><tr><th>Nama tamu</th><th>Waktu kunjungan</th></tr></thead><tbody id="visitorsBody"><tr><td colspan="2">Memuat kunjungan…</td></tr></tbody></table></div></section>
+    </section>
+    <footer>Panel ini memerlukan akun dengan role admin. Pembatasan data tetap ditegakkan oleh kebijakan RLS di Supabase.</footer>
+  </main>
 </body>
 </html>
