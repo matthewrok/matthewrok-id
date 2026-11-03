@@ -395,3 +395,19 @@ body:has(.calculate-button) .panel{margin-top:10px!important}
   body:has(.calculate-button) main.container{margin-top:4px!important}
 }
 @media(prefers-reduced-motion:reduce){body *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Compact password visibility control on member login and auth forms */
+.password-wrap{position:relative;display:flex;align-items:center;gap:6px}
+.password-wrap input{flex:1;min-width:0;padding-right:12px!important}
+.password-wrap .password-toggle{
+  flex:0 0 auto!important;width:auto!important;min-width:0!important;
+  min-height:30px!important;height:30px!important;margin:0!important;
+  padding:4px 7px!important;border-radius:7px!important;
+  font-size:9px!important;line-height:1!important;letter-spacing:.25px!important;
+  box-shadow:none!important;white-space:nowrap;
+}
+@media(max-width:420px){
+  .password-wrap{gap:5px}
+  .password-wrap .password-toggle{height:28px!important;min-height:28px!important;padding:4px 6px!important;font-size:8px!important}
+}
