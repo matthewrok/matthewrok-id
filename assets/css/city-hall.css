@@ -1,3 +1,5 @@
+@import url("./tokens.css");
+
 .city-hall-container {
     width: min(1000px, 92%);
     margin: 50px auto;
