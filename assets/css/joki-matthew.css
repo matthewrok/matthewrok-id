@@ -57,3 +57,15 @@ footer{color:var(--faint);border-color:var(--line)}
 .star-picker label:focus-visible{outline:2px solid var(--gilt);outline-offset:4px;border-radius:4px}
 .rating-feedback{display:inline-flex;align-items:center;min-height:30px;margin:-7px 0 16px;padding:5px 11px;border:1px solid var(--line-2);border-radius:20px;background:rgba(255,255,255,.04);color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.3px;transition:all .18s ease}
 .rating-feedback.has-rating{border-color:rgba(232,194,122,.55);background:rgba(232,194,122,.12);color:#ffe2a0}
+
+
+/* Rating picker: native checked state is the source of truth, even without JS. */
+.star-picker{align-items:center;min-height:52px;gap:8px}
+.star-picker input[type="radio"]{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.star-picker label{display:inline-block!important;padding:0 2px;color:#78614c!important;font-size:clamp(34px,7vw,44px)!important;line-height:1.2;cursor:pointer;transition:color .16s ease,transform .16s ease,text-shadow .16s ease}
+.star-picker input[type="radio"]:checked+label,
+.star-picker label.is-active{color:#e9b949!important;text-shadow:0 0 12px rgba(255,196,74,.42)}
+.star-picker input[type="radio"]:checked+label,
+.star-picker label.is-current{color:#fff0a6!important;text-shadow:0 0 14px rgba(255,220,120,.9);transform:scale(1.16)}
+.star-picker label:hover{color:#ffe08a!important;transform:scale(1.12)}
+.rating-feedback.has-rating{color:#ffe2a0!important}
