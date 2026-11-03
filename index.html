@@ -162,44 +162,86 @@
          DRAGON KINGDOM HERO
     ================================== -->
 
-    <section class="hero">
+    <section class="hero dragon-hero">
+      <div class="hero-aura" aria-hidden="true"></div>
+      <div class="hero-sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 
-      <!-- NEW DRAGON IMAGE -->
-      <div class="hero-image" aria-hidden="true"></div>
-
-      <div class="hero-content">
-
-        <div class="eyebrow">
-          THE DRAGON GUARDS THIS KINGDOM
+      <div class="hero-art" aria-hidden="true">
+        <div class="dragon-orbit orbit-back">
+          <svg viewBox="0 0 700 520" role="presentation">
+            <defs>
+              <linearGradient id="dragonGold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#fff0bb"/><stop offset=".38" stop-color="#e9a13e"/><stop offset=".72" stop-color="#e72b3f"/><stop offset="1" stop-color="#6c0717"/>
+              </linearGradient>
+              <filter id="dragonGlow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <ellipse cx="350" cy="260" rx="236" ry="163" fill="none" stroke="#ef384b" stroke-width="2" stroke-dasharray="3 13" opacity=".55"/>
+            <path d="M120 280 C72 185 165 82 280 105 C405 130 510 80 557 165 C605 255 493 364 380 345 C270 327 212 410 135 345 C95 310 119 270 167 253 C225 233 279 282 331 297 C399 317 480 274 469 218 C458 161 387 166 343 190 C293 217 261 197 253 165 C246 137 268 115 294 115" fill="none" stroke="url(#dragonGold)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" filter="url(#dragonGlow)"/>
+            <path d="M120 280 C72 185 165 82 280 105 C405 130 510 80 557 165 C605 255 493 364 380 345 C270 327 212 410 135 345 C95 310 119 270 167 253 C225 233 279 282 331 297 C399 317 480 274 469 218 C458 161 387 166 343 190 C293 217 261 197 253 165 C246 137 268 115 294 115" fill="none" stroke="#fff0c4" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+            <g transform="translate(278 88) rotate(-20)" filter="url(#dragonGlow)">
+              <path d="M0 27 Q-20 5 -8 -13 L11 2 L25 -15 L34 8 Q58 13 62 31 L45 43 L24 38 L13 52 L5 37 L-14 43 Z" fill="url(#dragonGold)" stroke="#ffe4a0" stroke-width="2"/>
+              <path d="M2 1 L-22 -9 L-13 12 M27 2 L44 -13 L41 12" fill="none" stroke="#e9c98a" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="35" cy="24" r="3" fill="#fff9df"/>
+              <path d="M42 35 L56 49 L39 43" fill="#ff4a59"/>
+              <path d="M4 17 L-20 23 L-8 31" fill="#a30b27"/>
+            </g>
+          </svg>
         </div>
-
-        <p class="welcome-text">
-          WELCOME TO
-        </p>
-
-        <h1>
-          MATTHEW<br>
-          JOKI
-        </h1>
-
-        <p class="hero-description">
-          A kingdom built with trust, strength, and dedication.
-          Welcome to the world of Matthew.
-        </p>
-
-        <a href="#about" class="btn btn-gold">
-          ABOUT MATTHEW →
-        </a>
-
+        <div class="dragon-orbit orbit-front">
+          <svg viewBox="0 0 700 520" role="presentation">
+            <path d="M575 250 C620 330 530 420 430 402 C315 381 280 450 193 410 C110 372 113 290 174 246 C229 205 281 237 329 256 C390 280 450 247 444 203 C438 165 392 143 352 161 C316 178 292 165 287 141" fill="none" stroke="#f44756" stroke-width="10" stroke-linecap="round" opacity=".9"/>
+            <path d="M575 250 C620 330 530 420 430 402 C315 381 280 450 193 410 C110 372 113 290 174 246 C229 205 281 237 329 256 C390 280 450 247 444 203 C438 165 392 143 352 161" fill="none" stroke="#ffd994" stroke-width="2" stroke-linecap="round" opacity=".9"/>
+            <g transform="translate(320 124) rotate(18)">
+              <path d="M0 20 Q-20 2 -7 -16 L10 0 L26 -13 L33 8 Q55 15 57 31 L39 42 L20 37 L9 50 L2 35 L-15 40 Z" fill="#ff5a62" stroke="#ffe3a0" stroke-width="2"/>
+              <circle cx="33" cy="23" r="3" fill="#fff8d9"/>
+              <path d="M6 2 L-14 -13 L-8 10 M26 0 L43 -13 L39 10" fill="none" stroke="#ffdb91" stroke-width="4" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+        <div class="warrior-halo"></div>
+        <svg class="warrior-art" viewBox="0 0 360 500" role="presentation">
+          <defs>
+            <linearGradient id="armor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3d89c"/><stop offset=".22" stop-color="#8c1726"/><stop offset=".55" stop-color="#241016"/><stop offset="1" stop-color="#080609"/></linearGradient>
+            <linearGradient id="cape" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ed233b"/><stop offset="1" stop-color="#480513"/></linearGradient>
+            <filter id="warriorGlow"><feGaussianBlur stdDeviation="12"/></filter>
+          </defs>
+          <ellipse cx="180" cy="475" rx="112" ry="14" fill="#e51c3d" opacity=".35" filter="url(#warriorGlow)"/>
+          <path d="M128 170 Q76 225 72 365 L108 450 L180 478 L252 450 L288 365 Q282 222 232 170 Z" fill="url(#cape)" stroke="#9b1a2d" stroke-width="3"/>
+          <path d="M127 190 L101 333 L142 305 L180 400 L218 305 L259 333 L233 190 Z" fill="url(#armor)" stroke="#e8bd72" stroke-width="3"/>
+          <path d="M132 188 L180 220 L228 188 L211 278 L180 320 L149 278 Z" fill="#171017" stroke="#d7a65d" stroke-width="3"/>
+          <path d="M139 202 L180 238 L221 202 L204 258 L180 278 L156 258 Z" fill="#8c1126"/>
+          <path d="M151 112 Q180 86 209 112 L220 161 L204 197 L180 213 L156 197 L140 161 Z" fill="#b97950" stroke="#e7c58d" stroke-width="3"/>
+          <path d="M128 143 L130 87 L151 58 L180 44 L209 58 L230 87 L232 143 L207 125 L197 94 L180 112 L163 94 L153 125 Z" fill="#171016" stroke="#e9c98a" stroke-width="4"/>
+          <path d="M151 59 L180 24 L209 59 L194 54 L180 43 L166 54 Z" fill="#c52338" stroke="#f1d39a" stroke-width="3"/>
+          <path d="M146 141 L164 148 M194 148 L214 141" stroke="#fff0c0" stroke-width="5" stroke-linecap="round"/>
+          <path d="M142 167 L113 208 L94 296 L118 302 L154 221 M218 167 L247 208 L266 296 L242 302 L206 221" fill="url(#armor)" stroke="#e9c98a" stroke-width="4"/>
+          <path d="M104 296 L122 305 L114 328 L92 319 Z M258 296 L240 305 L248 328 L270 319 Z" fill="#e9c98a"/>
+          <path d="M180 320 L155 380 L180 405 L205 380 Z" fill="#e9c98a"/>
+          <path d="M153 380 L180 405 L207 380 L198 425 L180 445 L162 425 Z" fill="#a20e28"/>
+          <path d="M106 449 L180 472 L254 449" fill="none" stroke="#f2d59b" stroke-width="4"/>
+        </svg>
+        <div class="hero-art-label"><span>✦</span> GUARDIAN OF THE CRIMSON KINGDOM <span>✦</span></div>
       </div>
 
+      <div class="hero-content">
+        <div class="eyebrow">THE DRAGON GUARDS THIS KINGDOM</div>
+        <p class="welcome-text">WELCOME TO</p>
+        <h1>MATTHEW<br><span>JOKI</span></h1>
+        <p class="hero-description">A kingdom built on trust, strength, and dedication.</p>
+        <div class="hero-actions">
+          <a href="#about" class="btn btn-gold">DISCOVER MATTHEW <span aria-hidden="true">↗</span></a>
+          <a href="calculator-resource.html" class="btn btn-outline hero-secondary">RESOURCE CALCULATOR</a>
+        </div>
+        <div class="hero-status"><span></span> RISE OF KINGDOMS • EST. 2025</div>
+      </div>
+      <a class="hero-scroll" href="#kingdom-tools" aria-label="Scroll to kingdom tools">SCROLL TO EXPLORE <span>↓</span></a>
     </section>
 
     <!-- =================================
          KINGDOM FEATURES
     ================================== -->
 
-    <section class="container kingdom-section">
+    <section id="kingdom-tools" class="container kingdom-section">
 
       <div class="feature-grid">
 
@@ -279,15 +321,7 @@
         </h3>
 
         <p>
-          Halo, saya Matthew. Selamat datang di website personal saya.
-          Saya percaya bahwa kesuksesan tidak datang secara instan,
-          melainkan melalui proses, konsistensi, dan kemauan untuk terus berkembang.
-
-          <br><br>
-
-          Bagi saya, setiap pengalaman adalah kesempatan untuk belajar,
-          setiap tantangan adalah kesempatan untuk bertumbuh,
-          dan setiap kepercayaan adalah sesuatu yang harus dijaga.
+          Saya Matthew — membangun perjalanan dengan konsistensi, menjaga kepercayaan, dan terus berkembang. Selamat datang di dunia saya.
         </p>
 
       </div>
