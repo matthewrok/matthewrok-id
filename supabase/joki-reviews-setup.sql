@@ -56,6 +56,7 @@ as $$
   select case when r.display_name then r.client_name else 'Client Matthew' end,
          r.rating, r.review_text, r.created_at
   from public.joki_reviews r
+  where r.display_name = true
   order by r.created_at desc limit 30;
 $$;
 
