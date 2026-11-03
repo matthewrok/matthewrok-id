@@ -1980,3 +1980,15 @@ header { z-index: 1000; }
   .menu-toggle span,
   .nav-links a { transition: none !important; }
 }
+
+/* ==========================================================
+   MYSTIC DRAGON REALM V2 — SHARED TOKEN INTEGRATION
+   ========================================================== */
+:root{--bg:var(--ink);--panel:var(--raise);--panel-light:var(--raise-2);--red:var(--crimson-deep);--red-light:var(--crimson);--orange:var(--crimson);--gold:var(--gilt);--text:#f6eee9;--muted:#b4a5a6;--border:var(--line)}
+body{font-family:var(--body);background-color:var(--ink);color:var(--text)}
+h1,h2,h3,.brand,.section-title{font-family:var(--display)}
+.btn,.hero-actions a,.feature-link{transition:transform .25s var(--ease),border-color .25s,background .25s,box-shadow .25s}
+.feature-card,.royal-card,.auth-card{border-color:var(--line)}
+.feature-card:hover,.royal-card:hover{border-color:var(--line-2);box-shadow:var(--shadow-gold)}
+:focus-visible{outline-color:var(--gilt)}
+@media(prefers-reduced-motion:reduce){.ember,.hero-cinematic-art,.dragon-emblem{animation:none!important;transition:none!important}}
