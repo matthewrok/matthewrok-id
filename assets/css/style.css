@@ -1715,3 +1715,169 @@ footer {
     transform: none !important;
   }
 }
+
+
+/* =========================================================
+   DRAGON KINGDOM — HOMEPAGE REDESIGN 2026
+   Clear hierarchy, quieter navigation, focused hero, responsive motion.
+========================================================= */
+:root {
+  --realm-ink: #09070a;
+  --realm-panel: #140d11;
+  --realm-gold: #e7c58b;
+  --realm-muted: #d7c7bd;
+}
+html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+body { overflow-x: hidden; }
+header {
+  background: rgba(9, 7, 10, .9);
+  border-bottom: 1px solid rgba(231,197,139,.16);
+  box-shadow: 0 8px 34px rgba(0,0,0,.28);
+}
+.nav { min-height: 82px; }
+.brand { gap: 12px; color: #fff4e5; font-size: 14px; }
+.brand small { color: #bda99b; font-size: 8px; letter-spacing: 1.5px; }
+.nav-links { gap: 12px; }
+.nav-links a { font-size: 10px; letter-spacing: .8px; color: #e7d9cf; }
+.nav-links a:hover { color: var(--realm-gold); }
+.dragon-hero {
+  min-height: min(820px, calc(100svh - 82px));
+  display: flex;
+  align-items: center;
+  padding: clamp(88px, 12vh, 138px) max(7%, calc((100vw - 1160px)/2)) 150px;
+  isolation: isolate;
+  background: #09070a;
+}
+.dragon-hero::before { inset: 14px; border-color: rgba(231,197,139,.15); }
+.dragon-hero .hero-cinematic-art { z-index: -2; }
+.dragon-hero .hero-cinematic-art img {
+  object-position: 64% 43%;
+  filter: saturate(.94) contrast(1.08) brightness(.82);
+  animation: realmImageReveal 1.5s ease-out both, realmImageDrift 28s ease-in-out 1.5s infinite alternate;
+}
+.dragon-hero .hero-cinematic-art::before {
+  background:
+    linear-gradient(90deg, rgba(8,5,8,.97) 0%, rgba(8,5,8,.91) 24%, rgba(8,5,8,.66) 43%, rgba(8,5,8,.10) 76%, rgba(8,5,8,.12) 100%),
+    linear-gradient(0deg, #09070a 0%, rgba(9,7,10,.72) 9%, transparent 43%, rgba(9,7,10,.12) 100%);
+}
+.dragon-hero .hero-vignette {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at 72% 42%, transparent 5%, rgba(0,0,0,.12) 62%, rgba(0,0,0,.42) 100%);
+}
+.dragon-hero .hero-content {
+  width: min(56%, 620px); max-width: 620px; padding: 20px 0;
+  text-align: left; animation: realmContentEnter .9s .1s both;
+}
+.dragon-hero .hero-kicker {
+  display: flex; align-items: center; gap: 10px; margin: 0 0 24px;
+  color: #f0d6aa; font-size: 9px; font-weight: 600; letter-spacing: 3px;
+}
+.dragon-hero .hero-kicker span {
+  width: 26px; height: 1px; background: var(--realm-gold);
+  box-shadow: 0 0 10px rgba(231,197,139,.65);
+}
+.dragon-hero .welcome-text {
+  margin: 0 0 8px; color: #d8c5b7; font-size: 10px; letter-spacing: 5px;
+}
+.dragon-hero .hero-content h1 {
+  margin: 0 0 22px; font-family: Cinzel, Georgia, serif;
+  font-size: clamp(64px, 8vw, 108px); line-height: .98; letter-spacing: 1px;
+  color: #f2d7a5; text-shadow: 0 6px 34px rgba(0,0,0,.8);
+}
+.dragon-hero .hero-content h1 span {
+  color: #fff1d5; background: linear-gradient(180deg,#fff4d9,#d4a45e);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.dragon-hero .hero-description {
+  max-width: 440px; margin: 0 0 30px; color: #f0e2d8;
+  font-size: 14px; line-height: 1.9; text-shadow: 0 2px 12px #000;
+}
+.dragon-hero .hero-actions { display: flex; align-items: center; justify-content: flex-start; gap: 26px; }
+.dragon-hero .hero-actions .btn {
+  min-height: 50px; padding: 0 24px; border-radius: 2px;
+  font-size: 9px; letter-spacing: 1.5px;
+}
+.dragon-hero .btn-gold {
+  color: #1a0d0a; background: linear-gradient(135deg,#f4dfb7,#c29352);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.55);
+}
+.dragon-hero .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(196,145,76,.24); }
+.dragon-hero .hero-text-link {
+  color: #f0d9b3; font-size: 9px; letter-spacing: 1.3px;
+  border-bottom: 1px solid rgba(231,197,139,.42); padding: 0 0 8px;
+  transition: color .2s, border-color .2s, transform .2s;
+}
+.dragon-hero .hero-text-link:hover { color: #fff; border-color: #fff; transform: translateX(3px); }
+.dragon-hero .hero-trust {
+  display: flex; align-items: center; gap: 12px; margin-top: 42px;
+  color: #cdb9ab; font-size: 8px; letter-spacing: 1.6px;
+}
+.dragon-hero .hero-trust i { width: 3px; height: 3px; border-radius: 50%; background: #c99d60; }
+.dragon-hero .trust-mark { color: var(--realm-gold); font-size: 13px; }
+.dragon-hero .hero-scroll {
+  bottom: 28px; color: #d5c1b2; font-size: 8px; letter-spacing: 2px;
+}
+.dragon-hero .hero-scroll span { color: var(--realm-gold); }
+.dragon-hero .hero-index {
+  position: absolute; right: max(7%, calc((100vw - 1160px)/2)); bottom: 30px;
+  color: rgba(236,218,194,.7); font: 9px Cinzel,serif; letter-spacing: 2px;
+}
+.dragon-hero .hero-index span { color: #bd8e56; padding: 0 7px; }
+.kingdom-section { padding-top: 58px; }
+.feature-grid { gap: 18px; }
+.feature-card {
+  position: relative; min-height: 238px; padding: 28px 26px;
+  border: 1px solid rgba(231,197,139,.18); border-radius: 3px;
+  background: linear-gradient(145deg,rgba(35,17,24,.96),rgba(13,9,13,.98));
+  box-shadow: 0 16px 42px rgba(0,0,0,.22);
+  transition: transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+}
+.feature-card:hover {
+  transform: translateY(-6px); border-color: rgba(231,197,139,.55);
+  box-shadow: 0 22px 46px rgba(0,0,0,.36),0 0 24px rgba(164,35,49,.12);
+}
+.feature-card::after {
+  content:""; position:absolute; left:20px; right:20px; bottom:0; height:1px;
+  background:linear-gradient(90deg,transparent,#a72d3c,#e7c58b,transparent);
+  transform:scaleX(.35); transition:transform .3s ease;
+}
+.feature-card:hover::after { transform:scaleX(1); }
+.feature-icon { font-size: 27px; margin-bottom: 24px; }
+.feature-card h2 { font-size: 14px; letter-spacing: 1px; line-height: 1.5; }
+.feature-card p { font-size: 12px; line-height: 1.8; }
+.section { max-width: 1160px; }
+.royal-card { padding: clamp(28px,5vw,54px); border-radius: 3px; }
+footer { padding: 38px 20px; color: #a9958b; font-size: 9px; letter-spacing: 1.8px; line-height: 2.2; }
+@media (max-width: 900px) {
+  .dragon-hero { min-height: 780px; padding: 80px 7% 140px; }
+  .dragon-hero .hero-content { width: min(72%,620px); }
+  .dragon-hero .hero-cinematic-art img { object-position: 66% center; }
+  .nav-links { gap: 4px; }
+}
+@media (max-width: 600px) {
+  .nav { min-height: 68px; }
+  .dragon-hero { min-height: 760px; align-items: flex-end; padding: 0 8% 118px; }
+  .dragon-hero .hero-cinematic-art img { object-position: 67% 35%; }
+  .dragon-hero .hero-cinematic-art::before {
+    background:
+      linear-gradient(0deg,#09070a 0%,rgba(9,7,10,.96) 17%,rgba(9,7,10,.68) 48%,rgba(9,7,10,.12) 100%),
+      linear-gradient(90deg,rgba(9,7,10,.25),transparent);
+  }
+  .dragon-hero .hero-content { width: 100%; padding: 0; }
+  .dragon-hero .hero-kicker { margin-bottom: 14px; font-size: 8px; letter-spacing: 2px; }
+  .dragon-hero .welcome-text { font-size: 9px; letter-spacing: 3px; }
+  .dragon-hero .hero-content h1 { font-size: clamp(48px,14vw,68px); margin-bottom: 14px; }
+  .dragon-hero .hero-description { font-size: 12px; line-height: 1.75; margin-bottom: 22px; }
+  .dragon-hero .hero-actions { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .dragon-hero .hero-actions .btn { min-height: 46px; }
+  .dragon-hero .hero-trust { flex-wrap: wrap; gap: 8px; margin-top: 25px; font-size: 7px; }
+  .dragon-hero .hero-scroll { display: none; }
+  .dragon-hero .hero-index { right: 8%; bottom: 24px; font-size: 8px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .feature-card { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dragon-hero .hero-cinematic-art img,.dragon-hero .hero-content { animation: none !important; }
+  .feature-card,.feature-card::after,.btn,.hero-text-link { transition: none !important; }
+}
