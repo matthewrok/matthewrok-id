@@ -20,9 +20,9 @@ create or replace function public.admin_send_inbox_message(
 )
 returns uuid
 language plpgsql
-security definer
+security invoker
 set search_path = ''
-as $$
+as $
 declare
   v_sender uuid := auth.uid();
   v_message_id uuid;
@@ -165,24 +165,28 @@ grant execute on function public.process_worker_application_decision(uuid, text,
 
 
 -- Allow the MATTHEW operator role to resolve member names when addressing Inbox messages.
-create or replace function public.is_matthew_operator()
+create schema if not exists private;
+revoke all on schema private from public, anon;
+grant usage on schema private to authenticated;
+
+create or replace function private.is_matthew_operator()
 returns boolean
 language sql
 stable
 security definer
 set search_path = ''
-as $$
+as $
   select exists (
     select 1 from public.profiles p
     where p.id = (select auth.uid())
       and p.role in ('admin', 'MATTHEW')
   );
-$$;
-revoke all on function public.is_matthew_operator() from public, anon;
-grant execute on function public.is_matthew_operator() to authenticated;
+$;
+revoke all on function private.is_matthew_operator() from public, anon;
+grant execute on function private.is_matthew_operator() to authenticated;
 
 drop policy if exists "MATTHEW can view profiles for inbox" on public.profiles;
 create policy "MATTHEW can view profiles for inbox"
 on public.profiles
 for select to authenticated
-using (public.is_matthew_operator());
+using ((select private.is_matthew_operator()));
