@@ -191,10 +191,10 @@
     </header>
 
     <!-- ANNOUNCEMENT TICKER: tepat di bawah header/logo -->
-    <div class="announcement-ticker" role="region" aria-label="Pengumuman">
+    <div class="announcement-ticker" id="announcementTicker" role="region" aria-label="Pengumuman" hidden>
       <span class="announcement-label">PENGUMUMAN</span>
       <div class="announcement-window">
-        <p class="announcement-track">✦ Selamat datang di Matthew Joki — pantau informasi terbaru dan update layanan di sini. ✦ &nbsp;&nbsp;&nbsp; Selamat datang di Matthew Joki — pantau informasi terbaru dan update layanan di sini. ✦</p>
+        <p class="announcement-track" id="announcementTrack"></p>
       </div>
     </div>
 
@@ -591,6 +591,7 @@
        JAVASCRIPT
   ================================== -->
 
+  <script defer src="assets/js/home-announcement.js?v=20261104"></script>
   <script defer src="assets/js/home.js"></script>
   <script defer src="assets/js/home-auth.js"></script>
   <script defer src="assets/js/home-visitor.js"></script>
