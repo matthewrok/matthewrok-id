@@ -222,3 +222,48 @@ footer{background:#060914;border-top-color:var(--line);color:#8798b8}
  .dragon-hero .hero-trust{margin-top:25px}
  .dragon-hero .hero-index{display:none}
 }
+
+
+/* Account email + role badge in the navigation menu */
+.nav-links .nav-user {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  min-width: 0;
+}
+.nav-user-email {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #dce6ff;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.nav-user-role {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid rgba(125, 231, 255, .28);
+  border-radius: 999px;
+  background: rgba(43, 116, 153, .18);
+  color: #8feaff;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: .8px;
+}
+.nav-user-role.is-admin {
+  border-color: rgba(255, 204, 112, .48);
+  background: linear-gradient(135deg, rgba(143, 91, 20, .32), rgba(82, 48, 10, .28));
+  color: #ffd88a;
+  box-shadow: 0 0 16px rgba(255, 196, 92, .08);
+}
+@media (min-width: 851px) {
+  .nav-links .nav-user {
+    border-top: 0;
+    margin-top: 0;
+    padding: 8px 10px;
+  }
+}
