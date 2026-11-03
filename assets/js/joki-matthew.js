@@ -25,6 +25,19 @@
       $("resultBar").style.width = $("resultPercent").textContent;
       $("resultUpdated").textContent = formatDate(order.updated_at);
       $("resultNote").textContent = order.progress_note || "Belum ada catatan dari admin.";
+      $("reviewSection").classList.toggle("hidden", order.status !== "Selesai");
+      $("reviewForm").reset();
+      $("reviewMessage").textContent = "";
+      $("existingReview").classList.add("hidden");
+      if (order.status === "Selesai") {
+        const {data: priorReview, error: reviewLookupError} = await db.rpc("lookup_joki_review", {p_token: token});
+        if (!reviewLookupError && priorReview && priorReview.length) {
+          $("reviewSection").classList.add("hidden");
+          const review = priorReview[0];
+          $("existingReview").textContent = "Terima kasih! Kamu sudah memberi penilaian " + "★".repeat(review.rating) + "☆".repeat(5-review.rating) + (review.review_text ? " — “" + review.review_text + "”" : "");
+          $("existingReview").classList.remove("hidden");
+        }
+      }
       $("progressResult").classList.remove("hidden");
       showMessage("lookupMessage", "Progres berhasil ditemukan.", "success");
     } catch (error) {
@@ -117,7 +130,63 @@
     if (error) { showMessage("adminMessage","Gagal menghapus: "+error.message,"error"); return; }
     showMessage("adminMessage","Pesanan dan token berhasil dihapus.","success"); await loadOrders();
   }
-  $("refreshOrders").addEventListener("click",loadOrders);
+  $("reviewForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const token = $("progressToken").value.trim().toUpperCase();
+    const rating = Number(new FormData($("reviewForm")).get("rating"));
+    if (!rating) { showMessage("reviewMessage", "Pilih rating bintang terlebih dahulu.", "error"); return; }
+    const button = $("submitReview");
+    setBusy(button, true, "MENGIRIM...", "KIRIM ULASAN");
+    try {
+      const {error} = await db.rpc("submit_joki_review", {
+        p_token: token,
+        p_rating: rating,
+        p_review_text: $("reviewText").value.trim(),
+        p_display_name: $("reviewConsent").checked
+      });
+      if (error) throw error;
+      showMessage("reviewMessage", "Terima kasih! Ulasanmu berhasil dikirim.", "success");
+      $("reviewSection").classList.add("hidden");
+      $("existingReview").textContent = "Terima kasih! Kamu sudah memberi penilaian " + "★".repeat(rating) + "☆".repeat(5-rating);
+      $("existingReview").classList.remove("hidden");
+      await loadPublicReviews();
+    } catch (error) {
+      showMessage("reviewMessage", error.message || "Ulasan belum dapat dikirim. Pastikan setup ulasan sudah dijalankan.", "error");
+    } finally { setBusy(button, false, "MENGIRIM...", "KIRIM ULASAN"); }
+  });
+  async function loadPublicReviews() {
+    const box = $("publicReviews");
+    const summary = $("reviewSummary");
+    try {
+      const {data, error} = await db.rpc("get_public_joki_reviews");
+      if (error) throw error;
+      const reviews = data || [];
+      const count = reviews.length;
+      const average = count ? reviews.reduce((sum, r) => sum + Number(r.rating), 0) / count : 0;
+      summary.replaceChildren();
+      const score = document.createElement("strong"); score.textContent = count ? average.toFixed(1) + " ★" : "—";
+      const label = document.createElement("span"); label.textContent = count ? count + " ulasan client yang memilih untuk ditampilkan" : "Belum ada ulasan publik. Jadilah client pertama yang memberi penilaian.";
+      summary.append(score, label);
+      box.replaceChildren();
+      if (!count) return;
+      reviews.forEach(review => {
+        const card = document.createElement("article"); card.className = "review-card";
+        const top = document.createElement("div"); top.className = "review-card-top";
+        const name = document.createElement("strong"); name.textContent = review.client_name || "Client Matthew";
+        const stars = document.createElement("span"); stars.className = "review-stars"; stars.textContent = "★".repeat(Number(review.rating)) + "☆".repeat(5-Number(review.rating)); stars.setAttribute("aria-label", review.rating + " dari 5 bintang");
+        top.append(name, stars);
+        const text = document.createElement("p"); text.textContent = review.review_text || "Client memberi rating tanpa komentar.";
+        const date = document.createElement("time"); date.textContent = formatDate(review.created_at);
+        card.append(top, text, date); box.append(card);
+      });
+    } catch (error) {
+      summary.textContent = "Fitur ulasan menunggu setup database.";
+      box.innerHTML = '<p class="hint">Jalankan file supabase/joki-reviews-setup.sql di Supabase SQL Editor untuk mengaktifkan ulasan.</p>';
+      console.warn(error);
+    }
+  }
+    $("refreshOrders").addEventListener("click",loadOrders);
   db.auth.onAuthStateChange(() => { setTimeout(()=>{ if (!$("adminLoginForm").classList.contains("hidden")) return; checkAdmin(); },0); });
   checkAdmin().catch(console.error);
+  loadPublicReviews();
 })();
