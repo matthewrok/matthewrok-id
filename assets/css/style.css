@@ -1881,3 +1881,100 @@ footer { padding: 38px 20px; color: #a9958b; font-size: 9px; letter-spacing: 1.8
   .dragon-hero .hero-cinematic-art img,.dragon-hero .hero-content { animation: none !important; }
   .feature-card,.feature-card::after,.btn,.hero-text-link { transition: none !important; }
 }
+
+
+
+/* =========================================================
+   MYSTIC DRAGON REALM V2 — NAVIGATION & MOTION POLISH
+   Safe visual layer: preserves page structure and application logic.
+========================================================= */
+header { z-index: 1000; }
+.nav { position: relative; }
+.menu-toggle {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid rgba(233,201,138,.42);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(65,12,27,.92), rgba(17,7,12,.98));
+  box-shadow: 0 8px 24px rgba(0,0,0,.24), inset 0 1px rgba(255,255,255,.04);
+  cursor: pointer;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.menu-toggle span {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f0d49b;
+  box-shadow: 0 0 9px rgba(233,201,138,.42);
+  transition: transform .25s ease, opacity .25s ease;
+}
+.menu-toggle:hover {
+  transform: translateY(-1px);
+  border-color: #f0d49b;
+  box-shadow: 0 10px 28px rgba(101,10,31,.28), 0 0 18px rgba(233,201,138,.1);
+}
+.menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(2px); }
+.menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-2px); }
+.nav-links {
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(360px, calc(100vw - 28px));
+  max-height: min(78svh, 620px);
+  padding: 12px;
+  border: 1px solid rgba(233,201,138,.28);
+  border-radius: 8px;
+  background: linear-gradient(155deg, rgba(31,12,20,.99), rgba(9,6,9,.99));
+  box-shadow: 0 24px 65px rgba(0,0,0,.62), inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter: blur(18px);
+}
+.nav-links.menu-open { display: flex; }
+.nav-links a {
+  display: flex;
+  align-items: center;
+  min-height: 43px;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #eadbd0;
+  font-size: 11px;
+  letter-spacing: .7px;
+  transition: color .2s ease, background .2s ease, border-color .2s ease, padding .2s ease;
+}
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  padding-left: 18px;
+  color: #f4d79f;
+  background: rgba(165,29,50,.16);
+  border-color: rgba(233,201,138,.13);
+}
+.nav-links .nav-user {
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(233,201,138,.16);
+  color: #e8c98f;
+  font-size: 11px;
+}
+.nav-links #logout { min-height: 42px; margin-top: 4px; }
+.feature-card { will-change: transform; }
+.feature-card:focus-visible {
+  outline: 2px solid #f0d49b;
+  outline-offset: 4px;
+}
+.hero-text-link:focus-visible { outline-offset: 6px; }
+@media (max-width: 600px) {
+  .menu-toggle { width: 42px; height: 42px; flex-basis: 42px; }
+  .nav-links { width: min(330px, calc(100vw - 24px)); }
+  .nav-links a { min-height: 46px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-toggle,
+  .menu-toggle span,
+  .nav-links a { transition: none !important; }
+}
