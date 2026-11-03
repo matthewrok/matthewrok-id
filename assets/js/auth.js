@@ -201,6 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const fullName = document.getElementById("registerName").value.trim();
       const email = document.getElementById("registerEmail").value.trim();
       const password = document.getElementById("registerPassword").value;
+      const confirmPassword = document.getElementById("registerConfirmPassword").value;
+      if (password.length < 6) { showMessage("Password minimal 6 karakter.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
+      if (password !== confirmPassword) { showMessage("Konfirmasi password tidak sama. Periksa kembali penulisannya.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       try {
         const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed.html" } });
         if (error) throw error;
