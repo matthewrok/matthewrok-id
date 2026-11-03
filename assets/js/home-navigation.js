@@ -1,4 +1,4 @@
-/* Responsive three-dot navigation menu. */
+/* Responsive navigation menu and collapsible purpose groups. */
 (() => {
   const toggle = document.getElementById("menuToggle");
   const menu = document.getElementById("siteMenu");
@@ -15,6 +15,18 @@
     const isOpen = menu.classList.toggle("menu-open");
     toggle.setAttribute("aria-expanded", String(isOpen));
     toggle.setAttribute("aria-label", isOpen ? "Tutup menu navigasi" : "Buka menu navigasi");
+  });
+
+  menu.querySelectorAll(".nav-group-title").forEach((heading) => {
+    heading.addEventListener("click", () => {
+      const group = heading.closest(".nav-group");
+      if (!group) return;
+      const isExpanded = heading.getAttribute("aria-expanded") === "true";
+      heading.setAttribute("aria-expanded", String(!isExpanded));
+      group.classList.toggle("is-collapsed", isExpanded);
+      const arrows = heading.querySelector(".nav-group-arrows");
+      if (arrows) arrows.textContent = isExpanded ? "↓" : "↑↓";
+    });
   });
 
   menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
