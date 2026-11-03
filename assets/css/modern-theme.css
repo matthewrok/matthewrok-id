@@ -443,7 +443,7 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 .joki-product-specs li span{color:#bba9a2}
 .joki-product-specs li strong{max-width:60%;color:#f0dfd2;text-align:right;font-size:11px;font-weight:700;overflow-wrap:anywhere}
 .joki-order-button{display:flex;align-items:center;justify-content:center;gap:12px;min-height:46px;margin-top:auto;padding:12px 15px;border:1px solid rgba(231,197,139,.5);background:linear-gradient(135deg,#f0d7a5,#bd874a);color:#21110b;text-decoration:none;font-size:9px;font-weight:900;letter-spacing:1.5px;transition:transform .2s ease,box-shadow .2s ease}
-.joki-order-button:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(189,135,74,.2)}
+.joki-order-button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 25px rgba(189,135,74,.2)}\n.joki-order-button:disabled{cursor:not-allowed;opacity:.58;filter:grayscale(.65);transform:none;box-shadow:none}
 .joki-product-note{margin:20px 0 0;color:#98877f;font-size:10px;line-height:1.8}
 @media(max-width:900px){.joki-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.joki-product-card:last-child{grid-column:1/-1}}
 @media(max-width:600px){.joki-product-grid{grid-template-columns:1fr}.joki-product-card:last-child{grid-column:auto}.joki-product-card{padding:23px 19px 19px}.joki-product-card h3{font-size:22px}.joki-product-price{font-size:34px}}
