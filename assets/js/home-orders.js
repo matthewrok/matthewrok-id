@@ -72,6 +72,7 @@
   $("jokiOrderSubmit")?.addEventListener("click",async()=>{
     const identity=getIdentity(),p=products[selected],button=$("jokiOrderSubmit");
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
+    if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
     normalizeQuantity();
     const requestedQty=Number(quantity.value);
     if(!Number.isInteger(requestedQty)||requestedQty<1||requestedQty>20){
