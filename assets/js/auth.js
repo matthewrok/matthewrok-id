@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
   const visitorForm = document.getElementById("visitorForm");
+  const forgotForm = document.getElementById("forgotPasswordForm");
+  const resetForm = document.getElementById("resetPasswordForm");
 
   document.querySelectorAll("[data-current-year]").forEach(el => { el.textContent = new Date().getFullYear(); });
   function showMessage(text, type = "") {
@@ -56,6 +58,63 @@ document.addEventListener("DOMContentLoaded", () => {
         setBusy(loginForm, false, "LOGIN");
       }
     });
+  }
+
+
+  if (forgotForm) {
+    forgotForm.addEventListener("submit", async event => {
+      event.preventDefault(); showMessage(""); setBusy(forgotForm, true, "MENGIRIM LINK...");
+      const email = document.getElementById("resetEmail").value.trim();
+      try {
+        const { error } = await client.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + "/reset-password.html"
+        });
+        if (error) throw error;
+        showMessage("Jika email terdaftar, link pemulihan telah dikirim. Periksa inbox dan folder spam.", "success");
+        forgotForm.reset();
+      } catch (error) {
+        showMessage(error.message || "Link pemulihan gagal dikirim. Coba lagi.", "error");
+      }
+      setBusy(forgotForm, false, "KIRIM LINK PEMULIHAN");
+    });
+  }
+
+  if (resetForm) {
+    let recoveryReady = false;
+    client.auth.onAuthStateChange(event => {
+      if (event === "PASSWORD_RECOVERY") {
+        recoveryReady = true;
+        showMessage("Link valid. Silakan buat password baru.", "success");
+        resetForm.hidden = false;
+      }
+    });
+    resetForm.addEventListener("submit", async event => {
+      event.preventDefault(); showMessage("");
+      if (!recoveryReady) {
+        showMessage("Sesi pemulihan belum terdeteksi. Buka link terbaru dari email pemulihan.", "error");
+        return;
+      }
+      const password = document.getElementById("newPassword").value;
+      const confirm = document.getElementById("confirmPassword").value;
+      if (password.length < 6) { showMessage("Password baru minimal 6 karakter.", "error"); return; }
+      if (password !== confirm) { showMessage("Konfirmasi password tidak sama.", "error"); return; }
+      setBusy(resetForm, true, "MENYIMPAN PASSWORD...");
+      try {
+        const { error } = await client.auth.updateUser({ password });
+        if (error) throw error;
+        showMessage("Password berhasil diperbarui. Silakan login kembali dengan password baru.", "success");
+        await client.auth.signOut();
+        resetForm.reset();
+        resetForm.hidden = true;
+        recoveryReady = false;
+      } catch (error) {
+        showMessage(error.message || "Password gagal diperbarui. Coba buka link terbaru dari email.", "error");
+      }
+      setBusy(resetForm, false, "SIMPAN PASSWORD BARU");
+    });
+    window.setTimeout(() => {
+      if (!recoveryReady) showMessage("Buka halaman ini melalui link pemulihan yang dikirim ke email kamu.", "error");
+    }, 1200);
   }
 
   if (visitorForm) {
