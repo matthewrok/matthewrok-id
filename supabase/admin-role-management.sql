@@ -1,5 +1,13 @@
 -- Admin-only member role promotion for MATTHEW JOKI.
 -- Safe to rerun in Supabase SQL Editor.
+
+-- Izinkan role bawaan serta role promosi yang disediakan dashboard admin.
+alter table public.profiles
+  drop constraint if exists profiles_role_check;
+alter table public.profiles
+  add constraint profiles_role_check
+  check (role = any (array['member'::text, 'admin'::text, 'SULTAN'::text, 'MATTHEW'::text, 'PELANGGAN'::text]));
+
 create or replace function public.admin_set_member_role(p_user_id uuid, p_new_role text)
 returns void
 language plpgsql
