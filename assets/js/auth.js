@@ -13,6 +13,52 @@ document.addEventListener("DOMContentLoaded", () => {
     message.textContent = text;
     message.className = "auth-message" + (type ? " " + type : "");
   }
+  function friendlyAuthError(error) {
+    const raw = String(error?.message || "").toLowerCase();
+    if (raw.includes("email not confirmed") || raw.includes("email_not_confirmed")) return "Email kamu belum diverifikasi. Buka Gmail dan klik link verifikasi, atau kirim ulang link di bawah.";
+    if (raw.includes("invalid login credentials")) return "Email atau password salah. Periksa kembali data login kamu.";
+    if (raw.includes("user already registered")) return "Email ini sudah terdaftar. Coba login atau gunakan fitur lupa kata sandi.";
+    if (raw.includes("password should be") || raw.includes("password must")) return "Password belum memenuhi ketentuan. Gunakan minimal 6 karakter.";
+    if (raw.includes("rate limit") || raw.includes("too many requests")) return "Terlalu banyak permintaan. Tunggu beberapa menit sebelum mencoba lagi.";
+    if (raw.includes("network") || raw.includes("fetch")) return "Koneksi internet bermasalah. Periksa jaringan lalu coba lagi.";
+    return error?.message || "Terjadi kesalahan. Silakan coba lagi.";
+  }
+
+  let resendButton;
+  function showResendButton(email) {
+    if (!message || !email) return;
+    if (!resendButton) {
+      resendButton = document.createElement("button");
+      resendButton.type = "button";
+      resendButton.className = "auth-resend-button";
+      resendButton.textContent = "KIRIM ULANG EMAIL VERIFIKASI";
+      resendButton.addEventListener("click", async () => {
+        resendButton.disabled = true;
+        resendButton.textContent = "MENGIRIM...";
+        try {
+          const { error } = await client.auth.resend({
+            type: "signup",
+            email: resendButton.dataset.email,
+            options: { emailRedirectTo: window.location.origin + "/email-confirmed.html" }
+          });
+          if (error) throw error;
+          showMessage("Jika akun tersebut menunggu verifikasi, link baru telah dikirim. Periksa Gmail, termasuk folder Spam.", "success");
+        } catch (error) {
+          showMessage(friendlyAuthError(error), "error");
+        } finally {
+          resendButton.disabled = false;
+          resendButton.textContent = "KIRIM ULANG EMAIL VERIFIKASI";
+        }
+      });
+      message.insertAdjacentElement("afterend", resendButton);
+    }
+    resendButton.dataset.email = email;
+    resendButton.hidden = false;
+  }
+  function hideResendButton() {
+    if (resendButton) resendButton.hidden = true;
+  }
+
   function setBusy(form, busy, label) {
     const button = form.querySelector('button[type="submit"]');
     if (!button) return;
@@ -43,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedEmail && emailField) { emailField.value = savedEmail; if (rememberField) rememberField.checked = true; }
     // Keep the login page visible even when a member session already exists.
     loginForm.addEventListener("submit", async event => {
-      event.preventDefault(); showMessage(""); setBusy(loginForm, true, "MEMERIKSA AKUN...");
+      event.preventDefault(); showMessage(""); hideResendButton(); setBusy(loginForm, true, "MEMERIKSA AKUN...");
       const email = emailField.value.trim();
       const password = document.getElementById("loginPassword").value;
       try {
@@ -74,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage("Jika email terdaftar, link pemulihan telah dikirim. Periksa inbox dan folder spam.", "success");
         forgotForm.reset();
       } catch (error) {
-        showMessage(error.message || "Link pemulihan gagal dikirim. Coba lagi.", "error");
+        showMessage(friendlyAuthError(error), "error");
       }
       setBusy(forgotForm, false, "KIRIM LINK PEMULIHAN");
     });
@@ -115,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resetForm.hidden = true;
         recoveryReady = false;
       } catch (error) {
-        showMessage(error.message || "Password gagal diperbarui. Coba buka link terbaru dari email.", "error");
+        showMessage(friendlyAuthError(error) || "Password gagal diperbarui. Coba buka link terbaru dari email.", "error");
       }
       setBusy(resetForm, false, "SIMPAN PASSWORD BARU");
     });
@@ -162,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage("Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual.", "success");
         registerForm.reset();
         setBusy(registerForm, false, "BUAT AKUN");
-      } catch (error) { showMessage(error.message || "Pendaftaran gagal. Coba lagi.", "error"); setBusy(registerForm, false, "BUAT AKUN"); }
+      } catch (error) { showMessage(friendlyAuthError(error), "error"); setBusy(registerForm, false, "BUAT AKUN"); }
     });
   }
   if (location.search.includes("reason=timeout")) showMessage("Sesi berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.", "error");
