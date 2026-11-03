@@ -13,6 +13,8 @@
   const fullName = document.getElementById("fullName");
   const email = document.getElementById("email");
   const password = document.getElementById("password");
+  const confirmPassword = document.getElementById("confirmPassword");
+  const confirmPasswordField = document.getElementById("confirmPasswordField");
   const submitButton = document.getElementById("submitButton");
   const switchMode = document.getElementById("switchMode");
   const switchText = document.getElementById("switchText");
@@ -30,6 +32,8 @@
       fullName.autocomplete = "name";
     }
     password.autocomplete = mode === "login" ? "current-password" : "new-password";
+    if (confirmPasswordField) confirmPasswordField.classList.toggle("hidden", mode !== "register");
+    if (confirmPassword) { confirmPassword.required = mode === "register"; confirmPassword.autocomplete = "new-password"; }
     submitButton.textContent = mode === "login" ? "LOGIN" : "CREATE ACCOUNT";
     if (switchText) switchText.textContent = mode === "login" ? "Belum punya akun?" : "Sudah punya akun?";
     if (switchMode) switchMode.textContent = mode === "login" ? "Daftar sekarang" : "Login";
@@ -79,6 +83,8 @@
 
     try {
       if (mode === "register") {
+        if (password.value.length < 6) throw new Error("Password minimal 6 karakter.");
+        if (password.value !== confirmPassword?.value) throw new Error("Konfirmasi password tidak sama. Periksa kembali penulisannya.");
         const { data, error } = await db.auth.signUp({
           email: email.value.trim(),
           password: password.value,
