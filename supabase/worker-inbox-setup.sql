@@ -151,3 +151,17 @@ $$;
 
 revoke all on function public.process_worker_application_decision(uuid, text, uuid) from public, anon, authenticated;
 grant execute on function public.process_worker_application_decision(uuid, text, uuid) to service_role;
+
+
+-- Allow the MATTHEW operator role to resolve member names when addressing Inbox messages.
+drop policy if exists "MATTHEW can view profiles for inbox" on public.profiles;
+create policy "MATTHEW can view profiles for inbox"
+on public.profiles
+for select to authenticated
+using (
+  exists (
+    select 1 from public.profiles operator_profile
+    where operator_profile.id = (select auth.uid())
+      and operator_profile.role in ('admin', 'MATTHEW')
+  )
+);
