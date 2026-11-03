@@ -448,3 +448,28 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 @media(max-width:900px){.joki-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.joki-product-card:last-child{grid-column:1/-1}}
 @media(max-width:600px){.joki-product-grid{grid-template-columns:1fr}.joki-product-card:last-child{grid-column:auto}.joki-product-card{padding:23px 19px 19px}.joki-product-card h3{font-size:22px}.joki-product-price{font-size:34px}}
 @media(prefers-reduced-motion:reduce){.joki-product-card,.joki-order-button{transition:none!important}}
+
+/* JOKI PRODUCTS — horizontal rail directly below hero */
+.joki-products{padding-top:42px;padding-bottom:42px}
+.joki-product-rail{display:flex;gap:16px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;padding:8px 3px 20px;scrollbar-width:thin;scrollbar-color:#557cff #101a30}
+.joki-product-rail .joki-product-card{flex:0 0 min(340px,82vw);scroll-snap-align:start}
+.joki-product-rail .joki-product-card:last-child{grid-column:auto}
+.joki-order-button{font-family:inherit;cursor:pointer}
+.joki-order-modal{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:18px;background:rgba(2,6,16,.82);backdrop-filter:blur(12px)}
+.joki-order-modal.hidden{display:none!important}
+.joki-order-dialog{position:relative;width:min(100%,480px);max-height:min(90svh,760px);overflow:auto;padding:30px;border:1px solid rgba(139,169,255,.35);border-radius:20px;background:linear-gradient(145deg,#142344,#080f20);box-shadow:0 28px 90px #000b}
+.joki-order-close{position:absolute;top:12px;right:14px;width:36px;height:36px;border:1px solid var(--theme-border);border-radius:10px;background:#101a30;color:#fff;font-size:24px}
+.joki-order-dialog h2{margin:8px 35px 8px 0;color:#e5edff;font-size:22px}
+.joki-order-lead{color:var(--muted);font-size:12px;line-height:1.7}
+.joki-order-identity,.joki-order-selected{display:grid;gap:5px;margin:15px 0;padding:14px;border:1px solid var(--theme-border);border-radius:12px;background:#0b1428}
+.joki-order-identity span,.joki-order-selected span,.joki-order-total span{color:#93a6ca;font-size:11px}
+.joki-order-identity strong,.joki-order-selected strong{color:#e5edff;font-size:14px}
+.joki-order-identity small{color:#8ca0c4;overflow-wrap:anywhere}
+.joki-order-dialog label{display:block;margin:16px 0 7px;color:#b9cbef;font-size:12px}
+.joki-order-dialog input{width:100%;min-height:46px;padding:12px;border:1px solid var(--theme-border);border-radius:10px;background:#080f20;color:white}
+.joki-order-total{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:16px 0;padding:16px;border:1px solid rgba(110,231,255,.25);border-radius:12px;background:#10203a}
+.joki-order-total strong{color:#9beaff;font-size:21px}
+.joki-order-disclaimer,.joki-order-message{color:#93a5c7;font-size:11px;line-height:1.7}
+.joki-order-dialog>.joki-order-button{width:100%;margin-top:12px}
+.joki-order-message{min-height:18px}
+@media(max-width:600px){.joki-products{padding-top:30px;padding-bottom:30px}.joki-product-rail .joki-product-card{flex-basis:84vw}.joki-order-dialog{padding:25px 20px}}
