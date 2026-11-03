@@ -196,3 +196,9 @@ using ((select private.is_matthew_operator()));
 grant select, insert on public.worker_applications to service_role;
 grant select, insert on public.inbox_messages to service_role;
 grant select, insert on public.inbox_recipients to service_role;
+
+
+-- Prevent concurrent duplicate active applications for one account.
+create unique index if not exists worker_applications_one_active_per_applicant
+on public.worker_applications(applicant_id)
+where applicant_id is not null and status in ('pending','approved');
