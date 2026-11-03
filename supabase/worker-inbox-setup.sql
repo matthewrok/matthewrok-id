@@ -5,19 +5,12 @@ alter table public.worker_applications
   add column if not exists consent_accepted boolean not null default false,
   add column if not exists consent_accepted_at timestamptz;
 
-do $
-begin
-  if not exists (
-    select 1 from pg_constraint
-    where conname = 'worker_applications_consent_timestamp_check'
-      and conrelid = 'public.worker_applications'::regclass
-  ) then
-    alter table public.worker_applications
-      add constraint worker_applications_consent_timestamp_check
-      check (consent_accepted_at is null or consent_accepted);
-  end if;
-end
-$;
+alter table public.worker_applications
+  drop constraint if exists worker_applications_consent_timestamp_check;
+alter table public.worker_applications
+  add constraint worker_applications_consent_timestamp_check
+  check (consent_accepted_at is null or consent_accepted);
+
 
 create or replace function public.admin_send_inbox_message(
   p_title text,
