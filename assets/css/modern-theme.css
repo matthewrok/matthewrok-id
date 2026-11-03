@@ -688,3 +688,38 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
  .nav-group-title{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}
  .nav-group.is-collapsed{gap:0}
 }
+
+
+/* RGB announcement ticker — placed directly beneath the header/logo */
+.announcement-ticker{
+  display:flex;align-items:center;gap:14px;width:min(1120px,calc(100% - 32px));
+  margin:14px auto 18px;padding:10px 14px;overflow:hidden;
+  border:1px solid rgba(110,231,255,.22);border-radius:12px;
+  background:linear-gradient(100deg,rgba(12,20,39,.96),rgba(17,10,28,.94));
+  box-shadow:0 8px 24px rgba(0,0,0,.18),0 0 18px rgba(110,231,255,.06);
+}
+.announcement-label{
+  flex:0 0 auto;font-size:9px;font-weight:900;letter-spacing:1.5px;
+  color:#fff;text-shadow:0 0 8px #ff315b,0 0 15px #ff315b;
+  animation:announcementRgb 4s linear infinite;
+}
+.announcement-window{min-width:0;overflow:hidden;white-space:nowrap}
+.announcement-track{
+  display:inline-block;margin:0;padding-left:100%;font-size:11px;font-weight:700;
+  letter-spacing:.45px;line-height:1.7;
+  background:linear-gradient(90deg,#ff477e,#ffb347,#fff16a,#52ffb8,#55dfff,#9b7bff,#ff477e);
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:announcementScroll 22s linear infinite,announcementRgb 5s linear infinite;
+}
+.announcement-ticker:hover .announcement-track{animation-play-state:paused}
+@keyframes announcementScroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+@keyframes announcementRgb{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+@media(max-width:600px){
+ .announcement-ticker{gap:10px;width:calc(100% - 24px);margin:10px auto 14px;padding:9px 11px}
+ .announcement-label{font-size:8px;letter-spacing:1px}
+ .announcement-track{font-size:10px;animation-duration:18s,5s}
+}
+@media(prefers-reduced-motion:reduce){
+ .announcement-track,.announcement-label{animation:none!important}
+ .announcement-track{padding-left:0;white-space:normal;color:#55dfff;background:none}
+}
