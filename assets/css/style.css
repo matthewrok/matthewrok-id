@@ -197,10 +197,17 @@ h3,
 }
 
 .dragon-emblem {
-  color: var(--gold);
-  font-size: 52px;
-  line-height: 1.3;
-  text-shadow: 0 0 25px #e9a43d66;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 12px;
+}
+.dragon-emblem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .auth-card h1 {
