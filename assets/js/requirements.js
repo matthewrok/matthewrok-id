@@ -26,50 +26,30 @@ const cityHallData = [
 {level:25,req:"Wall level 24; Trading Post level 24; 1 Master's Blueprint",food:"82,25 jt",wood:"82,25 jt",stone:"36 jt",time:"126 hari 3 jam",troops:"150.000"}
 ];
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById("requirementsRows");
   const search = document.getElementById("searchInput");
   const filter = document.getElementById("levelFilter");
   const empty = document.getElementById("emptyState");
-  const progressText = document.getElementById("progressText");
-  const progressBar = document.getElementById("progressBar");
-  const storageKey = "matthew-cityhall-checklist-v1";
-  let checked = {};
-  try { checked = JSON.parse(localStorage.getItem(storageKey) || "{}") || {}; } catch (_) {}
-
   const esc = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   function render() {
     const term = search.value.trim().toLowerCase();
     const bucket = filter.value;
     const visible = cityHallData.filter(item => {
       const range = bucket === "early" ? item.level <= 10 : bucket === "mid" ? item.level >= 11 && item.level <= 20 : bucket === "late" ? item.level >= 21 : true;
-      return range && (!term || (String(item.level).includes(term) || item.req.toLowerCase().includes(term) || ("city hall level " + item.level).includes(term)));
+      return range && (!term || String(item.level).includes(term) || item.req.toLowerCase().includes(term) || ("city hall level " + item.level).includes(term));
     });
-    tbody.innerHTML = visible.map(item => `<tr class="${checked[item.level] ? "done" : ""}">
-      <td><input class="check" type="checkbox" data-level="${item.level}" aria-label="Tandai City Hall level ${item.level} selesai" ${checked[item.level] ? "checked" : ""}></td>
+    tbody.innerHTML = visible.map(item => `<tr>
       <td><span class="level-badge">CH ${item.level}</span></td>
       <td>${esc(item.req)}</td>
       <td class="cost"><span>🍖 Food: ${esc(item.food)}</span><span>🪵 Wood: ${esc(item.wood)}</span><span>🪨 Stone: ${esc(item.stone)}</span></td>
       <td>${esc(item.time)}</td><td>${esc(item.troops)}</td>
     </tr>`).join("");
     empty.classList.toggle("hidden", visible.length !== 0);
-    tbody.querySelectorAll("[data-level]").forEach(box => box.addEventListener("change", () => {
-      checked[box.dataset.level] = box.checked;
-      try { localStorage.setItem(storageKey, JSON.stringify(checked)); } catch (_) {}
-      render();
-    }));
-    const done = cityHallData.filter(item => checked[item.level]).length;
-    progressText.textContent = done + " / " + cityHallData.length + " selesai";
-    progressBar.style.width = (done / cityHallData.length * 100) + "%";
   }
   search.addEventListener("input", render);
   filter.addEventListener("change", render);
-  document.getElementById("resetProgress").addEventListener("click", () => {
-    if (!confirm("Hapus semua checklist City Hall yang tersimpan di perangkat ini?")) return;
-    checked = {};
-    try { localStorage.removeItem(storageKey); } catch (_) {}
-    render();
-  });
   document.querySelectorAll("[data-current-year]").forEach(el => el.textContent = new Date().getFullYear());
   render();
 });
