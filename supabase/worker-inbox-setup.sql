@@ -160,13 +160,13 @@ language sql
 stable
 security definer
 set search_path = ''
-as $
+as $$
   select exists (
     select 1 from public.profiles p
     where p.id = (select auth.uid())
       and p.role in ('admin', 'MATTHEW')
   );
-$;
+$$;
 revoke all on function public.is_matthew_operator() from public, anon;
 grant execute on function public.is_matthew_operator() to authenticated;
 
