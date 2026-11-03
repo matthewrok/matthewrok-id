@@ -12,7 +12,8 @@ alter table public.worker_applications
   check (consent_accepted_at is null or consent_accepted);
 
 
-create or replace function public.admin_send_inbox_message(
+create or replace function public.service_send_inbox_message(
+  p_sender_id uuid,
   p_title text,
   p_body text,
   p_audience text default 'all',
@@ -24,12 +25,11 @@ security invoker
 set search_path = ''
 as $$
 declare
-  v_sender uuid := auth.uid();
   v_message_id uuid;
 begin
-  if v_sender is null or not exists (
+  if p_sender_id is null or not exists (
     select 1 from public.profiles p
-    where p.id = v_sender and p.role in ('admin', 'MATTHEW')
+    where p.id = p_sender_id and p.role in ('admin', 'MATTHEW')
   ) then
     raise exception 'Not authorized';
   end if;
@@ -54,7 +54,7 @@ begin
   end if;
 
   insert into public.inbox_messages(sender_id, title, body, audience, recipient_id)
-  values (v_sender, btrim(p_title), btrim(p_body), p_audience, p_recipient_id)
+  values (p_sender_id, btrim(p_title), btrim(p_body), p_audience, p_recipient_id)
   returning id into v_message_id;
 
   if p_audience = 'all' then
@@ -71,8 +71,8 @@ begin
 end;
 $$;
 
-revoke all on function public.admin_send_inbox_message(text, text, text, uuid) from public, anon;
-grant execute on function public.admin_send_inbox_message(text, text, text, uuid) to authenticated;
+revoke all on function public.service_send_inbox_message(uuid, text, text, text, uuid) from public, anon, authenticated;
+grant execute on function public.service_send_inbox_message(uuid, text, text, text, uuid) to service_role;
 
 -- A user may only mark their own receipt as read; they cannot change its owner/message.
 drop policy if exists "Members update own inbox receipt" on public.inbox_recipients;
