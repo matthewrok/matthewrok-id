@@ -1,14 +1,16 @@
 (() => {
   const db = window.supabaseClient;
-  if (!db) {
-    console.error("Supabase client belum siap. Periksa urutan pemuatan assets/js/supabase.js.");
-    return;
-  }
   const $ = id => document.getElementById(id);
   document.querySelectorAll("[data-current-year]").forEach(el => el.textContent = new Date().getFullYear());
   const showMessage = (id, text, type = "") => { const el = $(id); el.textContent = text; el.className = "message" + (type ? " " + type : ""); };
   const formatDate = value => value ? new Date(value).toLocaleString("id-ID", {dateStyle:"medium",timeStyle:"short"}) : "-";
   const setBusy = (button, busy, busyText, normalText) => { button.disabled = busy; button.textContent = busy ? busyText : normalText; };
+  // Database features require the Supabase client; the star picker above works independently.
+  if (!db) {
+    console.error("Supabase client belum siap. Fitur rating tetap aktif; fitur database dinonaktifkan.");
+    return;
+  }
+
   $("lookupForm").addEventListener("submit", async event => {
     event.preventDefault();
     const token = $("progressToken").value.trim().toUpperCase();
@@ -72,12 +74,17 @@
     starLabels.forEach(label => {
       label.addEventListener("click", () => {
         const input = document.getElementById(label.htmlFor);
-        if (input) {
-          input.checked = true;
-          paintStars(Number(input.value));
-        }
+        if (!input) return;
+        input.checked = true;
+        paintStars(Number(input.value));
       });
       label.addEventListener("mouseenter", () => paintStars(Number(label.htmlFor.replace("rating", ""))));
+      label.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          label.click();
+        }
+      });
     });
     starPicker.addEventListener("mouseleave", () => {
       const selected = starPicker.querySelector("input[name='rating']:checked");
