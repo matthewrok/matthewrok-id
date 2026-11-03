@@ -51,7 +51,6 @@
   });
   quantity?.addEventListener("input",updateTotal);
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
-  $("jokiToggleVoucher")?.addEventListener("click",()=>{const input=$("jokiOrderVoucher"),toggle=$("jokiToggleVoucher");const reveal=input.type==="password";input.type=reveal?"text":"password";toggle.textContent=reveal?"Sembunyikan":"Tampilkan";toggle.setAttribute("aria-label",reveal?"Sembunyikan kode voucher":"Tampilkan kode voucher");toggle.setAttribute("aria-pressed",String(reveal));});
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
   quantity?.addEventListener("blur",normalizeQuantity);
   $("jokiOrderClose")?.addEventListener("click",()=>modal?.classList.add("hidden"));
