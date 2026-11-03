@@ -18,3 +18,6 @@
 /* Replace the homepage's separate hamburger/link bar with this same global menu */
 body .menu-toggle,body .nav-links{display:none!important}
 @media(prefers-reduced-motion:reduce){.global-menu-trigger,.global-menu-panel,.global-menu-panel a{transition:none}}
+
+/* Keep the login form clean: hide the floating three-dot menu only on login.html. */
+body:has(#loginForm) .global-menu{display:none!important}
