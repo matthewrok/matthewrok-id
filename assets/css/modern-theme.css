@@ -473,3 +473,32 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 .joki-order-dialog>.joki-order-button{width:100%;margin-top:12px}
 .joki-order-message{min-height:18px}
 @media(max-width:600px){.joki-products{padding-top:30px;padding-bottom:30px}.joki-product-rail .joki-product-card{flex-basis:84vw}.joki-order-dialog{padding:25px 20px}}
+
+/* Crimson Serpent order interface — match the active website palette */
+.joki-products{color:var(--text)}
+.joki-products .eyebrow,.joki-products .joki-product-tier{color:var(--gold)}
+.joki-product-rail{scrollbar-color:var(--red-light) rgba(20,3,7,.9)}
+.joki-product-card{background:linear-gradient(145deg,#310911,#170409)!important;border:1px solid rgba(233,201,138,.3)!important;box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.joki-product-card:hover{border-color:var(--gold)!important;box-shadow:0 16px 38px rgba(143,16,32,.3)}
+.joki-product-card h3,.joki-product-price{color:var(--gold)!important}
+.joki-product-subtitle,.joki-product-specs span,.joki-product-note{color:var(--muted)!important}
+.joki-product-specs strong{color:var(--text)!important}
+.joki-product-divider{background:linear-gradient(90deg,transparent,var(--gold),transparent)!important}
+.joki-product-ribbon{background:linear-gradient(135deg,#df2438,#8f1020)!important;color:#fff!important}
+.joki-order-button{border:1px solid var(--gold)!important;border-radius:7px!important;background:linear-gradient(135deg,#a51d19,#650d18)!important;color:#fff4f1!important;box-shadow:0 8px 22px rgba(143,16,32,.22);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.joki-order-button:hover{transform:translateY(-2px);border-color:#fff0c9!important;box-shadow:0 12px 26px rgba(223,36,56,.3)}
+.joki-order-button:disabled{opacity:.65;cursor:wait;transform:none}
+.joki-order-modal{background:rgba(12,2,5,.82)!important}
+.joki-order-dialog{border:1px solid rgba(233,201,138,.42)!important;border-radius:14px!important;background:linear-gradient(145deg,#310911,#120305)!important;box-shadow:0 28px 90px #000b,0 0 40px rgba(143,16,32,.16)!important;color:var(--text)}
+.joki-order-dialog .eyebrow{color:var(--orange)}
+.joki-order-dialog h2{color:var(--gold)!important;font-family:"Cinzel",serif;letter-spacing:1px}
+.joki-order-lead,.joki-order-disclaimer,.joki-order-message{color:var(--muted)!important}
+.joki-order-identity,.joki-order-selected{border:1px solid var(--border)!important;border-radius:9px!important;background:rgba(12,3,5,.65)!important}
+.joki-order-identity span,.joki-order-selected span,.joki-order-total span,.joki-order-dialog label{color:var(--muted)!important}
+.joki-order-identity strong,.joki-order-selected strong{color:var(--text)!important}
+.joki-order-identity small{color:#d7aeb0!important}
+.joki-order-dialog input{border:1px solid var(--border)!important;border-radius:7px!important;background:#130508!important;color:var(--text)!important}
+.joki-order-dialog input:focus{outline:none;border-color:var(--gold)!important;box-shadow:0 0 0 3px rgba(233,201,138,.12)}
+.joki-order-total{border:1px solid rgba(233,201,138,.35)!important;border-radius:9px!important;background:linear-gradient(120deg,rgba(143,16,32,.28),rgba(51,9,15,.65))!important}
+.joki-order-total strong{color:var(--gold)!important}
+.joki-order-close{border:1px solid var(--border)!important;background:#26070d!important;color:var(--gold)!important;border-radius:7px!important}
