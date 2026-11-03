@@ -1,0 +1,51 @@
+/* MATTHEW JOKI — modern midnight-blue theme */
+:root {
+  --bg:#070b17; --panel:#0e1528; --panel-light:#131e37;
+  --red:#315ff4; --red-light:#5c8cff; --orange:#62d8f2;
+  --gold:#83a7ff; --text:#f1f5ff; --muted:#a9b6d0;
+  --border:rgba(132,164,255,.22);
+}
+html { scroll-behavior:smooth; }
+body { background-color:var(--bg); }
+.bg { background:radial-gradient(ellipse at 72% 8%,rgba(43,91,224,.22),transparent 45%),radial-gradient(ellipse at 12% 45%,rgba(23,156,200,.09),transparent 42%),#070b17; }
+header { background:rgba(7,11,23,.82); backdrop-filter:blur(18px); border-bottom-color:var(--border); }
+.nav { min-height:86px; }
+.brand,.brand-icon { color:#a6bcff; }
+.nav-links a { transition:color .2s ease,transform .2s ease; }
+.nav-links a:hover { color:#78e4ff; transform:translateY(-1px); }
+.btn { border-radius:12px; border-color:rgba(126,161,255,.38); letter-spacing:.3px; }
+.btn-gold { background:linear-gradient(135deg,#6c8dff,#3659e8); color:white; border-color:transparent; box-shadow:0 10px 30px rgba(49,95,244,.2); }
+.btn-gold:hover { box-shadow:0 12px 34px rgba(49,95,244,.38); transform:translateY(-2px); }
+.btn-outline { color:#b8caff; background:rgba(17,28,54,.55); }
+.btn-outline:hover { background:#21396d; color:white; }
+.hero { isolation:isolate; }
+.hero::before { background:radial-gradient(ellipse at 72% 40%,rgba(40,87,224,.16),transparent 50%); }
+.hero-cinematic-art { filter:saturate(.78) hue-rotate(12deg); }
+.hero-kicker,.eyebrow,.feature-link { color:#6ee5ff; }
+.hero h1 span { color:#7fa2ff; text-shadow:0 0 36px rgba(82,124,255,.25); }
+.hero-description,.royal-card p,.feature-card p { color:var(--muted); }
+.feature-card,.royal-card,.admin-panel,.auth-card { background:linear-gradient(145deg,rgba(17,27,51,.94),rgba(9,15,31,.97)); border:1px solid var(--border); border-radius:20px; box-shadow:0 22px 70px rgba(0,0,0,.24); }
+.feature-card { transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+.feature-card:hover { transform:translateY(-6px); border-color:rgba(104,218,255,.48); box-shadow:0 22px 55px rgba(20,65,150,.2); }
+.feature-icon { color:#8bb0ff; }
+.section-title,.royal-card h3,.admin-panel h2 { color:#b6c8ff; }
+.line { background:linear-gradient(90deg,#3766f5,#62d8f2); }
+.pill { border-color:var(--border); color:#a8c1ff; }
+.wa { background:linear-gradient(135deg,#315ff4,#17358f); border-color:transparent; border-radius:12px; }
+footer { background:#060914; border-top-color:var(--border); color:#8f9fbd; }
+.auth-screen { background:radial-gradient(ellipse at 70% 10%,rgba(42,83,207,.28),transparent 45%),linear-gradient(135deg,#080c19,#070b17); }
+.auth-card { padding:clamp(24px,4vw,42px); backdrop-filter:blur(16px); }
+.auth-card h1 { color:#d5e0ff; }
+.dragon-emblem { color:#82a5ff; text-shadow:0 0 28px rgba(71,112,255,.4); }
+.field label { color:var(--muted); }
+.field input,.auth-form input { background:#080e1d; color:#f1f5ff; border-color:var(--border); border-radius:11px; }
+.field input:focus,.auth-form input:focus { border-color:#6a9cff; box-shadow:0 0 0 3px rgba(87,132,255,.14); }
+#submitButton,.auth-form button { background:linear-gradient(135deg,#6c8dff,#3155df); color:white; border:0; border-radius:12px; }
+#authMessage.success,.auth-message.success { color:#72e4b2; }
+#authMessage.error,.auth-message.error { color:#ff929e; }
+.auth-switch button,.auth-link a,.forgot-link { color:#70ddf7; }
+.visitor-panel,.home-visitor { border-color:var(--border); background:rgba(14,22,43,.72); border-radius:16px; }
+@keyframes blueFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.dragon-emblem,.crown { animation:blueFloat 5s ease-in-out infinite; }
+@media(max-width:850px){ .nav { flex-direction:row; align-items:center; } .nav-links { gap:10px 14px; } }
+@media(prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important} }
