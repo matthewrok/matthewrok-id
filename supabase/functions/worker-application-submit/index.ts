@@ -70,6 +70,19 @@ Deno.serve(async (req: Request) => {
     "Content-Type": "application/json",
   };
 
+  const existingResponse = await fetch(
+    `${supabaseUrl}/rest/v1/worker_applications?applicant_id=eq.${encodeURIComponent(user.id)}&select=id,status&order=created_at.desc&limit=1`,
+    { headers }
+  );
+  const existingRows = await existingResponse.json();
+  if (!existingResponse.ok) {
+    console.error("Existing worker application lookup failed", existingResponse.status, existingRows);
+    return json({ error: "Status pendaftaran sebelumnya tidak dapat diperiksa." }, 502);
+  }
+  if (existingRows?.[0] && ["pending", "approved"].includes(existingRows[0].status)) {
+    return json({ error: "Kamu sudah memiliki pendaftaran worker yang masih diproses atau telah disetujui." }, 409);
+  }
+
   const insertResponse = await fetch(`${supabaseUrl}/rest/v1/worker_applications`, {
     method: "POST",
     headers: { ...headers, Prefer: "return=representation" },
