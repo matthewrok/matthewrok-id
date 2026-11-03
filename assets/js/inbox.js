@@ -36,13 +36,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         const button = form.querySelector("button[type=submit]");
         button.disabled = true; button.textContent = "MENGIRIM…";
         try {
-          const { error } = await db.rpc("admin_send_inbox_message", {
-            p_title: String(data.get("title")).trim(),
-            p_body: String(data.get("body")).trim(),
-            p_audience: target,
-            p_recipient_id: target === "user" ? data.get("recipient_id") : null
+          const { data: response, error } = await db.functions.invoke("inbox-send", {
+            body: {
+              title: String(data.get("title")).trim(),
+              body: String(data.get("body")).trim(),
+              audience: target,
+              recipient_id: target === "user" ? data.get("recipient_id") : null
+            }
           });
           if (error) throw error;
+          if (!response?.ok) throw new Error(response?.error || "Pesan gagal dikirim.");
           form.reset(); recipientField.hidden = true;
           say(feedback, "Pesan berhasil dikirim ke penerima yang dipilih.", "success");
           await loadInbox(user.id);
