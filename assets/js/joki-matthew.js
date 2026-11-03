@@ -1,7 +1,9 @@
 (() => {
-  const SUPABASE_URL = "https://aqiwrgnxwtphhwikqtmn.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const db = window.supabaseClient;
+  if (!db) {
+    console.error("Supabase client belum siap. Periksa urutan pemuatan assets/js/supabase.js.");
+    return;
+  }
   const $ = id => document.getElementById(id);
   document.querySelectorAll("[data-current-year]").forEach(el => el.textContent = new Date().getFullYear());
   const showMessage = (id, text, type = "") => { const el = $(id); el.textContent = text; el.className = "message" + (type ? " " + type : ""); };
