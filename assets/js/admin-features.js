@@ -12,6 +12,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function vouchers(){const {data,error}=await db.from("vouchers").select("id,code,discount_type,discount_value,used_count,max_uses,is_active").order("created_at",{ascending:false}).limit(100);if(error)throw error;const b=$("vouchersBody");b.replaceChildren();if(!data.length)return empty("vouchersBody",5,"Belum ada voucher.");data.forEach(v=>{const tr=document.createElement("tr");tr.append(td(v.code),td(v.discount_type==="percent"?v.discount_value+"%":"Rp "+Number(v.discount_value).toLocaleString("id-ID")),td(v.used_count+"/"+(v.max_uses??"∞")),td(v.is_active?"Aktif":"Nonaktif"));const ac=td("");ac.append(btn(v.is_active?"Nonaktifkan":"Aktifkan",async()=>{const {error}=await db.from("vouchers").update({is_active:!v.is_active}).eq("id",v.id);if(error)alert(error.message);else vouchers();}));tr.append(ac);b.append(tr);});}
   $("notificationForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget,d=new FormData(f),expiry=d.get("expires_at");try{const {error}=await db.from("site_notifications").insert({title:d.get("title").trim(),message:d.get("message").trim(),audience:d.get("audience"),expires_at:expiry?new Date(expiry).toISOString():null,created_by:session.user.id});if(error)throw error;f.reset();feedback("notificationFeedback","Notifikasi berhasil diterbitkan.");await notifications();}catch(x){feedback("notificationFeedback",x.message,true);}});
   $("voucherForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget,d=new FormData(f),expiry=d.get("expires_at"),max=d.get("max_uses");try{const {error}=await db.from("vouchers").insert({code:d.get("code").trim().toUpperCase(),description:d.get("description").trim()||null,discount_type:d.get("discount_type"),discount_value:Number(d.get("discount_value")),max_uses:max?Number(max):null,expires_at:expiry?new Date(expiry).toISOString():null,created_by:session.user.id});if(error)throw error;f.reset();feedback("voucherFeedback","Voucher berhasil dibuat.");await vouchers();}catch(x){feedback("voucherFeedback",x.message,true);}});
-  await Promise.all([members(),notifications(),vouchers()]);
+  async function roleAudit(){
+   const {data,error}=await db.from("profile_role_audit").select("id,actor_user_id,target_user_id,old_role,new_role,changed_at").order("changed_at",{ascending:false}).limit(100);
+   const body=$("roleAuditBody");
+   if(error){empty("roleAuditBody",5,"Riwayat belum tersedia. Pastikan supabase/admin-role-management.sql sudah diterapkan.");console.warn("Role audit unavailable:",error.message);return;}
+   body.replaceChildren();
+   if(!data.length)return empty("roleAuditBody",5,"Belum ada perubahan role yang tercatat.");
+   const fmt=new Intl.DateTimeFormat("id-ID",{dateStyle:"medium",timeStyle:"short"});
+   data.forEach(item=>{
+    const tr=document.createElement("tr");
+    tr.append(td(fmt.format(new Date(item.changed_at))),td(item.actor_user_id),td(item.target_user_id),td(item.old_role),td(item.new_role));
+    body.append(tr);
+   });
+  }
+  await Promise.all([members(),notifications(),vouchers(),roleAudit()]);
  }catch(e){console.error(e);feedback("notificationFeedback","Gagal memuat fitur: "+e.message,true);}
 });
