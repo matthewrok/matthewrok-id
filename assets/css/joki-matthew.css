@@ -5,7 +5,7 @@
 .review-form-card{margin-top:28px;padding:clamp(18px,3vw,28px);border:1px solid var(--border);border-radius:9px;background:linear-gradient(145deg,#21110d,#120907)}
 .review-form-heading h3{margin:5px 0;color:#fff0c3;font:700 clamp(20px,3vw,27px) Cinzel,serif}
 .review-form-heading p{margin:0 0 18px;color:var(--muted);font-size:12px}
-.star-picker{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:5px;margin:4px 0 15px}
+.star-picker{display:flex;flex-direction:row;justify-content:flex-start;gap:5px;margin:4px 0 15px}
 .star-picker input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
 .star-picker label{margin:0;color:#68513c;font-size:clamp(30px,6vw,40px);line-height:1.2;cursor:pointer;transition:color .15s,transform .15s}
 .star-picker label:hover,.star-picker label:hover~label,.star-picker input:checked~label{color:#f4c75e}
