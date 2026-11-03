@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100907">
+<meta name="description" content="Lacak progres layanan Joki Matthew menggunakan token progres.">
+<title>Joki Matthew | Progress Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/joki-matthew.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/joki-matthew.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="crown">♛</span><span>MATTHEW JOKI<small>DRAGON KINGDOM</small></span></a>
+  <nav><a href="index.html">Beranda</a><a href="calculator-resource.html">Calculator</a><a href="requirements-city-hall.html">Requirements</a></nav>
+</header>
+<main class="page">
+  <section class="hero">
+    <p class="eyebrow">PROFESSIONAL SERVICE · RISE OF KINGDOMS</p>
+    <h1>JOKI <em>MATTHEW</em></h1>
+    <p class="intro">Pantau perkembangan pesananmu secara berkala. Masukkan token progres yang diberikan admin untuk melihat status terbaru akunmu.</p>
+    <div class="hero-badges"><span>♜ Progress Update</span><span>♛ Token Unik</span><span>✦ Transparan</span></div>
+  </section>
+
+  <section class="panel lookup-panel">
+    <div class="section-heading"><p class="eyebrow">CLIENT ACCESS</p><h2>CEK PROGRES PESANAN</h2><p>Token bersifat unik dan hanya dapat dilihat oleh pemilik token.</p></div>
+    <form id="lookupForm" class="lookup-form">
+      <label for="progressToken">TOKEN PROGRES</label>
+      <div class="token-row"><input id="progressToken" name="token" type="text" placeholder="Contoh: MJ-AB12-CD34-EF56" maxlength="32" autocomplete="off" required><button class="btn btn-gold" type="submit" id="lookupButton">CEK PROGRES</button></div>
+      <p class="hint">Belum menerima token? Hubungi admin Matthew Joki.</p>
+    </form>
+    <div id="lookupMessage" class="message" aria-live="polite"></div>
+    <article id="progressResult" class="progress-result hidden" aria-live="polite">
+      <div class="result-top"><div><p class="eyebrow">STATUS PESANAN</p><h3 id="resultService">Layanan Joki</h3></div><span id="resultStatus" class="status-badge">Diproses</span></div>
+      <div class="progress-meta"><span>Progres pengerjaan</span><strong id="resultPercent">0%</strong></div>
+      <div class="progress-track"><div id="resultBar"></div></div>
+      <div class="result-grid"><div><span>Nama client</span><strong id="resultClient">Client</strong></div><div><span>Pembaruan terakhir</span><strong id="resultUpdated">-</strong></div></div>
+      <div class="note-box"><span>CATATAN ADMIN</span><p id="resultNote">Belum ada catatan.</p></div>
+      <p class="privacy-note">Demi keamanan, halaman ini hanya menampilkan progres yang terkait dengan token yang dimasukkan.</p>
+    </article>
+  </section>
+
+  <section class="admin-area">
+    <details id="adminDetails" class="admin-details">
+      <summary>♛ Area Admin — Kelola Progres Client</summary>
+      <div class="admin-inner">
+        <p class="admin-intro">Login dengan akun admin website untuk membuat token baru dan memperbarui progres pesanan.</p>
+        <form id="adminLoginForm" class="admin-login">
+          <label for="adminEmail">Email admin</label><input id="adminEmail" type="email" autocomplete="username" placeholder="Email admin" required>
+          <label for="adminPassword">Password</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Password" required>
+          <button class="btn btn-outline" type="submit">LOGIN ADMIN</button>
+        </form>
+        <div id="adminMessage" class="message" aria-live="polite"></div>
+        <div id="adminWorkspace" class="hidden">
+          <div class="admin-toolbar"><h3>Pesanan Client</h3><button id="refreshOrders" class="btn btn-outline" type="button">MUAT ULANG</button></div>
+          <form id="orderForm" class="order-form">
+            <input id="orderId" type="hidden">
+            <label for="clientName">Nama client</label><input id="clientName" maxlength="100" placeholder="Nama client" required>
+            <label for="serviceName">Layanan / target joki</label><input id="serviceName" maxlength="140" placeholder="Contoh: Upgrade City Hall 25" required>
+            <label for="orderStatus">Status</label><select id="orderStatus"><option>Menunggu</option><option>Dalam pengerjaan</option><option>Menunggu konfirmasi client</option><option>Selesai</option><option>Ditunda</option></select>
+            <label for="orderPercent">Progres: <strong id="percentLabel">0%</strong></label><input id="orderPercent" type="range" min="0" max="100" step="5" value="0">
+            <label for="orderNote">Catatan progres untuk client</label><textarea id="orderNote" rows="4" maxlength="1200" placeholder="Contoh: Bangunan utama sudah ditingkatkan, berikutnya melanjutkan riset..."></textarea>
+            <div class="form-actions"><button id="saveOrder" class="btn btn-gold" type="submit">BUAT TOKEN & PESANAN</button><button id="cancelEdit" class="btn btn-outline hidden" type="button">BATAL EDIT</button></div>
+          </form>
+          <div class="table-wrap"><table><thead><tr><th>Token</th><th>Client / layanan</th><th>Status</th><th>Progres</th><th>Aksi</th></tr></thead><tbody id="orderRows"></tbody></table></div>
+        </div>
+      </div>
+    </details>
+  </section>
+</main>
+<footer>© <span data-current-year>2026</span> MATTHEW JOKI · THE DRAGON GUARDS THIS KINGDOM</footer>
+</body>
+</html>
