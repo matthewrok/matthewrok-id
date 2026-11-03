@@ -94,6 +94,8 @@ Deno.serve(async (req: Request) => {
       play_duration: playDuration,
       account_capacity: accountCapacity,
       whatsapp_number: whatsapp || null,
+      consent_accepted: true,
+      consent_accepted_at: new Date().toISOString(),
       status: "pending",
     }),
   });
