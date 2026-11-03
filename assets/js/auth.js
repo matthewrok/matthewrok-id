@@ -81,12 +81,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (resetForm) {
     let recoveryReady = false;
+    const revealResetForm = () => {
+      recoveryReady = true;
+      showMessage("Link valid. Silakan buat password baru.", "success");
+      resetForm.hidden = false;
+    };
     client.auth.onAuthStateChange(event => {
-      if (event === "PASSWORD_RECOVERY") {
-        recoveryReady = true;
-        showMessage("Link valid. Silakan buat password baru.", "success");
-        resetForm.hidden = false;
-      }
+      if (event === "PASSWORD_RECOVERY") revealResetForm();
+    });
+    // Recovery URL may establish a session before this listener is attached.
+    client.auth.getSession().then(({ data }) => {
+      if (data.session && (window.location.hash.includes("type=recovery") ||
+          new URLSearchParams(window.location.search).get("type") === "recovery")) revealResetForm();
     });
     resetForm.addEventListener("submit", async event => {
       event.preventDefault(); showMessage("");
