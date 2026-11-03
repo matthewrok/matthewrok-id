@@ -19,9 +19,8 @@
 
   <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/assets/js/supabase.js"></script>
-  <script defer src="/assets/js/session-manager.js"></script>
+  <script defer src="assets/js/supabase.js"></script>
+  <script defer src="assets/js/session-manager.js"></script>
 </head>
 
 <body>
@@ -441,18 +440,8 @@
   ================================== -->
 
   <script>
-    /* SUPABASE CONFIGURATION */
-
-    const SUPABASE_URL =
-      "https://aqiwrgnxwtphhwikqtmn.supabase.co";
-
-    const SUPABASE_KEY =
-      "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv";
-
-    const db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+    /* Shared Supabase client */
+    const db = window.supabaseClient;
 
 
     /* ELEMENT REFERENCES */
@@ -670,13 +659,18 @@
     async function showUser(user) {
 
       if (!user) {
-
+        const visitorName = sessionStorage.getItem("matthewVisitorName");
+        if (visitorName) {
+          authScreen.classList.add("hidden");
+          site.classList.remove("hidden");
+          document.getElementById("navUser").textContent = "Tamu: " + visitorName;
+          document.getElementById("adminPanel")?.classList.add("hidden");
+          document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+          return;
+        }
         authScreen.classList.remove("hidden");
-
         site.classList.add("hidden");
-
         return;
-
       }
 
       const { data: profile, error } =
