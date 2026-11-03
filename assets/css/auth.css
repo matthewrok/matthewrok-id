@@ -142,3 +142,10 @@ body{font-family:var(--body);background:radial-gradient(ellipse at 50% 5%,rgba(2
 .auth-message.error{color:var(--warn)}
 .forgot-link,.auth-link a{color:var(--gilt)}
 footer{color:var(--faint)}
+
+
+/* Resend signup verification action */
+.auth-resend-button{display:block;width:100%;margin:12px 0 0;padding:11px 14px;border:1px solid var(--gilt);border-radius:8px;background:rgba(232,194,122,.1);color:var(--gilt);font:700 11px var(--body);letter-spacing:1px;cursor:pointer}
+.auth-resend-button:hover{background:rgba(232,194,122,.18)}
+.auth-resend-button:disabled{opacity:.6;cursor:wait}
+.auth-resend-button[hidden]{display:none}
