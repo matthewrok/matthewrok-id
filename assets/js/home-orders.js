@@ -49,6 +49,18 @@
   document.querySelectorAll("[data-order-product]").forEach(button=>{
     button.addEventListener("click",event=>{event.preventDefault();openOrder(button.dataset.orderProduct);});
   });
+  function syncVisitorRestrictions(){
+    const visitor=!!getIdentity()?.isVisitor;
+    document.querySelectorAll("[data-order-product]").forEach(button=>{
+      button.disabled=visitor;button.setAttribute("aria-disabled",String(visitor));
+      if(visitor){button.dataset.originalLabel ||= button.textContent.trim();button.textContent="LOGIN UNTUK MEMESAN";}
+      else if(button.dataset.originalLabel){button.textContent=button.dataset.originalLabel;delete button.dataset.originalLabel;}
+    });
+    const voucherInput=$("jokiOrderVoucher"),voucherButton=$("jokiApplyVoucher");
+    if(voucherInput){voucherInput.disabled=visitor;voucherInput.placeholder=visitor?"Login sebagai member untuk voucher":"Masukkan kode voucher";}
+    if(voucherButton){voucherButton.disabled=visitor;voucherButton.title=visitor?"Voucher hanya untuk member":"Cek voucher";}
+  }
+  syncVisitorRestrictions();
   quantity?.addEventListener("input",updateTotal);
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
