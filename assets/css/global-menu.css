@@ -21,3 +21,8 @@ body .menu-toggle,body .nav-links{display:none!important}
 
 /* Keep the login form clean: hide the floating three-dot menu only on login.html. */
 body:has(#loginForm) .global-menu{display:none!important}
+
+/* Hide navigation while the homepage is showing its KINGDOM MEMBER ACCESS screen. */
+body:has(#authScreen:not(.hidden)) .global-menu,
+body:has(#authScreen:not(.hidden)) .global-menu-trigger,
+body:has(#authScreen:not(.hidden)) #globalMenuPanel{display:none!important;visibility:hidden!important;pointer-events:none!important}
