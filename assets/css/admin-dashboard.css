@@ -52,3 +52,10 @@ footer{margin-top:30px;padding:18px 0 0;border-top:1px solid var(--line);color:v
 .manage-progress-cta .cta-arrow{margin-left:auto;font-size:25px;color:#ffe09a}
 .manage-progress-cta:hover,.manage-progress-cta:focus-visible{transform:translateY(-3px);border-color:#ffe5a3;box-shadow:0 18px 42px rgba(0,0,0,.4),0 0 0 4px rgba(232,194,122,.13)}
 @media(max-width:600px){.manage-progress-cta{gap:11px;padding:15px;min-height:82px}.manage-progress-cta>span:first-child{flex-basis:42px;width:42px;height:42px}.manage-progress-cta strong{font-size:13px}.manage-progress-cta small{font-size:10px}}
+
+.admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin:16px 0 20px;padding:18px;border:1px solid var(--line);border-radius:var(--r);background:rgba(0,0,0,.18)}
+.admin-form label{display:grid;gap:6px;color:var(--muted);font-size:11px;font-weight:700}
+.admin-form input,.admin-form select,.admin-form textarea{width:100%;min-width:0;padding:10px 11px;border:1px solid var(--line-2);border-radius:8px;background:#17131c;color:var(--text);font:500 12px var(--body)}
+.admin-form textarea{resize:vertical}.admin-form button{align-self:end;min-height:39px}
+.feature-feedback{grid-column:1/-1;margin:0;color:#bde8c7;font-size:12px}.feature-feedback.error{color:#ffb6bd}
+.danger-action{padding:9px 12px;border:1px solid rgba(255,120,135,.45);border-radius:8px;background:rgba(130,20,40,.3);color:#ffc2c8;font:700 11px var(--body);cursor:pointer}
