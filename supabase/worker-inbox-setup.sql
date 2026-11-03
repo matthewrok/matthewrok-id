@@ -83,3 +83,71 @@ using (
     where p.id = (select auth.uid()) and p.role in ('admin', 'MATTHEW')
   )
 );
+
+
+-- Called only by the authenticated Telegram webhook through the service role.
+-- Status change and Inbox delivery happen in one database transaction.
+create or replace function public.process_worker_application_decision(
+  p_application_id uuid,
+  p_decision text,
+  p_actor_id uuid
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_app public.worker_applications%rowtype;
+  v_message_id uuid;
+  v_title text;
+  v_body text;
+begin
+  if p_decision not in ('approved', 'rejected') then
+    raise exception 'Invalid decision';
+  end if;
+
+  if not exists (
+    select 1 from public.profiles p
+    where p.id = p_actor_id and p.role in ('admin', 'MATTHEW')
+  ) then
+    raise exception 'Decision actor is not an authorized admin';
+  end if;
+
+  select * into v_app
+  from public.worker_applications
+  where id = p_application_id
+  for update;
+
+  if not found then raise exception 'Application not found'; end if;
+  if v_app.status <> 'pending' then raise exception 'Application already processed'; end if;
+  if v_app.applicant_id is null then raise exception 'Applicant must have a member account'; end if;
+
+  if p_decision = 'approved' then
+    v_title := 'Pendaftaran Worker Disetujui';
+    v_body := 'Selamat! Anda telah bergabung menjadi bagian dari MATTHEW. Selanjutnya, data dan proses bergabung Anda akan kami tindak lanjuti. Terus semangat, jaga komunikasi, dan berikan kontribusi terbaik. Kami berharap ini menjadi awal kerja sama yang positif dan berkembang bersama.';
+  else
+    v_title := 'Informasi Hasil Pendaftaran Worker';
+    v_body := 'Terima kasih telah meluangkan waktu dan menunjukkan minat untuk bergabung bersama MATTHEW. Setelah mempertimbangkan pendaftaran Anda, saat ini kami belum dapat melanjutkan proses penerimaan. Keputusan ini tidak mengurangi apresiasi kami atas usaha dan ketertarikan Anda. Semoga kesempatan yang lebih sesuai segera datang, dan terima kasih telah memahami.';
+  end if;
+
+  update public.worker_applications
+  set status = p_decision,
+      decision_note = v_body,
+      decided_at = now()
+  where id = p_application_id;
+
+  insert into public.inbox_messages(sender_id, title, body, audience, recipient_id)
+  values (p_actor_id, v_title, v_body, 'user', v_app.applicant_id)
+  returning id into v_message_id;
+
+  insert into public.inbox_recipients(message_id, user_id)
+  values (v_message_id, v_app.applicant_id)
+  on conflict (message_id, user_id) do nothing;
+
+  return v_message_id;
+end;
+$$;
+
+revoke all on function public.process_worker_application_decision(uuid, text, uuid) from public, anon, authenticated;
+grant execute on function public.process_worker_application_decision(uuid, text, uuid) to service_role;
