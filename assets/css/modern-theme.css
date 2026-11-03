@@ -723,3 +723,6 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
  .announcement-track,.announcement-label{animation:none!important}
  .announcement-track{padding-left:0;white-space:normal;color:#55dfff;background:none}
 }
+
+/* Do not flash an empty ticker before the active announcement is loaded. */
+.announcement-ticker[hidden]{display:none!important}
