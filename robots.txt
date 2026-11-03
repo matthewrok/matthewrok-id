@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /reset-password.html
+
+Sitemap: https://matthewrok.my.id/sitemap.xml

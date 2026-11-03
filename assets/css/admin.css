@@ -1,52 +1,23 @@
-.admin-container {
-    width: min(1100px, 94%);
-    margin: 40px auto;
-}
+@import url("./tokens.css");
 
-.admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
-}
+/* ==========================================================
+   MATTHEW JOKI — ADMIN PANEL
+   ========================================================== */
 
-.admin-card {
-    background: #102541;
-    border: 1px solid rgba(214, 173, 85, 0.3);
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 20px;
-}
-
-.admin-table-wrapper {
-    overflow-x: auto;
-}
-
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.admin-table th,
-.admin-table td {
-    padding: 13px;
-    border-bottom: 1px solid #34516f;
-    text-align: left;
-}
-
-.admin-table th {
-    color: #d6ad55;
-}
-
-.admin-status {
-    color: #65d69a;
-    font-weight: bold;
-}
-
-@media (max-width: 600px) {
-    .admin-container {
-        margin: 25px auto;
-    }
-}
+.admin-container{width:min(1100px,94%);margin:40px auto 60px}
+.admin-header{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:25px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.admin-header h1{color:var(--text);font-size:clamp(24px,4vw,36px)}
+.admin-card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(52,7,16,.96),rgba(17,3,7,.98));border:1px solid var(--line-2);border-radius:var(--r-lg);padding:clamp(18px,3vw,26px);margin-bottom:20px;box-shadow:var(--shadow-card)}
+.admin-card::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,var(--crimson),var(--gilt),transparent);opacity:.8;pointer-events:none}
+.admin-table-wrapper{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:rgba(0,0,0,.16);-webkit-overflow-scrolling:touch}
+.admin-table{width:100%;min-width:620px;border-collapse:collapse}
+.admin-table th,.admin-table td{padding:13px 15px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.admin-table th{background:rgba(65,10,23,.72);color:var(--gilt);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.admin-table td{color:var(--muted);font-size:13px}
+.admin-table tbody tr{transition:background var(--transition-fast)}
+.admin-table tbody tr:hover{background:rgba(232,194,122,.045)}
+.admin-table tbody tr:last-child td{border-bottom:0}
+.admin-status{display:inline-flex;align-items:center;gap:7px;color:var(--jade);font-size:12px;font-weight:700}
+.admin-status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
+@media(max-width:600px){.admin-container{width:min(100% - 24px,1100px);margin:25px auto 40px}.admin-header{align-items:flex-start}.admin-card{padding:17px}}
+@media(prefers-reduced-motion:reduce){.admin-table tbody tr{transition:none}}

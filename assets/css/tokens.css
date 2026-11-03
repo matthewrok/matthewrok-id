@@ -1,0 +1,124 @@
+/* ==========================================================
+   MATTHEW JOKI — SHARED DESIGN SYSTEM
+   MYSTIC DRAGON REALM | Warm black • Royal gold • Dragon crimson
+   ========================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap");
+
+:root {
+  color-scheme: dark;
+  --ink:#100b0d;
+  --raise:#1a1217;
+  --raise-2:#241820;
+  --line:rgba(232,194,122,.16);
+  --line-2:rgba(232,194,122,.34);
+  --text:#f6eee9;
+  --muted:#b4a5a6;
+  --faint:#8a7b7d;
+  --crimson:#d1283b;
+  --crimson-deep:#8f1a2a;
+  --gilt:#e8c27a;
+  --jade:#5fd3a6;
+  --warn:#ff8a7a;
+  --r:8px;
+  --r-lg:16px;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --content-width:1160px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;
+  background:radial-gradient(1000px 520px at 82% -8%,rgba(209,40,59,.14),transparent 60%),var(--ink);
+  color:var(--text);font:400 15px/1.7 var(--body);overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+img,svg,video{max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+:focus-visible{outline:2px solid var(--gilt);outline-offset:3px}
+::selection{background:var(--crimson);color:#fff}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;padding:0 20px;border:1px solid var(--line-2);
+  border-radius:var(--r);background:transparent;color:var(--text);
+  font-size:12px;font-weight:700;letter-spacing:.06em;white-space:nowrap;
+  transition:background .2s,border-color .2s,color .2s,transform .2s var(--ease),box-shadow .2s;
+}
+.btn:hover{border-color:var(--gilt);transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn:disabled{opacity:.55;cursor:wait;transform:none}
+.btn-gold{background:var(--gilt);border-color:var(--gilt);color:#1b1208}
+.btn-gold:hover{background:#f3d590;border-color:#f3d590;box-shadow:0 7px 22px rgba(232,194,122,.16)}
+.btn-outline{color:var(--gilt)}
+.btn-outline:hover{background:rgba(232,194,122,.08)}
+.btn-full{width:100%}
+
+:where(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){
+  width:100%;min-width:0;padding:12px 14px;background:var(--ink);
+  border:1px solid var(--line-2);border-radius:var(--r);outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+:where(input,select,textarea):focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(232,194,122,.18)}
+::placeholder{color:var(--faint)}
+select option{background:var(--raise);color:var(--text)}
+input[type=checkbox],input[type=radio],input[type=range]{accent-color:var(--gilt)}
+
+.panel{background:var(--raise);border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(20px,4vw,40px)}
+.eyebrow{display:block;color:var(--gilt);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:lowercase}
+.eyebrow::first-letter{text-transform:uppercase}
+
+footer{
+  padding:28px 5%;border-top:1px solid var(--line);color:var(--faint);
+  font-size:11px;letter-spacing:.08em;line-height:2;text-align:center;
+}
+
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;gap:24px;
+  padding:14px max(5%,calc((100% - var(--content-width))/2));
+  background:rgba(16,11,13,.92);-webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.topbar nav{display:flex;flex-wrap:wrap;gap:4px 22px}
+.topbar nav a{
+  padding:6px 0;border-bottom:2px solid transparent;color:var(--muted);
+  font-size:13px;font-weight:500;transition:color .2s,border-color .2s;
+}
+.topbar nav a:hover{color:var(--text);border-color:var(--crimson)}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.02em}
+.brand small{display:block;margin-top:2px;color:var(--faint);font:500 10px var(--body);letter-spacing:.06em}
+.brand .crown,.brand-icon,.brand>span:first-child{color:var(--gilt);font-size:26px;line-height:1}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+body::after{
+  content:"";position:fixed;z-index:-1;top:18vh;left:0;
+  width:clamp(110px,14vw,190px);aspect-ratio:200/120;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120'%3E%3Cg%3E%3CanimateTransform attributeName='transform' type='translate' values='0 0;0 -5;0 0' dur='1.8s' repeatCount='indefinite'/%3E%3Cpath fill='%238f1a2a' d='M102 64 L80 4 C82 20 84 28 88 34 C88 44 90 50 96 56 C100 54 104 56 108 62Z'%3E%3CanimateTransform attributeName='transform' type='rotate' values='10 102 64;-22 102 64;10 102 64' dur='1.8s' begin='0.15s' repeatCount='indefinite'/%3E%3C/path%3E%3Cpath fill='%23d1283b' d='M34 84 C22 88 12 98 4 110 C18 104 30 102 42 98Z'/%3E%3Cpath fill='%23d1283b' d='M34 84 C54 82 76 74 96 66 C112 60 122 50 132 42 L142 34 L156 36 L162 42 L152 44 L148 50 L138 52 C130 62 118 74 100 82 C82 92 56 96 34 84Z'/%3E%3Cpath fill='%23e8c27a' d='M98 66 L52 10 C56 26 60 34 66 40 C64 48 66 54 72 60 C78 54 86 54 94 58Z'%3E%3CanimateTransform attributeName='transform' type='rotate' values='-6 98 66;26 98 66;-6 98 66' dur='1.8s' repeatCount='indefinite'/%3E%3C/path%3E%3Ccircle cx='150' cy='40' r='1.8' fill='%23100b0d'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+  opacity:.42;pointer-events:none;animation:dragonGlide 56s linear 2s infinite backwards;
+}
+@keyframes dragonGlide{
+  0%{transform:translate3d(-24vw,0,0) rotate(3deg)}
+  30%{transform:translate3d(28vw,-4vh,0) rotate(-3deg)}
+  65%{transform:translate3d(70vw,5vh,0) rotate(3deg)}
+  100%{transform:translate3d(124vw,-2vh,0) rotate(-2deg)}
+}
+
+@media(max-width:650px){
+  .topbar{flex-direction:column;align-items:flex-start;gap:8px}
+  .topbar nav{gap:2px 16px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  body::after{display:none}
+}
