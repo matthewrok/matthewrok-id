@@ -1,19 +1,30 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://matthewrok.my.id",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Vary": "Origin",
+};
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+    headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 
 const esc = (value: unknown) => String(value ?? "-")
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
 Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  const publishableKeys = Deno.env.get("SUPABASE_PUBLISHABLE_KEYS");
+  let anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  if (publishableKeys) {
+    try { anonKey = JSON.parse(publishableKeys).default || anonKey; } catch { /* keep legacy fallback */ }
+  }
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
   const botToken = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
   const adminChatId = Deno.env.get("TELEGRAM_CHAT_ID") ?? "";
