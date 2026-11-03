@@ -281,3 +281,117 @@ footer{background:#060914;border-top-color:var(--line);color:#8798b8}
 .public-reviews .review-card p{margin:14px 0;color:#bdc9e2;font-size:13px;line-height:1.8}
 .public-reviews .review-card time{color:#8293b4;font-size:10px}
 @media(max-width:580px){.public-reviews{grid-template-columns:1fr}.review-summary{align-items:flex-start;flex-direction:column;gap:4px}}
+
+
+/* =========================================================
+   GLOBAL DESIGN CONSISTENCY — NAVY / BLUE / CYAN
+   Shared finishing layer for every page, including legacy pages.
+   ========================================================= */
+:root{
+  --bg:#070b17;--panel:#0d1528;--panel2:#111d35;
+  --blue:#557cff;--blue2:#3157df;--cyan:#6ee7ff;
+  --text:#f3f6ff;--muted:#a9b6d0;--line:rgba(139,169,255,.2);
+  --theme-border:rgba(139,169,255,.22);
+}
+html{scroll-padding-top:84px}
+body{
+  background:radial-gradient(ellipse at 50% 0,rgba(49,87,223,.18),transparent 44%),#070b17!important;
+  color:var(--text)!important;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+}
+body:has(.auth-shell){background:radial-gradient(ellipse at 15% 5%,rgba(49,87,223,.2),transparent 36%),radial-gradient(ellipse at 95% 75%,rgba(32,186,219,.1),transparent 34%),#070b17!important}
+body>header,.topbar{
+  background:rgba(7,11,23,.9)!important;border-color:var(--theme-border)!important;
+  box-shadow:0 8px 30px rgba(0,0,0,.22)!important;backdrop-filter:blur(18px);
+}
+body .topbar nav{display:none!important}
+body .brand,body .brand small{font-family:inherit!important}
+body .brand{color:#cbd8ff!important}
+body .brand>span:first-child,body .brand .crown{color:var(--cyan)!important}
+body .brand small{color:#8798ba!important}
+body .page{
+  width:min(1120px,calc(100% - 36px))!important;
+  max-width:1120px!important;margin:0 auto!important;padding-top:0!important;
+}
+body .page>.hero,body main.page>.hero{
+  padding:22px 0 28px!important;margin:0!important;text-align:center;
+}
+body .page>.hero:before,body .page>.hero:after{display:none!important}
+body .hero h1,body .section-heading h2,body .result-top h3,body .admin-toolbar h3{
+  color:#edf2ff!important;font-family:inherit!important;text-shadow:0 8px 35px rgba(65,102,230,.18)!important;
+}
+body .eyebrow{color:var(--cyan)!important;letter-spacing:2.2px!important}
+body .intro,body .section-heading>p:last-child{color:var(--muted)!important}
+body .panel,body .source-note,body .review-form-card,body .progress-result,
+body .order-form,body .result,body .detail-card,body .auth-container,body .card{
+  background:linear-gradient(145deg,rgba(17,27,51,.97),rgba(9,15,31,.98))!important;
+  border:1px solid var(--theme-border)!important;border-radius:18px!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.28)!important;color:var(--text)!important;
+}
+body .stats>div,body .resource-card,body .total-card,body .detail-row,
+body .note-box,body .admin-details,body .review-card{
+  background:rgba(17,29,53,.78)!important;border-color:var(--theme-border)!important;color:var(--text)!important;
+}
+body .stats strong,body .level-badge,body .section-heading h2,body .result h2,
+body .graph-title,body .resource-card label,body label,body .note-box strong{
+  color:#a9c3ff!important;
+}
+body input,body select,body textarea,body .search{
+  background:#080f20!important;color:#f3f6ff!important;border-color:var(--theme-border)!important;border-radius:10px!important;
+}
+body input::placeholder,body textarea::placeholder{color:#7f91b5!important}
+body input:focus,body select:focus,body textarea:focus,body .search:focus-within{
+  border-color:var(--cyan)!important;box-shadow:0 0 0 3px rgba(110,231,255,.12)!important;
+}
+body button,body .btn,body .secondary,body .calculate-button,body .quick-buttons button{
+  border-radius:10px!important;transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+body .btn-gold,body .calculate-button,body .quick-buttons button,body .auth-form button,
+body #loginButton,body #visitorButton,body #submitButton{
+  color:#fff!important;border:1px solid rgba(125,155,255,.5)!important;
+  background:linear-gradient(135deg,#557cff,#3157df)!important;box-shadow:0 8px 24px rgba(49,87,223,.22)!important;
+}
+body .btn-outline,body .secondary,body .clear-button{
+  color:#c9d7ff!important;border:1px solid var(--theme-border)!important;background:rgba(21,35,65,.8)!important;
+}
+body .btn:hover,body button:hover,body .secondary:hover{border-color:var(--cyan)!important}
+body .tax-info,body .result,body .total-card{background:linear-gradient(145deg,#142344,#0c1529)!important;border-color:var(--theme-border)!important}
+body .tax-info strong,body .total-card strong,body .review-stars{color:#9beaff!important}
+body .gross-bar,body .progress-track div,body .track div{background:linear-gradient(90deg,#3157df,#557cff,#6ee7ff)!important}
+body th{background:#142344!important;color:#b9d0ff!important}
+body td{color:#d0dcf5!important;border-color:var(--theme-border)!important}
+body tbody tr:hover{background:rgba(85,124,255,.08)!important}
+body footer{background:transparent!important;color:#8293b4!important;border-color:var(--theme-border)!important}
+body .back,body .back-link{color:#a9c3ff!important}
+body .back:hover,body .back-link:hover{color:var(--cyan)!important}
+/* Tighten first-screen spacing site-wide without crushing centered auth/support layouts. */
+body:not(:has(.auth-shell)):not(:has(.auth-screen)) main.container,
+body:not(:has(.auth-shell)):not(:has(.auth-screen)) main.wrap{
+  padding-top:10px!important;
+}
+body main.container{margin-top:8px!important}
+body main.container>.back{margin-bottom:12px!important}
+body .page>.hero{min-height:0!important}
+body .page>.hero h1{margin:7px 0 10px!important}
+body .page>.hero .hero-badges{margin-top:16px!important}
+body .page>.panel:first-of-type{margin-top:12px!important}
+body:has(.lookup-form) .page>.hero{padding-top:12px!important;padding-bottom:18px!important}
+body:has(.lookup-form) .page>.hero:before,body:has(.lookup-form) .page>.hero:after{display:none!important}
+body:has(.lookup-form) .page>.hero .hero-badges{margin-top:12px!important}
+body:has(.lookup-form) .page>.hero h1{font-size:clamp(34px,6vw,58px)!important}
+body:has(.lookup-form) .page>.panel:first-of-type{margin-top:8px!important}
+body:has(.lookup-form) .topbar{min-height:66px!important;padding-top:10px!important;padding-bottom:10px!important}
+body:has(.lookup-form) .page{padding-bottom:24px!important}
+/* Calculator pages previously carried extra body/container top padding. */
+body:has(.calculate-button){padding:14px 16px 24px!important}
+body:has(.calculate-button) main.container{margin:4px auto 20px!important;padding-top:0!important}
+body:has(.calculate-button) main.container>.back{margin-bottom:12px!important}
+body:has(.calculate-button) .panel{margin-top:10px!important}
+@media(max-width:600px){
+  body .page{width:calc(100% - 24px)!important}
+  body .page>.hero,body main.page>.hero{padding:14px 0 18px!important}
+  body:has(.lookup-form) .page>.hero{padding-top:8px!important;padding-bottom:14px!important}
+  body:has(.lookup-form) .page>.hero h1{font-size:clamp(30px,9vw,44px)!important}
+  body:has(.calculate-button){padding:10px 12px 20px!important}
+  body:has(.calculate-button) main.container{margin-top:4px!important}
+}
+@media(prefers-reduced-motion:reduce){body *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
