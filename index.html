@@ -25,6 +25,7 @@
   <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase.js"></script>
+  <script defer src="assets/js/public-reviews.js"></script>
   <script defer src="assets/js/session-manager.js"></script>
   <link rel="stylesheet" href="assets/css/modern-theme.css">
 </head>
@@ -157,7 +158,7 @@
           <a href="#service">Matthew Joki</a>
           <a href="calculator-resource.html">Calculator Resource</a>
           <a href="requirements-city-hall.html">Requirements City Hall</a>
-          <a href="joki-matthew.html">Joki Progress</a>
+          <a href="joki-matthew.html">Lacak Progress</a>
           <a href="support-matthew.html">Support Matthew</a>
           <a id="adminNavLink" href="/admin/dashboard.html" style="display:none" aria-hidden="true">♛ Admin · Kelola Role</a>
           <span id="navUser" class="nav-user"></span>
@@ -244,8 +245,8 @@
 
         <a class="feature-card" href="joki-matthew.html">
           <div class="feature-icon">♛</div>
-          <h2>JOKI MATTHEW · PROGRESS TRACKER</h2>
-          <p>Lacak progres layanan joki menggunakan token unik yang diberikan admin.</p>
+          <h2>LACAK PROGRESS JOKI MATTHEW</h2>
+          <p>Lacak progres pesanan dengan memasukkan kode random unik yang diberikan admin.</p>
           <span class="feature-link">CEK PROGRES →</span>
         </a>
 
@@ -347,6 +348,17 @@
 
       </div>
 
+    </section>
+
+
+    <!-- ULASAN CLIENT: tampil publik di halaman utama -->
+    <section id="client-reviews" class="section container reveal" aria-labelledby="clientReviewsTitle">
+      <div class="eyebrow">TRUST & EXPERIENCE</div>
+      <h2 id="clientReviewsTitle" class="section-title">ULASAN CLIENT</h2>
+      <div class="line"></div>
+      <p class="reviews-intro">Pengalaman dan penilaian dari client yang telah menyelesaikan pesanan Matthew Joki.</p>
+      <div id="reviewSummary" class="review-summary"><strong>—</strong><span>Memuat rating client...</span></div>
+      <div id="publicReviews" class="public-reviews"><p class="hint">Memuat ulasan...</p></div>
     </section>
 
     <!-- =================================
