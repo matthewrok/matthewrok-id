@@ -90,6 +90,7 @@
             autocomplete="current-password"
           >
         </div>
+        <p class="auth-recovery-link"><a href="reset-password.html">Lupa kata sandi?</a></p>
 
         <button
           id="submitButton"
@@ -565,6 +566,37 @@
 
     }
 
+    let resendVerificationButton = null;
+    function showResendVerification(emailAddress) {
+      if (!resendVerificationButton) {
+        resendVerificationButton = document.createElement("button");
+        resendVerificationButton.type = "button";
+        resendVerificationButton.textContent = "KIRIM ULANG EMAIL VERIFIKASI";
+        resendVerificationButton.style.cssText = "display:block;width:100%;margin-top:12px;padding:12px;border:1px solid #d8b878;border-radius:8px;background:rgba(216,184,120,.12);color:#f0d6a0;font-weight:700;cursor:pointer";
+        authMessage.insertAdjacentElement("afterend", resendVerificationButton);
+        resendVerificationButton.addEventListener("click", async () => {
+          resendVerificationButton.disabled = true;
+          resendVerificationButton.textContent = "MENGIRIM...";
+          try {
+            const { error } = await db.auth.resend({
+              type: "signup",
+              email: resendVerificationButton.dataset.email,
+              options: { emailRedirectTo: "https://matthewrok.my.id/email-confirmed.html" }
+            });
+            if (error) throw error;
+            showMessage("Jika akun menunggu verifikasi, link baru telah dikirim. Periksa Gmail dan folder Spam.", "success");
+          } catch (error) {
+            showMessage(error.message || "Link verifikasi gagal dikirim. Coba lagi beberapa menit.", "error");
+          } finally {
+            resendVerificationButton.disabled = false;
+            resendVerificationButton.textContent = "KIRIM ULANG EMAIL VERIFIKASI";
+          }
+        });
+      }
+      resendVerificationButton.dataset.email = emailAddress;
+      resendVerificationButton.hidden = false;
+    }
+
 
     /* LOGIN AND REGISTER */
 
@@ -580,6 +612,7 @@
           "PLEASE WAIT...";
 
         showMessage("");
+        if (resendVerificationButton) resendVerificationButton.hidden = true;
 
         try {
 
@@ -613,9 +646,10 @@
               await db.auth.signOut({ scope: "local" });
             }
             showMessage(
-              "Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual.",
+              "Pendaftaran berhasil. Buka Gmail dan klik link verifikasi. Setelah terverifikasi, kembali ke halaman login dan masuk secara manual.",
               "success"
             );
+            showResendVerification(email.value.trim());
 
           } else {
 
@@ -641,6 +675,9 @@
             error.message || "Terjadi kesalahan.",
             "error"
           );
+          if (mode === "login" && String(error.message || "").toLowerCase().includes("email not confirmed")) {
+            showResendVerification(email.value.trim());
+          }
 
         } finally {
 
