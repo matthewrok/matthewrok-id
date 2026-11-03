@@ -93,3 +93,27 @@ h1 { color:#fff0d9; text-shadow:0 0 28px rgba(239,66,88,.2); }
 .remember-row{display:flex;align-items:center;gap:9px;margin-top:10px;color:var(--text);font-size:12px;cursor:pointer}
 .remember-row input{width:16px;height:16px;margin:0;accent-color:#e9c98a}
 .remember-note{margin:0;color:#bda5a6;font-size:10px;line-height:1.6}
+
+/* KINGDOM MEMBER ACCESS + VISITOR HELP */
+.auth-shell{width:min(100% - 28px,540px);padding-top:24px}
+.auth-container{padding:clamp(22px,5vw,38px)}
+.eyebrow{letter-spacing:1.8px;line-height:1.8}
+h1{font-size:clamp(22px,5vw,30px);letter-spacing:1px;line-height:1.35}
+.section-title,.visitor-panel h2{margin:0 0 8px;color:var(--gold);text-align:center;font:700 16px "Cinzel",serif;letter-spacing:1px}
+.password-wrap{position:relative;display:flex;align-items:center}
+.password-wrap input{padding-right:68px}
+.password-wrap .password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);margin:0;padding:7px 9px;font-size:9px;letter-spacing:.5px}
+.visitor-panel{padding:20px 16px 16px;border:1px solid rgba(233,201,138,.35);border-radius:12px;background:linear-gradient(145deg,rgba(106,12,31,.25),rgba(15,3,8,.65));}
+.visitor-icon{text-align:center;color:var(--gold);font-size:30px;line-height:1.2}
+.visitor-panel h2{margin:8px 0}
+.visitor-note{margin:0 auto 12px;max-width:390px;color:var(--muted);text-align:center;font-size:12px;line-height:1.8}
+.visitor-form{gap:8px}
+.visitor-form button{width:100%;background:linear-gradient(135deg,#a91d3b,#681027);color:#fff2e7;border-color:#e9c98a}
+.visitor-help{margin-top:17px;padding:13px 14px;border-radius:8px;background:rgba(0,0,0,.22);border:1px solid rgba(233,201,138,.16)}
+.visitor-help h3{margin:0 0 7px;color:var(--gold);font-size:12px}
+.visitor-help ul{margin:0;padding-left:18px;color:#d8c4c5;font-size:11px;line-height:1.9}
+.help-link{margin-top:7px}
+.security-note{margin-top:18px;padding-top:13px;border-top:1px solid rgba(233,201,138,.16);color:#bda5a6;text-align:center;font-size:10px;line-height:1.8}
+.remember-row{display:flex!important;align-items:center;gap:9px}
+.remember-row input{flex:0 0 16px;width:16px;height:16px;padding:0}
+@media(max-width:400px){.auth-shell{width:min(100% - 20px,540px)}.visitor-panel{padding:17px 12px}}
