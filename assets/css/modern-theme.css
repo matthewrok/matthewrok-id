@@ -173,3 +173,52 @@ footer{background:#060914;border-top-color:var(--line);color:#8798b8}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
 }
+
+/* FIX MOBILE NAV: replace the persistent three-dot control with a closable hamburger */
+.menu-toggle{display:none!important}
+.menu-toggle span{width:18px!important;height:2px!important;border-radius:3px!important;background:#bcd0ff!important;box-shadow:none!important;transition:transform .2s ease,opacity .2s ease!important}
+@media(max-width:850px){
+ .nav{position:relative;flex-wrap:wrap}
+ .menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;gap:5px;flex-direction:column;width:42px;height:42px;flex:0 0 42px;padding:0;border:1px solid var(--line);border-radius:12px;background:#101a30;box-shadow:none}
+ .menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(7px) rotate(45deg)!important}
+ .menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0!important}
+ .menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-7px) rotate(-45deg)!important}
+ .nav-links{display:none!important;position:absolute;top:calc(100% + 8px);right:0;left:auto;width:min(340px,calc(100vw - 32px));max-height:min(75svh,560px);overflow-y:auto;z-index:1100;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(10,16,32,.98);box-shadow:0 24px 60px #0008;backdrop-filter:blur(18px)}
+ .nav-links.menu-open{display:flex!important}
+ .nav-links a{display:flex;width:100%;min-height:42px;align-items:center;padding:10px 12px;border:1px solid transparent;border-radius:10px;background:transparent;color:#d5e0f7;font-size:12px}
+ .nav-links a:hover,.nav-links a:focus-visible{padding-left:12px;background:#18294b;border-color:var(--line)}
+ .nav-links #logout{width:100%;margin-top:5px}
+}
+@media(min-width:851px){
+ .nav-links{display:flex!important;position:static;width:auto;max-height:none;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none;overflow:visible}
+}
+/* Homepage hero now uses a clean abstract background, no character image */
+.dragon-hero{min-height:min(790px,calc(100svh - 82px));background:radial-gradient(ellipse at 78% 28%,rgba(74,112,255,.19),transparent 34%),radial-gradient(ellipse at 88% 72%,rgba(41,193,221,.10),transparent 30%),linear-gradient(120deg,#070b17 0%,#0b1225 58%,#090f1e 100%)!important}
+.dragon-hero .hero-cinematic-art{display:none!important}
+.dragon-hero .hero-vignette{display:none!important}
+.dragon-hero::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 82% 35%,rgba(103,140,255,.12),transparent 1px);background-size:34px 34px;mask-image:linear-gradient(90deg,transparent 20%,#000 100%);opacity:.4}
+.dragon-hero::before{content:"";position:absolute;inset:14px;border:1px solid rgba(139,169,255,.12);pointer-events:none}
+.dragon-hero .hero-content{width:min(680px,78%);max-width:680px;position:relative;z-index:2}
+.dragon-hero .hero-content h1{color:#edf2ff;text-shadow:0 8px 45px rgba(65,102,230,.24)}
+.dragon-hero .hero-content h1 span{background:linear-gradient(180deg,#b9d2ff,#6c91ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.dragon-hero .hero-kicker{color:#7de7ff}
+.dragon-hero .hero-kicker span{background:#7de7ff;box-shadow:0 0 12px #7de7ff88}
+.dragon-hero .hero-description{color:#b9c7e1;text-shadow:none}
+.dragon-hero .hero-actions .btn{border-radius:12px}
+.dragon-hero .btn-gold{color:#fff;background:linear-gradient(135deg,#6c8dff,#3155df);box-shadow:0 12px 30px #315ff42b}
+.dragon-hero .hero-text-link{color:#c4d4f4;border-color:#7f9fff55}
+.dragon-hero .hero-trust{color:#93a4c6}
+.dragon-hero .hero-trust i{background:#6ee7ff}
+.dragon-hero .hero-index,.dragon-hero .hero-scroll{color:#9aaed4}
+@media(max-width:850px){
+ .dragon-hero{min-height:650px;padding:80px 7% 110px}
+ .dragon-hero .hero-content{width:100%;padding:20px 0}
+}
+@media(max-width:600px){
+ .dragon-hero{min-height:600px;padding:45px 8% 90px;align-items:center}
+ .dragon-hero .hero-content{width:100%;padding:10px 0}
+ .dragon-hero .hero-content h1{font-size:clamp(50px,14vw,72px)}
+ .dragon-hero .hero-actions{gap:15px}
+ .dragon-hero .hero-trust{margin-top:25px}
+ .dragon-hero .hero-index{display:none}
+}
