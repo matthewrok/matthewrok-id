@@ -10,7 +10,7 @@
 .star-picker{display:flex;flex-direction:row;justify-content:flex-start;gap:5px;margin:4px 0 15px}
 .star-picker input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
 .star-picker label{margin:0;color:#68513c;font-size:clamp(30px,6vw,40px);line-height:1.2;cursor:pointer;transition:color .15s,transform .15s}
-.star-picker label:hover,.star-picker label:hover~label,.star-picker input:checked~label{color:#f4c75e}
+.star-picker label:hover,.star-picker label.is-active{color:#f4c75e}
 .star-picker label:hover{transform:scale(1.08)}
 .star-picker input:focus-visible+label{outline:2px solid var(--gold);outline-offset:4px;border-radius:3px}
 .review-consent{display:flex!important;align-items:flex-start;gap:9px;margin:13px 0!important;color:var(--muted)!important;font-size:11px!important;font-weight:400!important;letter-spacing:0!important}
@@ -46,6 +46,6 @@ body{font-family:var(--body);background:radial-gradient(ellipse at 50% 0,rgba(20
 .admin-details{background:rgba(26,18,23,.8);border-color:var(--line-2)}
 .order-form,.review-card{background:rgba(16,11,13,.75);border-color:var(--line)}
 th{background:#32101a;color:var(--gilt)}
-.review-stars,.star-picker label:hover,.star-picker label:hover~label,.star-picker input:checked~label{color:var(--gilt)}
+.review-stars,.star-picker label.is-active{color:var(--gilt)}
 .review-card p,.review-card-top strong{color:var(--text)}
 footer{color:var(--faint);border-color:var(--line)}
