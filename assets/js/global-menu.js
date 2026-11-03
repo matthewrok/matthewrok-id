@@ -22,6 +22,22 @@
         <a class="global-menu-account" href="/login.html" data-account-link>Masuk untuk mengakses akun</a>
       </nav>`;
     document.body.appendChild(root);
+
+    // Do not show the global three-dot menu while the homepage login/visitor gate is visible.
+    const authScreen = document.getElementById("authScreen");
+    const loginForm = document.getElementById("loginForm");
+    const syncAuthMenuVisibility = () => {
+      const authGateVisible = (authScreen && !authScreen.classList.contains("hidden")) || Boolean(loginForm);
+      root.style.setProperty("display", authGateVisible ? "none" : "");
+      root.setAttribute("aria-hidden", authGateVisible ? "true" : "false");
+    };
+    syncAuthMenuVisibility();
+    if (authScreen) {
+      new MutationObserver(syncAuthMenuVisibility).observe(authScreen, {
+        attributes: true,
+        attributeFilter: ["class", "hidden", "style"]
+      });
+    }
     const button = root.querySelector(".global-menu-trigger");
     const panel = root.querySelector(".global-menu-panel");
     const close = () => {
