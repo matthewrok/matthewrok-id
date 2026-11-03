@@ -8,11 +8,11 @@
   <link rel="canonical" href="https://matthewrok.my.id/joki-matthew.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Matthew Joki">
-  <meta property="og:title" content="Joki Matthew | Progress Tracker">
+  <meta property="og:title" content="Lacak Progress | Matthew Joki">
   <meta property="og:description" content="Pantau status dan progres pesanan layanan Joki Matthew menggunakan token progres.">
   <meta property="og:url" content="https://matthewrok.my.id/joki-matthew.html">
   <meta name="twitter:card" content="summary">
-<title>Joki Matthew | Progress Tracker</title>
+<title>Lacak Progress | Matthew Joki</title>
 <link rel="stylesheet" href="assets/css/joki-matthew.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="assets/js/joki-matthew.js"></script>
@@ -28,16 +28,16 @@
 <main class="page">
   <section class="hero">
     <p class="eyebrow">PROFESSIONAL SERVICE · RISE OF KINGDOMS</p>
-    <h1>JOKI <em>MATTHEW</em></h1>
-    <p class="intro">Pantau perkembangan pesananmu secara berkala. Masukkan token progres yang diberikan admin untuk melihat status terbaru akunmu.</p>
+    <h1>LACAK <em>PROGRESS</em></h1>
+    <p class="intro">Pantau perkembangan pesananmu secara berkala. Masukkan kode random yang diberikan admin untuk melihat status terbaru akunmu.</p>
     <div class="hero-badges"><span>♜ Progress Update</span><span>♛ Token Unik</span><span>✦ Transparan</span></div>
   </section>
 
   <section class="panel lookup-panel">
-    <div class="section-heading"><p class="eyebrow">CLIENT ACCESS</p><h2>CEK PROGRES PESANAN</h2><p>Token bersifat unik dan hanya dapat dilihat oleh pemilik token.</p></div>
+    <div class="section-heading"><p class="eyebrow">CLIENT ACCESS</p><h2>LACAK PROGRESS PESANAN</h2><p>Kode random bersifat unik untuk melihat progres pesanan terkait.</p></div>
     <form id="lookupForm" class="lookup-form">
-      <label for="progressToken">TOKEN PROGRES</label>
-      <div class="token-row"><input id="progressToken" name="token" type="text" placeholder="Contoh: MJ-AB12-CD34-EF56" maxlength="32" autocomplete="off" required><button class="btn btn-gold" type="submit" id="lookupButton">CEK PROGRES</button></div>
+      <label for="progressToken">KODE RANDOM</label>
+      <div class="token-row"><input id="progressToken" name="token" type="text" placeholder="Masukkan kode random dari admin" maxlength="32" autocomplete="off" required><button class="btn btn-gold" type="submit" id="lookupButton">LACAK PROGRESS</button></div>
       <p class="hint">Belum menerima token? Hubungi admin Matthew Joki.</p>
     </form>
     <div id="lookupMessage" class="message" aria-live="polite"></div>
@@ -68,12 +68,6 @@
       </section>
       <div id="existingReview" class="existing-review hidden"></div>
     </article>
-  </section>
-
-  <section class="panel reviews-panel" aria-labelledby="reviewsTitle">
-    <div class="section-heading"><p class="eyebrow">TRUST & EXPERIENCE</p><h2 id="reviewsTitle">ULASAN CLIENT</h2><p>Penilaian dari client yang telah menyelesaikan pesanan.</p></div>
-    <div id="reviewSummary" class="review-summary"><strong>—</strong><span>Memuat rating client...</span></div>
-    <div id="publicReviews" class="public-reviews"><p class="hint">Memuat ulasan...</p></div>
   </section>
 
 </main>
