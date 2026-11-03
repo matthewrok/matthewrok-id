@@ -43,3 +43,12 @@ footer{margin-top:30px;padding:18px 0 0;border-top:1px solid var(--line);color:v
 .role-save:disabled,.role-editor select:disabled{opacity:.6;cursor:wait}
 .role-protected{display:inline-flex;padding:6px 9px;border:1px solid rgba(232,194,122,.25);border-radius:8px;color:var(--gilt);font-size:11px;white-space:nowrap}
 @media(max-width:600px){.role-editor{align-items:stretch;flex-direction:column;min-width:150px}.role-editor select,.role-save{width:100%}}
+
+/* High-visibility shortcut to client progress management */
+.manage-progress-cta{display:flex;align-items:center;gap:15px;width:min(100%,620px);min-height:88px;margin:18px 0 8px;padding:18px 22px;border:1px solid rgba(232,194,122,.8);border-radius:16px;background:linear-gradient(120deg,#76551c 0%,#3b2b16 55%,#1a1720 100%);color:#fff4d5;text-decoration:none;box-shadow:0 12px 34px rgba(0,0,0,.32),0 0 0 3px rgba(232,194,122,.08);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.manage-progress-cta>span:first-child{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border:1px solid rgba(255,232,173,.45);border-radius:13px;background:rgba(0,0,0,.2);font-size:27px;color:#ffe09a}
+.manage-progress-cta strong{display:block;font-size:15px;font-weight:850;letter-spacing:.02em}
+.manage-progress-cta small{display:block;margin-top:4px;color:#e4d1aa;font-size:11px;line-height:1.5}
+.manage-progress-cta .cta-arrow{margin-left:auto;font-size:25px;color:#ffe09a}
+.manage-progress-cta:hover,.manage-progress-cta:focus-visible{transform:translateY(-3px);border-color:#ffe5a3;box-shadow:0 18px 42px rgba(0,0,0,.4),0 0 0 4px rgba(232,194,122,.13)}
+@media(max-width:600px){.manage-progress-cta{gap:11px;padding:15px;min-height:82px}.manage-progress-cta>span:first-child{flex-basis:42px;width:42px;height:42px}.manage-progress-cta strong{font-size:13px}.manage-progress-cta small{font-size:10px}}
