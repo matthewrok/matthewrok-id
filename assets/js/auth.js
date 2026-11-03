@@ -34,15 +34,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (loginForm) {
+    const savedEmail = localStorage.getItem("matthewRememberedEmail");
+    const emailField = document.getElementById("loginEmail");
+    const rememberField = document.getElementById("rememberMe");
+    if (savedEmail && emailField) { emailField.value = savedEmail; if (rememberField) rememberField.checked = true; }
+    client.auth.getSession().then(({ data }) => { if (data.session) window.location.replace("index.html"); });
     loginForm.addEventListener("submit", async event => {
       event.preventDefault();
       showMessage("");
       setBusy(loginForm, true, "SEDANG LOGIN...");
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
+      const remember = document.getElementById("rememberMe")?.checked;
       try {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        if (remember) localStorage.setItem("matthewRememberedEmail", email);
+        else localStorage.removeItem("matthewRememberedEmail");
         showMessage("Login berhasil. Mengalihkan ke beranda...", "success");
         window.location.assign("index.html");
       } catch (error) {
