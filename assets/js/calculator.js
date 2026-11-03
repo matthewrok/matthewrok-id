@@ -30,12 +30,44 @@ document.addEventListener("DOMContentLoaded", () => {
     result.style.display = "none";
   }));
 
-  document.querySelectorAll("[data-target]").forEach(button => button.addEventListener("click", () => {
-    const target = document.getElementById(button.dataset.target);
-    if (!target) return;
-    target.value = formatNumber(parseNumber(target.value) + Number(button.dataset.add));
-    result.style.display = "none";
-  }));
+  let activeInput = inputs[0] || null;
+  const activeName = document.getElementById("activeResourceName");
+
+  function selectResource(input) {
+    if (!input || !inputs.includes(input)) return;
+    activeInput = input;
+    inputs.forEach(field => {
+      const card = field.closest(".resource-card");
+      if (card) {
+        const selected = field === activeInput;
+        card.classList.toggle("is-active", selected);
+        field.setAttribute("aria-current", selected ? "true" : "false");
+      }
+    });
+    if (activeName) activeName.textContent = names[activeInput.id] || activeInput.id.toUpperCase();
+  }
+
+  inputs.forEach(input => {
+    input.addEventListener("focus", () => selectResource(input));
+    input.addEventListener("click", () => selectResource(input));
+    input.closest(".resource-card")?.addEventListener("click", event => {
+      if (event.target.closest("input")) return;
+      selectResource(input);
+      input.focus();
+    });
+  });
+
+  document.querySelectorAll("#sharedQuickButtons [data-add]").forEach(button => {
+    button.addEventListener("click", () => {
+      if (!activeInput) return;
+      activeInput.value = formatNumber(parseNumber(activeInput.value) + Number(button.dataset.add));
+      activeInput.dispatchEvent(new Event("input", {bubbles:true}));
+      activeInput.focus();
+      result.style.display = "none";
+    });
+  });
+
+  selectResource(activeInput);
 
   document.getElementById("clear")?.addEventListener("click", () => {
     inputs.forEach(input => input.value = "");
