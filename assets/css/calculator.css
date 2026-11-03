@@ -445,7 +445,7 @@ footer {
 
 
 /* CRIMSON ROYAL THEME */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
 :root { color-scheme: dark; --gold:#e9c98a; --red:#a8122a; --red-bright:#ef4258; --muted:#d8bfc0; }
 body {
   font-family: "Poppins", sans-serif;
@@ -533,3 +533,24 @@ button { font-family:"Poppins",sans-serif; }
 .note, .detail-row span { color:var(--muted); }
 footer { color:#bd999c; }
 @media (prefers-reduced-motion: reduce) { .panel::before { animation:none; } }
+
+/* MYSTIC DRAGON REALM V2 — RESOURCE CALCULATOR FINISHING PASS */
+:root{--gold:var(--gilt);--red:var(--crimson);--muted:#b4a5a6;--border:var(--line-2)}
+body{font-family:var(--body);background:radial-gradient(ellipse at 50% 0,rgba(209,40,59,.2),transparent 48%),var(--ink);color:var(--text)}
+.container{max-width:820px}
+.panel{background:linear-gradient(145deg,rgba(36,24,32,.98),rgba(16,11,13,.98));border-color:var(--line-2);box-shadow:var(--shadow-deep)}
+h1,.result h2{font-family:var(--display);color:#f6eee9}
+.subtitle,.note,.detail-row span{color:var(--muted)}
+label,.resource-card label{color:var(--gilt)}
+select,input{font-family:var(--body);background:#100b0d;border-color:var(--line-2);color:var(--text)}
+select:focus,input:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(232,194,122,.15)}
+.tax-info,.resource-card,.result,.detail-card{border-color:var(--line);background:linear-gradient(145deg,rgba(36,24,32,.95),rgba(16,11,13,.98))}
+.resource-card:hover{border-color:var(--gilt);box-shadow:var(--shadow-gold)}
+.quick-buttons button,.calculate-button{background:linear-gradient(135deg,#f3d590,#b88942);color:#1b1208}
+.clear-button{background:linear-gradient(135deg,var(--crimson),var(--crimson-deep));border-color:var(--crimson)}
+.total-card{background:linear-gradient(145deg,#4b0b1a,#21050d);border-color:var(--line-2)}
+.net{color:var(--jade)}.tax{color:var(--warn)}
+.gross-bar{background:linear-gradient(90deg,var(--crimson-deep),var(--gilt))}
+.tax-bar{background:linear-gradient(90deg,#8d1024,var(--warn))}
+.net-bar{background:linear-gradient(90deg,#348c60,var(--jade))}
+footer{color:var(--faint)}
