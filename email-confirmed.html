@@ -51,7 +51,7 @@
           refresh_token: refreshToken
         });
         if (sessionError) throw sessionError;
-        const { error: signOutError } = await client.auth.signOut();
+        const { error: signOutError } = await client.auth.signOut({ scope: "local" });
         if (signOutError) throw signOutError;
         message.textContent = "Alamat Gmail berhasil diverifikasi. Kamu belum login. Silakan kembali ke halaman login dan masuk menggunakan Gmail serta password yang sudah didaftarkan.";
         action.hidden = false;
