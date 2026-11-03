@@ -154,14 +154,24 @@ grant execute on function public.process_worker_application_decision(uuid, text,
 
 
 -- Allow the MATTHEW operator role to resolve member names when addressing Inbox messages.
+create or replace function public.is_matthew_operator()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $
+  select exists (
+    select 1 from public.profiles p
+    where p.id = (select auth.uid())
+      and p.role in ('admin', 'MATTHEW')
+  );
+$;
+revoke all on function public.is_matthew_operator() from public, anon;
+grant execute on function public.is_matthew_operator() to authenticated;
+
 drop policy if exists "MATTHEW can view profiles for inbox" on public.profiles;
 create policy "MATTHEW can view profiles for inbox"
 on public.profiles
 for select to authenticated
-using (
-  exists (
-    select 1 from public.profiles operator_profile
-    where operator_profile.id = (select auth.uid())
-      and operator_profile.role in ('admin', 'MATTHEW')
-  )
-);
+using (public.is_matthew_operator());
