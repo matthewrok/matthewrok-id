@@ -4,7 +4,7 @@
 /* =========================================
    MATTHEW JOKI - DRAGON KINGDOM
    FINAL DESIGN
-   Dragon image: ../../dragon-character.png
+   Dragon image: ../images/dragon-character.png
 ========================================= */
 
 :root {
@@ -381,7 +381,7 @@ header {
       rgba(16, 9, 7, .15) 35%,
       transparent 70%
     ),
-    url("../../dragon-character.png");
+    url("../images/dragon-character.png");
 
   background-repeat: no-repeat;
   background-size:
@@ -689,7 +689,7 @@ footer {
         rgba(10, 5, 4, .25) 48%,
         rgba(10, 5, 4, .05) 100%
       ),
-      url("../../dragon-character.png");
+      url("../images/dragon-character.png");
 
     background-size:
       cover,
@@ -753,7 +753,7 @@ footer {
         rgba(10, 5, 4, .32) 48%,
         rgba(10, 5, 4, .02) 100%
       ),
-      url("../../dragon-character.png");
+      url("../images/dragon-character.png");
 
     background-size:
       cover,
@@ -846,7 +846,7 @@ footer {
       rgba(10, 5, 4, .08) 75%,
       rgba(10, 5, 4, .4) 100%
     ),
-    url("../../dragon-character.png");
+    url("../images/dragon-character.png");
   background-repeat: no-repeat;
   background-size: cover, auto 112%;
   background-position: center, center 38%;
