@@ -600,7 +600,7 @@
             }
 
             if (data.session) {
-              await db.auth.signOut();
+              await db.auth.signOut({ scope: "local" });
             }
             showMessage(
               "Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual.",
@@ -621,6 +621,7 @@
             if (error) {
               throw error;
             }
+            sessionStorage.removeItem("matthewVisitorName");
 
           }
 
