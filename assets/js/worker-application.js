@@ -15,11 +15,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       .select("status,created_at,decision_note").eq("applicant_id", user.id)
       .order("created_at", { ascending: false }).limit(1);
     if (existingError) throw existingError;
-    if (existing?.length) {
+    if (existing?.length && existing[0].status !== "rejected") {
       const app = existing[0];
-      const statusLabel = app.status === "pending" ? "menunggu keputusan" : app.status === "approved" ? "disetujui" : "ditolak";
+      const statusLabel = app.status === "pending" ? "menunggu keputusan" : "disetujui";
       say("Pendaftaran kamu sudah tercatat dan saat ini " + statusLabel + ". Hasil keputusan dikirim melalui Inbox Matthew. " + (app.decision_note || ""), "success");
       return;
+    }
+    if (existing?.length && existing[0].status === "rejected") {
+      say("Pendaftaran sebelumnya belum dapat diterima. Kamu boleh mengajukan kembali dengan informasi terbaru.", "error");
     }
     form.hidden = false;
     form.addEventListener("submit", async event => {
