@@ -159,6 +159,7 @@
           <a href="requirements-city-hall.html">Requirements City Hall</a>
           <a href="joki-matthew.html">Joki Progress</a>
           <a href="support-matthew.html">Support Matthew</a>
+          <a id="adminNavLink" href="/admin/dashboard.html" style="display:none" aria-hidden="true">♛ Admin · Kelola Role</a>
           <span id="navUser" class="nav-user"></span>
           <button id="logout" class="btn btn-outline" type="button">Logout</button>
         </nav>
@@ -703,6 +704,12 @@
 
     async function showUser(user) {
 
+      const adminNavLink = document.getElementById("adminNavLink");
+      if (adminNavLink) {
+        adminNavLink.style.display = "none";
+        adminNavLink.setAttribute("aria-hidden", "true");
+      }
+
       if (!user) {
         const visitorName = sessionStorage.getItem("matthewVisitorName");
         if (visitorName) {
@@ -754,6 +761,11 @@
         document.getElementById("adminPanel");
 
       if (profile.role === "admin") {
+
+        if (adminNavLink) {
+          adminNavLink.style.display = "flex";
+          adminNavLink.setAttribute("aria-hidden", "false");
+        }
 
         adminPanel.classList.remove("hidden");
 
