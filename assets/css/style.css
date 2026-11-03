@@ -1999,3 +1999,14 @@ h1,h2,h3,.brand,.section-title{font-family:var(--display)}
 .feature-card:hover,.royal-card:hover{border-color:var(--line-2);box-shadow:var(--shadow-gold)}
 :focus-visible{outline-color:var(--gilt)}
 @media(prefers-reduced-motion:reduce){.ember,.hero-cinematic-art,.dragon-emblem{animation:none!important;transition:none!important}}
+
+
+/* Voucher input controls — compact, translucent, and touch-friendly */
+.joki-order-voucher-row{display:flex;align-items:center;gap:7px;}
+.joki-order-voucher-row input{flex:1;min-width:0;}
+.joki-voucher-toggle,.joki-voucher-check{flex:0 0 auto;min-height:40px;padding:8px 11px;border:1px solid rgba(220,180,105,.42);border-radius:10px;background:rgba(255,255,255,.055);color:#e8d4a8;font:inherit;font-size:.78rem;font-weight:600;line-height:1;cursor:pointer;transition:background .2s,border-color .2s,transform .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.joki-voucher-toggle{padding-inline:9px;color:rgba(255,236,202,.82);}
+.joki-voucher-toggle:hover,.joki-voucher-check:hover{background:rgba(220,180,105,.15);border-color:rgba(220,180,105,.75);}
+.joki-voucher-toggle:active,.joki-voucher-check:active{transform:scale(.97);}
+.joki-voucher-toggle:focus-visible,.joki-voucher-check:focus-visible{outline:2px solid #e8c77e;outline-offset:2px;}
+@media(max-width:420px){.joki-order-voucher-row{gap:5px}.joki-voucher-toggle,.joki-voucher-check{padding:8px 9px;font-size:.74rem;min-height:42px}}
