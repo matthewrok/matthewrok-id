@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary">
   <title>City Hall Requirements | Matthew Joki</title>
   <link rel="stylesheet" href="assets/css/requirements.css">
-  <script defer src="assets/js/requirements.js"></script>
+  <script defer src="assets/js/requirements.js?v=20261104-2"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/assets/js/supabase.js"></script>
   <script defer src="/assets/js/session-manager.js"></script>
@@ -32,20 +32,17 @@
     <p class="eyebrow">RISE OF KINGDOMS · BUILDING GUIDE</p>
     <h1>CITY HALL<br><em>REQUIREMENTS</em></h1>
     <p class="intro">Cek bangunan prasyarat, kebutuhan resource, waktu dasar, dan kapasitas pasukan untuk upgrade City Hall level 1–25.</p>
-    <div class="stats"><div><strong>1–25</strong><span>Level City Hall</span></div><div><strong>4</strong><span>Jenis resource</span></div><div><strong>Live checklist</strong><span>Tandai progresmu</span></div></div>
+    <div class="stats"><div><strong>1–25</strong><span>Level City Hall</span></div><div><strong>4</strong><span>Jenis resource</span></div><div><strong>25 Level</strong><span>Persyaratan upgrade</span></div></div>
   </section>
   <section class="panel">
     <div class="tools">
       <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Cari level atau bangunan..." aria-label="Cari level atau bangunan"></label>
       <label class="filter-label" for="levelFilter">Tampilkan level</label>
       <select id="levelFilter"><option value="all">Semua level</option><option value="early">Level 1–10</option><option value="mid">Level 11–20</option><option value="late">Level 21–25</option></select>
-      <button id="resetProgress" class="secondary" type="button">Reset checklist</button>
     </div>
-    <p class="hint">Centang level yang sudah kamu selesaikan. Progres tersimpan di browser perangkat ini.</p>
-    <div class="progress"><div class="progress-top"><span>Progres upgrade</span><strong id="progressText">0 / 25 selesai</strong></div><div class="track"><div id="progressBar"></div></div></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Selesai</th><th>Level</th><th>Bangunan prasyarat</th><th>Biaya upgrade (Food · Wood · Stone)</th><th>Waktu dasar</th><th>Kapasitas pasukan</th></tr></thead>
+        <thead><tr><th>Level</th><th>Bangunan prasyarat</th><th>Biaya upgrade (Food · Wood · Stone)</th><th>Waktu dasar</th><th>Kapasitas pasukan</th></tr></thead>
         <tbody id="requirementsRows"></tbody>
       </table>
     </div>
