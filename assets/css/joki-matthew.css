@@ -69,3 +69,14 @@ footer{color:var(--faint);border-color:var(--line)}
 .star-picker label.is-current{color:#fff0a6!important;text-shadow:0 0 14px rgba(255,220,120,.9);transform:scale(1.16)}
 .star-picker label:hover{color:#ffe08a!important;transform:scale(1.12)}
 .rating-feedback.has-rating{color:#ffe2a0!important}
+
+
+/* Review identity selection */
+.review-identity{margin:18px 0;padding:15px;border:1px solid var(--line-2);border-radius:8px;min-width:0}
+.review-identity legend{padding:0 7px;color:var(--gilt);font-size:12px;font-weight:700}
+.review-identity-option{display:flex!important;align-items:flex-start;gap:10px;margin:10px 0!important;padding:12px;border:1px solid var(--line-2);border-radius:7px;background:rgba(255,255,255,.025);cursor:pointer}
+.review-identity-option input{width:17px;min-width:17px;margin:3px 0 0;accent-color:var(--gilt)}
+.review-identity-option span,.review-identity-option strong,.review-identity-option small{display:block}
+.review-identity-option strong{color:var(--text);font-size:12px}
+.review-identity-option small{margin-top:3px;color:var(--muted);font-size:10px;font-weight:400}
+.review-identity-option:has(input:checked){border-color:var(--gilt);background:rgba(232,194,122,.09)}
