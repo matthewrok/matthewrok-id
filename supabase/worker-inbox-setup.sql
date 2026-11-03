@@ -22,7 +22,7 @@ returns uuid
 language plpgsql
 security invoker
 set search_path = ''
-as $
+as $$
 declare
   v_sender uuid := auth.uid();
   v_message_id uuid;
@@ -175,13 +175,13 @@ language sql
 stable
 security definer
 set search_path = ''
-as $
+as $$
   select exists (
     select 1 from public.profiles p
     where p.id = (select auth.uid())
       and p.role in ('admin', 'MATTHEW')
   );
-$;
+$$;
 revoke all on function private.is_matthew_operator() from public, anon;
 grant execute on function private.is_matthew_operator() to authenticated;
 
