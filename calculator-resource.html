@@ -53,46 +53,43 @@ Persentase Pajak
 <label for="food">FOOD</label>
 <input id="food" class="resource-input" inputmode="numeric" placeholder="0">
 
-<div class="quick-buttons">
-<button type="button" data-target="food" data-add="10000000">10 JUTA</button>
-<button type="button" data-target="food" data-add="100000000">100 JUTA</button>
-<button type="button" data-target="food" data-add="500000000">500 JUTA</button>
-</div>
+
 </div>
 
 <div class="resource-card">
 <label for="wood">WOOD</label>
 <input id="wood" class="resource-input" inputmode="numeric" placeholder="0">
 
-<div class="quick-buttons">
-<button type="button" data-target="wood" data-add="10000000">10 JUTA</button>
-<button type="button" data-target="wood" data-add="100000000">100 JUTA</button>
-<button type="button" data-target="wood" data-add="500000000">500 JUTA</button>
-</div>
+
 </div>
 
 <div class="resource-card">
 <label for="stone">STONE</label>
 <input id="stone" class="resource-input" inputmode="numeric" placeholder="0">
 
-<div class="quick-buttons">
-<button type="button" data-target="stone" data-add="10000000">10 JUTA</button>
-<button type="button" data-target="stone" data-add="100000000">100 JUTA</button>
-<button type="button" data-target="stone" data-add="500000000">500 JUTA</button>
-</div>
+
 </div>
 
 <div class="resource-card">
 <label for="gold">GOLD</label>
 <input id="gold" class="resource-input" inputmode="numeric" placeholder="0">
 
-<div class="quick-buttons">
-<button type="button" data-target="gold" data-add="10000000">10 JUTA</button>
-<button type="button" data-target="gold" data-add="100000000">100 JUTA</button>
-<button type="button" data-target="gold" data-add="500000000">500 JUTA</button>
-</div>
+
 </div>
 
+</div>
+
+<div class="quick-add-panel" aria-label="Penambah resource bersama">
+  <div class="quick-add-heading">
+    <strong>PENAMBAH RESOURCE</strong>
+    <span>Kolom aktif: <b id="activeResourceName">FOOD</b></span>
+  </div>
+  <p>Pilih kolom FOOD, WOOD, STONE, atau GOLD, lalu tekan nominal di bawah. Angka hanya ditambahkan ke kolom yang dipilih.</p>
+  <div class="quick-buttons" id="sharedQuickButtons">
+    <button type="button" data-add="10000000">+10 JUTA</button>
+    <button type="button" data-add="100000000">+100 JUTA</button>
+    <button type="button" data-add="500000000">+500 JUTA</button>
+  </div>
 </div>
 
 <button type="button" class="clear-button" id="clear">CLEAR</button>
@@ -153,7 +150,7 @@ HITUNG RESOURCE
 </div>
 
 <p class="note">
-* Tombol penambah bekerja hanya pada kolom resource masing-masing.
+* Pilih salah satu kolom resource, lalu gunakan satu penambah bersama untuk menambahkan angka ke kolom tersebut.
 Setiap klik menambahkan jumlah ke nilai sebelumnya.
 Perhitungan pajak menggunakan total resource gabungan.
 Hasil per jenis resource dibulatkan ke bawah.
