@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailField = document.getElementById("loginEmail");
     const rememberField = document.getElementById("rememberMe");
     if (savedEmail && emailField) { emailField.value = savedEmail; if (rememberField) rememberField.checked = true; }
-    client.auth.getSession().then(({ data }) => { if (data.session) window.location.replace("index.html"); });
+    // Keep the login page visible even when a member session already exists.
     loginForm.addEventListener("submit", async event => {
       event.preventDefault(); showMessage(""); setBusy(loginForm, true, "MEMERIKSA AKUN...");
       const email = emailField.value.trim();
