@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#100907">
+  <title>Inbox Matthew | MATTHEW JOKI</title>
+  <link rel="stylesheet" href="/assets/css/worker-inbox.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script defer src="/assets/js/inbox.js"></script>
+  <script defer src="/assets/js/global-menu.js"></script>
+</head>
+<body>
+  <main class="feature-shell">
+    <a class="back-link" href="/index.html">← Kembali ke website</a>
+    <header class="feature-heading"><span class="eyebrow">MATTHEW JOKI · COMMUNICATION CENTER</span><h1>INBOX <em>MATTHEW</em></h1><p>Pesan resmi, hasil pendaftaran, dan pengumuman untuk akun kamu.</p></header>
+    <section class="feature-card" id="inboxComposer" hidden>
+      <h2>Kirim pesan resmi</h2>
+      <form id="inboxSendForm">
+        <label>Judul<input name="title" minlength="3" maxlength="120" required></label>
+        <label>Isi pesan<textarea name="body" minlength="1" maxlength="4000" rows="4" required></textarea></label>
+        <label>Penerima<select name="audience"><option value="all">Semua member dan role</option><option value="user">Satu penerima</option></select></label>
+        <label id="recipientField" hidden>Nama penerima<select name="recipient_id"></select></label>
+        <button class="primary-button" type="submit">KIRIM PESAN</button>
+        <p id="inboxFeedback" class="feature-state" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <div id="inboxState" class="feature-state" role="status" aria-live="polite">Memuat Inbox…</div>
+    <section id="inboxList" class="inbox-list" aria-label="Daftar pesan"></section>
+  </main>
+</body>
+</html>
