@@ -12,9 +12,17 @@
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
   function updateTotal(){
     const p=products[selected]; if(!p||!quantity)return;
-    const qty=Math.max(1,Math.min(20,Number(quantity.value)||1));
+    // Jangan paksa input kembali ke 1 setiap pengguna menghapus angka.
+    const raw=quantity.value.trim();
+    const qty=raw===""?0:Math.max(0,Math.min(20,Number(raw)||0));
+    $("jokiOrderTotal").textContent=qty>0?money(p.price*qty):"Masukkan jumlah";
+  }
+  function normalizeQuantity(){
+    if(!quantity)return;
+    const raw=quantity.value.trim();
+    const qty=raw===""?1:Math.max(1,Math.min(20,Math.floor(Number(raw)||1)));
     quantity.value=String(qty);
-    $("jokiOrderTotal").textContent=money(p.price*qty);
+    updateTotal();
   }
   function getIdentity(){
     const identity=window.HomeApp?.currentIdentity;
@@ -40,18 +48,25 @@
     button.addEventListener("click",event=>{event.preventDefault();openOrder(button.dataset.orderProduct);});
   });
   quantity?.addEventListener("input",updateTotal);
+  quantity?.addEventListener("blur",normalizeQuantity);
   $("jokiOrderClose")?.addEventListener("click",()=>modal?.classList.add("hidden"));
   modal?.addEventListener("click",event=>{if(event.target===modal)modal.classList.add("hidden");});
   document.addEventListener("keydown",event=>{if(event.key==="Escape")modal?.classList.add("hidden");});
   $("jokiOrderSubmit")?.addEventListener("click",async()=>{
     const identity=getIdentity(),p=products[selected],button=$("jokiOrderSubmit");
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
+    normalizeQuantity();
+    const requestedQty=Number(quantity.value);
+    if(!Number.isInteger(requestedQty)||requestedQty<1||requestedQty>20){
+      $("jokiOrderMessage").textContent="Jumlah karakter harus antara 1 sampai 20.";
+      return;
+    }
     button.disabled=true;button.textContent="MENYIMPAN PESANAN...";
     $("jokiOrderMessage").textContent="Membuat nomor order unik...";
     try{
       const {data,error}=await db.rpc("create_joki_order",{
         p_client_name:identity.name,p_client_email:identity.email||"",
-        p_product_code:selected,p_quantity:Number(quantity.value)
+        p_product_code:selected,p_quantity:requestedQty
       });
       if(error)throw error;
       const order=Array.isArray(data)?data[0]:data;
