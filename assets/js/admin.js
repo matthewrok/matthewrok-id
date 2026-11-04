@@ -153,6 +153,46 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
+
+    async function loadStatisticsAndActivity() {
+      const countQuery = (table, configure) => {
+        let query = client.from(table).select("*", { count: "exact", head: true });
+        if (configure) query = configure(query);
+        return query;
+      };
+      const [orders, active, completed, reviews] = await Promise.all([
+        countQuery("joki_progress"),
+        countQuery("joki_progress", q => q.in("status", ["Menunggu", "Dalam pengerjaan", "Menunggu konfirmasi client", "Ditunda"])),
+        countQuery("joki_progress", q => q.eq("status", "Selesai")),
+        countQuery("joki_reviews", q => q.eq("moderation_status", "approved"))
+      ]);
+      [["orderTotal",orders],["orderActive",active],["orderCompleted",completed],["reviewTotal",reviews]].forEach(([id,result]) => {
+        document.getElementById(id).textContent = result.error ? "—" : String(result.count ?? 0);
+        if (result.error) console.warn("Statistik "+id+" tidak tersedia:",result.error.message);
+      });
+      const feed=document.getElementById("activityFeed");
+      const [recentOrders,recentMessages]=await Promise.all([
+        client.from("joki_progress").select("client_name,service_name,status,updated_at,created_at").order("updated_at",{ascending:false}).limit(8),
+        client.from("inbox_messages").select("title,audience,created_at").order("created_at",{ascending:false}).limit(8)
+      ]);
+      const items=[];
+      if(!recentOrders.error)(recentOrders.data||[]).forEach(x=>items.push({kind:"Pesanan",title:x.service_name||"Pesanan client",detail:(x.client_name||"Client")+" · "+(x.status||"Status belum diatur"),at:x.updated_at||x.created_at}));
+      else console.warn("Aktivitas pesanan tidak tersedia:",recentOrders.error.message);
+      if(!recentMessages.error)(recentMessages.data||[]).forEach(x=>items.push({kind:"Inbox",title:x.title||"Pesan resmi",detail:x.audience==="all"?"Semua penerima":x.audience==="members"?"Member dan role":"Penerima terpilih",at:x.created_at}));
+      else console.warn("Aktivitas Inbox tidak tersedia:",recentMessages.error.message);
+      items.sort((a,b)=>new Date(b.at||0)-new Date(a.at||0));
+      feed.replaceChildren();
+      if(!items.length){const p=document.createElement("p");p.textContent="Belum ada aktivitas terbaru yang dapat ditampilkan.";feed.append(p);return;}
+      items.slice(0,10).forEach(item=>{
+        const article=document.createElement("article");article.className="activity-item";
+        const kind=document.createElement("span");kind.className="activity-kind";kind.textContent=item.kind;
+        const title=document.createElement("strong");title.textContent=item.title;
+        const detail=document.createElement("p");detail.textContent=item.detail;
+        const time=document.createElement("time");time.textContent=item.at?dateFormat.format(new Date(item.at)):"Waktu tidak tersedia";
+        article.append(kind,title,detail,time);feed.append(article);
+      });
+    }
+
     const visitorsResult = await client.from("visitor_logs")
       .select("id, visitor_name, visited_at", { count: "exact" })
       .order("visited_at", { ascending: false })
@@ -176,6 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
       }
     }
+    await loadStatisticsAndActivity();
     document.getElementById("lastUpdated").textContent = dateFormat.format(new Date());
     showNotice("Dashboard dimuat. Admin dapat mengubah role anggota; otorisasi perubahan ditegakkan di database.");
   } catch (error) {
