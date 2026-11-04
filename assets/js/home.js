@@ -6,7 +6,6 @@
   "use strict";
 
   const db = window.supabaseClient;
-  const authScreen = document.getElementById("authScreen");
   const site = document.getElementById("site");
   const authMessage = document.getElementById("authMessage");
 
@@ -90,7 +89,6 @@
       const visitorName = sessionStorage.getItem("matthewVisitorName");
       app.currentIdentity = visitorName ? { name: visitorName, email: "", isVisitor: true } : null;
       if (visitorName) {
-        authScreen?.classList.add("hidden");
         site?.classList.remove("hidden");
         const navUser = document.getElementById("navUser");
         if (navUser) navUser.textContent = "Tamu: " + visitorName;
@@ -118,7 +116,6 @@
     }
 
     app.currentIdentity = { name: profile.full_name || user.email || "Client", email: user.email || "", isVisitor: false };
-    authScreen?.classList.add("hidden");
     site?.classList.remove("hidden");
 
     const navUser = document.getElementById("navUser");
