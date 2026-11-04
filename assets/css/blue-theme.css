@@ -64,3 +64,29 @@ footer{border-color:rgba(112,174,255,.18)!important;color:#7890b3!important}
 .member-shell{color:var(--text)}
 .member-hero p,.member-muted,.member-empty,.member-note{color:#a9bddb!important}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation-duration:.01ms!important}}
+
+
+/* GLOBAL EXPERIENCE POLISH — shared interaction and component finish */
+:where(button,a,input,select,textarea){-webkit-tap-highlight-color:transparent}
+:where(button,a){touch-action:manipulation}
+:where(button:not(:disabled),.btn,a.button){transition:filter .18s ease,border-color .18s ease,background-color .18s ease,transform .18s ease}
+:where(button:not(:disabled),.btn,a.button):active{transform:translateY(1px)}
+:where(button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible){outline:2px solid #83dcff!important;outline-offset:3px}
+:where(.member-stat,.member-order,.admin-panel,.inbox-item,.visitor-panel,.royal-card,.feature-card,.joki-product-card){border-radius:16px}
+:where(.member-stat,.member-order,.admin-panel,.inbox-item){box-shadow:0 12px 34px rgba(0,0,0,.17)}
+:where(.member-stat,.member-order,.admin-panel,.inbox-item):hover{border-color:rgba(120,201,255,.36)!important}
+:where(input,select,textarea){border-radius:10px}
+:where(table){border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid rgba(112,174,255,.18);border-radius:12px}
+:where(th:first-child){border-top-left-radius:10px}
+:where(th:last-child){border-top-right-radius:10px}
+:where(td){border-bottom:1px solid rgba(112,174,255,.1)}
+:where(tr:last-child td){border-bottom:0}
+:where(.auth-message,.admin-notice,.feedback,.notice){overflow-wrap:anywhere}
+:where(.global-menu-panel){box-shadow:0 22px 60px rgba(0,0,0,.42)}
+@media(max-width:640px){
+ :where(.admin-panel,.member-stat,.member-order,.inbox-item){border-radius:13px}
+ :where(button,.btn){min-height:42px}
+}
+@media(prefers-reduced-motion:reduce){
+ :where(button,a,.btn){transition:none!important}
+}
