@@ -8,22 +8,28 @@
       <button class="global-menu-trigger" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="globalMenuPanel">⋮</button>
       <nav class="global-menu-panel" id="globalMenuPanel" aria-label="Navigasi website" inert>
         <div class="global-menu-heading"><strong>MATTHEW JOKI</strong><span>DRAGON KINGDOM · NAVIGASI</span></div>
-        <a href="/index.html"><span class="global-menu-icon">⌂</span>Beranda · Kenali Matthew</a>
+        <div class="global-menu-group" data-admin-group hidden><span>PENGELOLAAN ADMIN</span></div>
+        <a href="/admin/dashboard.html" data-admin-link hidden><span class="global-menu-icon">♜</span>Pusat Kendali Admin</a>
+        <a href="/admin/joki-progress.html" data-admin-link hidden><span class="global-menu-icon">✓</span>Kelola Progres Client</a>
+        <div class="global-menu-group" data-account-group hidden><span>AKUN & PESAN</span></div>
+        <a href="/member-dashboard.html" data-auth-only hidden><span class="global-menu-icon">◈</span>Dashboard Member</a>
+        <a href="/your-order.html" data-auth-only hidden><span class="global-menu-icon">▤</span>Pesanan Saya</a>
+        <a href="/inbox.html" data-auth-only hidden><span class="global-menu-icon">✉</span>Inbox Matthew</a>
+        <div class="global-menu-divider"></div>
+        <div class="global-menu-group"><span>JELAJAHI WEBSITE</span></div>
+        <a href="/index.html"><span class="global-menu-icon">⌂</span>Beranda</a>
         <a href="/calculator-resource.html"><span class="global-menu-icon">⚖</span>Calculator Resource</a>
         <a href="/requirements-city-hall.html"><span class="global-menu-icon">♜</span>Requirements City Hall</a>
         <a href="/joki-matthew.html"><span class="global-menu-icon">♛</span>Lacak Progress</a>
         <a href="/support-matthew.html"><span class="global-menu-icon">♡</span>Support Matthew</a>
-        <a href="/member-dashboard.html" data-auth-only hidden data-member-link><span class="global-menu-icon">◈</span>Member Dashboard</a>
-        <a href="/your-order.html" data-auth-only hidden data-member-link><span class="global-menu-icon">▤</span>Your Order</a>
         <a href="/worker.html"><span class="global-menu-icon">♟</span>Daftar Worker</a>
-        <div class="global-menu-divider"></div>
-        <a href="/login.html" data-visitor-only><span class="global-menu-icon">↪</span>Login Member / Visitor</a>
-        <a href="/register.html" data-visitor-only><span class="global-menu-icon">＋</span>Daftar Akun</a>
-        <a href="/reset-password.html" data-visitor-only><span class="global-menu-icon">⌑</span>Lupa Kata Sandi</a>
-        <a href="/admin/dashboard.html" data-admin-link hidden><span class="global-menu-icon">♜</span>Admin Dashboard</a>
-        <a href="/admin/joki-progress.html" data-auth-only hidden data-admin-link><span class="global-menu-icon">✓</span>Kelola Progres Client</a>
-        <div class="global-menu-divider"></div>
-        <a class="global-menu-account" href="/login.html" data-auth-only hidden data-account-link>Masuk untuk mengakses akun</a>
+        <div class="global-menu-divider" data-visitor-divider hidden></div>
+        <div class="global-menu-group" data-visitor-group hidden><span>AKSES PENGUNJUNG</span></div>
+        <a href="/login.html" data-visitor-only hidden><span class="global-menu-icon">↪</span>Login Member / Visitor</a>
+        <a href="/register.html" data-visitor-only hidden><span class="global-menu-icon">＋</span>Daftar Akun</a>
+        <a href="/reset-password.html" data-visitor-only hidden><span class="global-menu-icon">⌑</span>Lupa Kata Sandi</a>
+        <div class="global-menu-divider" data-account-divider hidden></div>
+        <a class="global-menu-account" href="#" data-auth-only hidden data-account-link>Keluar dari akun</a>
       </nav>`;
     document.body.appendChild(root);
 
@@ -93,9 +99,12 @@
     if (client && client.auth) {
       client.auth.getSession().then(async ({data}) => {
         const user = data?.session?.user;
-        if (!user) return;
-        panel.querySelectorAll("[data-auth-only]").forEach(link => link.hidden = false);
-        panel.querySelectorAll("[data-visitor-only]").forEach(link => link.hidden = true);
+        if (!user) {
+          panel.querySelectorAll("[data-visitor-only], [data-visitor-group], [data-visitor-divider]").forEach(el => el.hidden = false);
+          return;
+        }
+        panel.querySelectorAll("[data-auth-only], [data-account-group], [data-account-divider]").forEach(el => el.hidden = false);
+        panel.querySelectorAll("[data-visitor-only], [data-visitor-group], [data-visitor-divider]").forEach(el => el.hidden = true);
         panel.querySelector('[data-account-link]').textContent = user.email || "Akun aktif";
         panel.querySelector('[data-account-link]').href = "#";
         panel.querySelector('[data-account-link]').addEventListener("click", async event => {
@@ -134,7 +143,13 @@
         } catch (error) { console.warn("Pembaruan Inbox realtime tidak tersedia.", error); }
         try {
           const {data: profile} = await client.from("profiles").select("role").eq("id", user.id).maybeSingle();
-          if (profile?.role === "admin") { panel.querySelectorAll("[data-admin-link]").forEach(link => link.hidden = false); const adminDashboard = panel.querySelector('[data-admin-link][href="/admin/dashboard.html"]'); const heading = panel.querySelector(".global-menu-heading"); if (adminDashboard && heading) heading.after(adminDashboard); }
+          if (profile?.role === "admin") {
+            panel.querySelectorAll("[data-admin-link], [data-admin-group]").forEach(el => el.hidden = false);
+            const adminGroup = panel.querySelector("[data-admin-group]");
+            const accountGroup = panel.querySelector("[data-account-group]");
+            if (adminGroup && accountGroup) panel.insertBefore(adminGroup, accountGroup);
+            Array.from(panel.querySelectorAll("[data-admin-link]")).forEach(link => panel.insertBefore(link, accountGroup));
+          }
         } catch (error) { console.warn("Peran akun tidak dapat dimuat untuk menu.", error); }
       }).catch(error => console.warn("Sesi akun tidak dapat dimuat untuk menu.", error));
     }
