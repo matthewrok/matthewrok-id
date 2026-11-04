@@ -1,0 +1,30 @@
+.order-shell{max-width:960px}
+.orders-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.orders-heading h2{margin:5px 0 0}
+.secondary-button,.copy-order-code,.order-detail-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 12px;border:1px solid rgba(117,200,255,.36);border-radius:10px;background:rgba(30,104,164,.15);color:#d9f1ff;font:700 12px Inter,system-ui,sans-serif;cursor:pointer}
+.secondary-button:hover,.copy-order-code:hover,.order-detail-toggle:hover{background:rgba(49,133,216,.28);border-color:#75c8ff}
+.your-orders-list{display:grid;gap:14px}
+.your-order-card{overflow:hidden;border:1px solid rgba(112,183,239,.24);border-radius:15px;background:linear-gradient(145deg,rgba(12,35,60,.95),rgba(7,22,40,.96))}
+.your-order-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 12px}
+.your-order-service{margin:0 0 5px;color:#e6f5ff;font:700 17px Cinzel,Georgia,serif}
+.your-order-date{color:#86a9c6;font-size:11px}
+.your-order-status{display:inline-flex;align-items:center;max-width:48%;padding:5px 9px;border:1px solid rgba(117,200,255,.3);border-radius:999px;background:rgba(49,133,216,.12);color:#bce6ff;font-size:10px;font-weight:800;text-align:center}
+.your-order-code-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 18px;padding:12px;border:1px dashed rgba(117,200,255,.38);border-radius:11px;background:rgba(3,15,29,.45)}
+.your-order-code-label{display:block;color:#87a9c5;font-size:10px;letter-spacing:.12em}
+.your-order-code{display:block;margin-top:4px;color:#fff;font:800 14px ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+.your-order-total-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px}
+.your-order-total-row span{color:#a8bfd5;font-size:12px}.your-order-total-row strong{color:#9beaff;font-size:19px}
+.your-order-progress{height:5px;margin:0 18px 14px;overflow:hidden;border-radius:99px;background:rgba(133,174,211,.15)}
+.your-order-progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#3185d8,#75d8ff)}
+.your-order-actions{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 17px}
+.order-details{padding:16px 18px 18px;border-top:1px solid rgba(112,183,239,.16);background:rgba(3,15,29,.3)}
+.order-details[hidden]{display:none!important}
+.order-details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.order-detail-cell{min-width:0;padding:11px;border:1px solid rgba(112,183,239,.14);border-radius:10px;background:rgba(9,27,49,.5)}
+.order-detail-cell span{display:block;color:#86a9c6;font-size:10px;margin-bottom:4px}
+.order-detail-cell strong{display:block;color:#e5f4ff;font-size:12px;overflow-wrap:anywhere;white-space:pre-wrap}
+.order-detail-note{margin:12px 0 0;padding:12px;border-left:3px solid #75c8ff;border-radius:0 9px 9px 0;background:rgba(49,133,216,.09);color:#c8dced;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.order-empty{padding:30px 18px;border:1px dashed rgba(112,183,239,.25);border-radius:14px;text-align:center;color:#a8bfd5;font-size:13px;line-height:1.8}
+.order-empty strong{display:block;color:#e1f2ff;font-size:16px;margin-bottom:5px}
+.order-error{color:#ffaaa8!important}
+@media(max-width:560px){.orders-heading{align-items:flex-start}.orders-heading h2{font-size:18px}.your-order-card-head{padding:15px 14px 10px}.your-order-code-row{margin:0 14px;padding:10px}.your-order-code{font-size:12px}.your-order-total-row{padding:13px 14px}.your-order-total-row strong{font-size:17px}.your-order-progress{margin-left:14px;margin-right:14px}.your-order-actions{padding:0 14px 14px}.order-details{padding:14px}.order-details-grid{grid-template-columns:1fr}.your-order-status{font-size:9px}}
