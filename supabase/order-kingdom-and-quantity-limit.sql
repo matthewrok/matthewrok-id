@@ -16,7 +16,7 @@ alter table public.joki_progress
 drop function if exists public.create_joki_order(text,text,text,integer,text);
 drop function if exists public.create_joki_order(text,text,text,integer);
 
-create function public.create_joki_order(
+create or replace function public.create_joki_order(
   p_client_name text,
   p_client_email text,
   p_product_code text,
@@ -62,8 +62,8 @@ begin
   if v_kingdom !~ '^[0-9]{1,12}$' then
     raise exception 'Nomor Kingdom wajib diisi dengan angka 1 sampai 12 digit.';
   end if;
-  if p_quantity is null or p_quantity<1 or p_quantity>12 then
-    raise exception 'Jumlah karakter harus antara 1 sampai 12.';
+  if p_quantity is null or p_quantity<4 or p_quantity>12 then
+    raise exception 'Jumlah karakter harus antara 4 sampai 12.';
   end if;
   v_qty:=p_quantity;
   if p_product_code='CH11' then v_service:='City Hall 11'; v_price:=17000;
@@ -100,5 +100,21 @@ $function$;
 
 revoke all on function public.create_joki_order(text,text,text,integer,text,text) from public, anon;
 grant execute on function public.create_joki_order(text,text,text,integer,text,text) to authenticated;
+
+
+-- Extend member order listing with the saved Kingdom number.
+drop function if exists public.list_my_joki_orders();
+create function public.list_my_joki_orders()
+returns table (id uuid, order_number text, client_name text, client_email text, service_name text, kingdom_number text, quantity integer, unit_price integer, subtotal_price integer, voucher_code text, discount_amount integer, total_price integer, status text, progress_percent integer, progress_note text, created_at timestamptz, updated_at timestamptz)
+language plpgsql security definer set search_path = '' as $$
+declare v_email text;
+begin
+ if auth.uid() is null or coalesce((select auth.jwt()->>'is_anonymous'),'false')='true' then raise exception 'Login diperlukan untuk melihat pesanan.'; end if;
+ select lower(u.email) into v_email from auth.users u where u.id=auth.uid();
+ if v_email is null or v_email='' then return; end if;
+ return query select j.id,j.order_number,j.client_name,j.client_email,j.service_name,j.kingdom_number,j.quantity,j.unit_price,j.subtotal_price,j.voucher_code,j.discount_amount,j.total_price,j.status,j.progress_percent,j.progress_note,j.created_at,j.updated_at from public.joki_progress j where lower(coalesce(j.client_email,''))=v_email and j.order_number is not null order by j.created_at desc;
+end; $$;
+revoke all on function public.list_my_joki_orders() from public, anon;
+grant execute on function public.list_my_joki_orders() to authenticated;
 
 commit;
