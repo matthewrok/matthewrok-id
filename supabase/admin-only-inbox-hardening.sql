@@ -23,14 +23,10 @@ using (
 );
 
 drop policy if exists "Admins manage inbox receipts" on public.inbox_recipients;
-create policy "Admins manage inbox receipts"
-on public.inbox_recipients for all to authenticated
-using (
-  exists (select 1 from public.profiles p where p.id = (select auth.uid()) and p.role = 'admin')
-)
-with check (
-  exists (select 1 from public.profiles p where p.id = (select auth.uid()) and p.role = 'admin')
-);
+drop policy if exists "Members read own inbox receipt" on public.inbox_recipients;
+create policy "Members read own inbox receipt"
+on public.inbox_recipients for select to authenticated
+using (user_id = (select auth.uid()));
 
 create or replace function public.service_send_inbox_message(
   p_sender_id uuid,
