@@ -103,6 +103,7 @@ Deno.serve(async (req: Request) => {
         "🔄 <b>PEMBARUAN PESANAN — MATTHEW JOKI</b>", "",
         `🧾 <b>No. Pesanan:</b> <code>${esc(record.order_number)}</code>`,
         `👤 <b>Nama:</b> ${esc(record.client_name)}`,
+        `🏰 <b>Kingdom:</b> ${esc(record.kingdom_number || "—")}`,
         ...changes, "",
         `🕒 <b>Diperbarui:</b> ${esc(record.updated_at || new Date().toISOString())}`,
       ].join("\\n");
@@ -115,9 +116,13 @@ Deno.serve(async (req: Request) => {
       "🔔 <b>PESANAN BARU — MATTHEW JOKI</b>", "",
       `🧾 <b>No. Pesanan:</b> <code>${esc(record.order_number)}</code>`,
       `👤 <b>Nama:</b> ${esc(record.client_name)}`,
+      `🏰 <b>Kingdom:</b> ${esc(record.kingdom_number || "—")}`,
       `📧 <b>Email:</b> ${esc(record.client_email || "Visitor")}`,
-      `🎮 <b>Layanan:</b> ${esc(record.service_name)}`,
-      `📦 <b>Jumlah:</b> ${esc(record.quantity)}`,
+      `🎮 <b>Paket:</b> ${esc(record.service_name)}`,
+      `📦 <b>Jumlah karakter:</b> ${esc(record.quantity)}`,
+      `🎟️ <b>Kode voucher:</b> ${esc(record.voucher_code || "Tidak digunakan")}`,
+      `💵 <b>Subtotal:</b> ${money(record.subtotal_price ?? (Number(record.unit_price || 0) * Number(record.quantity || 0)))}`,
+      `🏷️ <b>Diskon:</b> ${money(record.discount_amount)}`,
       `💰 <b>Total:</b> ${money(record.total_price)}`,
       `📌 <b>Status:</b> ${esc(record.status || "Menunggu")}`,
       "", "Pesanan baru telah tersimpan di sistem website."
@@ -141,7 +146,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const queryOrder = async (orderNumber: string) => {
-    const url = `${supabaseUrl}/rest/v1/joki_progress?order_number=eq.${encodeURIComponent(orderNumber)}&select=id,order_number,client_name,client_email,service_name,quantity,unit_price,total_price,status,progress_percent,progress_note,created_at,updated_at&limit=1`;
+    const url = `${supabaseUrl}/rest/v1/joki_progress?order_number=eq.${encodeURIComponent(orderNumber)}&select=id,order_number,client_name,client_email,service_name,kingdom_number,quantity,unit_price,subtotal_price,voucher_code,discount_amount,total_price,status,progress_percent,progress_note,created_at,updated_at&limit=1`;
     const res = await fetch(url, { headers: baseHeaders });
     const rows = await res.json();
     if (!res.ok) { console.error("Order lookup failed", res.status, rows); throw new Error("Database read failed"); }
@@ -151,9 +156,13 @@ Deno.serve(async (req: Request) => {
     "📋 <b>DETAIL PESANAN</b>", "",
     `🧾 <b>Nomor:</b> <code>${esc(o.order_number)}</code>`,
     `👤 <b>Nama:</b> ${esc(o.client_name)}`,
+    `🏰 <b>Kingdom:</b> ${esc(o.kingdom_number || "—")}`,
     `📧 <b>Email:</b> ${esc(o.client_email || "Visitor")}`,
-    `🎮 <b>Layanan:</b> ${esc(o.service_name)}`,
-    `📦 <b>Jumlah:</b> ${esc(o.quantity)}`,
+    `🎮 <b>Paket:</b> ${esc(o.service_name)}`,
+    `📦 <b>Jumlah karakter:</b> ${esc(o.quantity)}`,
+    `🎟️ <b>Voucher:</b> ${esc(o.voucher_code || "Tidak digunakan")}`,
+    `💵 <b>Subtotal:</b> ${money(o.subtotal_price ?? (Number(o.unit_price || 0) * Number(o.quantity || 0)))}`,
+    `🏷️ <b>Diskon:</b> ${money(o.discount_amount)}`,
     `💰 <b>Total:</b> ${money(o.total_price)}`,
     `📌 <b>Status:</b> ${esc(o.status)}`,
     `📊 <b>Progress:</b> ${esc(o.progress_percent)}%`,
@@ -165,7 +174,7 @@ Deno.serve(async (req: Request) => {
     [{ text: "⬅️ Menu Utama", callback_data: "menu" }]
   ] });
   const showOrders = async (targetChat: string, messageId?: number) => {
-    const res = await fetch(`${supabaseUrl}/rest/v1/joki_progress?select=order_number,client_name,service_name,status,progress_percent,total_price,created_at&order=created_at.desc&limit=10`, { headers: baseHeaders });
+    const res = await fetch(`${supabaseUrl}/rest/v1/joki_progress?select=order_number,client_name,service_name,kingdom_number,status,progress_percent,total_price,created_at&order=created_at.desc&limit=10`, { headers: baseHeaders });
     const rows = await res.json();
     if (!res.ok) { console.error("Order list failed", res.status, rows); throw new Error("Database read failed"); }
     if (!rows.length) {
