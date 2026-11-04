@@ -227,3 +227,13 @@ footer{color:var(--faint)}
  .login-options{gap:8px}
 }
 @media(prefers-reduced-motion:reduce){.auth-container:before{animation:none}}
+
+/* Prominent registration CTA directly below password recovery */
+.login-options{align-items:flex-start}
+.login-links{display:flex;flex:0 0 auto;flex-direction:column;align-items:flex-end;gap:10px}
+.login-links .forgot-link{white-space:nowrap}
+.register-highlight{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:158px;padding:9px 15px;border:1px solid rgba(112,205,255,.7);border-radius:11px;background:linear-gradient(135deg,rgba(36,112,220,.34),rgba(11,65,123,.5));color:#fff!important;text-decoration:none!important;box-shadow:0 0 18px rgba(52,151,255,.15),inset 0 1px rgba(255,255,255,.08);transition:transform .18s,box-shadow .18s,border-color .18s}
+.register-highlight:hover{transform:translateY(-2px);border-color:#9be5ff;box-shadow:0 0 24px rgba(52,151,255,.3)}
+.register-kicker{font-size:9px;letter-spacing:1.2px;color:#a9dfff;font-weight:700}
+.register-main{font-size:13px;font-weight:800;letter-spacing:.2px;color:#fff}
+@media(max-width:420px){.login-options{flex-direction:column}.login-links{width:100%;align-items:stretch}.login-links .forgot-link{align-self:flex-start}.register-highlight{width:100%}}
