@@ -748,3 +748,7 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
   .joki-order-total span{font-size:10px!important}
   .joki-order-total strong{font-size:14px!important}
 }
+
+
+/* Admin dashboard heading must scroll with the page, not cover content. */
+body:has(.admin-shortcuts) header.top{position:static;top:auto;backdrop-filter:none;}
