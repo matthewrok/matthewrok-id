@@ -47,7 +47,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         say("Pendaftaran berhasil dikirim dan notifikasi Telegram sudah diterima sistem. Silakan pantau Inbox Matthew untuk hasil seleksi.", "success");
       } catch (error) {
         console.error("Worker submission failed:", error);
-        say(error?.message || "Pendaftaran gagal dikirim. Silakan coba kembali.", "error");
+        let serverMessage = "";
+        try {
+          const response = error?.context;
+          if (response && typeof response.clone === "function") {
+            const body = await response.clone().json();
+            serverMessage = body?.error || body?.message || "";
+            if (response.status === 409) {
+              form.hidden = true;
+              say("Pendaftaran kamu sudah tercatat dan masih menunggu keputusan admin. Tidak perlu mengirim ulang. Pantau Inbox dan tunggu keputusan dari Matthew.", "success");
+              return;
+            }
+          }
+        } catch (_) { /* keep the SDK error as fallback */ }
+        say(serverMessage || error?.message || "Pendaftaran gagal dikirim. Silakan coba kembali.", "error");
         submit.disabled = false; submit.textContent = "KIRIM PENDAFTARAN";
       }
     });
