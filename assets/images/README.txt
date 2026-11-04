@@ -1,1 +1,6 @@
-The animated dragon and warrior hero is built from inline SVG in index.html and animated with CSS in ../css/style.css. No large image downloads are required.
+Folder aset gambar website MATTHEW.
+
+- brand/logo-matthew.png: logo utama/identitas brand, digunakan di index.html.
+- qris-matthew.jpeg: QRIS yang digunakan pada halaman support-matthew.html.
+
+Visual naga dan warrior pada hero beranda dibuat dari inline SVG/CSS, bukan file gambar terpisah.
