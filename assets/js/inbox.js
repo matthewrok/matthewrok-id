@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { data: profile, error: profileError } = await db.from("profiles").select("role").eq("id", user.id).maybeSingle();
     if (profileError) throw profileError;
 
-    if (["admin", "MATTHEW"].includes(profile?.role)) {
+    if (profile?.role === "admin") {
       composer.hidden = false;
       const audience = composer.querySelector('[name="audience"]');
       const recipientField = document.getElementById("recipientField");
