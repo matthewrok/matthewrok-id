@@ -99,3 +99,14 @@ Advisor menandai beberapa indeks belum digunakan dan beberapa tabel memiliki pol
 
 **Catatan:** temuan ini dicatat sebagai pekerjaan lanjutan. Belum ada perubahan schema, grant, Edge Function, atau konfigurasi Auth produksi yang dilakukan dalam audit ini.
 
+## Pemeriksaan lanjutan pelacakan progres — 5 November 2026
+
+Pemeriksaan definisi RPC Supabase dan pemanggil frontend menemukan ketidaksesuaian kontrak yang perlu dibereskan sebelum perubahan skema keamanan diterapkan:
+
+- `lookup_joki_progress(text)` saat ini mengembalikan `client_name, service_name, status, progress_percent, progress_note, updated_at`.
+- `assets/js/joki-matthew.js` juga membaca `order_number, quantity, total_price`. Kolom-kolom tersebut tidak tersedia pada hasil RPC saat ini, sehingga nomor order, jumlah karakter, dan total dapat tampil sebagai tanda hubung/teks fallback.
+- `create_joki_order` menyimpan nilai yang sama pada `token` dan `order_number`. Memisahkan kode order publik dan token rahasia akan memerlukan perubahan terkoordinasi pada skema, RPC pembuatan/pencarian/ulasan, frontend, dan alur admin.
+- Jangan menjalankan perubahan DDL produksi sampai semua pemanggil fungsi, halaman admin, riwayat order, dan alur ulasan telah dipetakan. Perubahan harus mempertahankan akses untuk pesanan lama atau menyediakan strategi transisi eksplisit.
+- Perbaikan yang direkomendasikan: kontrak lookup minimal mengembalikan data progres yang memang boleh dilihat pemilik token, termasuk nomor order, jumlah karakter, dan total jika kebijakan privasi mengizinkan; lalu gunakan token pelacakan berentropi tinggi yang terpisah, dan tambahkan pembatasan percobaan/monitoring sesuai kemampuan backend.
+
+Catatan ini berasal dari pemeriksaan definisi fungsi dan kode frontend; belum merupakan perubahan database. Uji browser dan end-to-end tetap diperlukan.
