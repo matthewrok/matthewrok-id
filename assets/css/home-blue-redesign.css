@@ -138,3 +138,80 @@ footer{background:#040f1e!important;border-top:1px solid rgba(112,177,255,.2)!im
  .kingdom-section{padding-top:28px!important;padding-bottom:34px!important}
  .section{padding-top:44px!important;padding-bottom:44px!important}
 }
+
+
+/* =========================================================
+   FINAL HOMEPAGE TUNING — tighter announcement-to-hero gap
+   and lighter desktop scrolling workload.
+   ========================================================= */
+
+/* Keep the welcome heading close to the announcement/header. */
+#site > .announcement-ticker + .hero.dragon-hero{
+  margin-top:0!important;
+  padding-top:0!important;
+}
+#site > .announcement-ticker + .hero.dragon-hero .hero-content{
+  padding-top:12px!important;
+  padding-bottom:0!important;
+}
+#site > .announcement-ticker + .hero.dragon-hero .hero-kicker{
+  margin-top:0!important;
+}
+#site > .announcement-ticker + .hero.dragon-hero .welcome-text{
+  margin-top:10px!important;
+}
+#site > .announcement-ticker + .hero.dragon-hero .hero-product-strip{
+  margin-top:20px!important;
+}
+
+/* Avoid reserving vertical space when the announcement is hidden. */
+#site > .announcement-ticker[hidden]{
+  display:none!important;
+}
+
+/* Desktop: keep the visual design, but stop expensive continuous effects
+   that can cause frame drops on integrated graphics. */
+@media (min-width:851px){
+  .embers{display:none!important}
+  .hero.dragon-hero:before,
+  .hero.dragon-hero:after{
+    animation:none!important;
+  }
+  header{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+  .hero-kicker,
+  .joki-products,
+  .joki-product-card,
+  .feature-card,
+  .royal-card{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+  .feature-card,
+  .joki-product-card{
+    transition:transform .16s ease,border-color .16s ease!important;
+    box-shadow:0 8px 22px rgba(0,0,0,.14)!important;
+  }
+  .feature-card:hover,
+  .joki-product-card:hover{
+    transform:translateY(-2px)!important;
+    box-shadow:0 10px 26px rgba(0,0,0,.18)!important;
+  }
+}
+
+/* Reduce scroll animation work and avoid unnecessary compositing layers. */
+.meteor{will-change:auto!important}
+.reveal{
+  transition:opacity .35s ease!important;
+  transform:none!important;
+}
+.reveal.show{transform:none!important}
+@media(prefers-reduced-motion:reduce){
+  .hero.dragon-hero:before,
+  .hero.dragon-hero:after,
+  .hero-kicker span,
+  .embers{display:none!important;animation:none!important}
+  .reveal,.reveal.show{transition:none!important;opacity:1!important;transform:none!important}
+}
