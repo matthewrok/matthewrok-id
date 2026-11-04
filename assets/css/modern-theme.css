@@ -193,29 +193,29 @@ footer{background:#060914;border-top-color:var(--line);color:#8798b8}
  .nav-links{display:flex!important;position:static;width:auto;max-height:none;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none;overflow:visible}
 }
 /* Homepage hero now uses a clean abstract background, no character image */
-.dragon-hero{min-height:min(790px,calc(100svh - 82px));background:radial-gradient(ellipse at 78% 28%,rgba(74,112,255,.19),transparent 34%),radial-gradient(ellipse at 88% 72%,rgba(41,193,221,.10),transparent 30%),linear-gradient(120deg,#070b17 0%,#0b1225 58%,#090f1e 100%)!important}
+.dragon-hero{min-height:0;padding:44px 7% 26px;background:radial-gradient(ellipse at 78% 28%,rgba(74,112,255,.19),transparent 34%),radial-gradient(ellipse at 88% 72%,rgba(41,193,221,.10),transparent 30%),linear-gradient(120deg,#070b17 0%,#0b1225 58%,#090f1e 100%)!important}
 .dragon-hero .hero-cinematic-art{display:none!important}
 .dragon-hero .hero-vignette{display:none!important}
 .dragon-hero::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 82% 35%,rgba(103,140,255,.12),transparent 1px);background-size:34px 34px;mask-image:linear-gradient(90deg,transparent 20%,#000 100%);opacity:.4}
 .dragon-hero::before{content:"";position:absolute;inset:14px;border:1px solid rgba(139,169,255,.12);pointer-events:none}
-.dragon-hero .hero-content{width:min(680px,78%);max-width:680px;position:relative;z-index:2}
-.dragon-hero .hero-content h1{color:#edf2ff;text-shadow:0 8px 45px rgba(65,102,230,.24)}
+.dragon-hero .hero-content{width:min(680px,78%);max-width:680px;position:relative;z-index:2;padding:0}
+.dragon-hero .hero-content h1{margin:0 0 10px;color:#edf2ff;text-shadow:0 8px 45px rgba(65,102,230,.24)}
 .dragon-hero .hero-content h1 span{background:linear-gradient(180deg,#b9d2ff,#6c91ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .dragon-hero .hero-kicker{color:#7de7ff}
 .dragon-hero .hero-kicker span{background:#7de7ff;box-shadow:0 0 12px #7de7ff88}
-.dragon-hero .hero-description{color:#b9c7e1;text-shadow:none}
+.dragon-hero .hero-description{margin:0 0 18px;color:#b9c7e1;text-shadow:none;line-height:1.65}
 .dragon-hero .hero-actions .btn{border-radius:12px}
 .dragon-hero .btn-gold{color:#fff;background:linear-gradient(135deg,#6c8dff,#3155df);box-shadow:0 12px 30px #315ff42b}
 .dragon-hero .hero-text-link{color:#c4d4f4;border-color:#7f9fff55}
-.dragon-hero .hero-trust{color:#93a4c6}
+.dragon-hero .hero-trust{margin-top:18px;color:#93a4c6}
 .dragon-hero .hero-trust i{background:#6ee7ff}
 .dragon-hero .hero-index,.dragon-hero .hero-scroll{color:#9aaed4}
 @media(max-width:850px){
- .dragon-hero{min-height:650px;padding:80px 7% 110px}
+ .dragon-hero{min-height:0;padding:30px 7% 24px}
  .dragon-hero .hero-content{width:100%;padding:20px 0}
 }
 @media(max-width:600px){
- .dragon-hero{min-height:600px;padding:45px 8% 90px;align-items:center}
+ .dragon-hero{min-height:0;padding:26px 8% 20px;align-items:center}
  .dragon-hero .hero-content{width:100%;padding:10px 0}
  .dragon-hero .hero-content h1{font-size:clamp(50px,14vw,72px)}
  .dragon-hero .hero-actions{gap:15px}
@@ -576,7 +576,7 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 .hero-product-strip .joki-product-price span{font-size:10px}
 .hero-product-strip .joki-order-button{min-height:32px;padding:7px 10px;font-size:8px;letter-spacing:1px}
 @media(max-width:600px){
- .dragon-hero{min-height:0;padding:42px 6% 28px;display:flex;flex-direction:column;justify-content:center}
+ .dragon-hero{min-height:0;padding:24px 6% 18px;display:flex;flex-direction:column;justify-content:center}
  .dragon-hero .hero-content{padding:8px 0 0}
  .dragon-hero .hero-trust{margin-top:18px}
  .hero-product-strip{width:100%;margin:22px 0 0}
