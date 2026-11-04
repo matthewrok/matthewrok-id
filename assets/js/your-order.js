@@ -25,7 +25,7 @@
     const v=document.createElement("strong"); v.textContent=escapeText(value);
     cell.append(l,v); grid.appendChild(cell);
   }
-  function renderOrder(order) {
+  function renderOrder(order, history=[]) {
     const card=document.createElement("article"); card.className="your-order-card";
     const head=document.createElement("div"); head.className="your-order-card-head";
     const titleWrap=document.createElement("div");
@@ -92,8 +92,11 @@
       const {data,error}=await db.rpc("list_my_joki_orders");
       if(error) throw error;
       const orders=Array.isArray(data)?data:[];
+      let history=[];
+      try { const result=await db.rpc("list_my_joki_order_history"); if(!result.error && Array.isArray(result.data)) history=result.data; }
+      catch(historyError) { console.warn("[Your Order] Riwayat belum tersedia:",historyError); }
       if(!orders.length){setState("Belum ada pesanan yang terhubung dengan email akun ini.");const box=document.createElement("div");box.className="order-empty";const title=document.createElement("strong");title.textContent="Belum ada pesanan";const p=document.createElement("p");p.textContent="Pesanan baru akan muncul di sini setelah dibuat menggunakan akun ini.";const link=document.createElement("a");link.href="/index.html";link.className="order-detail-toggle";link.textContent="Lihat paket joki";box.append(title,p,link);list.appendChild(box);return;}
-      orders.forEach(order=>list.appendChild(renderOrder(order)));
+      orders.forEach(order=>list.appendChild(renderOrder(order,history.filter(item=>item.order_id===order.id))));
       setState("Ditemukan "+orders.length+" pesanan untuk akun "+(user.email||"ini")+".","success");
     } catch(error) {
       console.error("[Your Order]",error);
