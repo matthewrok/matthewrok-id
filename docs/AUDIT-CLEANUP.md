@@ -118,3 +118,11 @@ Catatan ini berasal dari pemeriksaan definisi fungsi dan kode frontend; belum me
 - Skrip ini **belum dijalankan di Supabase produksi**. Skrip diberi penanda kandidat karena masih menggunakan `joki_progress.token` lama sebagai kunci lookup dan dengan sendirinya tidak menyelesaikan masalah entropi token.
 - Sebelum penerapan, perubahan lookup ini harus digabungkan secara terkoordinasi dengan desain token pelacakan baru, kompatibilitas pesanan lama, dan pemeriksaan pemanggil Telegram/admin. Jangan menjalankan skrip ini secara terpisah sebagai perbaikan keamanan final.
 - Perubahan ini memperbaiki kontrak data yang tidak lengkap pada level rancangan; validasi runtime masih menunggu penerapan migrasi dan uji end-to-end.
+
+## Hardening token buatan admin — 5 November 2026
+
+- `assets/js/admin-joki-progress.js` sekarang menghasilkan token untuk pesanan manual admin menggunakan 32 byte dari `crypto.getRandomValues` (256 bit), ditampilkan dalam kelompok heksadesimal agar lebih mudah dibaca.
+- `joki-matthew.html` menerima input kode hingga 80 karakter dan memperjelas instruksi agar kode pelacakan tidak dibagikan secara publik.
+- Perubahan ini hanya mengeraskan token yang dibuat melalui formulir admin manual. **Token otomatis dari `create_joki_order` belum diperbaiki** dan masih memakai format lama; lookup dan ulasan masih mencari kolom `token`. Jadi temuan utama keamanan belum dianggap selesai.
+- Perubahan berada di branch `feature/blue-login-experience`; belum masuk produksi dan belum diuji di browser.
+- Langkah berikutnya tetap migrasi terkoordinasi: token rahasia terpisah dari nomor order, cara aman mengirim token baru ke pelanggan, transisi order lama, pembaruan RPC order/review, dan pengujian akses tanpa token/role yang tidak berhak.
