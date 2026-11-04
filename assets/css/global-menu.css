@@ -26,3 +26,11 @@ body:has(#loginForm) .global-menu{display:none!important}
 body:has(#authScreen:not(.hidden)) .global-menu,
 body:has(#authScreen:not(.hidden)) .global-menu-trigger,
 body:has(#authScreen:not(.hidden)) #globalMenuPanel{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+
+/* Inbox Matthew is a dedicated envelope icon immediately left of the three-dot menu. */
+.global-menu{display:flex;align-items:center;gap:8px}
+.global-inbox-trigger{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;box-sizing:border-box;border:1px solid var(--global-menu-line);border-radius:15px;background:rgba(9,16,33,.94);color:#9beaff;text-decoration:none;font-size:22px;line-height:1;box-shadow:0 8px 28px rgba(0,0,0,.28);backdrop-filter:blur(14px);transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.global-inbox-trigger:hover{background:#142344;border-color:rgba(117,218,255,.58);transform:translateY(-1px)}
+.global-inbox-trigger:focus-visible{outline:2px solid #7de7ff;outline-offset:3px}
+.global-inbox-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
