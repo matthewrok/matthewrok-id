@@ -41,3 +41,7 @@ body:has(#authScreen:not(.hidden)) #globalMenuPanel{display:none!important;visib
 .global-inbox-svg{display:block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .global-inbox-badge{position:absolute;top:5px;right:5px;width:10px;height:10px;border:2px solid #091021;border-radius:50%;background:#ff334f;box-shadow:0 0 0 2px rgba(255,51,79,.18),0 0 12px rgba(255,51,79,.55);pointer-events:none}
 .global-inbox-badge[hidden]{display:none!important}
+
+
+/* During the order-format modal, only its own close (X) control should be visible. */
+body.order-modal-open .global-menu{display:none!important;visibility:hidden!important;pointer-events:none!important}
