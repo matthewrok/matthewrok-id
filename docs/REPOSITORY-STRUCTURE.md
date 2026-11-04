@@ -14,7 +14,9 @@ Dokumen ini menjelaskan penempatan file dan aturan aman saat merapikan repositor
 ├── assets/
 │   ├── css/               # Stylesheet per halaman dan komponen bersama
 │   ├── js/                # Modul JavaScript browser
-│   └── images/            # Gambar dan dokumentasi aset
+│   └── images/
+│       ├── brand/         # Logo dan identitas brand
+│       └── *.jpeg         # Gambar fitur, misalnya QRIS
 ├── supabase/              # SQL setup/migrasi serta sumber Edge Function terdokumentasi
 └── docs/                  # Dokumentasi teknis dan laporan audit
 ```
@@ -26,8 +28,13 @@ Dokumen ini menjelaskan penempatan file dan aturan aman saat merapikan repositor
 - **CSS di `assets/css/`.** Pisahkan stylesheet berdasarkan halaman/komponen; jangan membuat duplikat aturan global tanpa memeriksa cascade.
 - **JavaScript browser di `assets/js/`.** Pertahankan pemisahan modul autentikasi, beranda, kalkulator, layanan, dan administrasi.
 - **SQL/backend terdokumentasi di `supabase/`.** Perubahan skema harus disertai catatan migrasi dan pemeriksaan RLS.
+- **Gambar di `assets/images/`.** Letakkan logo di `assets/images/brand/` dan gambar fitur seperti QRIS langsung di `assets/images/`.
 - **Dokumentasi di `docs/`.** Simpan hasil audit, keputusan struktur, dan instruksi pemeliharaan.
 - Gunakan nama file huruf kecil, deskriptif, dan tanda hubung.
+
+## Cache dan versi aset
+
+Parameter `?v=...` pada CSS/JavaScript adalah cache-busting query string, bukan file cache. Perbarui versinya ketika aset berubah. Jangan menyimpan cache browser atau hasil build yang tidak diperlukan dalam repository GitHub Pages statis. Cache browser pengguna tidak dapat dihapus dari GitHub; versi URL baru membantu browser mengambil aset terbaru.
 
 ## Aturan sebelum memindahkan atau menghapus file
 
