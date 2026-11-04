@@ -54,3 +54,29 @@ body:has(#jokiOrderModal:not(.hidden)) .global-menu-trigger{display:none!importa
 .global-menu-group{padding:10px 12px 5px}
 .global-menu-group span{display:block;color:#87a2d2;font-size:9px;font-weight:850;letter-spacing:1.25px}
 .global-menu-panel [hidden]{display:none!important}
+
+/* Color-coded navigation section labels */
+.global-menu-group{padding:13px 12px 6px}
+.global-menu-group span{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:"Trebuchet MS",Verdana,sans-serif;
+  font-size:10px;font-weight:900;letter-spacing:1.45px;
+  text-transform:uppercase;line-height:1.4;
+  text-shadow:0 0 14px currentColor
+}
+.global-menu-group[data-admin-group] span{color:#ff6578}
+.global-menu-group[data-account-group] span{color:#55ddff}
+.global-menu-group:not([data-admin-group]):not([data-account-group]):not([data-visitor-group]) span{color:#9be58a}
+.global-menu-group[data-visitor-group] span{color:#ffc66b}
+.global-menu-group[data-admin-group] span:before{content:"◆";font-size:9px}
+.global-menu-group[data-account-group] span:before{content:"●";font-size:8px}
+.global-menu-group[data-visitor-group] span:before{content:"✦";font-size:10px}
+.global-menu-panel .global-menu-account{display:flex;flex-wrap:wrap;align-items:center;gap:7px 9px;padding:12px;margin-top:3px;border-color:rgba(142,174,255,.18);background:rgba(255,255,255,.035)}
+.global-account-email{min-width:0;max-width:100%;overflow-wrap:anywhere;color:#eaf0ff;font-size:11px;font-weight:650}
+.global-role-badge{display:inline-flex;align-items:center;justify-content:center;padding:4px 8px;border:1px solid transparent;border-radius:999px;font-family:"Trebuchet MS",Verdana,sans-serif;font-size:9px;font-weight:900;letter-spacing:1px;line-height:1.2}
+.global-role-badge[data-role="admin"]{color:#ff6377;background:rgba(255,55,83,.14);border-color:rgba(255,89,112,.45);box-shadow:0 0 12px rgba(255,55,83,.12)}
+.global-role-badge[data-role="customer"]{color:#65e2a4;background:rgba(36,196,126,.13);border-color:rgba(76,224,157,.4)}
+.global-role-badge[data-role="worker"]{color:#69c9ff;background:rgba(57,159,255,.13);border-color:rgba(91,187,255,.4)}
+.global-role-badge[data-role="staff"]{color:#c7a1ff;background:rgba(151,99,255,.14);border-color:rgba(184,146,255,.4)}
+.global-role-badge[data-role="moderator"]{color:#ffd078;background:rgba(255,184,65,.13);border-color:rgba(255,199,105,.4)}
+.global-role-badge[data-role="other"]{color:#d6deef;background:rgba(150,170,205,.12);border-color:rgba(150,170,205,.3)}
