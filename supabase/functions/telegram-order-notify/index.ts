@@ -170,7 +170,7 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({ ...changes, updated_at: new Date().toISOString() })
     });
     const rows = await res.json();
-    if (!res.ok) { console.error("Order update failed", res.status, rows); throw new Error("Database update failed"); }
+    if (!res.ok) { console.error("Order update failed", res.status, rows); const detail = String(rows?.message || rows?.details || rows?.hint || rows?.code || "Periksa izin database dan nilai status yang diizinkan."); throw new Error("Database update failed (" + res.status + "): " + detail.slice(0, 220)); }
     if (!rows?.length) throw new Error("No order updated");
   };
 
@@ -451,7 +451,7 @@ Deno.serve(async (req: Request) => {
         const order = await queryOrder(number);
         if (!order) await editMessage(chatId, messageId, "❌ Pesanan tidak ditemukan.", { reply_markup: mainMenu });
         else {
-          const statuses = [["Menunggu","🟡 Menunggu"],["Diproses","🔵 Diproses"],["Selesai","🟢 Selesai"],["Dibatalkan","🔴 Dibatalkan"]];
+          const statuses = [["Menunggu","🟡 Menunggu"],["Dalam pengerjaan","🔵 Dalam pengerjaan"],["Menunggu konfirmasi client","🟣 Menunggu konfirmasi client"],["Selesai","🟢 Selesai"],["Ditunda","⏸️ Ditunda"]];
           const keyboard = statuses.map(([v, label]) => [{ text: label, callback_data: `asks|${number}|${v}` }]);
           keyboard.push([{ text: "⬅️ Kembali", callback_data: `open|${number}` }]);
           await editMessage(chatId, messageId, `🔄 <b>UBAH STATUS</b>\n\nPesanan: <code>${esc(number)}</code>\nStatus saat ini: <b>${esc(order.status)}</b>\n\nPilih status baru:`, { reply_markup: { inline_keyboard: keyboard } });
@@ -459,7 +459,7 @@ Deno.serve(async (req: Request) => {
       } else if (action === "asks") {
         await editMessage(chatId, messageId, `⚠️ <b>KONFIRMASI STATUS</b>\n\nUbah status pesanan <code>${esc(number)}</code> menjadi <b>${esc(value)}</b>?`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ya, simpan", callback_data: `saves|${number}|${value}` }, { text: "❌ Batal", callback_data: `open|${number}` }]] } });
       } else if (action === "saves") {
-        if (!["Menunggu", "Diproses", "Selesai", "Dibatalkan"].includes(value)) throw new Error("Invalid status value");
+        if (!["Menunggu", "Dalam pengerjaan", "Menunggu konfirmasi client", "Selesai", "Ditunda"].includes(value)) throw new Error("Status tidak valid untuk database.");
         await updateOrder(number, { status: value });
         const order = await queryOrder(number);
         await editMessage(chatId, messageId, `✅ <b>STATUS BERHASIL DIPERBARUI</b>\n\n${formatOrder(order)}`, { reply_markup: orderKeyboard(number) });
@@ -554,16 +554,16 @@ Deno.serve(async (req: Request) => {
         }
       }
     } else if (command === "/status") {
-      if (!arg || !parts[2]) await sendMessage(chatId, "Format: <code>/status NOMOR Menunggu|Diproses|Selesai|Dibatalkan</code>");
+      if (!arg || !parts[2]) await sendMessage(chatId, "Format: <code>/status NOMOR STATUS</code>\\nStatus yang didukung: <code>Menunggu</code>, <code>Dalam pengerjaan</code>, <code>Menunggu konfirmasi client</code>, <code>Selesai</code>, <code>Ditunda</code>.");
       else {
-        const raw = parts.slice(2).join(" ").toLowerCase();
-        const status = ["menunggu", "diproses", "selesai", "dibatalkan"].find(s => s === raw);
+        const raw = parts.slice(2).join(" ").trim().toLowerCase();
+        const status = ["Menunggu", "Dalam pengerjaan", "Menunggu konfirmasi client", "Selesai", "Ditunda"].find(s => s.toLowerCase() === raw);
         if (!status) await sendMessage(chatId, "Status tidak valid.");
         else {
           const order = await queryOrder(arg);
           if (!order) await sendMessage(chatId, "❌ Pesanan tidak ditemukan.");
           else {
-            const label = status[0].toUpperCase() + status.slice(1);
+            const label = status;
             await updateOrder(arg, { status: label });
             await sendMessage(chatId, `✅ Status pesanan <code>${esc(arg)}</code> diubah menjadi <b>${label}</b>.`, { reply_markup: orderKeyboard(arg) });
           }
