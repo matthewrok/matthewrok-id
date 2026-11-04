@@ -20,7 +20,6 @@
 
   <!-- MAIN CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/auth-visitor.css">
 
   <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -40,103 +39,6 @@
   <!-- BACKGROUND EFFECTS -->
   <div class="bg"></div>
   <div class="embers" id="embers"></div>
-
-  <!-- =================================
-       LOGIN / REGISTER
-  ================================== -->
-
-  <main id="authScreen" class="auth-screen">
-
-    <div class="auth-card">
-
-      <div class="dragon-emblem"><img src="assets/images/brand/logo-matthew.png" alt="Logo Matthew"></div>
-
-      <h1>MATTHEW</h1>
-
-      <p class="creator">
-        CREATOR: MATTHEW.rmn
-      </p>
-
-      <p class="kicker">
-        KINGDOM MEMBER ACCESS
-      </p>
-
-      <form id="authForm">
-
-        <div id="nameField" class="field hidden">
-          <label for="fullName">Nama lengkap</label>
-          <input
-            id="fullName"
-            type="text"
-            placeholder="Nama kamu"
-            autocomplete="name"
-          >
-        </div>
-
-        <div class="field">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            placeholder="nama@email.com"
-            required
-            autocomplete="email"
-          >
-        </div>
-
-        <div class="field">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Minimal 6 karakter"
-            required
-            minlength="6"
-            autocomplete="current-password"
-          >
-        </div>
-        <div id="confirmPasswordField" class="field hidden">
-          <label for="confirmPassword">Konfirmasi password</label>
-          <input id="confirmPassword" type="password" placeholder="Tulis ulang password" minlength="6" autocomplete="new-password">
-        </div>
-        <p class="auth-recovery-link"><a href="reset-password.html">Lupa kata sandi?</a></p>
-
-        <button
-          id="submitButton"
-          class="btn btn-gold btn-full"
-          type="submit"
-        >
-          LOGIN
-        </button>
-
-      </form>
-
-      <div class="visitor-divider"><span>ATAU</span></div>
-      <section class="home-visitor" aria-labelledby="visitorTitle">
-        <div class="home-visitor-mark" aria-hidden="true">♟</div>
-        <h2 id="visitorTitle">MASUK SEBAGAI VISITOR</h2>
-        <p>Jelajahi website tanpa membuat akun. Cukup masukkan nama kamu.</p>
-        <form id="homeVisitorForm">
-          <label for="homeVisitorName">Nama pengunjung</label>
-          <input id="homeVisitorName" name="visitorName" type="text" minlength="2" maxlength="60" autocomplete="name" placeholder="Masukkan nama kamu" required>
-          <button class="btn btn-outline btn-full" id="homeVisitorButton" type="submit">MASUK SEBAGAI TAMU</button>
-        </form>
-        <small>Akses visitor bersifat sementara dan berakhir setelah 30 menit tidak aktif.</small>
-      </section>
-
-      <div id="authMessage" aria-live="polite"></div>
-
-      <div class="auth-switch">
-        <span id="switchText">Belum punya akun?</span>
-
-        <button id="switchMode" type="button">
-          Daftar sekarang
-        </button>
-      </div>
-
-    </div>
-
-  </main>
 
   <!-- =================================
        MAIN WEBSITE
@@ -521,9 +423,8 @@
   ================================== -->
 
   <script defer src="assets/js/home-announcement.js?v=20261104"></script>
-  <script defer src="assets/js/home.js"></script>
-  <script defer src="assets/js/home-auth.js"></script>
-  <script defer src="assets/js/home-visitor.js"></script>
+  <script defer src="assets/js/home.js?v=20261104-single-login"></script>
+    <script defer src="assets/js/home-visitor.js"></script>
   <script defer src="assets/js/home-effects.js"></script>
   <script defer src="assets/js/home-navigation.js"></script>
   <script defer src="assets/js/home-orders.js?v=20261104-5"></script>
