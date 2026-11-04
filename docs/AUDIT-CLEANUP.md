@@ -110,3 +110,11 @@ Pemeriksaan definisi RPC Supabase dan pemanggil frontend menemukan ketidaksesuai
 - Perbaikan yang direkomendasikan: kontrak lookup minimal mengembalikan data progres yang memang boleh dilihat pemilik token, termasuk nomor order, jumlah karakter, dan total jika kebijakan privasi mengizinkan; lalu gunakan token pelacakan berentropi tinggi yang terpisah, dan tambahkan pembatasan percobaan/monitoring sesuai kemampuan backend.
 
 Catatan ini berasal dari pemeriksaan definisi fungsi dan kode frontend; belum merupakan perubahan database. Uji browser dan end-to-end tetap diperlukan.
+
+
+## Kandidat perbaikan kontrak lookup — 5 November 2026
+
+- Menambahkan `supabase/lookup-joki-progress-contract.sql` pada branch kerja untuk menyelaraskan hasil RPC dengan data yang memang dibaca halaman pelacakan: nomor order, nama client, layanan, jumlah karakter, total, status, persentase, catatan, dan waktu pembaruan.
+- Skrip ini **belum dijalankan di Supabase produksi**. Skrip diberi penanda kandidat karena masih menggunakan `joki_progress.token` lama sebagai kunci lookup dan dengan sendirinya tidak menyelesaikan masalah entropi token.
+- Sebelum penerapan, perubahan lookup ini harus digabungkan secara terkoordinasi dengan desain token pelacakan baru, kompatibilitas pesanan lama, dan pemeriksaan pemanggil Telegram/admin. Jangan menjalankan skrip ini secara terpisah sebagai perbaikan keamanan final.
+- Perubahan ini memperbaiki kontrak data yang tidak lengkap pada level rancangan; validasi runtime masih menunggu penerapan migrasi dan uji end-to-end.
