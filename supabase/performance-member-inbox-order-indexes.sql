@@ -6,4 +6,3 @@ create index if not exists idx_profile_role_audit_actor_user_id on public.profil
 create index if not exists idx_site_notifications_created_by on public.site_notifications(created_by);
 create index if not exists idx_vouchers_created_by on public.vouchers(created_by);
 create index if not exists idx_joki_progress_client_email_lower_created_at on public.joki_progress (lower(client_email), created_at desc) where order_number is not null;
-create index if not exists idx_inbox_recipients_user_read on public.inbox_recipients(user_id, read_at);
