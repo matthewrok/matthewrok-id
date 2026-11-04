@@ -88,3 +88,14 @@ footer{margin-top:30px;padding:18px 0 0;border-top:1px solid var(--line);color:v
 @media(max-width:850px){.admin-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));position:relative;top:auto}}
 @media(max-width:600px){.admin-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:7px}.admin-shortcuts a{padding:9px 7px}.admin-shortcuts strong{font-size:10px}.admin-shortcuts small{font-size:9px}.admin-guide{display:grid;gap:4px}.section[id]{padding:16px;margin-top:20px}.section[id] form.admin-form{grid-template-columns:1fr;padding:12px}.section[id] form.admin-form label:nth-child(2){grid-column:auto}.section[id] form.admin-form button{width:100%}}
 @media(prefers-reduced-motion:reduce){.admin-shortcuts a{transition:none}}
+
+/* ADMIN OVERVIEW METRICS + ACTIVITY TIMELINE */
+.admin-stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:0}
+.admin-stats .card{min-height:112px}
+.activity-feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.activity-item{display:grid;gap:5px;min-width:0;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.16)}
+.activity-kind{width:max-content;padding:3px 8px;border:1px solid var(--line-2);border-radius:20px;color:var(--gilt);font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.activity-item strong{color:var(--text);font-size:12px;overflow-wrap:anywhere}
+.activity-item p{margin:0;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.activity-item time{margin-top:4px;color:var(--faint);font-size:10px}
+@media(max-width:700px){.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.activity-feed{grid-template-columns:1fr}}
