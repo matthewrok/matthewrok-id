@@ -14,13 +14,13 @@
     const p=products[selected]; if(!p||!quantity)return;
     // Jangan paksa input kembali ke 1 setiap pengguna menghapus angka.
     const raw=quantity.value.trim();
-    const qty=raw===""?0:Math.max(0,Math.min(20,Number(raw)||0));
+    const qty=raw===""?0:Math.max(0,Math.min(12,Number(raw)||0));
     const subtotal=qty>0?p.price*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0; $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—"; $("jokiOrderDiscount").textContent=money(discount); $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
   }
   function normalizeQuantity(){
     if(!quantity)return;
     const raw=quantity.value.trim();
-    const qty=raw===""?1:Math.max(1,Math.min(20,Math.floor(Number(raw)||1)));
+    const qty=raw===""?1:Math.max(1,Math.min(12,Math.floor(Number(raw)||1)));
     quantity.value=String(qty);
     updateTotal();
   }
@@ -107,10 +107,17 @@
     if(completedWhatsappUrl){window.open(completedWhatsappUrl,"_blank","noopener");return;}
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
     if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
+    const kingdomInput=$("jokiOrderKingdom");
+    const kingdomNumber=(kingdomInput?.value||"").trim();
+    if(!/^[0-9]{1,12}$/.test(kingdomNumber)){
+      $("jokiOrderMessage").textContent="Nomor Kingdom wajib diisi dengan angka (1–12 digit).";
+      kingdomInput?.focus();
+      return;
+    }
     normalizeQuantity();
     const requestedQty=Number(quantity.value);
-    if(!Number.isInteger(requestedQty)||requestedQty<1||requestedQty>20){
-      $("jokiOrderMessage").textContent="Jumlah karakter harus antara 1 sampai 20.";
+    if(!Number.isInteger(requestedQty)||requestedQty<1||requestedQty>12){
+      $("jokiOrderMessage").textContent="Jumlah karakter harus antara 1 sampai 12.";
       return;
     }
     // Buka tab kosong saat klik masih dianggap interaksi pengguna oleh browser mobile.
@@ -122,7 +129,8 @@
     try{
       const {data,error}=await db.rpc("create_joki_order",{
         p_client_name:identity.name,p_client_email:identity.email||"",
-        p_product_code:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null
+        p_product_code:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null,
+        p_kingdom_number:kingdomNumber
       });
       if(error)throw error;
       const order=Array.isArray(data)?data[0]:data;
@@ -131,6 +139,7 @@
         "HALO MATTHEW, SAYA INGIN KONFIRMASI PESANAN JOKI.","",
         "=== DETAIL PESANAN MATTHEW JOKI ===",
         "No. Order: "+order.order_number,"Nama Client: "+order.client_name,
+        "Kingdom: "+kingdomNumber,
         "Email: "+(order.client_email||"Visitor"),"Produk: "+order.service_name,
         "Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price),
         "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
