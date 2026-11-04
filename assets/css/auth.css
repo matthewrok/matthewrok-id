@@ -237,3 +237,10 @@ footer{color:var(--faint)}
 .register-kicker{font-size:9px;letter-spacing:1.2px;color:#a9dfff;font-weight:700}
 .register-main{font-size:13px;font-weight:800;letter-spacing:.2px;color:#fff}
 @media(max-width:420px){.login-options{flex-direction:column}.login-links{width:100%;align-items:stretch}.login-links .forgot-link{align-self:flex-start}.register-highlight{width:100%}}
+
+/* Registration prompt: subtle text, same typography as password recovery link */
+.login-links{align-items:flex-end;gap:7px}
+.register-prompt{margin:0;color:#8bdfff;font-size:11px;line-height:1.5;text-align:right}
+.register-prompt .forgot-link{font-size:11px;font-weight:600;color:#8bdfff!important;text-decoration:underline;text-underline-offset:3px}
+.register-prompt .forgot-link:hover{color:#fff!important}
+@media(max-width:420px){.login-links{align-items:flex-start}.register-prompt{text-align:left}}
