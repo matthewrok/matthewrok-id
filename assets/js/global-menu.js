@@ -4,6 +4,7 @@
     const root = document.createElement("div");
     root.className = "global-menu";
     root.innerHTML = `
+      <a class="global-inbox-trigger" href="/inbox.html" aria-label="Buka Inbox Matthew" title="Inbox Matthew"><span aria-hidden="true">✉</span><span class="global-inbox-label">Inbox Matthew</span></a>
       <button class="global-menu-trigger" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="globalMenuPanel">⋮</button>
       <nav class="global-menu-panel" id="globalMenuPanel" aria-label="Navigasi website" inert>
         <div class="global-menu-heading"><strong>MATTHEW JOKI</strong><span>DRAGON KINGDOM · NAVIGASI</span></div>
@@ -13,7 +14,6 @@
         <a href="/joki-matthew.html"><span class="global-menu-icon">♛</span>Lacak Progress</a>
         <a href="/support-matthew.html"><span class="global-menu-icon">♡</span>Support Matthew</a>
         <a href="/worker.html"><span class="global-menu-icon">♟</span>Daftar Worker</a>
-        <a href="/inbox.html"><span class="global-menu-icon">✉</span>Inbox Matthew</a>
         <div class="global-menu-divider"></div>
         <a href="/login.html"><span class="global-menu-icon">↪</span>Login Member / Visitor</a>
         <a href="/register.html"><span class="global-menu-icon">＋</span>Daftar Akun</a>
