@@ -28,3 +28,15 @@
 .order-empty strong{display:block;color:#e1f2ff;font-size:16px;margin-bottom:5px}
 .order-error{color:#ffaaa8!important}
 @media(max-width:560px){.orders-heading{align-items:flex-start}.orders-heading h2{font-size:18px}.your-order-card-head{padding:15px 14px 10px}.your-order-code-row{margin:0 14px;padding:10px}.your-order-code{font-size:12px}.your-order-total-row{padding:13px 14px}.your-order-total-row strong{font-size:17px}.your-order-progress{margin-left:14px;margin-right:14px}.your-order-actions{padding:0 14px 14px}.order-details{padding:14px}.order-details-grid{grid-template-columns:1fr}.your-order-status{font-size:9px}}
+
+
+/* Secure order history timeline */
+.order-history{margin-top:20px;padding-top:16px;border-top:1px solid rgba(125,190,255,.2)}
+.order-history h4{margin:0 0 12px;color:#9bd8ff;font-size:.95rem;letter-spacing:.04em}
+.order-history-empty{color:rgba(220,235,255,.65);font-size:.88rem}
+.order-history-list{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid rgba(65,155,255,.38);display:grid;gap:14px}
+.order-history-list li{position:relative;padding:0 0 0 12px}
+.order-history-list li:before{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#56b8ff;left:-19px;top:5px;box-shadow:0 0 12px rgba(66,170,255,.6)}
+.order-history-list strong{display:block;color:#e8f4ff;font-size:.9rem}
+.order-history-list p{margin:4px 0;color:rgba(220,235,255,.82);font-size:.86rem;overflow-wrap:anywhere}
+.order-history-list small{color:rgba(165,195,225,.72);font-size:.76rem}
