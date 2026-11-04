@@ -20,7 +20,7 @@
         <a href="/login.html" data-visitor-only><span class="global-menu-icon">↪</span>Login Member / Visitor</a>
         <a href="/register.html" data-visitor-only><span class="global-menu-icon">＋</span>Daftar Akun</a>
         <a href="/reset-password.html" data-visitor-only><span class="global-menu-icon">⌑</span>Lupa Kata Sandi</a>
-        <a href="/admin/dashboard.html" data-auth-only hidden data-admin-link><span class="global-menu-icon">♜</span>Admin Dashboard</a>
+        <a href="/admin/dashboard.html" data-admin-link hidden><span class="global-menu-icon">♜</span>Admin Dashboard</a>
         <a href="/admin/joki-progress.html" data-auth-only hidden data-admin-link><span class="global-menu-icon">✓</span>Kelola Progres Client</a>
         <div class="global-menu-divider"></div>
         <a class="global-menu-account" href="/login.html" data-auth-only hidden data-account-link>Masuk untuk mengakses akun</a>
