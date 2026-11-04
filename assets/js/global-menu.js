@@ -11,6 +11,7 @@
         <a href="/index.html"><span class="global-menu-icon">⌂</span>Beranda · Kenali Matthew</a>
         <a href="/calculator-resource.html"><span class="global-menu-icon">⚖</span>Calculator Resource</a>
         <a href="/requirements-city-hall.html"><span class="global-menu-icon">♜</span>Requirements City Hall</a>
+        <a href="/your-order.html" data-member-link><span class="global-menu-icon">▤</span>Your Order</a>
         <a href="/joki-matthew.html"><span class="global-menu-icon">♛</span>Lacak Progress</a>
         <a href="/support-matthew.html"><span class="global-menu-icon">♡</span>Support Matthew</a>
         <a href="/worker.html"><span class="global-menu-icon">♟</span>Daftar Worker</a>
