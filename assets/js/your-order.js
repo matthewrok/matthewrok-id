@@ -5,6 +5,7 @@
   const money = value => "Rp" + Number(value || 0).toLocaleString("id-ID");
   const date = value => value ? new Date(value).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}) : "—";
   const escapeText = value => String(value ?? "");
+  let loadingOrders = false;
   function setState(message, type="") {
     const el=$("ordersState"); el.textContent=message; el.className="feature-state"+(type?" "+type:"");
   }
@@ -78,8 +79,10 @@
     card.append(actions,details); return card;
   }
   async function loadOrders() {
+    if (loadingOrders) return;
+    loadingOrders = true;
     const list=$("ordersList"); list.replaceChildren();
-    if(!db){setState("Layanan pesanan belum siap. Muat ulang halaman.","error");return;}
+    if(!db){setState("Layanan pesanan belum siap. Muat ulang halaman.","error");loadingOrders=false;return;}
     const button=$("refreshOrders"); button.disabled=true;
     try {
       const {data:{user},error:authError}=await db.auth.getUser();
@@ -95,8 +98,10 @@
     } catch(error) {
       console.error("[Your Order]",error);
       setState("Pesanan belum dapat dimuat. Pastikan kamu login dan fungsi list_my_joki_orders tersedia di database. "+(error.message||""),"error");
-    } finally {button.disabled=false;}
+    } finally {button.disabled=false;loadingOrders=false;}
   }
   $("refreshOrders")?.addEventListener("click",loadOrders);
+  window.setInterval(() => { if (!document.hidden) loadOrders(); }, 45000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) loadOrders(); });
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",loadOrders,{once:true});else loadOrders();
 })();
