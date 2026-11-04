@@ -726,3 +726,29 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 
 /* Do not flash an empty ticker before the active announcement is loaded. */
 .announcement-ticker[hidden]{display:none!important}
+
+
+/* Compact pricing summary in the ORDER REGISTRATION modal */
+.joki-order-total{
+  margin:6px 0!important;
+  padding:9px 12px!important;
+  gap:8px!important;
+  border-radius:8px!important;
+}
+.joki-order-total span{
+  font-size:11px!important;
+  line-height:1.25!important;
+}
+.joki-order-total strong{
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:700!important;
+}
+.joki-order-total:last-of-type{
+  margin-top:8px!important;
+}
+@media(max-width:600px){
+  .joki-order-total{padding:8px 10px!important;margin:5px 0!important}
+  .joki-order-total span{font-size:10px!important}
+  .joki-order-total strong{font-size:14px!important}
+}
