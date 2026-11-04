@@ -29,7 +29,7 @@
         <a href="/register.html" data-visitor-only hidden><span class="global-menu-icon">＋</span>Daftar Akun</a>
         <a href="/reset-password.html" data-visitor-only hidden><span class="global-menu-icon">⌑</span>Lupa Kata Sandi</a>
         <div class="global-menu-divider" data-account-divider hidden></div>
-        <a class="global-menu-account" href="#" data-auth-only hidden data-account-link>Keluar dari akun</a>
+        <a class="global-menu-account" href="#" data-auth-only hidden data-account-link><span class="global-account-email" data-account-email></span><span class="global-role-badge" data-role-badge>MEMBER</span></a>
       </nav>`;
     document.body.appendChild(root);
 
@@ -108,7 +108,7 @@
         }
         panel.querySelectorAll("[data-auth-only], [data-account-group], [data-account-divider]").forEach(el => el.hidden = false);
         panel.querySelectorAll("[data-visitor-only], [data-visitor-group], [data-visitor-divider]").forEach(el => el.hidden = true);
-        panel.querySelector('[data-account-link]').textContent = user.email || "Akun aktif";
+        panel.querySelector("[data-account-email]").textContent = user.email || "Akun aktif";
         panel.querySelector('[data-account-link]').href = "#";
         panel.querySelector('[data-account-link]').addEventListener("click", async event => {
           event.preventDefault();
@@ -146,6 +146,20 @@
         } catch (error) { console.warn("Pembaruan Inbox realtime tidak tersedia.", error); }
         try {
           const {data: profile} = await client.from("profiles").select("role").eq("id", user.id).maybeSingle();
+          const role = String(profile?.role || "member").toLowerCase();
+          const roleBadge = panel.querySelector("[data-role-badge]");
+          const roleLabels = {
+            admin: ["ADMIN", "admin"],
+            member: ["PELANGGAN", "customer"],
+            customer: ["PELANGGAN", "customer"],
+            pelanggan: ["PELANGGAN", "customer"],
+            worker: ["WORKER", "worker"],
+            staff: ["STAFF", "staff"],
+            moderator: ["MODERATOR", "moderator"]
+          };
+          const roleInfo = roleLabels[role] || [role.replace(/[_-]+/g, " ").toUpperCase(), "other"];
+          roleBadge.textContent = roleInfo[0];
+          roleBadge.dataset.role = roleInfo[1];
           if (profile?.role === "admin") {
             panel.querySelectorAll("[data-admin-link], [data-admin-group]").forEach(el => el.hidden = false);
             const adminGroup = panel.querySelector("[data-admin-group]");
