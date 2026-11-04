@@ -41,3 +41,18 @@ Memisahkan nomor order yang boleh dibagikan untuk administrasi dari token rahasi
 - `lookup_joki_progress` yang ada di database belum mengembalikan semua kolom yang dibaca frontend.
 - Advisory Supabase juga menandai leaked-password protection nonaktif serta dua tabel RLS tanpa policy. Jangan menambah policy baca umum pada tabel riwayat atau state Telegram hanya untuk menghilangkan warning; akses service-role-only mungkin memang disengaja.
 - Tidak ada DDL produksi yang dijalankan sebagai bagian dari rancangan ini.
+
+
+## Preflight database (read-only)
+
+File `supabase/tracking-token-preflight.sql` ditambahkan sebagai inventaris sebelum menyusun DDL final. Query hanya membaca metadata dan agregat; tidak mengubah tabel, function, grant, maupun data. Jalankan dan simpan hasilnya sebelum migrasi agar signature, dependency, indeks, grant, dan pola token aktual dapat diverifikasi.
+
+### Temuan implementasi frontend yang sudah dikonfirmasi
+
+- Form order otomatis saat ini hanya membaca `order_number` dari RPC dan memasukkannya ke pesan WhatsApp; belum ada properti token pelacakan terpisah.
+- Halaman pelacakan mengirim input yang sama ke tiga RPC: lookup progres, lookup ulasan, dan submit ulasan.
+- Panel admin membuat token manual 256-bit, tetapi menyimpannya ke kolom legacy `token`; perubahan kolom harus mengubah jalur insert, select, copy, dan edit secara bersamaan.
+- `list_my_joki_orders()` saat ini mengembalikan detail order berdasarkan email akun, tetapi belum mengembalikan token pelacakan. Jangan menambahkan token ke daftar riwayat secara otomatis tanpa memutuskan apakah fitur pemulihan token memang diperlukan dan memastikan akses hanya untuk pemilik.
+- Script `lookup-joki-progress-contract.sql` adalah kandidat terpisah yang masih mencari melalui kolom `token`; jangan jalankan bersamaan atau sebelum migrasi token final karena akan mempertahankan kontrak lama.
+
+Preflight belum dijalankan pada database produksi. Hasilnya harus ditinjau terlebih dahulu; khususnya dependency function dan policy/grant perlu diverifikasi sebelum membuat migrasi final.
