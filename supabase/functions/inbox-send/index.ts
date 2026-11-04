@@ -62,7 +62,7 @@ Deno.serve(async (req: Request) => {
   );
   const profiles = await profileResponse.json();
   if (!profileResponse.ok || !profiles?.[0]) return json({ error: "Profil akun tidak ditemukan." }, 403);
-  if (!["admin", "MATTHEW"].includes(profiles[0].role)) {
+  if (profiles[0].role !== "admin") {
     return json({ error: "Kamu tidak memiliki izin mengirim pesan Inbox." }, 403);
   }
 
