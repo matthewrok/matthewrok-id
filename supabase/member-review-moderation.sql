@@ -29,7 +29,7 @@ begin
   if not found then raise exception 'Pesanan tidak ditemukan pada akun ini.'; end if;
   if v_order.status <> 'Selesai' then raise exception 'Ulasan hanya dapat diberikan setelah pesanan selesai.'; end if;
   insert into public.joki_reviews(joki_progress_id,client_name,rating,review_text,display_name,moderation_status)
-  values(v_order.id,v_order.client_name,p_rating,btrim(p_review_text),coalesce(p_display_name,false),'pending');
+  values(v_order.id,v_order.client_name,p_rating,btrim(p_review_text),coalesce(p_display_name,false),'approved');
 exception when unique_violation then raise exception 'Pesanan ini sudah memiliki ulasan.';
 end;
 $$;
