@@ -34,12 +34,42 @@
       root.setAttribute("aria-hidden", authGateVisible ? "true" : "false");
     };
     syncAuthMenuVisibility();
+
+    // Hide both floating controls while the order dialog is visible.
+    // Use JS as well as CSS so this remains reliable across cached stylesheets.
+    const orderModal = document.getElementById("jokiOrderModal");
+    const syncOrderModalVisibility = () => {
+      const orderOpen = Boolean(orderModal && !orderModal.classList.contains("hidden"));
+      const authGateVisible = (authScreen && !authScreen.classList.contains("hidden")) || Boolean(loginForm);
+      const shouldHide = orderOpen || authGateVisible;
+      root.style.setProperty("display", shouldHide ? "none" : "");
+      root.setAttribute("aria-hidden", shouldHide ? "true" : "false");
+      if (shouldHide) {
+        const menuButton = root.querySelector(".global-menu-trigger");
+        const menuPanel = root.querySelector(".global-menu-panel");
+        menuButton?.setAttribute("aria-expanded", "false");
+        menuPanel?.classList.remove("is-open");
+        menuPanel?.setAttribute("inert", "");
+      }
+    };
+    syncOrderModalVisibility();
+    const visibilityObserver = new MutationObserver(syncOrderModalVisibility);
     if (authScreen) {
-      new MutationObserver(syncAuthMenuVisibility).observe(authScreen, {
+      visibilityObserver.observe(authScreen, {
         attributes: true,
         attributeFilter: ["class", "hidden", "style"]
       });
     }
+    if (orderModal) {
+      visibilityObserver.observe(orderModal, {
+        attributes: true,
+        attributeFilter: ["class", "hidden", "style"]
+      });
+    }
+    visibilityObserver.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
     const button = root.querySelector(".global-menu-trigger");
     const panel = root.querySelector(".global-menu-panel");
     const close = () => {
