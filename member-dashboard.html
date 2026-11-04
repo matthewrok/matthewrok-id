@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100b0d"><meta name="robots" content="noindex,nofollow">
+<title>Member Dashboard | MATTHEW JOKI</title>
+<link rel="stylesheet" href="/assets/css/tokens.css"><link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-7">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/js/supabase.js"></script><script defer src="/assets/js/session-manager.js"></script>
+<style>
+.member-shell{width:min(1120px,92%);margin:0 auto;padding:34px 0 70px}.member-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}.member-brand{font-family:var(--display);letter-spacing:.04em;color:var(--gilt)}.member-brand small{display:block;color:var(--muted);font:11px var(--body);letter-spacing:.12em}.member-hero{padding:clamp(24px,5vw,46px);border:1px solid var(--line-2);border-radius:18px;background:radial-gradient(ellipse at 90% 0,rgba(209,40,59,.22),transparent 50%),linear-gradient(135deg,#24151a,#120d12);margin-bottom:22px}.member-hero .eyebrow{color:var(--gilt);letter-spacing:.16em}.member-hero h1{font-size:clamp(25px,5vw,42px);margin:10px 0}.member-hero p{color:var(--muted)}.member-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}.member-stat,.member-panel{background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:20px}.member-stat span{display:block;color:var(--muted);font-size:12px}.member-stat strong{display:block;font:600 25px var(--display);margin-top:8px;color:var(--gilt)}.member-panels{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}.member-panel h2{font-size:17px;margin-bottom:14px}.member-order{padding:14px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:center}.member-order:first-of-type{border-top:0}.member-order small{display:block;color:var(--muted);margin-top:4px}.member-order button,.member-actions a,.member-actions button{border:1px solid var(--line-2);background:transparent;color:var(--gilt);padding:9px 12px;border-radius:8px;font-weight:700;font-size:11px;text-decoration:none}.member-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.member-note{padding:12px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px}.member-note strong{display:block;color:var(--text)}.member-muted{color:var(--muted)}.member-empty{padding:20px 0;color:var(--muted)}.member-status{color:var(--gilt);font-size:12px}.member-footer{margin-top:28px;text-align:center;color:var(--faint);font-size:11px}.member-error{padding:16px;border:1px solid #a33;border-radius:10px;color:#ffb7b7}
+@media(max-width:760px){.member-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.member-panels{grid-template-columns:1fr}.member-top{align-items:flex-start;flex-direction:column}.member-order{align-items:flex-start;flex-direction:column}}
+@media print{.member-top,.member-actions,.member-footer,.global-menu{display:none!important}.member-shell{width:100%;padding:0}.member-panel,.member-hero{break-inside:avoid;background:#fff!important;color:#111!important;border:1px solid #bbb}.member-hero p,.member-stat span,.member-note,.member-order small{color:#444!important}.member-stat strong{color:#111!important}}
+</style></head><body>
+<main class="member-shell">
+<div class="member-top"><a class="member-brand" href="/index.html">MATTHEW JOKI <small>KINGDOM MEMBER CENTER</small></a><button id="logoutBtn" class="member-actions" style="margin:0">KELUAR</button></div>
+<section class="member-hero"><span class="eyebrow">PERSONAL KINGDOM SPACE</span><h1>Halo, <span id="memberName">Member</span>.</h1><p>Selamat datang di pusat aktivitas akun MATTHEW JOKI. Pantau pesanan, notifikasi, dan perkembangan keanggotaanmu di sini.</p><div class="member-actions"><a href="/your-order.html">Lihat Semua Pesanan</a><a href="/index.html">Jelajahi Layanan</a></div></section>
+<div id="loadState" class="member-muted">Memuat data akun...</div>
+<section id="dashboardContent" hidden>
+<div class="member-grid">
+<div class="member-stat"><span>Total Pesanan</span><strong id="totalOrders">0</strong></div>
+<div class="member-stat"><span>Pesanan Selesai</span><strong id="completedOrders">0</strong></div>
+<div class="member-stat"><span>Dalam Proses</span><strong id="activeOrders">0</strong></div>
+<div class="member-stat"><span>Level Member</span><strong id="memberLevel">Bronze</strong></div>
+</div>
+<div class="member-panels">
+<section class="member-panel"><h2>Pesanan Terbaru</h2><div id="recentOrders" class="member-empty">Belum ada pesanan.</div><div class="member-actions"><a href="/your-order.html">Buka Your Order</a></div></section>
+<section class="member-panel"><h2>Notification Center</h2><div id="notifications" class="member-empty">Belum ada notifikasi.</div></section>
+</div>
+<div class="member-panel" style="margin-top:16px"><h2>Membership Progress</h2><p id="levelDescription" class="member-muted">Mulai gunakan layanan MATTHEW JOKI untuk meningkatkan level keanggotaan.</p><div style="height:8px;background:#33242b;border-radius:20px;overflow:hidden;margin:14px 0"><div id="levelBar" style="height:100%;width:0;background:var(--gilt);border-radius:20px"></div></div><div id="nextLevel" class="member-status"></div></div>
+</section>
+<p class="member-footer">MATTHEW JOKI · KINGDOM MEMBER CENTER</p></main>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+ const client=window.supabaseClient, state=document.getElementById("loadState"), content=document.getElementById("dashboardContent");
+ if(!client){state.textContent="Layanan akun belum tersedia. Muat ulang halaman.";return;}
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){location.replace("/login.html?next=member-dashboard.html");return;}
+ const user=session.user;
+ const [{data:profile,error:profileError},{data:orders,error:ordersError}]=await Promise.all([
+  client.from("profiles").select("full_name,role,account_status,created_at").eq("id",user.id).maybeSingle(),
+  client.rpc("list_my_joki_orders")
+ ]);
+ if(profileError){state.textContent="Profil gagal dimuat: "+profileError.message;return;}
+ if(profile?.account_status==="suspended"){await client.auth.signOut();location.replace("/login.html?reason=suspended");return;}
+ if(ordersError){state.textContent="Data pesanan gagal dimuat: "+ordersError.message;return;}
+ const list=orders||[], done=list.filter(o=>o.status==="Selesai").length, active=list.filter(o=>!["Selesai","Ditunda"].includes(o.status)).length;
+ const levels=[{name:"Bronze",min:0,next:3},{name:"Silver",min:3,next:8},{name:"Gold",min:8,next:15},{name:"Diamond",min:15,next:null}];
+ const level=[...levels].reverse().find(x=>done>=x.min)||levels[0], next=levels.find(x=>x.min===level.next);
+ document.getElementById("memberName").textContent=profile?.full_name||user.email.split("@")[0];
+ document.getElementById("totalOrders").textContent=list.length;
+ document.getElementById("completedOrders").textContent=done;
+ document.getElementById("activeOrders").textContent=active;
+ document.getElementById("memberLevel").textContent=level.name;
+ document.getElementById("levelDescription").textContent="Level "+level.name+" · dihitung dari jumlah pesanan berstatus Selesai.";
+ const progress=next?Math.min(100,Math.round((done-level.min)/(next.min-level.min)*100)):100;
+ document.getElementById("levelBar").style.width=progress+"%";
+ document.getElementById("nextLevel").textContent=next?("Selesaikan "+Math.max(0,next.min-done)+" pesanan lagi untuk mencapai "+next.name+"."): "Level tertinggi telah tercapai.";
+ const money=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n||0));
+ const recent=document.getElementById("recentOrders");
+ recent.innerHTML=list.length?list.slice(0,5).map(o=>'<div class="member-order"><div><strong>'+escapeHtml(o.service_name||"Layanan")+'</strong><small>'+escapeHtml(o.order_number||"—")+' · '+escapeHtml(o.status||"Menunggu")+' · '+money(o.total_price)+'</small></div><button type="button" data-invoice="'+escapeHtml(o.id)+'">INVOICE</button></div>').join(""):'<div class="member-empty">Belum ada pesanan. Pesanan yang dibuat dengan email akun ini akan muncul di sini.</div>';
+ const notes=list.slice().sort((a,b)=>new Date(b.updated_at||b.created_at)-new Date(a.updated_at||a.created_at)).slice(0,4);
+ document.getElementById("notifications").innerHTML=notes.length?notes.map(o=>'<div class="member-note"><strong>'+escapeHtml(o.order_number||"Pesanan")+' · '+escapeHtml(o.status||"Menunggu")+'</strong>'+escapeHtml(o.progress_note||("Status pesanan diperbarui. Progres "+(o.progress_percent||0)+"%."))+'<br><small>'+new Date(o.updated_at||o.created_at).toLocaleString("id-ID")+'</small></div>').join(""):'Belum ada pembaruan pesanan.';
+ recent.addEventListener("click",e=>{const btn=e.target.closest("[data-invoice]");if(!btn)return;const o=list.find(x=>x.id===btn.dataset.invoice);if(o)printInvoice(o,user.email);});
+ state.hidden=true;content.hidden=false;
+ document.getElementById("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();location.replace("/login.html");});
+ function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+ function printInvoice(o,email){
+  const w=window.open("","_blank","width=760,height=800");if(!w){alert("Izinkan pop-up untuk mencetak invoice.");return;}
+  const e=escapeHtml;
+  w.document.write('<!doctype html><html lang="id"><meta charset="utf-8"><title>Invoice '+e(o.order_number)+'</title><style>body{font:14px Arial;color:#222;max-width:720px;margin:40px auto;padding:0 20px}h1{letter-spacing:3px}header{border-bottom:2px solid #222;padding-bottom:18px}.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ddd}.total{font-size:20px;font-weight:bold}small{color:#666}</style><header><h1>MATTHEW JOKI</h1><b>INVOICE PESANAN</b><p>Kode: '+e(o.order_number)+'</p><small>Diterbitkan: '+new Date().toLocaleDateString("id-ID")+'</small></header><p>Nama: '+e(o.client_name||"—")+'<br>Email: '+e(email)+'</p><div class="row"><span>Layanan</span><b>'+e(o.service_name)+'</b></div><div class="row"><span>Jumlah</span><b>'+e(o.quantity)+'</b></div><div class="row"><span>Harga satuan</span><b>'+money(o.unit_price)+'</b></div><div class="row"><span>Subtotal</span><b>'+money(o.subtotal_price)+'</b></div><div class="row"><span>Voucher</span><b>'+e(o.voucher_code||"—")+'</b></div><div class="row"><span>Diskon</span><b>− '+money(o.discount_amount)+'</b></div><div class="row total"><span>Total</span><b>'+money(o.total_price)+'</b></div><p>Status: '+e(o.status)+' · Progres: '+e(o.progress_percent)+'%</p><p><small>Invoice ini merupakan ringkasan pesanan dari MATTHEW JOKI.</small></p><script>window.onload=()=>window.print()<\/script></html>');
+  w.document.close();
+ }
+});
+</script><script defer src="/assets/js/global-menu.js?v=20261104-7"></script></body></html>
