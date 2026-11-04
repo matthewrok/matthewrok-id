@@ -22,8 +22,7 @@ begin
   if auth.uid() is null then raise exception 'Silakan login untuk mengirim ulasan.'; end if;
   if p_rating is null or p_rating < 1 or p_rating > 5 then raise exception 'Rating harus antara 1 sampai 5 bintang.'; end if;
   if char_length(btrim(coalesce(p_review_text,''))) < 5 or char_length(coalesce(p_review_text,'')) > 700 then
-    raise exception 'Ulasan harus 5–700 karakter.';
-  end if;
+    raise exception 'Ulasan harus 5–700 karakter.'; end if;
   select lower(email) into v_email from auth.users where id = auth.uid();
   select * into v_order from public.joki_progress
     where id = p_order_id and lower(coalesce(client_email,'')) = v_email for share;
@@ -38,6 +37,7 @@ $$;
 revoke all on function public.submit_member_joki_review(uuid,integer,text,boolean) from public;
 grant execute on function public.submit_member_joki_review(uuid,integer,text,boolean) to authenticated;
 
+-- Public endpoint only returns admin-approved reviews. Names are shown only with client consent.
 create or replace function public.get_public_joki_reviews()
 returns table(client_name text,rating integer,review_text text,created_at timestamptz)
 language sql
@@ -47,8 +47,9 @@ as $$
   select case when r.display_name then r.client_name else 'Client Matthew' end,
          r.rating,r.review_text,r.created_at
   from public.joki_reviews r
-  where r.display_name = true and r.moderation_status = 'approved'
-  order by r.created_at desc limit 30;
+  where r.moderation_status = 'approved'
+  order by r.created_at desc
+  limit 30;
 $$;
 revoke all on function public.get_public_joki_reviews() from public;
 grant execute on function public.get_public_joki_reviews() to anon,authenticated;
