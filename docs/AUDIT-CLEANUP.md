@@ -17,7 +17,7 @@ Tanggal: 4 November 2026
 
 ## Aset gambar yang dipertahankan
 
-- `logo-matthew.png` di root — digunakan oleh `index.html`.
+- `assets/images/brand/logo-matthew.png` — logo utama yang direferensikan oleh `index.html`; dipindahkan dari root agar aset brand terstruktur.
 - `assets/images/qris-matthew.jpeg` — digunakan oleh `support-matthew.html`.
 - `assets/images/README.txt` — catatan bahwa visual naga/warrior hero dibuat dari inline SVG dan CSS.
 
@@ -47,6 +47,14 @@ Tanggal: 4 November 2026
 - `README.md` diperluas dengan peta fitur, struktur direktori, arsitektur frontend/backend, alur autentikasi, keamanan Supabase/RLS, integrasi Telegram, publikasi GitHub Pages, dan checklist pemeliharaan.
 - `docs/REPOSITORY-STRUCTURE.md` diperbarui dengan aturan pemindahan/penghapusan file, keamanan konfigurasi, dan checklist rilis.
 - Dokumentasi tidak mengklaim pengujian browser atau end-to-end yang belum dilakukan.
+
+## Penataan aset dan penghapusan legacy — 4 November 2026
+
+- Memindahkan `logo-matthew.png` dari root ke `assets/images/brand/logo-matthew.png` menggunakan blob Git yang sama, sehingga file gambar 6,9 MB tidak perlu diunggah ulang sebagai salinan.
+- Memperbarui dua referensi logo di `index.html` ke lokasi baru.
+- Memperbarui `README.md`, `docs/REPOSITORY-STRUCTURE.md`, dan `assets/images/README.txt` agar mencerminkan struktur aset terbaru.
+- Mengidentifikasi `assets/js/city-hall.js` sebagai skrip legacy yang tidak direferensikan oleh halaman maupun source yang dicari; fungsinya tampak berasal dari versi pencarian lama dan halaman City Hall saat ini menggunakan `assets/js/requirements.js`. File tersebut dihapus setelah pemeriksaan referensi statis.
+- Cache browser tidak bisa dibersihkan dari repository. Parameter `?v=...` adalah cache-busting URL dan bukan file cache yang harus dihapus.
 
 ## Batas verifikasi
 
