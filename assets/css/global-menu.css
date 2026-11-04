@@ -49,3 +49,8 @@ body:has(#jokiOrderModal:not(.hidden)) .global-menu,
 body.order-modal-open .global-menu,
 body:has(#jokiOrderModal:not(.hidden)) .global-inbox-trigger,
 body:has(#jokiOrderModal:not(.hidden)) .global-menu-trigger{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+
+/* Navigation hierarchy: account actions first, public exploration second */
+.global-menu-group{padding:10px 12px 5px}
+.global-menu-group span{display:block;color:#87a2d2;font-size:9px;font-weight:850;letter-spacing:1.25px}
+.global-menu-panel [hidden]{display:none!important}
