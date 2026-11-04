@@ -96,6 +96,9 @@
     panel.querySelectorAll("a").forEach(link => link.addEventListener("click", close));
 
     const client = window.supabaseClient;
+    const showVisitorNavigation = () => {
+      panel.querySelectorAll("[data-visitor-only], [data-visitor-group], [data-visitor-divider]").forEach(el => el.hidden = false);
+    };
     if (client && client.auth) {
       client.auth.getSession().then(async ({data}) => {
         const user = data?.session?.user;
@@ -151,7 +154,12 @@
             Array.from(panel.querySelectorAll("[data-admin-link]")).forEach(link => panel.insertBefore(link, accountGroup));
           }
         } catch (error) { console.warn("Peran akun tidak dapat dimuat untuk menu.", error); }
-      }).catch(error => console.warn("Sesi akun tidak dapat dimuat untuk menu.", error));
+      }).catch(error => {
+        console.warn("Sesi akun tidak dapat dimuat untuk menu.", error);
+        showVisitorNavigation();
+      });
+    } else {
+      showVisitorNavigation();
     }
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once:true});
