@@ -63,7 +63,7 @@
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
     $("jokiOrderProduct").textContent=p.name+" · "+p.display;
-    quantity.value="1";$("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
+    quantity.value="4";$("jokiOrderKingdom").value="";$("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
     const submit=$("jokiOrderSubmit");
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
     updateTotal();document.body.classList.add("order-modal-open");modal?.classList.remove("hidden");$("jokiOrderClose")?.focus();
@@ -116,8 +116,8 @@
     }
     normalizeQuantity();
     const requestedQty=Number(quantity.value);
-    if(!Number.isInteger(requestedQty)||requestedQty<1||requestedQty>12){
-      $("jokiOrderMessage").textContent="Jumlah karakter harus antara 1 sampai 12.";
+    if(!Number.isInteger(requestedQty)||requestedQty<4||requestedQty>12){
+      $("jokiOrderMessage").textContent="Jumlah karakter harus minimal 4 dan maksimal 12.";
       return;
     }
     // Buka tab kosong saat klik masih dianggap interaksi pengguna oleh browser mobile.
