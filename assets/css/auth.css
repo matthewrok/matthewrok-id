@@ -244,3 +244,10 @@ footer{color:var(--faint)}
 .register-prompt .forgot-link{font-size:11px;font-weight:600;color:#8bdfff!important;text-decoration:underline;text-underline-offset:3px}
 .register-prompt .forgot-link:hover{color:#fff!important}
 @media(max-width:420px){.login-links{align-items:flex-start}.register-prompt{text-align:left}}
+
+/* Final plain inline registration prompt */
+.login-options .login-links{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.login-options .register-prompt{display:block;margin:0;color:#8bdfff;font:400 11px/1.5 inherit;text-align:right}
+.login-options .register-prompt .forgot-link{display:inline;margin:0;font:600 11px/1.5 inherit;color:#8bdfff!important;text-decoration:none}
+.login-options .register-prompt .forgot-link:hover{text-decoration:underline}
+@media(max-width:420px){.login-options .login-links{align-items:flex-start}.login-options .register-prompt{text-align:left}}
