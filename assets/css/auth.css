@@ -149,3 +149,81 @@ footer{color:var(--faint)}
 .auth-resend-button:hover{background:rgba(232,194,122,.18)}
 .auth-resend-button:disabled{opacity:.6;cursor:wait}
 .auth-resend-button[hidden]{display:none}
+
+
+/* ROYAL BLUE AUTH REDESIGN — shared login and registration */
+.auth-shell{width:min(100% - 32px,620px);padding:clamp(22px,5vh,48px) 0 28px}
+.auth-container{
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:clamp(26px,5vw,48px);
+  border:1px solid rgba(111,190,255,.34)!important;
+  border-radius:24px!important;
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(46,139,255,.19),transparent 42%),
+    linear-gradient(145deg,rgba(13,37,67,.98),rgba(5,17,33,.99))!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.045)!important;
+}
+.auth-container:before{
+  content:"";position:absolute;z-index:-1;top:-125px;right:-105px;width:270px;height:270px;
+  border:1px solid rgba(118,205,255,.17);border-radius:50%;
+  box-shadow:0 0 0 24px rgba(75,151,255,.035),0 0 0 52px rgba(75,151,255,.025);
+  animation:authOrbit 32s linear infinite;
+}
+.auth-container:after{
+  content:"";position:absolute;z-index:-1;left:0;right:0;top:0;height:3px;
+  background:linear-gradient(90deg,transparent,#4c9dff,#83e4ff,transparent);
+}
+@keyframes authOrbit{to{transform:rotate(360deg)}}
+.crown{color:#8edfff!important;text-shadow:0 0 30px rgba(76,173,255,.45)!important;font-size:42px}
+.eyebrow{color:#80d7ff!important;letter-spacing:2.2px!important}
+.auth-container h1{color:#f0f8ff!important;text-shadow:0 0 28px rgba(73,153,255,.2)!important}
+.auth-container .section-title,.visitor-panel h2{color:#a9e5ff!important}
+.auth-container .intro,.visitor-note,.auth-link,.security-note{color:#abc2df!important}
+.auth-form{gap:10px}
+.auth-form label{color:#bfd3ec!important}
+.auth-form input,.password-wrap input{
+  min-height:48px;padding:12px 14px!important;border-radius:11px!important;
+  background:rgba(4,17,33,.82)!important;border:1px solid rgba(115,176,231,.28)!important;
+  color:#f3f8ff!important;transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.auth-form input:focus,.password-wrap input:focus{
+  border-color:#76d7ff!important;background:#071b32!important;
+  box-shadow:0 0 0 3px rgba(83,178,255,.13)!important;
+}
+.auth-form button,.visitor-form button{
+  min-height:48px;border-radius:11px!important;
+  background:linear-gradient(110deg,#2867d4,#188fc1)!important;
+  border:1px solid rgba(133,216,255,.55)!important;color:#fff!important;
+  box-shadow:0 10px 26px rgba(27,111,219,.22)!important;
+  letter-spacing:1.1px;transition:transform .18s,filter .18s,box-shadow .18s;
+}
+.auth-form button:hover,.visitor-form button:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.auth-form button:disabled{transform:none;opacity:.65}
+.visitor-panel{
+  border:1px solid rgba(113,190,255,.25)!important;border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(21,65,111,.34),rgba(5,20,38,.7))!important;
+}
+.visitor-icon{color:#8bdfff!important}
+.visitor-help{border-color:rgba(115,185,255,.16)!important;background:rgba(2,13,27,.34)!important}
+.visitor-help h3{color:#8bdfff!important}
+.visitor-help ul{color:#b7cce4!important}
+.guest-divider{color:#8faecc!important}
+.guest-divider:before,.guest-divider:after{background:rgba(115,185,255,.22)!important}
+.forgot-link,.auth-link a{color:#8bdfff!important}
+.remember-row{color:#c4d8ef!important}
+.remember-row input{accent-color:#4daeff}
+.auth-message{padding:0 2px}
+.auth-message.success{color:#80e0c1!important}
+.auth-message.error{color:#ff9aab!important}
+.password-wrap .password-toggle{border-radius:8px!important;background:rgba(44,113,190,.25)!important;color:#a9e5ff!important}
+.auth-resend-button{border-color:rgba(120,201,255,.35)!important;color:#9cddff!important;background:rgba(39,105,175,.14)!important}
+.auth-link{line-height:1.7}
+.back-link{color:#9bdfff!important}
+.auth-shell footer{color:#7899bc!important}
+@media(max-width:600px){
+ .auth-shell{width:min(100% - 22px,620px);padding-top:16px}
+ .auth-container{padding:25px 19px!important;border-radius:19px!important}
+ .auth-container:before{width:190px;height:190px;right:-95px;top:-95px}
+ .login-options{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){.auth-container:before{animation:none}}
