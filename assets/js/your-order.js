@@ -55,6 +55,7 @@
     addDetail(grid,"Nama client",order.client_name||"—");
     addDetail(grid,"Email akun",order.client_email||"—");
     addDetail(grid,"Paket layanan",order.service_name||"—");
+    addDetail(grid,"Kingdom",order.kingdom_number||"—");
     addDetail(grid,"Jumlah karakter",Number(order.quantity||0)+" karakter");
     addDetail(grid,"Harga per karakter",money(order.unit_price));
     addDetail(grid,"Subtotal",money(order.subtotal_price ?? order.total_price));
@@ -69,7 +70,7 @@
     const note=document.createElement("p"); note.className="order-detail-note"; note.textContent="Catatan admin: "+(order.progress_note||"Belum ada catatan dari admin."); details.appendChild(note);
     const copyDetails=document.createElement("button"); copyDetails.type="button"; copyDetails.className="copy-order-code"; copyDetails.textContent="⧉ Salin detail pesanan";
     copyDetails.addEventListener("click",()=>copyText([
-      "DETAIL PESANAN MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Nama: "+(order.client_name||"—"),"Email: "+(order.client_email||"—"),"Paket: "+(order.service_name||"—"),"Jumlah karakter: "+(order.quantity||0),"Harga per karakter: "+money(order.unit_price),"Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak digunakan"),"Diskon: "+money(order.discount_amount),"Total: "+money(order.total_price),"Status: "+(order.status||"Menunggu"),"Progress: "+(Number(order.progress_percent)||0)+"%","Dibuat: "+date(order.created_at),"Update: "+date(order.updated_at),"Catatan admin: "+(order.progress_note||"Belum ada catatan")
+      "DETAIL PESANAN MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Nama: "+(order.client_name||"—"),"Email: "+(order.client_email||"—"),"Paket: "+(order.service_name||"—"),"Kingdom: "+(order.kingdom_number||"—"),"Jumlah karakter: "+(order.quantity||0),"Harga per karakter: "+money(order.unit_price),"Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak digunakan"),"Diskon: "+money(order.discount_amount),"Total: "+money(order.total_price),"Status: "+(order.status||"Menunggu"),"Progress: "+(Number(order.progress_percent)||0)+"%","Dibuat: "+date(order.created_at),"Update: "+date(order.updated_at),"Catatan admin: "+(order.progress_note||"Belum ada catatan")
     ].join("\n"),copyDetails));
     details.appendChild(copyDetails);
     detailButton.setAttribute("aria-expanded","false");
