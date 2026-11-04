@@ -98,8 +98,10 @@
         observeRevealElements();
         return;
       }
-      authScreen?.classList.remove("hidden");
+      // Satu pintu autentikasi: gunakan halaman login.html yang baru.
+      // Jangan tampilkan formulir login lama yang masih tertanam di index.html.
       site?.classList.add("hidden");
+      window.location.replace("/login.html");
       return;
     }
 
