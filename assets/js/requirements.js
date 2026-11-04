@@ -33,6 +33,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const filter = document.getElementById("levelFilter");
   const empty = document.getElementById("emptyState");
   const esc = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  let resultCount = document.getElementById("requirementsResultCount");
+  if (!resultCount) {
+    resultCount = document.createElement("p");
+    resultCount.id = "requirementsResultCount";
+    resultCount.className = "hint";
+    resultCount.setAttribute("aria-live", "polite");
+    const tools = document.querySelector(".tools");
+    if (tools) tools.insertAdjacentElement("afterend", resultCount);
+  }
   function render() {
     const term = search.value.trim().toLowerCase();
     const bucket = filter.value;
@@ -47,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <td>${esc(item.time)}</td><td>${esc(item.troops)}</td>
     </tr>`).join("");
     empty.classList.toggle("hidden", visible.length !== 0);
+    if (resultCount) resultCount.textContent = "Menampilkan " + visible.length + " dari " + cityHallData.length + " level City Hall.";
   }
   search.addEventListener("input", render);
   filter.addEventListener("change", render);
