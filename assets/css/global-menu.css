@@ -43,5 +43,9 @@ body:has(#authScreen:not(.hidden)) #globalMenuPanel{display:none!important;visib
 .global-inbox-badge[hidden]{display:none!important}
 
 
-/* During the order-format modal, only its own close (X) control should be visible. */
-body.order-modal-open .global-menu{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+/* Highest-priority guard: when ORDER REGISTRATION is open, remove the entire floating Inbox/menu group. */
+body:has(#jokiOrderModal:not(.hidden)) .global-menu,
+body.order-modal-open .global-menu,
+body:has(#jokiOrderModal:not(.hidden)) .global-inbox-trigger,
+body:has(#jokiOrderModal:not(.hidden)) .global-menu-trigger{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
