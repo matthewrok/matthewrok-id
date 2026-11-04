@@ -337,7 +337,7 @@ Deno.serve(async (req: Request) => {
         return Response.json({ok:true});
       }
       if (data === "newvoucher") {
-        await sendMessage(chatId, "NEWVOUCHER|CREATE\n🎟️ <b>Buat Voucher Baru</b>\nBalas pesan ini dengan format:\n<code>KODE | percent/fixed | NILAI | DESKRIPSI | BATAS_PAKAI</code>\n\nContoh: <code>HEMAT10 | percent | 10 | Diskon pelanggan | 100</code>\nBatas pakai boleh dikosongkan. Kode 4–24 karakter: huruf, angka, atau tanda -.", {reply_markup:{force_reply:true}});
+        await sendMessage(chatId, "NEWVOUCHER|CREATE\n🎟️ <b>Buat Voucher Baru</b>\nBalas pesan ini dengan satu baris:\n<code>NAMAVOUCHER, percent/fixed, NILAI, DESKRIPSI, BATAS_PAKAI</code>\n\nContoh: <code>HEMAT10, percent, 10, Diskon pelanggan, 100</code>\n• <b>percent</b> = diskon persen (maks. 100)\n• <b>fixed</b> = potongan rupiah\n• Batas pakai boleh kosong\n• Bisa juga memakai pemisah |\n\nContoh tanpa batas: <code>MATTHEW20, percent, 20, Promo khusus,</code>", {reply_markup:{force_reply:true}});
         return Response.json({ok:true});
       }
       if (data.startsWith("editann|") || data.startsWith("editvoucher|")) {
@@ -491,18 +491,18 @@ Deno.serve(async (req: Request) => {
     const text = String(msg.text).trim();
     const replyText = String(msg.reply_to_message?.text ?? "");
     if (replyText.startsWith("NEWVOUCHER|CREATE")) {
-      const fields = text.split("|").map((v:string) => v.trim());
+      const fields = text.includes("|") ? text.split("|").map((v:string) => v.trim()) : text.split(",").map((v:string) => v.trim());
       const code = (fields[0] || "").toUpperCase();
       const discountType = (fields[1] || "").toLowerCase();
       const discountValue = Number(fields[2]);
       const description = fields[3] || null;
       const maxUses = fields[4] ? Number(fields[4]) : null;
       if (!/^[A-Z0-9-]{4,24}$/.test(code) || !["percent","fixed"].includes(discountType) || !Number.isFinite(discountValue) || discountValue <= 0 || (discountType === "percent" && discountValue > 100) || (maxUses !== null && (!Number.isInteger(maxUses) || maxUses <= 0))) {
-        await sendMessage(chatId, "❌ Format voucher tidak valid. Gunakan: <code>KODE | percent/fixed | NILAI | DESKRIPSI | BATAS_PAKAI</code>\nContoh: <code>HEMAT10 | percent | 10 | Diskon pelanggan | 100</code>");
+        await sendMessage(chatId, "❌ Format voucher tidak valid. Gunakan: <code>KODE, percent/fixed, NILAI, DESKRIPSI, BATAS_PAKAI</code>\nContoh: <code>HEMAT10, percent, 10, Diskon pelanggan, 100</code>\nAtau gunakan pemisah |. Nilai percent maksimal 100; fixed berarti potongan rupiah. Batas pakai boleh kosong.");
         return Response.json({ok:true});
       }
-      const creators = await adminRead("profiles","role=eq.MATTHEW&select=id&limit=1");
-      if (!creators.length) { await sendMessage(chatId,"❌ Akun pembuat dengan role MATTHEW tidak ditemukan."); return Response.json({ok:true}); }
+      const creators = await adminRead("profiles","role=eq.admin&select=id&limit=1");
+      if (!creators.length) { await sendMessage(chatId,"❌ Profil admin tidak ditemukan. Pastikan akun admin sudah memiliki profil."); return Response.json({ok:true}); }
       const payload = {code,discount_type:discountType,discount_value:discountValue,description,max_uses:maxUses,used_count:0,starts_at:new Date().toISOString(),expires_at:null,is_active:true,created_by:creators[0].id};
       const res = await fetch(supabaseUrl + "/rest/v1/vouchers", {method:"POST",headers:{...baseHeaders,Prefer:"return=representation"},body:JSON.stringify(payload)});
       const created = await res.json();
