@@ -24,15 +24,15 @@
       score.textContent = count ? average.toFixed(1) + " / 5 ★" : "—";
       const label = document.createElement("span");
       label.textContent = count
-        ? count + " ulasan terbaru yang telah disetujui"
-        : "Belum ada ulasan yang disetujui untuk ditampilkan.";
+        ? count + " ulasan client terbaru"
+        : "Belum ada ulasan client untuk ditampilkan.";
       summary.append(score, label);
 
       box.replaceChildren();
       if (!count) {
         const empty = document.createElement("p");
         empty.className = "reviews-intro";
-        empty.textContent = "Ulasan client akan tampil di sini setelah pesanan selesai dan ulasan disetujui admin.";
+        empty.textContent = "Ulasan client akan tampil di sini setelah dikirim melalui Member Dashboard.";
         box.append(empty);
         return;
       }
