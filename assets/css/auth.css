@@ -318,3 +318,21 @@ footer{color:var(--faint)}
 .login-page .register-cta-arrow{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:#b8edff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:480px){.login-page .login-links{align-items:stretch!important}.login-page .login-links .register-cta{min-height:68px}}
 @media(prefers-reduced-motion:reduce){.login-page .register-cta{transition:none}}
+
+
+/* LOGIN FINAL OVERRIDE — image logo and clear premium layout */
+.login-page .brand-mark{
+  width:88px;height:88px;padding:8px;margin:0 auto 17px;
+  overflow:hidden;border:1px solid rgba(137,214,255,.48);
+  border-radius:22px;background:linear-gradient(145deg,rgba(29,91,157,.42),rgba(5,23,43,.9));
+  box-shadow:0 12px 32px rgba(24,112,196,.22),inset 0 1px rgba(255,255,255,.12);
+}
+.login-page .brand-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:14px}
+.login-page .login-panel{margin-top:2px}
+.login-page .login-options .login-links{display:flex;flex-direction:column!important;align-items:stretch!important;gap:10px!important}
+.login-page .login-links>.forgot-link{align-self:flex-start;padding:2px 0}
+.login-page .login-links>.register-cta{width:100%;min-height:72px}
+.login-page .panel-heading{padding-bottom:13px;border-bottom:1px solid rgba(117,185,240,.14)}
+.login-page .panel-heading .section-title{font-size:21px}
+.login-page .intro{margin-bottom:22px}
+@media(max-width:480px){.login-page .brand-mark{width:78px;height:78px}.login-page .login-panel{padding:17px 13px}}
