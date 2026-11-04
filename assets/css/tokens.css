@@ -101,18 +101,6 @@ footer{
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-body::after{
-  content:"";position:fixed;z-index:-1;top:18vh;left:0;
-  width:clamp(110px,14vw,190px);aspect-ratio:200/120;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120'%3E%3Cg%3E%3CanimateTransform attributeName='transform' type='translate' values='0 0;0 -5;0 0' dur='1.8s' repeatCount='indefinite'/%3E%3Cpath fill='%238f1a2a' d='M102 64 L80 4 C82 20 84 28 88 34 C88 44 90 50 96 56 C100 54 104 56 108 62Z'%3E%3CanimateTransform attributeName='transform' type='rotate' values='10 102 64;-22 102 64;10 102 64' dur='1.8s' begin='0.15s' repeatCount='indefinite'/%3E%3C/path%3E%3Cpath fill='%23d1283b' d='M34 84 C22 88 12 98 4 110 C18 104 30 102 42 98Z'/%3E%3Cpath fill='%23d1283b' d='M34 84 C54 82 76 74 96 66 C112 60 122 50 132 42 L142 34 L156 36 L162 42 L152 44 L148 50 L138 52 C130 62 118 74 100 82 C82 92 56 96 34 84Z'/%3E%3Cpath fill='%23e8c27a' d='M98 66 L52 10 C56 26 60 34 66 40 C64 48 66 54 72 60 C78 54 86 54 94 58Z'%3E%3CanimateTransform attributeName='transform' type='rotate' values='-6 98 66;26 98 66;-6 98 66' dur='1.8s' repeatCount='indefinite'/%3E%3C/path%3E%3Ccircle cx='150' cy='40' r='1.8' fill='%23100b0d'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
-  opacity:.42;pointer-events:none;animation:dragonGlide 56s linear 2s infinite backwards;
-}
-@keyframes dragonGlide{
-  0%{transform:translate3d(-24vw,0,0) rotate(3deg)}
-  30%{transform:translate3d(28vw,-4vh,0) rotate(-3deg)}
-  65%{transform:translate3d(70vw,5vh,0) rotate(3deg)}
-  100%{transform:translate3d(124vw,-2vh,0) rotate(-2deg)}
-}
 
 @media(max-width:650px){
   .topbar{flex-direction:column;align-items:flex-start;gap:8px}
