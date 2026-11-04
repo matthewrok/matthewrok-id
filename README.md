@@ -166,6 +166,7 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 
 - [Panduan struktur repository](docs/REPOSITORY-STRUCTURE.md)
 - [Riwayat audit dan cleanup](docs/AUDIT-CLEANUP.md)
+- [Rencana migrasi token pelacakan](docs/TRACKING-TOKEN-MIGRATION.md)
 
 ## Batas audit
 
