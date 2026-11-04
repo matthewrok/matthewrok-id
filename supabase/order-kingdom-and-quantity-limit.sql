@@ -14,6 +14,7 @@ alter table public.joki_progress
   check (kingdom_number is null or kingdom_number ~ '^[0-9]{1,12}$');
 
 drop function if exists public.create_joki_order(text,text,text,integer,text);
+drop function if exists public.create_joki_order(text,text,text,integer);
 
 create function public.create_joki_order(
   p_client_name text,
