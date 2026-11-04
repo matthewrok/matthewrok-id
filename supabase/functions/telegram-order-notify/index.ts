@@ -90,6 +90,25 @@ Deno.serve(async (req: Request) => {
         commands: commandsResult.ok ? "Bot commands registered" : (commandsResult.description ?? "Command registration failed")
       }, { status: commandsResult.ok ? 200 : 502 });
     }
+    if (payload.action === "order_updated") {
+      const record = payload.record ?? {};
+      const previous = payload.old_record ?? {};
+      if (!record.order_number) return Response.json({ ok: true, skipped: "tracking-only record" });
+      const changes: string[] = [];
+      if (previous.status !== record.status) changes.push(`📌 <b>Status:</b> ${esc(previous.status)} → <b>${esc(record.status)}</b>`);
+      if (previous.progress_percent !== record.progress_percent) changes.push(`📊 <b>Progres:</b> ${esc(previous.progress_percent ?? 0)}% → <b>${esc(record.progress_percent ?? 0)}%</b>`);
+      if (previous.progress_note !== record.progress_note) changes.push(`📝 <b>Catatan:</b> ${esc(record.progress_note || "—")}`);
+      if (!changes.length) return Response.json({ ok: true, skipped: "no tracked changes" });
+      const message = [
+        "🔄 <b>PEMBARUAN PESANAN — MATTHEW JOKI</b>", "",
+        `🧾 <b>No. Pesanan:</b> <code>${esc(record.order_number)}</code>`,
+        `👤 <b>Nama:</b> ${esc(record.client_name)}`,
+        ...changes, "",
+        `🕒 <b>Diperbarui:</b> ${esc(record.updated_at || new Date().toISOString())}`,
+      ].join("\\n");
+      const sent = await sendMessage(adminChatId, message, { reply_markup: mainMenu });
+      return Response.json({ ok: Boolean(sent.ok) }, { status: sent.ok ? 200 : 502 });
+    }
     const record = payload?.record ?? payload?.data?.record ?? payload;
     if (!record || typeof record !== "object" || !record.order_number) return Response.json({ error: "Missing order record" }, { status: 400 });
     const message = [
