@@ -4,7 +4,7 @@
     const root = document.createElement("div");
     root.className = "global-menu";
     root.innerHTML = `
-      <a class="global-inbox-trigger" href="/inbox.html" aria-label="Buka Inbox Matthew" title="Inbox Matthew"><span aria-hidden="true">✉</span><span class="global-inbox-label">Inbox Matthew</span></a>
+      <a class="global-inbox-trigger" href="/inbox.html" aria-label="Buka Inbox Matthew" title="Inbox Matthew"><svg class="global-inbox-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.25" y="5.25" width="17.5" height="13.5" rx="2.2"></rect><path d="m4.2 7 7.8 6 7.8-6"></path></svg><span class="global-inbox-label">Inbox Matthew</span><span class="global-inbox-badge" aria-hidden="true" hidden></span></a>
       <button class="global-menu-trigger" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="globalMenuPanel">⋮</button>
       <nav class="global-menu-panel" id="globalMenuPanel" aria-label="Navigasi website" inert>
         <div class="global-menu-heading"><strong>MATTHEW JOKI</strong><span>DRAGON KINGDOM · NAVIGASI</span></div>
@@ -71,6 +71,33 @@
             location.href = "/login.html";
           }
         });
+        // Show a red dot while this account has at least one unread Inbox message.
+        const inboxLink = root.querySelector(".global-inbox-trigger");
+        const inboxBadge = root.querySelector(".global-inbox-badge");
+        const syncUnreadInbox = async () => {
+          try {
+            const { count, error } = await client.from("inbox_recipients")
+              .select("message_id", { count: "exact", head: true })
+              .eq("user_id", user.id).is("read_at", null);
+            if (error) throw error;
+            inboxBadge.hidden = !(count > 0);
+            inboxLink.setAttribute("aria-label", count > 0 ? "Buka Inbox Matthew — ada pesan belum dibaca" : "Buka Inbox Matthew");
+            inboxLink.title = count > 0 ? "Inbox Matthew — ada pesan belum dibaca" : "Inbox Matthew";
+          } catch (error) {
+            // Keep the icon usable if unread counts are temporarily unavailable.
+            console.warn("Status pesan Inbox tidak dapat dimuat.", error);
+          }
+        };
+        await syncUnreadInbox();
+        // Poll as a fallback for pages/browsers where realtime delivery is unavailable.
+        const unreadPoll = window.setInterval(syncUnreadInbox, 30000);
+        window.addEventListener("pagehide", () => window.clearInterval(unreadPoll), { once: true });
+        try {
+          const channel = client.channel("global-inbox-unread-" + user.id)
+            .on("postgres_changes", { event: "*", schema: "public", table: "inbox_recipients", filter: "user_id=eq." + user.id }, syncUnreadInbox)
+            .subscribe();
+          window.addEventListener("pagehide", () => client.removeChannel(channel), { once: true });
+        } catch (error) { console.warn("Pembaruan Inbox realtime tidak tersedia.", error); }
         try {
           const {data: profile} = await client.from("profiles").select("role").eq("id", user.id).maybeSingle();
           if (profile?.role === "admin") panel.querySelectorAll("[data-admin-link]").forEach(link => link.hidden = false);
