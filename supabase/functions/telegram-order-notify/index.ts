@@ -377,7 +377,16 @@ Deno.serve(async (req: Request) => {
         const id=data.split("|")[1];
         const rows=await adminRead("profiles","id=eq."+encodeURIComponent(id)+"&select=id,email,full_name,role&limit=1");
         const p=rows[0];
-        await editMessage(chatId,callback.message.message_id,p?"👥 <b>"+esc(p.full_name||p.email)+"</b>\\nRole saat ini: <b>"+esc(p.role)+"</b>\\nPilih role baru:":"Akun tidak ditemukan.",{reply_markup:p?{inline_keyboard:[["member","PELANGGAN","SULTAN","MATTHEW"].map(v=>({text:v,callback_data:"setrole|"+id+"|"+v})) ,[{text:"⬅️ Kembali",callback_data:"roles"}]]}:mainMenu});
+        await editMessage(chatId,callback.message.message_id,p?"👥 <b>"+esc(p.full_name||p.email)+"</b>\\nRole saat ini: <b>"+esc(p.role)+"</b>\\nPilih role baru:":"Akun tidak ditemukan.",{reply_markup:p?{inline_keyboard:[["member","PELANGGAN","SULTAN","MATTHEW"].map(v=>({text:v,callback_data:"askrole|"+id+"|"+v})) ,[{text:"⬅️ Kembali",callback_data:"roles"}]]}:mainMenu});
+        return Response.json({ok:true});
+      }
+      if (data.startsWith("askrole|")) {
+        const [,id,role]=data.split("|");
+        if(!["member","PELANGGAN","SULTAN","MATTHEW"].includes(role)) throw new Error("Invalid role");
+        const rows=await adminRead("profiles","id=eq."+encodeURIComponent(id)+"&select=id,email,full_name,role&limit=1");
+        const p=rows[0];
+        if(!p || p.role==="admin") throw new Error("Akun tidak dapat diubah melalui menu ini");
+        await editMessage(chatId,callback.message.message_id,"⚠️ <b>KONFIRMASI PERUBAHAN ROLE</b>\\n\\nAkun: <b>"+esc(p.full_name||p.email)+"</b>\\nRole saat ini: <b>"+esc(p.role)+"</b>\\nRole baru: <b>"+esc(role)+"</b>\\n\\nLanjutkan perubahan?",{reply_markup:{inline_keyboard:[[{text:"✅ Ya, ubah role",callback_data:"setrole|"+id+"|"+role},{text:"❌ Batal",callback_data:"roleuser|"+id}]]}});
         return Response.json({ok:true});
       }
       if (data.startsWith("setrole|")) {
