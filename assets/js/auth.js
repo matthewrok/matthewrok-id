@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.assign("member-dashboard.html");
       } catch (error) {
         showMessage(friendlyAuthError(error) || "Login gagal. Periksa kembali email dan password.", "error");
+        if (/email not confirmed|email_not_confirmed/i.test(String(error?.message || ""))) showResendButton(email);
         setBusy(loginForm, false, "LOGIN");
       }
     });
@@ -212,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed.html" } });
         if (error) throw error;
         if (data.session) await client.auth.signOut({ scope: "local" });
-        showMessage("Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual.", "success");
+        showMessage("Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual. Jika email belum masuk, kamu bisa meminta link verifikasi baru di bawah.", "success");
+        showResendButton(email);
         registerForm.reset();
         setBusy(registerForm, false, "BUAT AKUN");
       } catch (error) { showMessage(friendlyAuthError(error), "error"); setBusy(registerForm, false, "BUAT AKUN"); }
