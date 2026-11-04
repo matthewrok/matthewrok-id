@@ -296,3 +296,25 @@ footer{color:var(--faint)}
  .login-page .login-links{align-items:center!important}
 }
 @media(prefers-reduced-motion:reduce){.login-page *{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* HIGH-VISIBILITY REGISTER CTA */
+.login-page .login-links{align-items:stretch!important;gap:12px!important}
+.login-page .login-links>.forgot-link{align-self:flex-start;padding:8px 0}
+.login-page .login-links .register-cta{
+  position:relative;display:flex;align-items:center;gap:12px;width:100%;
+  min-height:70px;padding:11px 14px;border:1px solid rgba(127,218,255,.78);
+  border-radius:13px;background:linear-gradient(110deg,rgba(27,112,211,.34),rgba(16,153,196,.2));
+  color:#f5fbff!important;text-decoration:none!important;
+  box-shadow:0 0 0 1px rgba(65,167,255,.1),0 8px 24px rgba(19,116,207,.2),inset 0 1px rgba(255,255,255,.1);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.login-page .register-cta:hover{transform:translateY(-2px);border-color:#b4efff;box-shadow:0 0 0 3px rgba(91,190,255,.1),0 12px 30px rgba(19,116,207,.3)}
+.login-page .register-cta-icon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:12px;background:linear-gradient(145deg,#4cb8f2,#2469d2);color:#fff;box-shadow:0 5px 15px rgba(31,126,224,.3)}
+.login-page .register-cta-icon svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.login-page .register-cta-copy{display:flex;flex:1;flex-direction:column;gap:2px;text-align:left}
+.login-page .register-cta-copy strong{font-size:14px;line-height:1.35;font-weight:800;letter-spacing:.1px}
+.login-page .register-cta-copy small{font-size:10px;line-height:1.4;color:#b8dfff}
+.login-page .register-cta-arrow{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:#b8edff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:480px){.login-page .login-links{align-items:stretch!important}.login-page .login-links .register-cta{min-height:68px}}
+@media(prefers-reduced-motion:reduce){.login-page .register-cta{transition:none}}
