@@ -8,7 +8,7 @@
     CH17:{name:"City Hall 17/17",price:115000,display:"115K/char"}
   };
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
-  let selected=null, appliedVoucher=null;
+  let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
   function updateTotal(){
     const p=products[selected]; if(!p||!quantity)return;
@@ -59,6 +59,7 @@
     if(!identity?.name){alert("Sesi login belum terbaca. Muat ulang halaman atau login kembali.");return;}
     if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login dengan akun terverifikasi untuk memesan.");return;}
     selected=code;
+    completedWhatsappUrl=null;
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
     $("jokiOrderProduct").textContent=p.name+" · "+p.display;
@@ -103,6 +104,7 @@
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   $("jokiOrderSubmit")?.addEventListener("click",async()=>{
     const identity=getIdentity(),p=products[selected],button=$("jokiOrderSubmit");
+    if(completedWhatsappUrl){window.open(completedWhatsappUrl,"_blank","noopener");return;}
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
     if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
     normalizeQuantity();
@@ -138,11 +140,13 @@
       ].join("\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";
       const whatsappUrl="https://wa.me/6285894152856?text="+encodeURIComponent(message);
+      // Tandai transaksi selesai sebelum membuka WhatsApp. Klik ulang hanya membuka tautan,
+      // tidak pernah memanggil RPC pembuatan order untuk kedua kalinya.
+      completedWhatsappUrl=whatsappUrl;
       if(whatsappTab&&!whatsappTab.closed){
         whatsappTab.location.href=whatsappUrl;
         $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. WhatsApp dibuka di tab baru. Jika belum terbuka, gunakan tombol di bawah.";
         button.disabled=false;button.textContent="BUKA WHATSAPP ↗";
-        button.onclick=()=>{window.open(whatsappUrl,"_blank");};
       }else{
         // Fallback same-tab jika browser menolak tab baru.
         $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. Mengalihkan ke WhatsApp...";
@@ -151,7 +155,8 @@
     }catch(error){
       console.error("[Joki Order]",error);
       $("jokiOrderMessage").textContent=error.message||"Pesanan gagal dibuat. Silakan coba kembali.";
-      button.disabled=false;button.textContent="COBA LAGI";
+      if(completedWhatsappUrl){button.disabled=false;button.textContent="BUKA WHATSAPP ↗";}
+      else{button.disabled=false;button.textContent="COBA LAGI";}
     }
   });
 })();
