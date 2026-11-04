@@ -700,34 +700,30 @@ body:has(#loginForm) #globalMenuPanel{display:none!important;visibility:hidden!i
 }
 .announcement-label{
   flex:0 0 auto;font-size:9px;font-weight:900;letter-spacing:1.5px;
-  color:#fff;text-shadow:0 0 8px #ff315b,0 0 15px #ff315b;
-  animation:announcementRgb 4s linear infinite;
+  color:#a9d2ff;text-shadow:0 0 7px rgba(43,111,224,.45);
 }
 .announcement-window{min-width:0;overflow:hidden;white-space:nowrap}
 .announcement-track{
   display:inline-block;margin:0;padding-left:100%;font-size:11px;font-weight:700;
-  letter-spacing:.45px;line-height:1.7;
-  background:linear-gradient(90deg,#ff477e,#ffb347,#fff16a,#52ffb8,#55dfff,#9b7bff,#ff477e);
-  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:announcementScroll 22s linear infinite,announcementRgb 5s linear infinite;
+  letter-spacing:.45px;line-height:1.7;color:#8ebeff;
+  text-shadow:0 0 8px rgba(49,119,224,.28);
+  animation:announcementScroll 22s linear infinite,announcementNavyPulse 3.6s ease-in-out infinite;
 }
 .announcement-ticker:hover .announcement-track{animation-play-state:paused}
 @keyframes announcementScroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
-@keyframes announcementRgb{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+@keyframes announcementNavyPulse{0%,100%{color:#527db7;text-shadow:0 0 3px rgba(31,79,145,.12)}50%{color:#a9d2ff;text-shadow:0 0 11px rgba(65,137,230,.45)}}
 @media(max-width:600px){
  .announcement-ticker{gap:10px;width:calc(100% - 24px);margin:10px auto 14px;padding:9px 11px}
  .announcement-label{font-size:8px;letter-spacing:1px}
- .announcement-track{font-size:10px;animation-duration:18s,5s}
+ .announcement-track{font-size:10px;animation-duration:18s,3.6s}
 }
 @media(prefers-reduced-motion:reduce){
  .announcement-track,.announcement-label{animation:none!important}
- .announcement-track{padding-left:0;white-space:normal;color:#55dfff;background:none}
+ .announcement-track{padding-left:0;white-space:normal;color:#8ebeff;background:none}
 }
 
 /* Do not flash an empty ticker before the active announcement is loaded. */
 .announcement-ticker[hidden]{display:none!important}
-
-
 /* Compact pricing summary in the ORDER REGISTRATION modal */
 .joki-order-total{
   margin:6px 0!important;
