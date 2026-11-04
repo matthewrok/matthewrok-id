@@ -65,7 +65,7 @@
     quantity.value="1";$("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
     const submit=$("jokiOrderSubmit");
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
-    updateTotal();modal?.classList.remove("hidden");
+    updateTotal();document.body.classList.add("order-modal-open");modal?.classList.remove("hidden");$("jokiOrderClose")?.focus();
   }
   document.addEventListener("click",event=>{
     const button=event.target.closest("[data-order-product]");
@@ -93,9 +93,14 @@
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
   quantity?.addEventListener("blur",normalizeQuantity);
-  $("jokiOrderClose")?.addEventListener("click",()=>modal?.classList.add("hidden"));
-  modal?.addEventListener("click",event=>{if(event.target===modal)modal.classList.add("hidden");});
-  document.addEventListener("keydown",event=>{if(event.key==="Escape")modal?.classList.add("hidden");});
+  function closeOrderModal(){
+    if(!modal)return;
+    modal.classList.add("hidden");
+    document.body.classList.remove("order-modal-open");
+  }
+  $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
+  modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   $("jokiOrderSubmit")?.addEventListener("click",async()=>{
     const identity=getIdentity(),p=products[selected],button=$("jokiOrderSubmit");
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
