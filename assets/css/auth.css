@@ -251,3 +251,48 @@ footer{color:var(--faint)}
 .login-options .register-prompt .forgot-link{display:inline;margin:0;font:600 11px/1.5 inherit;color:#8bdfff!important;text-decoration:none}
 .login-options .register-prompt .forgot-link:hover{text-decoration:underline}
 @media(max-width:420px){.login-options .login-links{align-items:flex-start}.login-options .register-prompt{text-align:left}}
+
+
+/* MATTHEW LOGIN — STRUCTURED BLUE LAYOUT */
+.login-page{width:100%;display:flex;flex-direction:column;gap:0;padding:clamp(22px,4vw,38px)!important}
+.login-page .brand-mark{display:grid;place-items:center;width:62px;height:62px;margin:0 auto 15px;border:1px solid rgba(137,214,255,.55);border-radius:19px;background:linear-gradient(145deg,#1e68b8,#0a2b50);color:#f2fbff;font:800 30px/1 Georgia,serif;box-shadow:0 10px 30px rgba(34,133,224,.24),inset 0 1px rgba(255,255,255,.2)}
+.login-page .eyebrow{margin:0 0 7px;font-size:10px}
+.login-page h1{margin:0;color:#f3f8ff!important;font:700 clamp(27px,5vw,34px)/1.2 var(--display,Georgia),serif;letter-spacing:.2px}
+.login-page .intro{max-width:390px;margin:10px auto 25px;font-size:13px;line-height:1.7}
+.login-panel{padding:22px;border:1px solid rgba(117,185,240,.2);border-radius:17px;background:rgba(3,16,32,.42)}
+.panel-heading{margin-bottom:18px}
+.panel-heading .panel-kicker{display:block;margin-bottom:5px;color:#79d4ff;font-size:9px;font-weight:800;letter-spacing:1.8px}
+.panel-heading .section-title{margin:0;text-align:left;font:700 20px/1.3 var(--display,Georgia),serif;color:#f0f7ff!important;letter-spacing:0}
+.panel-heading p{margin:5px 0 0;color:#9fb8d5;font-size:11px}
+.login-page .auth-form{gap:8px}
+.login-page .auth-form label{margin-top:9px;font-size:12px}
+.login-page .auth-form input{min-height:49px}
+.login-page .password-wrap{width:100%}
+.login-page .password-wrap input{padding-right:54px!important}
+.login-page .password-wrap .password-toggle{position:absolute;right:7px;top:50%;display:grid;place-items:center;width:38px;height:38px;min-height:38px;margin:0;padding:8px;transform:translateY(-50%);border:0!important;border-radius:9px!important;background:transparent!important;box-shadow:none!important;color:#8bdfff!important}
+.login-page .password-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.login-page .password-toggle:hover{background:rgba(86,174,238,.13)!important}
+.login-page .remember-row{margin-top:8px}
+.login-page .login-options{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.login-page .login-options .remember-note{font-size:10px;color:#8faac8}
+.login-page .login-links{width:100%;display:flex;flex-direction:row!important;align-items:center!important;justify-content:space-between;gap:14px!important}
+.login-page .login-links .forgot-link{font-size:11px}
+.login-page .login-options .register-only-link{padding:7px 12px;border:1px solid rgba(113,195,255,.32);border-radius:8px;background:rgba(39,116,190,.13);text-decoration:none}
+.login-page #loginButton{width:100%;margin-top:12px}
+.login-page .guest-divider{margin:23px 0;color:#7192b5}
+.login-page .visitor-panel{padding:20px;border-radius:17px}
+.login-page .visitor-icon{display:grid;place-items:center;width:40px;height:40px;margin:0 auto 8px;border:1px solid rgba(123,201,255,.28);border-radius:13px;background:rgba(42,129,200,.13)}
+.login-page .visitor-icon svg{width:22px;height:22px;fill:none;stroke:#91ddff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.login-page .visitor-panel h2{margin:0 0 6px;font:700 17px/1.35 var(--display,Georgia),serif;color:#eaf6ff!important}
+.login-page .visitor-note{margin-bottom:15px}
+.login-page .visitor-help{margin-top:15px}
+.login-page .auth-message{margin:14px 0 0}
+.login-page .help-link{margin-top:14px}
+.login-page .security-note{margin-top:16px}
+@media(max-width:480px){
+ .login-page{padding:22px 17px!important}
+ .login-panel{padding:18px 14px}
+ .login-page .visitor-panel{padding:18px 14px}
+ .login-page .login-links{align-items:center!important}
+}
+@media(prefers-reduced-motion:reduce){.login-page *{scroll-behavior:auto!important;transition:none!important}}
