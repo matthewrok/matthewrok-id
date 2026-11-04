@@ -434,8 +434,11 @@
         <p class="joki-order-lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
         <div class="joki-order-identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
         <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
-        <label for="jokiOrderQuantity">Jumlah karakter</label>
-        <input id="jokiOrderQuantity" type="number" min="1" max="20" value="1" inputmode="numeric">
+        <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
+        <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required aria-describedby="jokiOrderKingdomHint">
+        <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
+        <label for="jokiOrderQuantity">Jumlah karakter (maksimal 12)</label>
+        <input id="jokiOrderQuantity" type="number" min="1" max="12" value="1" inputmode="numeric" required>
         <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
         <div class="joki-order-total"><span>Subtotal</span><strong id="jokiOrderSubtotal">Rp17.000</strong></div><div class="joki-order-total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div><div class="joki-order-total"><span>Total estimasi</span><strong id="jokiOrderTotal">Rp17.000</strong></div>
         <p class="joki-order-disclaimer">Setelah dibuat, sistem menyimpan nomor order dan status awal <b>Menunggu Pembayaran / Administrasi</b>. Pembayaran belum otomatis terkonfirmasi.</p>
@@ -526,7 +529,7 @@
   <script defer src="assets/js/home-visitor.js"></script>
   <script defer src="assets/js/home-effects.js"></script>
   <script defer src="assets/js/home-navigation.js"></script>
-  <script defer src="assets/js/home-orders.js?v=20261104-3"></script>
+  <script defer src="assets/js/home-orders.js?v=20261104-4"></script>
   <script defer src="/assets/js/global-menu.js?v=20261104-11"></script>
   <script defer src="/assets/js/floating-cs.js?v=20261104-1"></script>
 
