@@ -72,8 +72,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!field) return;
       const visible = field.type === "password";
       field.type = visible ? "text" : "password";
-      button.textContent = visible ? "SEMBUNYIKAN" : "LIHAT";
+      button.innerHTML = visible
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.9A10.8 10.8 0 0 1 12 5.8c6.4 0 9.8 6.2 9.8 6.2a16 16 0 0 1-3.1 3.7M6.2 6.2C3.6 8 2.2 12 2.2 12s3.4 6.2 9.8 6.2c1.1 0 2.1-.2 3-.5"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>';
       button.setAttribute("aria-label", visible ? "Sembunyikan password" : "Tampilkan password");
+      button.setAttribute("aria-pressed", visible ? "true" : "false");
     });
   });
 
