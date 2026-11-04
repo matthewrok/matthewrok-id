@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage("Login berhasil. Membuka kerajaan...", "success");
         window.location.assign("member-dashboard.html");
       } catch (error) {
-        showMessage(error.message || "Login gagal. Periksa kembali email dan password.", "error");
+        showMessage(friendlyAuthError(error) || "Login gagal. Periksa kembali email dan password.", "error");
         setBusy(loginForm, false, "LOGIN");
       }
     });
