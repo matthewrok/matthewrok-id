@@ -1,73 +1,79 @@
-# PR #13 — System Control Center & Maintenance Mode
+# Maintenance Mode 2.0 — MATTHEW JOKI
 
 ## Status
-Dokumen desain/implementasi untuk PR #13. Ini belum mengaktifkan maintenance mode di website dan belum mengubah database Supabase produksi.
+Implemented in PR #13 and the server-side configuration has been applied to the live Supabase project. The default production state is **disabled**. The feature is not activated unless an admin explicitly turns it on.
 
-## Tujuan
-Memberi admin kendali operasional saat website atau sebagian layanan perlu dihentikan sementara, tanpa mengunci admin sendiri dan tanpa mengandalkan kontrol frontend sebagai pengaman.
-
-## Mode operasional
+## Supported modes
 
 ### 1. FULL MAINTENANCE
-- Halaman publik/member menampilkan halaman maintenance dengan tema biru/navy MATTHEW JOKI.
-- Hanya admin yang lolos verifikasi server-side yang boleh melewati halaman maintenance.
-- Semua operasi sensitif tetap ditolak di backend selama mode ini aktif.
-- Halaman menampilkan judul, pesan, estimasi selesai (opsional), dan status layanan.
+- Non-admin visitors and members are routed to maintenance.html.
+- Admins verified by the server-side is_admin RPC can access the admin dashboard and disable maintenance.
+- Order creation is denied by the database RPC.
+- Worker applications are denied by the worker-application-submit Edge Function.
+- Inbox message reads are denied by RLS for non-admin users.
+- Login and password-reset routes remain available so an admin can recover access.
 
 ### 2. ORDER MAINTENANCE
-- Website tetap dapat dijelajahi dan pengguna tetap dapat masuk ke akun.
-- Pembuatan pesanan baru, penggunaan voucher, dan operasi terkait order ditolak oleh backend.
-- Riwayat dan detail pesanan lama tetap dapat dibaca sesuai RLS.
-- UI menampilkan banner status layanan dan alasan penghentian order.
+- The website remains browseable.
+- Checkout entry points show a maintenance message and are disabled.
+- The legacy and secure order RPC paths both enforce the maintenance state in PostgreSQL.
+- Voucher lookup remains read-only; voucher redemption cannot complete because order creation is blocked.
+- Existing order history remains readable.
 
 ### 3. SYSTEM MAINTENANCE
-- Admin memilih modul terdampak, misalnya Worker, MACUL, Inbox, atau modul order.
-- Modul yang tidak terdampak tetap berjalan.
-- Setiap endpoint/RPC/Edge Function terkait wajib memeriksa status modul di server.
+Selectable modules:
+- orders — checkout and voucher redemption are blocked by the database.
+- worker — all worker applications are blocked by the Edge Function.
+- macul — only MACUL worker applications are blocked; AKUN applications remain available.
+- inbox — member Inbox reads and read-receipt updates are blocked by RLS; admin access remains available.
 
-## Kontrol admin
-- Toggle mode dan status aktif/nonaktif.
-- Pesan pengumuman dan estimasi selesai.
-- Pemilihan modul untuk mode system.
-- Pratinjau tampilan maintenance.
-- Riwayat aktivasi/nonaktif dan perubahan konfigurasi.
-- Tombol pemulihan darurat yang hanya dapat digunakan admin terverifikasi.
+If the maintenance configuration cannot be read, order creation and worker submissions fail closed.
 
-## Rancangan backend — belum diterapkan
-Sebelum implementasi, audit tabel, RPC, Edge Functions, RLS, dan mekanisme status website yang sudah ada. Hindari membuat tabel/kontrak kedua jika mekanisme yang kompatibel sudah tersedia.
+## Admin controls
+- Admin Dashboard → Status Website & Maintenance Mode.
+- Enable/disable toggle, mode selection, custom message, estimated completion time, and affected modules.
+- Emergency restore button disables maintenance immediately.
+- Every change writes an append-only audit entry with actor, previous state, new state, and timestamp.
+- All mutations are verified against an active admin profile in PostgreSQL; browser metadata/localStorage are not trusted.
 
-Model data konseptual (bukan SQL siap-jalankan):
-- Konfigurasi aktif: mode, enabled, message, estimated_end_at, affected_modules, updated_at, updated_by.
-- Riwayat append-only: actor_id, action, previous_state, new_state, created_at.
-- Satu sumber status kanonis agar frontend, RPC, dan Edge Functions tidak membaca konfigurasi berbeda.
+## Telegram admin controls
+- Telegram admin panel now includes Maintenance Mode.
+- /maintenance opens the controls.
+- Inline actions can disable maintenance or enable FULL, ORDER, or a selected SYSTEM module.
+- Telegram webhook validates the configured secret token and requires both chat ID and sender ID to match TELEGRAM_CHAT_ID.
+- The webhook uses a service_role-only RPC that also validates an active admin profile and records the audit entry.
+- Telegram bot token and service-role key remain server-side; no secret is stored in browser code or repository.
 
-Aturan keamanan wajib:
-1. Perubahan konfigurasi hanya oleh admin yang diverifikasi dari sumber otorisasi tepercaya di server/database.
-2. Jangan gunakan user_metadata, localStorage, parameter URL, atau role dari browser untuk memberi bypass.
-3. RLS harus membatasi pembacaan konfigurasi internal dan penulisan riwayat.
-4. Operasi order/voucher harus memeriksa maintenance di jalur backend yang benar-benar digunakan aplikasi.
-5. Telegram hanya menjadi antarmuka kontrol ke Edge Function; token bot dan secret tidak boleh masuk ke browser atau repository.
-6. Jika status tidak dapat diverifikasi, jangan izinkan operasi sensitif baru (fail closed untuk mutasi).
-7. Sediakan prosedur pemulihan yang tidak bergantung pada halaman admin yang sedang dikunci.
+## Backend implementation
+- Canonical configuration: public.site_maintenance_config (singleton).
+- Append-only history: public.site_maintenance_audit.
+- Public read-only RPC: get_public_maintenance_status.
+- Authenticated admin RPCs: admin_set_maintenance and admin_get_maintenance_audit.
+- Server-to-server Telegram RPC: service_set_maintenance, executable only by service_role.
+- Internal policy helper: is_maintenance_module_blocked.
+- Order enforcement: create_joki_order checks maintenance in PostgreSQL; create_joki_order_secure calls that guarded function.
+- Worker enforcement: worker-application-submit queries the canonical config using service_role and returns 503 if status cannot be verified.
+- Inbox enforcement: RLS policies block non-admin reads/receipt updates while Inbox maintenance is active.
 
-## Tahapan implementasi
-1. Inventarisasi status website, order, voucher, worker/MACUL, Inbox, Telegram, dan akses admin yang sudah ada.
-2. Tetapkan kontrak status kanonis serta aturan fail-safe.
-3. Siapkan migrasi SQL terpisah dan tinjau RLS/RPC sebelum deployment.
-4. Implementasikan enforcement backend dan uji endpoint langsung terlebih dahulu.
-5. Implementasikan halaman/banner dan panel admin setelah kontrak backend stabil.
-6. Tambahkan Telegram setelah endpoint admin terverifikasi tersedia.
-7. Jalankan regresi untuk ADMIN, member, Visitor, WORKER, dan MACUL.
-8. Aktifkan hanya setelah seluruh tes dan prosedur pemulihan lolos.
+## Deployment and verification
+- Supabase migration maintenance_mode_v2_server_enforcement applied; default config row is enabled=false.
+- Supabase migration maintenance_mode_inbox_rls applied.
+- Supabase migration maintenance_mode_telegram_rpc applied.
+- Edge Function worker-application-submit deployed as version 5 with verify_jwt=true.
+- Edge Function telegram-order-notify deployed as version 41 with verify_jwt=false; webhook secret and Telegram chat/sender validation remain enabled.
+- SQL syntax was tested inside rollback transactions before applying migrations.
+- Rollback-only role simulation verified that a member cannot read Inbox messages/receipts during Inbox maintenance while admin can still read them.
+- A rollback-only service_role test verified the Telegram maintenance RPC without persisting a config change or audit row.
+- Production maintenance state remains disabled; audit table has no test entries.
 
-## Kriteria selesai
-- Admin bisa mengaktifkan dan mematikan semua mode tanpa kehilangan akses.
-- Member/visitor tidak bisa melewati maintenance melalui manipulasi frontend atau memanggil endpoint secara langsung.
-- Order/voucher benar-benar ditolak di backend pada mode yang sesuai.
-- Modul yang tidak terdampak tetap tersedia.
-- Riwayat audit tercatat dan tidak bisa dimanipulasi pengguna biasa.
-- Telegram tidak membocorkan secret.
-- Tes regresi dan CI lulus.
+## Recovery and rollback
+- Admin Dashboard and Telegram /maintenance both provide an emergency disable path.
+- The public maintenance page links to login so an admin can authenticate and regain access.
+- Do not drop the maintenance tables/functions after the frontend is published. To disable maintenance, use the admin toggle or Telegram command, not a schema rollback.
+- Before future destructive changes, take a Supabase Dashboard backup/PITR restore point. Connected tools in this session did not expose a native backup/export action or staging branch.
 
-## Batasan
-Dokumen ini tidak mengubah Supabase produksi, tidak membuat UI toggle palsu, dan tidak menyatakan fitur aktif. Implementasi kode dilakukan setelah inventarisasi kontrak backend dan pengujian yang sesuai.
+## Remaining manual QA
+- Browser/device smoke tests with a real admin session.
+- Confirm the admin can enable/disable FULL mode and reach the dashboard while it is active.
+- Confirm member/visitor redirects, checkout denial, worker/MACUL module behavior, Inbox RLS denial, and Telegram buttons against a real Telegram update.
+- Do not activate maintenance in production for testing; use a separate staging project when available.
