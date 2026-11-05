@@ -8,6 +8,7 @@ on:
       - "assets/js/access-guard.js"
       - "assets/js/session-manager.js"
       - "supabase/functions/worker-application-submit/**"
+      - "supabase/admin-role-management.sql"
       - "tests/**"
       - ".github/workflows/auth-regression.yml"
   workflow_dispatch:
