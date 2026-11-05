@@ -42,6 +42,7 @@ If the maintenance configuration cannot be read, order creation and worker submi
 - Inline actions can disable maintenance or enable FULL, ORDER, or a selected SYSTEM module.
 - Telegram webhook validates the configured secret token and requires both chat ID and sender ID to match TELEGRAM_CHAT_ID.
 - The webhook uses a service_role-only RPC that also validates an active admin profile and records the audit entry.
+- service_role has SELECT only on the canonical config table so Edge Functions can read it; anon/authenticated have no direct table access.
 - Telegram bot token and service-role key remain server-side; no secret is stored in browser code or repository.
 
 ## Backend implementation
