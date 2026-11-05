@@ -306,3 +306,15 @@ test("worker application function preserves both configured site origins and ser
   assert.match(source, /select=role,account_status/);
   assert.match(source, /applicantRoles\.includes\(role\)/);
 });
+
+
+test("worker application form uses the server-validated Edge Function, not direct table INSERT", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/worker-application.js"), "utf8");
+  assert.match(source, /functions\.invoke\(["']worker-application-submit["']/);
+  assert.doesNotMatch(source, /from\(["']worker_applications["']\)\s*\.insert\(/);
+  const endpoint = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(endpoint, /auth\/v1\/user/);
+  assert.match(endpoint, /profiles\?id=eq\./);
+  assert.match(endpoint, /SUPABASE_SERVICE_ROLE_KEY/);
+  assert.match(endpoint, /applicantRoles\.includes\(role\)/);
+});
