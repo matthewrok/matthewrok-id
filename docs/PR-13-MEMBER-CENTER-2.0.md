@@ -255,3 +255,6 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Read-only verification confirmed all three functions now have search_path="".
 - GitHub Actions run #32 on head 371cad96508f2815cae62e984e564a093c7a604f passed: 62 tests passed, 0 failed, 0 skipped.
 - Security Advisor continues to report expected SECURITY DEFINER warnings for intentionally callable RPCs. The legacy public tracking RPCs remain the final token-related warning to retire after the new frontend is published and old customers receive new tokens.
+### Rollback and backup boundaries
+- Added supabase/tracking-token-v2-rollback.sql as a pre-release rollback only. It drops only the new token-v2 functions/trigger/column and leaves legacy token and order_number values untouched. It must not be used after the new frontend creates orders with the new token contract.
+- The connected Supabase tools did not expose a native backup/export action or an available staging branch. No native point-in-time backup was created by this session. The applied migrations are additive/reversible and did not delete existing orders or reviews; the legacy token/order_number values were preserved. For a full restore point, use the Supabase Dashboard backup/PITR controls before the final cutover.
