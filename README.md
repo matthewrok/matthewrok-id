@@ -174,6 +174,8 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 - supabase/tracking-token-v2-rollback.sql — rollback pra-rilis saja; jangan jalankan setelah frontend baru membuat pesanan.
 - supabase/harden_remaining_rpc_search_paths.sql — mengunci search_path tiga RPC SECURITY DEFINER tambahan.
 - supabase/harden_legacy_order_rpc_role_access.sql — menyamakan allowlist role/status pada RPC order lama selama masa kompatibilitas.
+- supabase/consolidate_permissive_rls_policies.sql — menggabungkan policy SELECT berulang tanpa memperluas akses.
+- supabase/remove_unused_anon_voucher_policy.sql — menghapus policy anon yang tidak punya table grant dan tidak diperlukan.
 
 ## Batas audit
 
