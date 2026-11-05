@@ -541,3 +541,23 @@ test("maintenance Telegram RPC is restricted to service_role and validates an ac
   assert.match(sql, /to service_role/);
   assert.doesNotMatch(sql, /grant execute[^;]*to authenticated/i);
 });
+
+
+test("Inbox send Edge Function fails closed during maintenance and requires an active admin", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/inbox-send/index.ts"), "utf8");
+  assert.match(source, /site_maintenance_config/);
+  assert.match(source, /maintenanceResponse\.ok/);
+  assert.match(source, /maintenance\.mode === "full"/);
+  assert.match(source, /affectedModules\.includes\("inbox"\)/);
+  assert.match(source, /select=role,account_status/);
+  assert.match(source, /role !== "admin" \|\| accountStatus !== "active"/);
+  assert.match(source, /service_send_inbox_message/);
+});
+
+test("login and homepage initialize Supabase only once per page", () => {
+  for (const page of ["login.html", "index.html"]) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    assert.equal((html.match(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2/g) || []).length, 1, page + " should load Supabase JS once");
+    assert.equal((html.match(/(?:src=["'])\/?assets\/js\/supabase\.js/g) || []).length, 1, page + " should initialize one Supabase client");
+  }
+});
