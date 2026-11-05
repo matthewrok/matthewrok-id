@@ -156,4 +156,15 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Pemeriksaan ini tidak bergantung pada role dari browser, user_metadata, atau access guard frontend.
 - Regression test kontrak otorisasi ditambahkan; workflow auth-regression kini berjalan juga ketika file Edge Function tersebut berubah. GitHub Actions run #9 pada head PR terbaru berstatus success.
 - BELUM diterapkan ke Supabase produksi. Source GitHub saja tidak mengubah fungsi yang sedang ter-deploy. Setelah PR ditinjau/di-merge, Edge Function harus di-deploy secara terencana lalu diuji dengan role member aktif, visitor/tanpa sesi, akun nonaktif, admin, WORKER, dan MACUL.
-- Catatan audit: supabase/admin-role-management.sql saat ini membatasi profiles.role pada member, admin, SULTAN, MATTHEW, dan PELANGGAN; kontrak tersebut belum memasukkan WORKER/MACUL. Jangan menjalankan constraint tersebut ulang sebelum skema role diselaraskan dengan desain role final.
+- Catatan audit: database aktif sudah memakai role member, admin, SULTAN, MATTHEW, PELANGGAN, WORKER, MACUL, dan AKUN. File supabase/admin-role-management.sql telah diperbaiki agar tidak menghapus role operasional WORKER/MACUL/AKUN saat dijalankan di kemudian hari. SQL belum dijalankan ke produksi.
+
+
+### Audit Supabase aktif — 6 November 2026 (read-only)
+- Proyek aktif matthew-joki berada di region eu-west-3 dan memakai PostgreSQL 17.11. Audit ini hanya membaca metadata, grants, policy, dan definisi fungsi; tidak ada perubahan database atau deployment.
+- Edge Function worker-application-submit yang aktif di Supabase masih versi 3 dan belum memuat pemeriksaan role/account_status yang sudah ditambahkan di branch PR. Source repository sudah diperbaiki; deployment dan uji role matrix masih diperlukan.
+- Policy Public submit worker application saat ini memberi INSERT ke anon dan authenticated untuk baris worker_applications dengan applicant_id NULL. Jalur ini berpotensi membuat record yatim/spam. Perlu audit frontend agar dipastikan semua formulir sudah memakai Edge Function terautentikasi sebelum policy tersebut dicabut melalui migrasi terpisah. Belum ada perubahan policy.
+- Tabel joki_order_history dan telegram_command_state memiliki RLS aktif tanpa policy dan tanpa grants langsung untuk anon/authenticated; keduanya tidak terbuka melalui role publik yang diperiksa.
+- Inbox policy membatasi pembacaan pesan ke receipt milik user. Pengiriman resmi melalui Edge Function memeriksa role admin di server.
+- Security Advisor menandai beberapa SECURITY DEFINER RPC yang dapat dipanggil anon/authenticated. Endpoint publik dan endpoint login perlu ditinjau satu per satu berdasarkan isi fungsi, parameter, dan grants; tidak semua temuan otomatis merupakan kerentanan. Advisor juga menandai leaked-password protection nonaktif.
+- process_worker_application_decision memetakan worker_type akun ke role AKUN dan macul ke MACUL, membuat pesan Inbox, serta membatasi aktor pada admin/MATTHEW. RPC tidak dapat dipanggil anon/authenticated; Telegram Edge Function memverifikasi secret webhook dan chat/sender ID admin sebelum menjalankannya.
+- Rekomendasi: evaluasi dan cabut anonymous INSERT worker_applications setelah audit frontend; aktifkan leaked-password protection di Auth; audit SECURITY DEFINER RPC; dan deploy Edge Function worker setelah diff versi aktif dengan branch ditinjau.
