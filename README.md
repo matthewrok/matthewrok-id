@@ -181,7 +181,7 @@ File assets/js/access-guard.js dijalankan setelah inisialisasi Supabase pada hal
 | /worker.html | member, sultan, matthew, pelanggan, worker, macul, admin |
 | /inbox.html, /your-order.html, /member-dashboard.html | Role terdaftar yang sama |
 
-Role worker memiliki dua jenis tugas: `macul` untuk petani/farmer dan `worker` untuk pembuat akun atau penjoki akun. Keduanya termasuk kelompok worker dan diizinkan membuka halaman worker, Inbox, pesanan, serta dashboard sesuai allowlist guard; keduanya tidak mendapat akses admin. Visitor menggunakan sessionStorage tersendiri dan tidak dianggap sebagai pengguna Supabase terautentikasi. Karena itu visitor tidak memenuhi pemeriksaan guard halaman privat. Parameter next setelah login dibatasi ke path privat pada origin website sendiri.
+Role worker memiliki dua jenis tugas: `macul` untuk petani/farmer dan `worker` untuk pembuat akun atau penjoki akun. Keduanya termasuk kelompok worker dan diizinkan membuka halaman worker, Inbox, pesanan, serta dashboard sesuai allowlist guard; keduanya tidak mendapat akses admin. Visitor menggunakan sessionStorage tersendiri dan tidak dianggap sebagai pengguna Supabase terautentikasi. Karena itu visitor tidak memenuhi pemeriksaan guard halaman privat. Setelah login berhasil, semua role selalu diarahkan ke `/index.html`; parameter `next` diabaikan sepenuhnya.
 
 **Batas keamanan penting:** GitHub Pages menyajikan HTML dan aset sebagai file statis. Guard browser hanya mengendalikan alur tampilan; ia bukan batas keamanan server dan tidak membuat file HTML tidak dapat diunduh. Semua data dan operasi sensitif wajib tetap dilindungi oleh Supabase RLS, validasi kepemilikan, serta pemeriksaan role di RPC/Edge Functions. Jangan pernah menaruh service-role key atau secret di frontend.
 
