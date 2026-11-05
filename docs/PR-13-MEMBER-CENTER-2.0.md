@@ -250,3 +250,8 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - GitHub Actions run #29 (run ID 42092699606) on commit 994dc7ac07ab0af579a06d00467df05f048b6245 completed successfully.
 - The Node test runner reported 61 tests passed, 0 failed, 0 skipped. This includes login redirects, access guard roles, session timer cleanup, worker authorization source checks, secure tracking-token RPC usage, SQL grant/randomness assertions, tracking input markup, JavaScript parse checks, and admin blue-theme metadata.
 - This remains automated/static QA; it does not replace browser/device and live account-role tests.
+### Additional RPC hardening — 6 November 2026
+- Applied migration harden_remaining_rpc_search_paths to pin an empty search_path for get_public_joki_reviews, get_my_reviewed_order_ids, and submit_member_joki_review. Their table references were already schema-qualified.
+- Read-only verification confirmed all three functions now have search_path="".
+- GitHub Actions run #32 on head 371cad96508f2815cae62e984e564a093c7a604f passed: 62 tests passed, 0 failed, 0 skipped.
+- Security Advisor continues to report expected SECURITY DEFINER warnings for intentionally callable RPCs. The legacy public tracking RPCs remain the final token-related warning to retire after the new frontend is published and old customers receive new tokens.
