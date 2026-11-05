@@ -67,6 +67,7 @@ Deno.serve(async (req: Request) => {
     console.error("Worker applicant profile lookup failed", profileResponse.status, profileRows);
     return json({ error: "Status akun tidak dapat diverifikasi. Silakan coba kembali." }, 503);
   }
+  const profile = Array.isArray(profileRows) ? profileRows[0] : null;
   const maintenanceResponse = await fetch(
     `${supabaseUrl}/rest/v1/site_maintenance_config?id=eq.true&select=enabled,mode,affected_modules&limit=1`,
     { headers }
