@@ -88,13 +88,14 @@ begin
     raise exception 'Hanya admin aktif yang dapat mengubah maintenance mode.';
   end if;
 
-  if p_mode not in ('full','orders','system') then
+  if p_mode is null or p_mode not in ('full','orders','system') then
     raise exception 'Mode maintenance tidak valid.';
   end if;
   if char_length(coalesce(p_message,''))>500 then
     raise exception 'Pesan maintenance maksimal 500 karakter.';
   end if;
-  if exists(select 1 from unnest(v_modules) as x where x not in ('orders','worker','macul','inbox')) then
+  if array_position(v_modules,null) is not null
+     or exists(select 1 from unnest(v_modules) as x where x not in ('orders','worker','macul','inbox')) then
     raise exception 'Daftar modul maintenance tidak valid.';
   end if;
   if p_enabled and p_mode='system' and cardinality(v_modules)=0 then
