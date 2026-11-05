@@ -106,7 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (rememberField?.checked) localStorage.setItem("matthewRememberedEmail", email);
         else localStorage.removeItem("matthewRememberedEmail");
         showMessage("Login berhasil. Membuka kerajaan...", "success");
-        window.location.assign("member-dashboard.html");
+        const requestedNext = new URLSearchParams(window.location.search).get("next");
+        const safeNext = requestedNext && requestedNext.startsWith("/") && !requestedNext.startsWith("//")
+          ? requestedNext
+          : "member-dashboard.html";
+        window.location.assign(safeNext);
       } catch (error) {
         showMessage(friendlyAuthError(error) || "Login gagal. Periksa kembali email dan password.", "error");
         if (/email not confirmed|email_not_confirmed/i.test(String(error?.message || ""))) showResendButton(email);
