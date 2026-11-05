@@ -569,3 +569,30 @@ test("maintenance foreign-key index follow-up covers both reported advisor findi
   assert.match(sql, /site_maintenance_config_updated_by_idx/);
   assert.match(sql, /create index if not exists/);
 });
+
+
+test("maintenance Inbox RLS blocks member reads and receipts while preserving admin recovery access", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-inbox-rls.sql"), "utf8");
+  assert.match(sql, /is_maintenance_module_blocked/);
+  assert.match(sql, /m\.mode='full'/);
+  assert.match(sql, /p_module='inbox'/);
+  assert.match(sql, /Members read addressed inbox messages outside maintenance/);
+  assert.match(sql, /Members read own inbox receipt outside maintenance/);
+  assert.match(sql, /Members update own inbox receipt outside maintenance/);
+  assert.match(sql, /or \(select public\.is_admin\(\)\)/);
+  assert.match(sql, /grant execute on function public\.is_maintenance_module_blocked\(text\) to authenticated/);
+  assert.doesNotMatch(sql, /grant execute on function public\.is_maintenance_module_blocked\(text\) to anon/);
+});
+
+test("Telegram maintenance RPC is service-role-only and validates an active admin actor", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-telegram-rpc.sql"), "utf8");
+  assert.match(sql, /v_role is distinct from 'admin'/);
+  assert.match(sql, /v_status is distinct from 'active'/);
+  assert.match(sql, /p_mode not in \('full','orders','system'\)/);
+  assert.match(sql, /grant execute on function public\.service_set_maintenance[\s\S]*to service_role/);
+  assert.match(sql, /revoke all on function public\.service_set_maintenance[\s\S]*from public, anon, authenticated/);
+  const telegram = fs.readFileSync(path.join(ROOT, "supabase/functions/telegram-order-notify/index.ts"), "utf8");
+  assert.match(telegram, /x-telegram-bot-api-secret-token/);
+  assert.match(telegram, /chatId !== adminChatId \|\| senderId !== adminChatId/);
+  assert.match(telegram, /service_set_maintenance/);
+});
