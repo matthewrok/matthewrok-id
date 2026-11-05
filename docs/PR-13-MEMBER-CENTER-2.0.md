@@ -231,3 +231,18 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Browser/device smoke tests and end-to-end order tests remain required after migration + frontend deployment.
 - Supabase leaked-password protection is still disabled; the available connected Supabase actions do not expose the Auth security-settings toggle. This must be enabled and verified in Supabase Dashboard.
 - PR #13 is not merged. No public frontend release was performed in this follow-up.
+
+### Tracking token v2 — database rollout verified (6 November 2026)
+- Migration add_secure_tracking_token_v2 successfully applied to the live Supabase project after its complete SQL was first executed inside an explicit transaction and rolled back to validate syntax/permissions without persisting the trial.
+- Production now has a separate tracking_token column, 256-bit tokens for all 3 existing orders, a unique case-insensitive index, and an insert trigger for future rows.
+- Verification confirmed 3/3 orders have distinct tracking tokens and 0 rows use order_number as tracking_token.
+- New secure RPCs exist: create_joki_order_secure, lookup_joki_progress_secure, lookup_joki_review_secure, and submit_joki_review_secure. The order RPC is authenticated-only; tracking/review RPCs are public by design but accept only the new high-entropy tracking token.
+- Negative lookup verification confirmed a public order number does not resolve through lookup_joki_progress_secure.
+- Legacy RPCs remain active temporarily so the currently published frontend is not broken before PR #13 is merged and published. tracking-token-v2-cutover.sql is staged and must be applied only after the new frontend is live and the operator has privately delivered new tokens to existing clients.
+- Both expand and cutover SQL were tested in explicit transactions and rolled back; only the expand migration was subsequently applied through the Supabase migration mechanism. The cutover has NOT been applied.
+
+### Latest verification
+- GitHub Actions run #24 for head 9fd54cb0d38acaeabbe1b623f34ebeb509bd296f completed successfully; job Login redirect, session cleanup, and role access passed.
+- Supabase Security Advisor still reports SECURITY DEFINER warnings for public token-based lookup/review RPCs and authenticated privileged RPCs. These are not automatically vulnerabilities; each function has explicit grants and search_path='', and the new public endpoints are protected by 256-bit tokens. Remaining review includes leaked-password protection.
+- Supabase Performance Advisor still reports multiple permissive policies and unused indexes. No index was dropped based only on the advisor; unused indexes require workload review.
+- Browser tests, real member role matrix tests, and a live end-to-end order/payment/WhatsApp test remain outstanding.
