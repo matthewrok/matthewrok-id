@@ -67,7 +67,26 @@ Deno.serve(async (req: Request) => {
     console.error("Worker applicant profile lookup failed", profileResponse.status, profileRows);
     return json({ error: "Status akun tidak dapat diverifikasi. Silakan coba kembali." }, 503);
   }
-  const profile = Array.isArray(profileRows) ? profileRows[0] : null;
+  const maintenanceResponse = await fetch(
+    `${supabaseUrl}/rest/v1/site_maintenance_config?id=eq.true&select=enabled,mode,affected_modules&limit=1`,
+    { headers }
+  );
+  const maintenanceRows = await maintenanceResponse.json();
+  if (!maintenanceResponse.ok || !Array.isArray(maintenanceRows) || !maintenanceRows[0]) {
+    console.error("Worker maintenance status lookup failed", maintenanceResponse.status);
+    return json({ error: "Status layanan tidak dapat diverifikasi. Silakan coba kembali." }, 503);
+  }
+  const maintenance = maintenanceRows[0];
+  const affectedModules = Array.isArray(maintenance.affected_modules)
+    ? maintenance.affected_modules.map((value: unknown) => String(value).toLowerCase())
+    : [];
+  if (maintenance.enabled && maintenance.mode === "full") {
+    return json({ error: maintenance.message || "Pendaftaran worker sedang ditutup sementara." }, 503);
+  }
+  if (maintenance.enabled && maintenance.mode === "system" && affectedModules.includes("worker")) {
+    return json({ error: maintenance.message || "Modul worker sedang dalam pemeliharaan." }, 503);
+  }
+
   const role = String(profile?.role ?? "").trim().toLowerCase();
   const accountStatus = String(profile?.account_status ?? "").trim().toLowerCase();
   const applicantRoles = ["member", "sultan", "matthew", "pelanggan"];
@@ -83,6 +102,10 @@ Deno.serve(async (req: Request) => {
 
   const applicantName = String(input.applicant_name ?? "").trim().replace(/\s+/g, " ");
   const workerType = String(input.worker_type ?? "");
+  if (maintenance.enabled && maintenance.mode === "system" &&
+      workerType === "macul" && affectedModules.includes("macul")) {
+    return json({ error: maintenance.message || "Modul MACUL sedang dalam pemeliharaan." }, 503);
+  }
   const playDuration = String(input.play_duration ?? "").trim();
   const accountCapacity = String(input.account_capacity ?? "").trim();
   const whatsapp = String(input.whatsapp_number ?? "").trim();
