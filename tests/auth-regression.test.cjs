@@ -318,3 +318,43 @@ test("worker application form uses the server-validated Edge Function, not direc
   assert.match(endpoint, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(endpoint, /applicantRoles\.includes\(role\)/);
 });
+
+
+test("order flow uses private tracking-token RPC and shares token separately from order number", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(source, /rpc\(["']create_joki_order_secure["']/);
+  assert.match(source, /order\.tracking_token/);
+  assert.match(source, /No\. Order:/);
+  assert.match(source, /Token Pelacakan Rahasia:/);
+  assert.doesNotMatch(source, /rpc\(["']create_joki_order["']/);
+});
+
+test("public tracking and review UI call only secure tracking-token RPCs", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/joki-matthew.js"), "utf8");
+  assert.match(source, /lookup_joki_progress_secure/);
+  assert.match(source, /lookup_joki_review_secure/);
+  assert.match(source, /submit_joki_review_secure/);
+  assert.doesNotMatch(source, /rpc\(["']lookup_joki_progress["']/);
+  assert.doesNotMatch(source, /rpc\(["']lookup_joki_review["']/);
+  assert.doesNotMatch(source, /rpc\(["']submit_joki_review["']/);
+});
+
+test("admin progress panel manages and copies the private tracking token", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/admin-joki-progress.js"), "utf8");
+  assert.match(source, /tracking_token/);
+  assert.match(source, /payload\.tracking_token=payload\.token/);
+});
+
+test("tracking-token SQL uses 256-bit cryptographic randomness and explicit RPC grants", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/tracking-token-v2.sql"), "utf8");
+  assert.match(migration, /extensions\.gen_random_bytes\(32\)/);
+  assert.match(migration, /joki_progress_tracking_token_uidx/);
+  assert.match(migration, /create_joki_order_secure/);
+  assert.match(migration, /lookup_joki_progress_secure/);
+  assert.match(migration, /lookup_joki_review_secure/);
+  assert.match(migration, /submit_joki_review_secure/);
+  assert.match(migration, /set search_path = ''/);
+  const cutover = fs.readFileSync(path.join(ROOT, "supabase/tracking-token-v2-cutover.sql"), "utf8");
+  assert.match(cutover, /revoke all on function public\.lookup_joki_progress/);
+  assert.match(cutover, /revoke all on function public\.create_joki_order/);
+});
