@@ -58,13 +58,25 @@ Deno.serve(async (req: Request) => {
     [{ text: "❔ Panduan & Perintah", callback_data: "help" }],
   ] };
   const helpText = [
-    "🤖 <b>MATTHEW JOKI — ADMIN BOT</b>", "",
-    "Pilih menu menggunakan tombol di bawah. Kamu juga masih bisa memakai perintah:",
-    "/pesanan — daftar pesanan terbaru", "/detail NOMOR — detail pesanan",
-    "/progress NOMOR PERSEN CATATAN — ubah progress", "/status NOMOR STATUS — ubah status",
-    "/maintenance — kelola mode maintenance website",
-    "", "Perubahan melalui tombol akan meminta konfirmasi sebelum disimpan."
-  ].join("\n");
+    "🤖 <b>PANDUAN MATTHEWBOT</b>",
+    "━━━━━━━━━━━━━━━━━━",
+    "",
+    "Gunakan tombol panel untuk mengelola website dengan mudah.",
+    "",
+    "📦 <b>PERINTAH PESANAN</b>",
+    "<code>/pesanan</code> — melihat 10 pesanan terbaru",
+    "<code>/detail NOMOR</code> — melihat detail pesanan",
+    "<code>/progress NOMOR PERSEN CATATAN</code> — memperbarui progres",
+    "<code>/status NOMOR STATUS</code> — memperbarui status pesanan",
+    "",
+    "⚙️ <b>PERINTAH WEBSITE</b>",
+    "<code>/maintenance</code> — melihat dan mengatur Maintenance Mode",
+    "<code>/panel</code> — membuka kembali panel admin",
+    "<code>/bantuan</code> — menampilkan panduan ini",
+    "",
+    "🔐 <b>KEAMANAN</b>",
+    "Perubahan penting melalui tombol akan meminta konfirmasi sebelum disimpan."
+  ].join("\\n");
 
   // Private endpoint: setup webhook and deliver database order notifications.
   if (req.headers.get("x-webhook-secret") === webhookSecret) {
@@ -357,7 +369,20 @@ Deno.serve(async (req: Request) => {
       adminRead("visitor_logs", "select=id&limit=1000"),
       adminRead("joki_reviews", "select=id&limit=1000")
     ]);
-    return "📊 <b>RINGKASAN WEBSITE</b>\\n\\n📦 Pesanan: <b>" + results[0].length + "</b>\\n👥 Akun: <b>" + results[1].length + "</b>\\n👀 Kunjungan tercatat: <b>" + results[2].length + "</b>\\n⭐ Ulasan: <b>" + results[3].length + "</b>";
+    return [
+      "📊 <b>RINGKASAN WEBSITE</b>",
+      "━━━━━━━━━━━━━━━━━━",
+      "",
+      "📦 <b>Total Pesanan</b>\\n" + results[0].length + " pesanan tercatat",
+      "",
+      "👥 <b>Total Akun</b>\\n" + results[1].length + " akun terdaftar",
+      "",
+      "👀 <b>Total Kunjungan</b>\\n" + results[2].length + " kunjungan tercatat",
+      "",
+      "⭐ <b>Total Ulasan</b>\\n" + results[3].length + " ulasan pelanggan",
+      "",
+      "<i>Data dihitung dari catatan yang tersedia di database.</i>"
+    ].join("\\n");
   };
   const readPanel = async (kind: string) => {
     if (kind === "summary") return summaryText();
@@ -555,7 +580,7 @@ Deno.serve(async (req: Request) => {
         return Response.json({ok:true});
       }
       if (data === "menu" || data === "help") {
-        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PANEL ADMIN — MATTHEW JOKI</b>\\n\\n<b>OPERASIONAL</b>\nKelola pesanan dan pantau ringkasan.\n\n<b>PENGELOLAAN WEBSITE</b>\nAtur role akun, pengumuman, dan voucher.\n\n<b>AKTIVITAS &amp; MASUKAN</b>\nPantau pengunjung dan ulasan.\n\nPilih tombol di bawah atau ketik /panel kapan saja.", { reply_markup: mainMenu });
+        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PUSAT KONTROL — MATTHEW JOKI</b>\\n━━━━━━━━━━━━━━━━━━\\n\\n📦 <b>OPERASIONAL</b>\\nKelola pesanan dan pantau ringkasan aktivitas.\\n\\n👥 <b>PENGELOLAAN AKUN & WEBSITE</b>\\nAtur role akun, pengumuman, voucher, dan status website.\\n\\n📊 <b>AKTIVITAS & MASUKAN</b>\\nPantau kunjungan website serta ulasan pelanggan.\\n\\nPilih salah satu menu di bawah. Ketik /panel kapan saja untuk membuka panel ini kembali.", { reply_markup: mainMenu });
         return Response.json({ ok: true });
       }
       const messageId = callback.message?.message_id;
