@@ -441,7 +441,7 @@ test("all pages load the current shared blue theme cache version", () => {
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
-    assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13/, page + " should load the current blue theme");
+    assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13-mm2/, page + " should load the current blue theme");
   }
 });
 
@@ -467,4 +467,48 @@ test("RLS policy consolidation preserves role-specific visibility and admin oper
   assert.match(sql, /Applicants and operators read worker applications/);
   const cleanup = fs.readFileSync(path.join(ROOT, "supabase/remove_unused_anon_voucher_policy.sql"), "utf8");
   assert.match(cleanup, /drop policy if exists "Public reads usable vouchers"/);
+});
+
+
+test("Maintenance Mode 2.0 has a server-enforced config, admin audit, and backend gates", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-v2.sql"), "utf8");
+  for (const item of [
+    "site_maintenance_config", "site_maintenance_audit",
+    "get_public_maintenance_status", "admin_set_maintenance",
+    "admin_get_maintenance_audit", "site_maintenance_config m"
+  ]) assert.ok(sql.includes(item), "maintenance SQL missing " + item);
+  assert.match(sql, /m\.mode = 'full'/);
+  assert.match(sql, /m\.mode = 'orders'/);
+  assert.match(sql, /'orders' = any\(m\.affected_modules\)/);
+  assert.match(sql, /Hanya admin aktif yang dapat mengubah maintenance mode/);
+  const worker = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(worker, /site_maintenance_config/);
+  assert.match(worker, /maintenance\.mode === "full"/);
+  assert.match(worker, /affectedModules\.includes\("macul"\)/);
+});
+
+test("maintenance page, global gate, and admin control are wired across every route", () => {
+  const status = fs.readFileSync(path.join(ROOT, "assets/js/maintenance-status.js"), "utf8");
+  const admin = fs.readFileSync(path.join(ROOT, "assets/js/maintenance-admin.js"), "utf8");
+  const dashboard = fs.readFileSync(path.join(ROOT, "admin/dashboard.html"), "utf8");
+  const maintenancePage = fs.readFileSync(path.join(ROOT, "maintenance.html"), "utf8");
+  assert.match(status, /get_public_maintenance_status/);
+  assert.match(status, /location\.replace\("\/maintenance\.html"\)/);
+  assert.match(status, /db\.rpc\("is_admin"\)/);
+  assert.match(admin, /admin_set_maintenance/);
+  assert.match(admin, /admin_get_maintenance_audit/);
+  assert.match(dashboard, /maintenanceForm/);
+  assert.match(dashboard, /maintenanceDisableNow/);
+  assert.match(maintenancePage, /maintenanceMessage/);
+  for (const file of [
+    "index.html","login.html","register.html","reset-password.html","email-confirmed.html",
+    "member-dashboard.html","your-order.html","inbox.html","worker.html","joki-matthew.html",
+    "calculator-resource.html","requirements-city-hall.html","support-matthew.html",
+    "admin/dashboard.html","admin/joki-progress.html"
+  ]) {
+    const html=fs.readFileSync(path.join(ROOT,file),"utf8");
+    assert.match(html,/maintenance-status\.js/,"missing maintenance gate in "+file);
+  }
+  assert.doesNotThrow(()=>new Function(status));
+  assert.doesNotThrow(()=>new Function(admin));
 });
