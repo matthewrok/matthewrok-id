@@ -16,7 +16,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 
 ## B. Profil dan status akun
 - [x] Tampilkan nama, email, role, dan tanggal bergabung dari sesi/profil; status akun tetap mengikuti access guard dan pemeriksaan status yang tersedia.
-- [ ] Tangani profil hilang, status nonaktif, dan kegagalan query tanpa menampilkan dashboard seolah-olah sehat.
+- [x] Kegagalan query/exception dashboard menampilkan pesan pemulihan dan tombol coba lagi; pemeriksaan status akun tetap mengikuti access guard. Profil hilang masih perlu uji skenario database.
 - [ ] Jangan mengizinkan user mengubah role atau status melalui UI member.
 - [ ] Pengaturan profil hanya ditambahkan jika ada jalur backend/RLS yang aman.
 
@@ -32,7 +32,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - [ ] Timeline progres yang membaca data backend, bukan progres buatan frontend.
 - [ ] Tombol salin kode pesanan dengan fallback yang aksesibel.
 - [ ] Invoice aman dari HTML injection dan menampilkan rincian yang benar.
-- [ ] Empty, loading, error, dan retry state.
+- [x] State loading, error, dan retry dasar pada pemuatan dashboard; empty state pesanan tersedia. Filter/pagination masih terbuka.
 - [ ] Validasi bahwa semua data berasal dari RPC/RLS yang hanya mengembalikan pesanan milik user.
 
 ## E. Notification Center dan Inbox
@@ -59,8 +59,8 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - [ ] Audit access guard untuk dashboard, pesanan, Inbox, worker, Macul, dan halaman admin.
 - [ ] Pastikan WORKER dan MACUL tetap role terpisah; jangan gabungkan otorisasi keduanya.
 - [ ] Periksa seluruh query dashboard terhadap RLS dan kepemilikan data.
-- [ ] Periksa XSS/HTML injection, terutama render ulasan, pesan, nama, dan invoice.
-- [ ] Logout harus menangani error dan membersihkan sesi lokal dengan benar.
+- [x] Render nama/ulasan/order dan invoice dashboard menggunakan escaping HTML pada output dinamis; audit XSS seluruh halaman masih terbuka.
+- [x] Logout menampilkan penanganan error dan tombol kembali aktif jika signOut gagal; perlu uji runtime multi-tab.
 - [ ] Jangan menaruh service-role key, token bot, webhook secret, atau kredensial di frontend/repository.
 - [ ] Perubahan SQL/RLS/RPC harus ditinjau dan diuji terpisah sebelum diterapkan ke Supabase produksi.
 
@@ -89,7 +89,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 ## K. Pengujian dan kriteria siap merge
 - [ ] Jalankan seluruh regression tests yang sudah ada.
 - [ ] Tambahkan tes untuk status profil, statistik/status pesanan, escaping output, logout, dan akses data.
-- [ ] Jalankan pemeriksaan sintaks JavaScript untuk file yang berubah.
+- [x] Pemeriksaan parser JavaScript inline `member-dashboard.html` berhasil setelah perubahan; belum menggantikan browser test.
 - [ ] Jalankan tes responsivitas/aksesibilitas bila tooling tersedia.
 - [ ] Periksa diff dan pastikan tidak ada perubahan rahasia atau kredensial.
 - [ ] Pastikan GitHub Actions hijau.
@@ -135,6 +135,8 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - `member-review-moderation.sql` dan `order-kingdom-and-quantity-limit.sql` adalah source SQL di repository. Audit ini tidak memverifikasi checksum/versi fungsi yang sedang aktif di Supabase produksi.
 
 ### CI dan batas pengujian
+
+- Perbaikan dashboard lanjutan pada 6 November: panel Rating & Testimoni kini berada di dalam kontainer dashboard terautentikasi (tidak tampil saat dashboard masih loading); kegagalan request ditangani dengan pesan dan tombol coba lagi; logout menampilkan error tanpa mengunci tombol selamanya. Parser JavaScript inline berhasil dijalankan melalui pemeriksaan statis. Browser/runtime test tetap belum dilakukan.
 - Pemeriksaan GitHub Actions untuk head PR saat audit tidak mengembalikan workflow run; belum ada bukti CI lulus.
 - Belum dilakukan browser smoke test, uji mobile, uji akun dengan role berbeda, uji koneksi terputus, maupun pengujian database aktif.
 - Tidak ada perubahan schema, RLS, RPC, Edge Function, atau konfigurasi Auth produksi pada tahap audit ini.
