@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#071326">
+  <title>Maintenance | MATTHEW JOKI</title>
+  <link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261106-blue-pr13">
+  <style>
+    body{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .maintenance-card{width:min(680px,100%);padding:clamp(24px,5vw,46px);border:1px solid rgba(120,201,255,.35);border-radius:24px;background:linear-gradient(145deg,#102b4d,#07172b);box-shadow:0 28px 80px rgba(0,0,0,.4);text-align:center}
+    .maintenance-mark{font-size:42px;color:#8bdcff}
+    .maintenance-card h1{font-size:clamp(30px,6vw,48px);margin:12px 0;color:#eef6ff}
+    .maintenance-card p{color:#b8cce5;line-height:1.8}
+    .maintenance-mode{display:inline-flex;padding:7px 12px;border:1px solid rgba(120,201,255,.4);border-radius:999px;color:#a9ddff;font-size:11px;font-weight:800;letter-spacing:.1em}
+    .maintenance-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+    .maintenance-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 18px;border-radius:12px;background:linear-gradient(135deg,#347fe8,#2456bd);color:#fff;text-decoration:none;font-weight:700}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+</head>
+<body>
+  <main class="maintenance-card">
+    <div class="maintenance-mark" aria-hidden="true">✦</div>
+    <span class="maintenance-mode" id="maintenanceModeLabel">FULL MAINTENANCE</span>
+    <h1>SEDANG PEMELIHARAAN</h1>
+    <p id="maintenanceMessage">Website MATTHEW JOKI sedang menjalani pemeliharaan agar layanan tetap aman dan stabil.</p>
+    <p id="maintenanceEta">Status layanan sedang diperiksa…</p>
+    <div class="maintenance-actions"><a href="/login.html">Login Admin</a></div>
+    <p style="font-size:11px;margin-top:26px">Terima kasih atas kesabaran kamu. Silakan kembali beberapa saat lagi.</p>
+  </main>
+  <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
+</body>
+</html>
