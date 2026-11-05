@@ -106,7 +106,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if (rememberField?.checked) localStorage.setItem("matthewRememberedEmail", email);
         else localStorage.removeItem("matthewRememberedEmail");
         showMessage("Login berhasil. Membuka kerajaan...", "success");
-        window.location.assign("member-dashboard.html");
+        const requestedNext = new URLSearchParams(window.location.search).get("next");
+        let safeNext = "member-dashboard.html";
+        if (requestedNext) {
+          try {
+            const candidate = new URL(requestedNext, window.location.origin);
+            const allowedPath = /^\/(?:admin(?:\/|$)|worker[.]html$|inbox[.]html$|your-order[.]html$|member-dashboard[.]html$)/i;
+            if (candidate.origin === window.location.origin &&
+                !candidate.username && !candidate.password &&
+                allowedPath.test(candidate.pathname)) {
+              safeNext = candidate.pathname + candidate.search + candidate.hash;
+            }
+          } catch (_) {
+            // Ignore malformed or external redirect targets and use the member dashboard.
+          }
+        }
+        window.location.assign(safeNext);
       } catch (error) {
         showMessage(friendlyAuthError(error) || "Login gagal. Periksa kembali email dan password.", "error");
         if (/email not confirmed|email_not_confirmed/i.test(String(error?.message || ""))) showResendButton(email);

@@ -1,5 +1,8 @@
 (() => {
   const init = () => {
+    // Authentication pages must never receive the global menu or Inbox, even if this script is included accidentally.
+    if (document.body?.matches(".auth-page, .auth-experience") ||
+        document.querySelector("#loginForm, #registerForm, #forgotPasswordForm, #resetPasswordForm")) return;
     if (document.querySelector(".global-menu")) return;
     const root = document.createElement("div");
     root.className = "global-menu";
