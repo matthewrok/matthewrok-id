@@ -258,3 +258,8 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 ### Rollback and backup boundaries
 - Added supabase/tracking-token-v2-rollback.sql as a pre-release rollback only. It drops only the new token-v2 functions/trigger/column and leaves legacy token and order_number values untouched. It must not be used after the new frontend creates orders with the new token contract.
 - The connected Supabase tools did not expose a native backup/export action or an available staging branch. No native point-in-time backup was created by this session. The applied migrations are additive/reversible and did not delete existing orders or reviews; the legacy token/order_number values were preserved. For a full restore point, use the Supabase Dashboard backup/PITR controls before the final cutover.
+### Legacy order RPC authorization hardening — 6 November 2026
+- Applied harden_legacy_order_rpc_role_access to the live database. The legacy create_joki_order signature/return contract is preserved for the currently published frontend, but server-side role and account_status checks now match the secure RPC: only active member, SULTAN, MATTHEW, and PELANGGAN profiles may order.
+- Direct execution remains authenticated-only; anon cannot execute the legacy order RPC.
+- Ran a rollback-only database regression using the live admin and MACUL profile identities: both were rejected by the server-side role guard before any order insert. The transaction was rolled back; no test order or Telegram notification was created.
+- The new secure RPC continues to require an authenticated, email-confirmed, active allowed-role account.
