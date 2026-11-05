@@ -58,13 +58,25 @@ Deno.serve(async (req: Request) => {
     [{ text: "❔ Panduan & Perintah", callback_data: "help" }],
   ] };
   const helpText = [
-    "🤖 <b>MATTHEW JOKI — ADMIN BOT</b>", "",
-    "Pilih menu menggunakan tombol di bawah. Kamu juga masih bisa memakai perintah:",
-    "/pesanan — daftar pesanan terbaru", "/detail NOMOR — detail pesanan",
-    "/progress NOMOR PERSEN CATATAN — ubah progress", "/status NOMOR STATUS — ubah status",
-    "/maintenance — kelola mode maintenance website",
-    "", "Perubahan melalui tombol akan meminta konfirmasi sebelum disimpan."
-  ].join("\n");
+    "🤖 <b>PANDUAN MATTHEWBOT</b>",
+    "━━━━━━━━━━━━━━━━━━",
+    "",
+    "Gunakan tombol panel untuk mengelola website dengan mudah.",
+    "",
+    "📦 <b>PERINTAH PESANAN</b>",
+    "<code>/pesanan</code> — melihat 10 pesanan terbaru",
+    "<code>/detail NOMOR</code> — melihat detail pesanan",
+    "<code>/progress NOMOR PERSEN CATATAN</code> — memperbarui progres",
+    "<code>/status NOMOR STATUS</code> — memperbarui status pesanan",
+    "",
+    "⚙️ <b>PERINTAH WEBSITE</b>",
+    "<code>/maintenance</code> — melihat dan mengatur Maintenance Mode",
+    "<code>/panel</code> — membuka kembali panel admin",
+    "<code>/bantuan</code> — menampilkan panduan ini",
+    "",
+    "🔐 <b>KEAMANAN</b>",
+    "Perubahan penting melalui tombol akan meminta konfirmasi sebelum disimpan."
+  ].join("\\n");
 
   // Private endpoint: setup webhook and deliver database order notifications.
   if (req.headers.get("x-webhook-secret") === webhookSecret) {
@@ -357,29 +369,74 @@ Deno.serve(async (req: Request) => {
       adminRead("visitor_logs", "select=id&limit=1000"),
       adminRead("joki_reviews", "select=id&limit=1000")
     ]);
-    return "📊 <b>RINGKASAN WEBSITE</b>\\n\\n📦 Pesanan: <b>" + results[0].length + "</b>\\n👥 Akun: <b>" + results[1].length + "</b>\\n👀 Kunjungan tercatat: <b>" + results[2].length + "</b>\\n⭐ Ulasan: <b>" + results[3].length + "</b>";
+    return [
+      "📊 <b>RINGKASAN WEBSITE</b>",
+      "━━━━━━━━━━━━━━━━━━",
+      "",
+      "📦 <b>Total Pesanan</b>\\n" + results[0].length + " pesanan tercatat",
+      "",
+      "👥 <b>Total Akun</b>\\n" + results[1].length + " akun terdaftar",
+      "",
+      "👀 <b>Total Kunjungan</b>\\n" + results[2].length + " kunjungan tercatat",
+      "",
+      "⭐ <b>Total Ulasan</b>\\n" + results[3].length + " ulasan pelanggan",
+      "",
+      "<i>Data dihitung dari catatan yang tersedia di database.</i>"
+    ].join("\\n");
   };
   const readPanel = async (kind: string) => {
     if (kind === "summary") return summaryText();
     if (kind === "roles") {
       const rows = await adminRead("profiles", "select=email,full_name,role,account_status&order=created_at.desc&limit=15");
-      return "👥 <b>ROLE AKUN TERBARU</b>\\n\\n" + (rows.map((p:any) => "• " + esc(p.full_name || p.email) + " — " + esc(p.email) + " — <b>" + esc(p.role) + "</b>").join("\\n") || "Belum ada akun.") + "\\n\\nPengubahan role akan ditambahkan melalui alur terkonfirmasi.";
+      const body = rows.map((p: any, index: number) => [
+        `${index + 1}. <b>${esc(p.full_name || "Tanpa nama")}</b>`,
+        `   ✉️ ${esc(p.email || "Email tidak tersedia")}`,
+        `   🏷️ Role: <b>${esc(p.role || "Belum ditentukan")}</b>`,
+        `   🔘 Akun: ${esc(p.account_status || "Status tidak tersedia")}`
+      ].join("\\n")).join("\\n\\n");
+      return ["👥 <b>DAFTAR ROLE AKUN</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada akun yang tercatat.", "", "Pilih akun pada tombol di bawah untuk melihat detail dan mengubah role."].join("\\n");
     }
     if (kind === "announcements") {
-      const rows = await adminRead("site_notifications", "select=id,title,is_active,audience,expires_at&order=created_at.desc&limit=10");
-      return "📣 <b>PENGUMUMAN TERBARU</b>\\n\\n" + (rows.map((n:any) => "• #" + esc(n.id) + " " + esc(n.title) + " — " + (n.is_active ? "Aktif" : "Nonaktif")).join("\\n") || "Belum ada pengumuman.");
+      const rows = await adminRead("site_notifications", "select=title,is_active,audience,expires_at&order=created_at.desc&limit=10");
+      const body = rows.map((n: any, index: number) => [
+        `${index + 1}. <b>${esc(n.title || "Tanpa judul")}</b>`,
+        `   👥 Target: ${esc(n.audience || "all")}`,
+        `   🔘 Status: ${n.is_active ? "🟢 Aktif" : "⚪ Nonaktif"}`,
+        `   ⏳ Berakhir: ${n.expires_at ? esc(new Date(n.expires_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })) + " WIB" : "Tidak ditentukan"}`
+      ].join("\\n")).join("\\n\\n");
+      return ["📣 <b>DAFTAR PENGUMUMAN TERBARU</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada pengumuman.", "", "Pilih pengumuman di bawah untuk melihat detail, mengedit, mengaktifkan, atau menghapusnya."].join("\\n");
     }
     if (kind === "vouchers") {
-      const rows = await adminRead("vouchers", "select=id,code,description,discount_type,discount_value,is_active&order=created_at.desc&limit=10");
-      return "🎟️ <b>VOUCHER TERBARU</b>\\n\\n" + (rows.map((v:any) => "• #" + esc(v.id) + " " + esc(v.code) + " — " + esc(v.description) + " — " + (v.is_active ? "Aktif" : "Nonaktif")).join("\\n") || "Belum ada voucher.");
+      const rows = await adminRead("vouchers", "select=code,description,discount_type,discount_value,is_active&order=created_at.desc&limit=10");
+      const body = rows.map((v: any, index: number) => {
+        const discount = v.discount_type === "percent"
+          ? Number(v.discount_value || 0).toLocaleString("id-ID") + "%"
+          : money(v.discount_value);
+        return [
+          `${index + 1}. <b>${esc(v.code)}</b>`,
+          `   🏷️ Diskon: <b>${esc(discount)}</b>`,
+          `   📝 ${esc(v.description || "Tanpa keterangan")}`,
+          `   🔘 Status: ${v.is_active ? "🟢 Aktif" : "🔴 Nonaktif"}`
+        ].join("\\n");
+      }).join("\\n\\n");
+      return ["🎟️ <b>VOUCHER TERBARU</b>", "", body || "Belum ada voucher."].join("\\n");
     }
     if (kind === "visitors") {
       const rows = await adminRead("visitor_logs", "select=visitor_name,visited_at&order=visited_at.desc&limit=10");
-      return "👀 <b>KUNJUNGAN TERBARU</b>\\n\\n" + (rows.map((v:any) => "• " + esc(v.visitor_name) + " — " + esc(v.visited_at)).join("\\n") || "Belum ada data.");
+      const body = rows.map((v: any, index: number) => [
+        `${index + 1}. <b>${esc(v.visitor_name || "Pengunjung")}</b>`,
+        `   🕒 ${v.visited_at ? esc(new Date(v.visited_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })) + " WIB" : "Waktu tidak tersedia"}`
+      ].join("\\n")).join("\\n\\n");
+      return ["👀 <b>RIWAYAT KUNJUNGAN TERBARU</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada kunjungan yang tercatat."].join("\\n");
     }
     if (kind === "reviews") {
       const rows = await adminRead("joki_reviews", "select=client_name,rating,review_text,created_at&order=created_at.desc&limit=10");
-      return "⭐ <b>ULASAN TERBARU</b>\\n\\n" + (rows.map((v:any) => "⭐ " + esc(v.rating) + "/5 — " + esc(v.client_name || "Pelanggan") + "\\n" + esc(v.review_text)).join("\\n\\n") || "Belum ada ulasan.");
+      const body = rows.map((v: any, index: number) => [
+        `${index + 1}. <b>${esc(v.client_name || "Pelanggan")}</b> — ⭐ <b>${esc(v.rating)}/5</b>`,
+        `   💬 ${esc(v.review_text || "Tidak ada isi ulasan")}`,
+        `   🕒 ${v.created_at ? esc(new Date(v.created_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })) + " WIB" : "Waktu tidak tersedia"}`
+      ].join("\\n")).join("\\n\\n");
+      return ["⭐ <b>ULASAN PELANGGAN TERBARU</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada ulasan yang masuk.", "", "Pilih tombol ulasan di bawah jika ingin menghapus ulasan."].join("\\n");
     }
     return "Menu tidak dikenal.";
   };
@@ -523,7 +580,7 @@ Deno.serve(async (req: Request) => {
         return Response.json({ok:true});
       }
       if (data === "menu" || data === "help") {
-        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PANEL ADMIN — MATTHEW JOKI</b>\\n\\n<b>OPERASIONAL</b>\nKelola pesanan dan pantau ringkasan.\n\n<b>PENGELOLAAN WEBSITE</b>\nAtur role akun, pengumuman, dan voucher.\n\n<b>AKTIVITAS &amp; MASUKAN</b>\nPantau pengunjung dan ulasan.\n\nPilih tombol di bawah atau ketik /panel kapan saja.", { reply_markup: mainMenu });
+        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PUSAT KONTROL — MATTHEW JOKI</b>\\n━━━━━━━━━━━━━━━━━━\\n\\n📦 <b>OPERASIONAL</b>\\nKelola pesanan dan pantau ringkasan aktivitas.\\n\\n👥 <b>PENGELOLAAN AKUN & WEBSITE</b>\\nAtur role akun, pengumuman, voucher, dan status website.\\n\\n📊 <b>AKTIVITAS & MASUKAN</b>\\nPantau kunjungan website serta ulasan pelanggan.\\n\\nPilih salah satu menu di bawah. Ketik /panel kapan saja untuk membuka panel ini kembali.", { reply_markup: mainMenu });
         return Response.json({ ok: true });
       }
       const messageId = callback.message?.message_id;
