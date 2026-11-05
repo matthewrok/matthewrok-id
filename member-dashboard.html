@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
  document.getElementById("completedOrders").textContent=done;
  document.getElementById("activeOrders").textContent=active;
  document.getElementById("cancelledOrders").textContent=cancelled;
- document.getElementById("totalSpent").textContent=money(list.reduce((sum,o)=>sum+Number(o.total_price||0),0));
+ document.getElementById("totalSpent").textContent=new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(list.reduce((sum,o)=>sum+Number(o.total_price||0),0));
  document.getElementById("profileName").textContent=profile?.full_name||"Belum diatur";
  document.getElementById("profileEmail").textContent=user.email||"—";
  document.getElementById("profileRole").textContent=profile?.role||"MEMBER";
