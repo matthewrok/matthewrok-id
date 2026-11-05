@@ -125,7 +125,7 @@
     let whatsappTab=null;
     try{whatsappTab=window.open("about:blank","_blank");}catch(_e){}
     button.disabled=true;button.textContent="MENYIMPAN PESANAN...";
-    $("jokiOrderMessage").textContent="Membuat nomor order unik...";
+    $("jokiOrderMessage").textContent="Membuat nomor order dan token pelacakan rahasia...";
     try{
       const {data,error}=await db.rpc("create_joki_order_secure",{
         p_client_name:identity.name,p_client_email:identity.email||"",
