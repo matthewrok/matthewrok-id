@@ -12,7 +12,7 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 - /admin/* hanya untuk role admin.
 - Kelompok worker terdiri dari dua role: `macul` untuk petani/farmer dan `worker` untuk pembuat akun atau penjoki akun. Keduanya diizinkan pada halaman worker, Inbox, pesanan, dan dashboard member, tetapi tidak pada /admin/*.
 - Visitor disimpan di sessionStorage dan tidak mempunyai sesi Auth, sehingga tidak lolos guard.
-- Parameter next hanya menerima path privat yang diizinkan pada origin yang sama.
+- Halaman privat boleh menyertakan parameter `next` saat meminta login, tetapi handler login sengaja mengabaikannya: semua login akun berakhir di `/index.html`.
 
 ## Skenario uji manual
 | No. | Kondisi | Hasil yang diharapkan |
@@ -28,8 +28,8 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 | 9 | Akun dengan status selain active | Sesi lokal diakhiri dan dialihkan ke login |
 | 10 | Akun belum verifikasi email | Dialihkan ke login |
 | 11 | Admin membuka halaman di /admin/ | Diizinkan |
-| 12 | Login setelah diminta membuka halaman privat | Kembali ke path privat internal yang diizinkan |
-| 13 | Parameter next berisi URL eksternal atau path tak diizinkan | Diabaikan; masuk ke dashboard member |
+| 12 | Login setelah diminta membuka halaman privat | Selalu menuju `/index.html`, tanpa memulihkan path privat |
+| 13 | Parameter `next` berisi URL eksternal, path privat, atau path tak diizinkan | Seluruhnya diabaikan; masuk ke `/index.html` |
 
 ## Pengamanan backend yang tetap wajib
 1. Audit RLS untuk semua tabel pada schema terekspos.
@@ -41,7 +41,7 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 
 ## Batasan dan status verifikasi
 - File HTML statis tetap dapat diminta langsung dari GitHub Pages; guard hanya mencegah halaman privat ditampilkan melalui alur normal browser.
-- Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, admin, belum verifikasi, dan suspended.
+- Login menolak melanjutkan jika profil tidak ditemukan atau `account_status` bukan `active`; status `suspended` mendapat pesan khusus.\n- Setelah login berhasil, semua role diarahkan ke `/index.html`; parameter `next` tidak digunakan sebagai tujuan redirect.\n- Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, macul, admin, belum verifikasi, profil hilang, dan suspended.
 - Lakukan pengujian setelah deployment dan periksa log Supabase bila ada kegagalan akses.
 
 ## Temuan audit Supabase yang belum diubah
