@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     return local.toISOString().slice(0,16);
   };
   const selectedModules = () => [...form.querySelectorAll('input[name="maintenance_modules"]:checked')].map(x => x.value);
+  const updateModuleAvailability = () => {
+    const enabled = $("maintenanceMode").value === "system";
+    form.querySelectorAll('input[name="maintenance_modules"]').forEach(x => { x.disabled = !enabled; });
+  };
   const setBusy = busy => {
     form.querySelectorAll("input,select,textarea,button").forEach(x => x.disabled = busy);
     $("maintenanceDisableNow").disabled = busy;
@@ -37,6 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!state) throw new Error("Konfigurasi maintenance belum tersedia.");
       $("maintenanceEnabled").checked = Boolean(state.enabled);
       $("maintenanceMode").value = state.mode || "full";
+      updateModuleAvailability();
       $("maintenanceMessageInput").value = state.message || "";
       $("maintenanceEtaInput").value = localDateTime(state.estimated_end_at);
       form.querySelectorAll('input[name="maintenance_modules"]').forEach(x => x.checked = (state.affected_modules || []).includes(x.value));
@@ -65,6 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
     await load();
+    $("maintenanceMode").addEventListener("change", updateModuleAvailability);
     form.addEventListener("submit", async event => {
       event.preventDefault();
       const mode=$("maintenanceMode").value;
@@ -76,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const eta=$("maintenanceEtaInput").value;
         const {data,error}=await db.rpc("admin_set_maintenance",{
           p_enabled:enabled,p_mode:mode,p_message:$("maintenanceMessageInput").value.trim(),
-          p_estimated_end_at:eta?new Date(eta).toISOString():null,p_affected_modules:modules
+          p_estimated_end_at:eta?new Date(eta).toISOString():null,p_affected_modules:mode==="system"?modules:[]
         });
         if(error)throw error;
         feedback("Maintenance berhasil diperbarui. Status aktif akan diterapkan oleh backend dan halaman website.");
