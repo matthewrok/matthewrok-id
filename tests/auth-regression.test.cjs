@@ -358,3 +358,24 @@ test("tracking-token SQL uses 256-bit cryptographic randomness and explicit RPC 
   assert.match(cutover, /revoke all on function public\.lookup_joki_progress/);
   assert.match(cutover, /revoke all on function public\.create_joki_order/);
 });
+
+
+test("tracking page requests a secret token and has valid input markup", () => {
+  const html = fs.readFileSync(path.join(ROOT, "joki-matthew.html"), "utf8");
+  assert.match(html, /TOKEN PELACAKAN/);
+  assert.match(html, /maxlength="80" autocomplete="off"/);
+  assert.match(html, /Nomor order tidak dapat digunakan/);
+  assert.doesNotMatch(html, /kode order yang sudah kamu terima/i);
+  assert.match(html, /name="theme-color" content="#071326"/);
+});
+
+test("tracking and admin progress scripts parse without syntax errors", () => {
+  for (const file of [
+    "assets/js/home-orders.js",
+    "assets/js/joki-matthew.js",
+    "assets/js/admin-joki-progress.js"
+  ]) {
+    const source = fs.readFileSync(path.join(ROOT, file), "utf8");
+    assert.doesNotThrow(() => new Function(source), file + " should parse");
+  }
+});
