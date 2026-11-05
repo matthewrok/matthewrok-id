@@ -90,3 +90,55 @@ footer{border-color:rgba(112,174,255,.18)!important;color:#7890b3!important}
 @media(prefers-reduced-motion:reduce){
  :where(button,a,.btn){transition:none!important}
 }
+
+
+/* PAGE PALETTE NORMALIZATION — remove legacy warm/red surfaces on secondary pages */
+:where(.card,.resource-card,.tax-info,.result,.source-note,.stats div,.search,.notice,.table-wrap){
+  background:linear-gradient(145deg,rgba(15,42,73,.97),rgba(7,22,40,.98))!important;
+  border-color:rgba(112,174,255,.24)!important;
+  color:var(--text)!important;
+}
+:where(.card)::before,:where(.card)::after{
+  background:linear-gradient(90deg,#3979ee,#78d8ff)!important;
+}
+:where(.resource-card:hover,.secondary:hover,.actions a:hover,.actions button:hover){
+  border-color:rgba(120,201,255,.58)!important;
+  background-color:rgba(49,112,196,.18)!important;
+}
+:where(.resource-card label,.tax-info strong,.stats strong,.scan,.thanks,.value){
+  color:#8bd7ff!important;
+}
+:where(.tax-info,.resource-card,.result,.stats div,.search,.notice,.source-note){
+  box-shadow:0 16px 42px rgba(0,0,0,.2)!important;
+}
+:where(.quick-buttons button,.calculate-button,.clear-button,.actions button.primary,.secondary){
+  background:linear-gradient(135deg,#347fe8,#2456bd)!important;
+  color:#f5f9ff!important;
+  border:1px solid rgba(120,201,255,.42)!important;
+}
+:where(.track,.progress-track){background:rgba(255,255,255,.1)!important}
+:where(.track div,.progress-track div){
+  background:linear-gradient(90deg,#2865d4,#78d8ff)!important;
+}
+:where(.topbar,.feature-nav,.table-wrap){border-color:rgba(112,174,255,.2)!important}
+:where(.topbar nav a,.back,.secondary){color:#a9ddff!important}
+:where(.notice.error,.auth-message.error,.feedback.error){
+  border-color:rgba(255,130,145,.48)!important;
+  color:#ffc0c8!important;
+}
+:where(.admin-dashboard .card,.admin-panel .card,.wrap .card){
+  background:linear-gradient(145deg,rgba(14,39,67,.97),rgba(7,23,42,.97))!important;
+  border-color:rgba(112,174,255,.24)!important;
+}
+:where(.admin-dashboard .card::after,.wrap .card::after){
+  background:linear-gradient(90deg,#3979ee,#78d8ff)!important;
+}
+:where(.admin-dashboard .notice,.wrap .notice){
+  background:rgba(13,34,58,.94)!important;
+  border-color:rgba(112,174,255,.24)!important;
+}
+:where(.support-card,.support .card,.wrap .card){
+  background:linear-gradient(145deg,rgba(14,39,67,.97),rgba(7,23,42,.97))!important;
+}
+:where(.qr-frame){background:#fff!important;border-color:rgba(120,201,255,.5)!important}
+:where(.clear-button){background:linear-gradient(135deg,#173b67,#10284a)!important;color:#dceeff!important}
