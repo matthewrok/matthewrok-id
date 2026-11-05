@@ -300,8 +300,8 @@ test("role management SQL preserves all operational worker roles", () => {
 
 test("worker application function preserves both configured site origins and server-side role checks", () => {
   const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
-  assert.match(source, /https:\\/\\/matthewrok\\.my\\.id/);
-  assert.match(source, /http:\\/\\/matthewrok\\.my\\.id/);
+  assert.ok(source.includes("https://matthewrok.my.id"));
+  assert.ok(source.includes("http://matthewrok.my.id"));
   assert.match(source, /corsHeadersFor\(req\.headers\.get\("Origin"\)\)/);
   assert.match(source, /select=role,account_status/);
   assert.match(source, /applicantRoles\.includes\(role\)/);
