@@ -96,6 +96,20 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - [ ] Uji smoke test di staging/live setelah deployment yang disetujui.
 - [ ] Dokumentasikan item yang tidak dapat diuji dan alasan teknisnya.
 
+## L. System Control Center & Maintenance Mode
+
+- [ ] Audit mekanisme status website yang sudah ada sebelum menambah sumber status baru.
+- [ ] Rancang tiga mode: FULL MAINTENANCE, ORDER MAINTENANCE, dan SYSTEM MAINTENANCE.
+- [ ] Sediakan pesan maintenance, estimasi selesai, alasan, dan status aktif/nonaktif.
+- [ ] Admin bypass harus diverifikasi server-side; jangan mengandalkan role dari localStorage atau user_metadata.
+- [ ] ORDER MAINTENANCE harus memblokir pembuatan pesanan dan penukaran voucher di backend, bukan hanya menonaktifkan tombol.
+- [ ] SYSTEM MAINTENANCE harus mendukung pemilihan modul terdampak (mis. Worker, MACUL, Inbox) tanpa mematikan modul lain.
+- [ ] Catat riwayat perubahan: aktor, mode, pesan, waktu mulai/selesai, dan modul terdampak.
+- [ ] Integrasikan kontrol Telegram hanya melalui Edge Function terautentikasi dan secret server-side.
+- [ ] Pastikan jalur darurat untuk memulihkan akses admin tetap tersedia jika konfigurasi maintenance salah.
+- [ ] Tambahkan pengujian role, visitor, order/voucher, endpoint langsung, dan kegagalan backend.
+- [ ] Uji status maintenance saat database/network tidak tersedia; gunakan perilaku fail-safe yang tidak membuka operasi sensitif.
+- [ ] Dokumentasikan prosedur aktivasi, pembatalan, dan pemulihan.
 ## Batas perubahan
 1. Tidak melakukan merge tanpa persetujuan eksplisit.
 2. Tidak mengubah skema, RLS, RPC, Edge Function, atau konfigurasi Auth produksi tanpa migrasi dan persetujuan terpisah.
