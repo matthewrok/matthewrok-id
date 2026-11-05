@@ -9,19 +9,19 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - [x] Sisakan ruang aman untuk tombol KELUAR agar tidak tertutup Inbox dan menu tiga titik.
 - [x] Atur ulang header pada viewport kecil.
 - [ ] Audit tabrakan elemen fixed/sticky di seluruh halaman.
-- [ ] Selaraskan dashboard dengan tema biru/navy premium (hindari aksen merah lama yang tidak konsisten).
+- [x] Selaraskan dashboard member dengan tema biru/navy premium (audit lintas halaman lain masih berjalan).
 - [ ] Standarkan spacing, radius, tipografi, tombol, fokus keyboard, dan state hover.
 - [ ] Pastikan animasi ringan dan menghormati prefers-reduced-motion.
 - [ ] Uji lebar 320px, 360px, 390px, tablet, dan desktop.
 
 ## B. Profil dan status akun
-- [ ] Tampilkan nama, email, role, tanggal bergabung, dan status akun dari sumber data yang benar.
+- [x] Tampilkan nama, email, role, dan tanggal bergabung dari sesi/profil; status akun tetap mengikuti access guard dan pemeriksaan status yang tersedia.
 - [ ] Tangani profil hilang, status nonaktif, dan kegagalan query tanpa menampilkan dashboard seolah-olah sehat.
 - [ ] Jangan mengizinkan user mengubah role atau status melalui UI member.
 - [ ] Pengaturan profil hanya ditambahkan jika ada jalur backend/RLS yang aman.
 
 ## C. Ringkasan dan statistik
-- [ ] Ringkasan total pesanan, selesai, proses, dibatalkan, dan total transaksi.
+- [x] Ringkasan total pesanan, selesai, proses, dibatalkan, dan akumulasi nilai transaksi.
 - [ ] Pastikan definisi status mengikuti nilai status backend yang sebenarnya (normalisasi konsisten).
 - [ ] Statistik periode/grafik hanya ditampilkan jika data dan definisi agregasinya valid.
 - [ ] Format mata uang, tanggal, dan angka konsisten untuk locale Indonesia.
