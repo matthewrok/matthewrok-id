@@ -412,3 +412,20 @@ test("legacy order RPC enforces the same active member-role allowlist during com
   assert.match(sql, /revoke all on function public\.create_joki_order/);
   assert.match(sql, /grant execute on function public\.create_joki_order[\s\S]*to authenticated/);
 });
+
+
+test("all website routes use the approved blue/navy browser theme colors", () => {
+  const pages = [
+    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login.html", "member-dashboard.html", "register.html",
+    "requirements-city-hall.html", "reset-password.html",
+    "support-matthew.html", "worker.html", "your-order.html"
+  ];
+  const approved = new Set(["#071326", "#071426", "#071a3a"]);
+  for (const page of pages) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
+    assert.ok(approved.has(theme), page + " has non-blue theme color: " + theme);
+  }
+});
