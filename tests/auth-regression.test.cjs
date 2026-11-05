@@ -614,3 +614,20 @@ test("admin helper hardening requires an active profile and preserves a locked s
   assert.equal(sql.split("lower(trim(p.account_status)) = 'active'").length - 1, 2);
   assert.equal(sql.split("set search_path = ''").length - 1, 2);
 });
+
+
+test("every public/private route loads Supabase before the maintenance gate", () => {
+  const pages = [
+    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login.html", "member-dashboard.html", "register.html",
+    "requirements-city-hall.html", "reset-password.html", "support-matthew.html",
+    "worker.html", "your-order.html", "maintenance.html"
+  ];
+  for (const page of pages) {
+    const html=fs.readFileSync(path.join(ROOT,page),"utf8");
+    assert.match(html,/@supabase\/supabase-js@2/,page+" must load Supabase SDK");
+    assert.match(html,/assets\/js\/supabase\.js/,page+" must initialize Supabase");
+    assert.match(html,/maintenance-status\.js/,page+" must load the maintenance gate");
+  }
+});
