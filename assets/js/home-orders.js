@@ -52,12 +52,23 @@
     const visitorName=sessionStorage.getItem("matthewVisitorName");
     return visitorName?{name:visitorName,email:"",isVisitor:true}:null;
   }
+  async function getOrderMaintenanceMessage(){
+    const {data,error}=await db.rpc("get_public_maintenance_status");
+    if(error)return "Status layanan tidak dapat diverifikasi. Pemesanan sementara tidak dapat dilanjutkan.";
+    const state=Array.isArray(data)?data[0]:data;
+    if(!state?.enabled)return "";
+    const modules=Array.isArray(state.affected_modules)?state.affected_modules:[];
+    const blocked=state.mode==="full"||state.mode==="orders"||(state.mode==="system"&&modules.includes("orders"));
+    return blocked?(state.message||"Pemesanan sedang dinonaktifkan sementara oleh admin."):"";
+  }
   async function openOrder(code){
     const p=products[code];
     if(!p){console.error("[Joki Order] Kode produk tidak valid:",code);return;}
     const identity=await resolveIdentity();
     if(!identity?.name){alert("Sesi login belum terbaca. Muat ulang halaman atau login kembali.");return;}
     if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login dengan akun terverifikasi untuk memesan.");return;}
+    const maintenanceMessage=await getOrderMaintenanceMessage();
+    if(maintenanceMessage){alert(maintenanceMessage);return;}
     selected=code;
     completedWhatsappUrl=null;
     $("jokiOrderName").textContent=identity.name;
