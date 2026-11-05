@@ -609,8 +609,8 @@ test("maintenance configuration is readable only by trusted server functions", (
 test("admin helper hardening requires an active profile and preserves a locked search_path", () => {
   const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_admin_helpers_active_status.sql"), "utf8");
   for (const name of ["is_admin", "is_current_user_admin"]) {
-    assert.match(sql, new RegExp("create or replace function public\\\\." + name));
+    assert.ok(sql.includes("create or replace function public." + name + "()"));
   }
-  assert.equal((sql.match(/lower\\(trim\\(p\\.account_status\\)\\) = 'active'/g) || []).length, 2);
-  assert.equal((sql.match(/set search_path = ''/g) || []).length, 2);
+  assert.equal(sql.split("lower(trim(p.account_status)) = 'active'").length - 1, 2);
+  assert.equal(sql.split("set search_path = ''").length - 1, 2);
 });
