@@ -34,6 +34,7 @@ on:
       - "supabase/consolidate_permissive_rls_policies.sql"
       - "supabase/remove_unused_anon_voucher_policy.sql"
       - "supabase/maintenance-mode-v2.sql"
+      - "supabase/add_maintenance_foreign_key_indexes.sql"
       - "assets/js/maintenance-status.js"
       - "assets/js/maintenance-admin.js"
       - "assets/js/home-orders.js"
