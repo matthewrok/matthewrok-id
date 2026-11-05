@@ -98,10 +98,29 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        const { data: currentUser } = await client.auth.getUser();
-        const { data: memberProfile, error: statusError } = await client.from("profiles").select("account_status").eq("id", currentUser.user.id).maybeSingle();
+        const { data: currentUser, error: userError } = await client.auth.getUser();
+        if (userError || !currentUser?.user?.id) {
+          await client.auth.signOut({ scope: "local" });
+          throw userError || new Error("Sesi login tidak dapat diverifikasi. Silakan coba lagi.");
+        }
+
+        const { data: memberProfile, error: statusError } = await client
+          .from("profiles")
+          .select("account_status")
+          .eq("id", currentUser.user.id)
+          .maybeSingle();
         if (statusError) throw statusError;
-        if (memberProfile?.account_status === "suspended") { await client.auth.signOut(); throw new Error("Akun kamu sedang ditangguhkan oleh admin. Hubungi Matthew untuk bantuan."); }
+
+        // Hanya akun dengan profil yang eksplisit berstatus active yang boleh melanjutkan.
+        const accountStatus = String(memberProfile?.account_status || "").trim().toLowerCase();
+        if (accountStatus !== "active") {
+          await client.auth.signOut({ scope: "local" });
+          throw new Error(
+            accountStatus === "suspended"
+              ? "Akun kamu sedang ditangguhkan oleh admin. Hubungi Matthew untuk bantuan."
+              : "Akun belum aktif atau profilnya belum tersedia. Hubungi Matthew untuk bantuan."
+          );
+        }
         sessionStorage.removeItem("matthewVisitorName");
         if (rememberField?.checked) localStorage.setItem("matthewRememberedEmail", email);
         else localStorage.removeItem("matthewRememberedEmail");
