@@ -173,6 +173,7 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 - supabase/tracking-token-v2-cutover.sql — pencabutan RPC token lama; jalankan setelah frontend baru tayang dan token baru sudah dikirim ke pelanggan.
 - supabase/tracking-token-v2-rollback.sql — rollback pra-rilis saja; jangan jalankan setelah frontend baru membuat pesanan.
 - supabase/harden_remaining_rpc_search_paths.sql — mengunci search_path tiga RPC SECURITY DEFINER tambahan.
+- supabase/harden_legacy_order_rpc_role_access.sql — menyamakan allowlist role/status pada RPC order lama selama masa kompatibilitas.
 
 ## Batas audit
 
