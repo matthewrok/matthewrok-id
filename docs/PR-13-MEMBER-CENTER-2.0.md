@@ -246,3 +246,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Supabase Security Advisor still reports SECURITY DEFINER warnings for public token-based lookup/review RPCs and authenticated privileged RPCs. These are not automatically vulnerabilities; each function has explicit grants and search_path='', and the new public endpoints are protected by 256-bit tokens. Remaining review includes leaked-password protection.
 - Supabase Performance Advisor still reports multiple permissive policies and unused indexes. No index was dropped based only on the advisor; unused indexes require workload review.
 - Browser tests, real member role matrix tests, and a live end-to-end order/payment/WhatsApp test remain outstanding.
+### Final CI run — 6 November 2026
+- GitHub Actions run #29 (run ID 42092699606) on commit 994dc7ac07ab0af579a06d00467df05f048b6245 completed successfully.
+- The Node test runner reported 61 tests passed, 0 failed, 0 skipped. This includes login redirects, access guard roles, session timer cleanup, worker authorization source checks, secure tracking-token RPC usage, SQL grant/randomness assertions, tracking input markup, JavaScript parse checks, and admin blue-theme metadata.
+- This remains automated/static QA; it does not replace browser/device and live account-role tests.
