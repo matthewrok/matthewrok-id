@@ -169,6 +169,8 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 - [Rancangan Maintenance Mode 2.0](docs/MAINTENANCE-MODE-2.0.md)
 - [Checklist PR #13 — Member Center 2.0](docs/PR-13-MEMBER-CENTER-2.0.md)
 - [Rencana migrasi token pelacakan](docs/TRACKING-TOKEN-MIGRATION.md)
+- supabase/tracking-token-v2.sql — migrasi token pelacakan 256-bit (tahap expand sudah diterapkan di Supabase produksi).
+- supabase/tracking-token-v2-cutover.sql — pencabutan RPC token lama; jalankan setelah frontend baru tayang dan token baru sudah dikirim ke pelanggan.
 
 ## Batas audit
 
