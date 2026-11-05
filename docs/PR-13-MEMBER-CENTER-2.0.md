@@ -263,3 +263,9 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Direct execution remains authenticated-only; anon cannot execute the legacy order RPC.
 - Ran a rollback-only database regression using the live admin and MACUL profile identities: both were rejected by the server-side role guard before any order insert. The transaction was rolled back; no test order or Telegram notification was created.
 - The new secure RPC continues to require an authenticated, email-confirmed, active allowed-role account.
+### RLS performance/security cleanup — 6 November 2026
+- Applied consolidate_permissive_rls_policies and remove_unused_anon_voucher_policy to production.
+- Combined duplicate SELECT policy paths for profiles, site_notifications, vouchers, and worker_applications while preserving the previous access rules. Admin write policies for announcements/vouchers are now explicit INSERT/UPDATE/DELETE policies.
+- Removed the anonymous voucher SELECT policy because anon has no table SELECT grant and visitors are not allowed to use vouchers.
+- Read-only role simulation inside rolled-back transactions verified: anon can read only public active notifications and cannot SELECT profiles/vouchers/worker applications; a member sees only their own profile and own worker applications; admin sees all 6 profiles, 4 worker applications, and operational notification/voucher rows.
+- Supabase Performance Advisor no longer reports multiple permissive policies. Six unused-index notices remain; no indexes were dropped without workload evidence.
