@@ -278,3 +278,14 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
   assert.equal(scheduled.size, 0, "signed-out session should not retain an inactivity timer");
   assert.equal(cleared.length, 1);
 });
+
+
+test("worker application Edge Function enforces active applicant roles server-side", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(source, /select=role,account_status/);
+  assert.match(source, /const applicantRoles = \["member", "sultan", "matthew", "pelanggan"\]/);
+  assert.match(source, /applicantRoles\.includes\(role\)/);
+  assert.match(source, /accountStatus !== "active"/);
+  assert.match(source, /return json\(\{ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker\." \}, 403\)/);
+  assert.doesNotMatch(source, /user_metadata[\s\S]{0,100}role/);
+});
