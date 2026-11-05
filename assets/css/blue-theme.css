@@ -142,3 +142,18 @@ footer{border-color:rgba(112,174,255,.18)!important;color:#7890b3!important}
 }
 :where(.qr-frame){background:#fff!important;border-color:rgba(120,201,255,.5)!important}
 :where(.clear-button){background:linear-gradient(135deg,#173b67,#10284a)!important;color:#dceeff!important}
+
+
+/* Maintenance Mode 2.0 admin controls */
+.maintenance-control{padding:18px;border:1px solid rgba(112,174,255,.28);border-radius:18px;background:linear-gradient(145deg,rgba(12,37,66,.95),rgba(6,20,37,.98))}
+.maintenance-state{display:inline-flex;margin:0 0 16px;padding:9px 13px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.08em}
+.maintenance-state.is-off{background:rgba(63,160,126,.16);border:1px solid rgba(90,210,165,.35);color:#9df2ce}
+.maintenance-state.is-active{background:rgba(255,175,75,.14);border:1px solid rgba(255,190,100,.4);color:#ffd39a}
+.maintenance-toggle{display:flex!important;align-items:center;gap:10px}
+.maintenance-toggle input,.maintenance-modules input{width:auto!important;accent-color:#4d9cff}
+.maintenance-modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:8px 0 16px;padding:14px;border:1px solid rgba(112,174,255,.22);border-radius:14px}
+.maintenance-modules legend{padding:0 8px;color:#a9ddff;font-weight:800}
+.maintenance-modules label{display:flex;align-items:center;gap:8px;margin:0}
+.maintenance-actions{display:flex;flex-wrap:wrap;gap:10px}
+#maintenanceFeedback.is-error{color:#ffb9c4}
+@media(max-width:640px){.maintenance-control{padding:13px}.maintenance-actions>*{width:100%}}
