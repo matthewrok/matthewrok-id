@@ -170,3 +170,34 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Rekomendasi: evaluasi dan cabut anonymous INSERT worker_applications setelah audit frontend; aktifkan leaked-password protection di Auth; audit SECURITY DEFINER RPC; dan deploy Edge Function worker setelah diff versi aktif dengan branch ditinjau.
 
 - Pengujian CI run #16 mencakup file auth regression, kontrak role Edge Function, CORS HTTP/HTTPS, dan role SQL; seluruh test berhasil.
+
+### Follow-up security audit — worker applications and public RPCs (6 November 2026)
+
+#### Worker application flow
+- Verified assets/js/worker-application.js: it reads the applicant's own application status and submits through db.functions.invoke(worker-application-submit); it does not directly INSERT into worker_applications.
+- Verified the repository Edge Function checks Supabase Auth, verified email, server-side profiles.role, and account_status, then inserts with the service-role key.
+- Live policy metadata confirms the legacy policy Public submit worker application still permits anon/authenticated INSERT when applicant_id IS NULL. It is not used by the active frontend flow and is a candidate for retirement.
+- Added docs/WORKER-APPLICATION-SECURITY-AUDIT.md documenting the evidence and safe retirement plan.
+- A database change to drop that policy and revoke direct INSERT has not been applied. Production table grants still need a separate read-only verification before final SQL is approved.
+
+#### SECURITY DEFINER RPC classification
+- Admin mutations admin_set_member_role and admin_set_member_status are executable by authenticated only and check admin identity/role server-side.
+- create_joki_order is authenticated-only and validates a non-anonymous session, account email, Kingdom format, quantity, product and voucher on the database side.
+- list_my_joki_orders, list_my_joki_order_history, get_my_reviewed_order_ids, and submit_member_joki_review are authenticated-only and use the current user's identity/ownership checks.
+- Trigger/event helpers and process_worker_application_decision are not executable by anon/authenticated.
+- get_public_joki_reviews is intentionally public and returns only approved review fields.
+- lookup_joki_progress, lookup_joki_review, and submit_joki_review remain public to anon/authenticated and rely on the legacy tracking token. The automatic order RPC currently generates a date-prefixed token with only 8 random hex characters and stores it as both token and order number. This is a material enumeration risk; do not claim public tracking is secure until a coordinated migration separates a high-entropy tracking token from the public order number, includes old-order transition, and adds abuse/rate controls.
+- The repository already contains docs/TRACKING-TOKEN-MIGRATION.md and supabase/tracking-token-preflight.sql; the latter was used read-only in a prior audit. Do not apply the separate lookup-contract candidate alone.
+
+#### Additional regression coverage
+- Added a test asserting the worker form uses the server-validated Edge Function and does not directly INSERT into the table.
+- Latest test commit: 9eedfd3314c301f8e65c7be6a39501746baa9fef.
+- CI for this exact commit has not yet returned a run at the time of this update; prior successful run #16 applies to an earlier head only.
+
+#### Outstanding release gates
+- Run the latest CI and full regression suite.
+- Retire the unused public worker INSERT policy only after checking direct table grants and reviewing a separate SQL change.
+- Coordinate the tracking-token migration across database RPCs, automatic order confirmation, admin-created orders, progress lookup, review lookup/submit, and old-order rotation. Stage and test first.
+- Review leaked-password protection in Supabase Auth settings and test signup/password reset after enabling.
+- Browser smoke tests and real role matrix tests remain outstanding.
+- No Supabase production DDL, grants, Auth settings, Edge Function deployment, or PR merge was performed in this follow-up.
