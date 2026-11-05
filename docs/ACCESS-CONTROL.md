@@ -12,7 +12,7 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 - /admin/* hanya untuk role admin.
 - Kelompok worker terdiri dari dua role: `macul` untuk petani/farmer dan `worker` untuk pembuat akun atau penjoki akun. Keduanya diizinkan pada halaman worker, Inbox, pesanan, dan dashboard member, tetapi tidak pada /admin/*.
 - Visitor disimpan di sessionStorage dan tidak mempunyai sesi Auth, sehingga tidak lolos guard.
-- Parameter next hanya menerima path privat yang diizinkan pada origin yang sama.
+- Halaman privat boleh menyertakan parameter `next` saat meminta login, tetapi handler login sengaja mengabaikannya: semua login akun berakhir di `/index.html`.
 
 ## Skenario uji manual
 | No. | Kondisi | Hasil yang diharapkan |
@@ -24,12 +24,13 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 | 5 | Masuk sebagai visitor lalu buka halaman privat | Dialihkan ke login |
 | 6 | Member membuka /admin/dashboard.html | Akses ditolak |
 | 7 | Member berstatus active membuka dashboard/inbox/pesanan | Diizinkan |
-| 8 | Role `worker` (pembuat akun/penjoki akun) berstatus active membuka worker/inbox | Diizinkan |\n| 8a | Role `macul` (petani/farmer) berstatus active membuka worker/inbox | Diizinkan |
+| 8 | Role `worker` (pembuat akun/penjoki akun) berstatus active membuka worker/inbox | Diizinkan |
+| 8a | Role `macul` (petani/farmer) berstatus active membuka worker/inbox | Diizinkan |
 | 9 | Akun dengan status selain active | Sesi lokal diakhiri dan dialihkan ke login |
 | 10 | Akun belum verifikasi email | Dialihkan ke login |
 | 11 | Admin membuka halaman di /admin/ | Diizinkan |
-| 12 | Login setelah diminta membuka halaman privat | Kembali ke path privat internal yang diizinkan |
-| 13 | Parameter next berisi URL eksternal atau path tak diizinkan | Diabaikan; masuk ke dashboard member |
+| 12 | Login setelah diminta membuka halaman privat | Selalu menuju `/index.html`, tanpa memulihkan path privat |
+| 13 | Parameter `next` berisi URL eksternal, path privat, atau path tak diizinkan | Seluruhnya diabaikan; masuk ke `/index.html` |
 
 ## Pengamanan backend yang tetap wajib
 1. Audit RLS untuk semua tabel pada schema terekspos.
@@ -41,7 +42,9 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 
 ## Batasan dan status verifikasi
 - File HTML statis tetap dapat diminta langsung dari GitHub Pages; guard hanya mencegah halaman privat ditampilkan melalui alur normal browser.
-- Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, admin, belum verifikasi, dan suspended.
+- Login menolak melanjutkan jika profil tidak ditemukan atau `account_status` bukan `active`; status `suspended` mendapat pesan khusus.
+- Setelah login berhasil, semua role diarahkan ke `/index.html`; parameter `next` tidak digunakan sebagai tujuan redirect.
+- Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, macul, admin, belum verifikasi, profil hilang, dan suspended.
 - Lakukan pengujian setelah deployment dan periksa log Supabase bila ada kegagalan akses.
 
 ## Temuan audit Supabase yang belum diubah
@@ -54,3 +57,13 @@ Pemeriksaan advisor pada project menemukan beberapa hal yang perlu ditinjau terp
 - Tabel profiles memiliki role `macul` pada satu akun saat audit. Pengguna telah mengonfirmasi bahwa `macul` adalah role petani/farmer, sedangkan `worker` adalah pembuat akun atau penjoki akun. Keduanya kini masuk allowlist halaman privat non-admin. Tidak ada akses admin yang diberikan kepada keduanya.
 
 Temuan ini dicatat untuk tindak lanjut. Tidak ada perubahan skema, policy, grant, function, maupun konfigurasi Auth yang dilakukan pada database produksi dalam PR ini.
+
+
+## Hasil pemeriksaan pra-merge (6 November 2026)
+
+- Pengujian otomatis tersedia di `tests/auth-regression.test.cjs` dan dijalankan GitHub Actions melalui `.github/workflows/auth-regression.yml`.
+- Cakupan tes: redirect homepage untuk seluruh role yang didukung meskipun ada parameter `next`; penolakan akun suspended/profil tidak tersedia; pembersihan sesi lokal saat pemeriksaan Auth/profil gagal; timer sesi dibersihkan setelah sign-out; serta matriks akses halaman worker/member dan admin.
+- Pemeriksaan database produksi: `public.profiles` memiliki RLS aktif dan hak `SELECT` untuk role `authenticated`. Policy SELECT mengizinkan pengguna membaca baris miliknya berdasarkan `auth.uid() = id`, serta admin/operator Matthew melalui policy khusus.
+- Simulasi query sebagai role PostgreSQL `authenticated` dengan JWT subject akun member menghasilkan `own_profile_visible = 1` dan `total_profiles_visible = 1` dari 6 profil. Ini mengonfirmasi RLS tidak menghalangi akun member membaca profilnya sendiri, tanpa membuka profil pengguna lain.
+- Role aktif yang saat ini ditemukan di database: `admin` (1), `macul` (1), `member` (1), dan `pelanggan` (3). Belum ada akun aktif `worker`, `sultan`, atau `matthew` untuk pengujian login langsung; role tersebut dicakup melalui fixture pengujian otomatis.
+- Pengujian otomatis ini menjalankan kode browser melalui mock DOM/Auth, bukan browser sungguhan. Uji login manual di browser dengan akun produksi tetap disarankan setelah deployment.

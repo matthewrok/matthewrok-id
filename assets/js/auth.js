@@ -98,30 +98,39 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        const { data: currentUser } = await client.auth.getUser();
-        const { data: memberProfile, error: statusError } = await client.from("profiles").select("account_status").eq("id", currentUser.user.id).maybeSingle();
-        if (statusError) throw statusError;
-        if (memberProfile?.account_status === "suspended") { await client.auth.signOut(); throw new Error("Akun kamu sedang ditangguhkan oleh admin. Hubungi Matthew untuk bantuan."); }
+        const { data: currentUser, error: userError } = await client.auth.getUser();
+        if (userError || !currentUser?.user?.id) {
+          await client.auth.signOut({ scope: "local" });
+          throw userError || new Error("Sesi login tidak dapat diverifikasi. Silakan coba lagi.");
+        }
+
+        const { data: memberProfile, error: statusError } = await client
+          .from("profiles")
+          .select("account_status")
+          .eq("id", currentUser.user.id)
+          .maybeSingle();
+        if (statusError) {
+          await client.auth.signOut({ scope: "local" });
+          throw statusError;
+        }
+
+        // Hanya akun dengan profil yang eksplisit berstatus active yang boleh melanjutkan.
+        const accountStatus = String(memberProfile?.account_status || "").trim().toLowerCase();
+        if (accountStatus !== "active") {
+          await client.auth.signOut({ scope: "local" });
+          throw new Error(
+            accountStatus === "suspended"
+              ? "Akun kamu sedang ditangguhkan oleh admin. Hubungi Matthew untuk bantuan."
+              : "Akun belum aktif atau profilnya belum tersedia. Hubungi Matthew untuk bantuan."
+          );
+        }
         sessionStorage.removeItem("matthewVisitorName");
         if (rememberField?.checked) localStorage.setItem("matthewRememberedEmail", email);
         else localStorage.removeItem("matthewRememberedEmail");
         showMessage("Login berhasil. Membuka kerajaan...", "success");
-        const requestedNext = new URLSearchParams(window.location.search).get("next");
-        let safeNext = "member-dashboard.html";
-        if (requestedNext) {
-          try {
-            const candidate = new URL(requestedNext, window.location.origin);
-            const allowedPath = /^\/(?:admin(?:\/|$)|worker[.]html$|inbox[.]html$|your-order[.]html$|member-dashboard[.]html$)/i;
-            if (candidate.origin === window.location.origin &&
-                !candidate.username && !candidate.password &&
-                allowedPath.test(candidate.pathname)) {
-              safeNext = candidate.pathname + candidate.search + candidate.hash;
-            }
-          } catch (_) {
-            // Ignore malformed or external redirect targets and use the member dashboard.
-          }
-        }
-        window.location.assign(safeNext);
+        // Setelah login, semua role diarahkan ke halaman utama MATTHEW JOKI.
+        // Parameter ?next sengaja diabaikan agar login tidak membuka halaman worker/admin.
+        window.location.replace("/index.html");
       } catch (error) {
         showMessage(friendlyAuthError(error) || "Login gagal. Periksa kembali email dan password.", "error");
         if (/email not confirmed|email_not_confirmed/i.test(String(error?.message || ""))) showResendButton(email);
