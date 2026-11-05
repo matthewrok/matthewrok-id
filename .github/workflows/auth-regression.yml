@@ -35,6 +35,7 @@ on:
       - "supabase/remove_unused_anon_voucher_policy.sql"
       - "supabase/maintenance-mode-v2.sql"
       - "supabase/add_maintenance_foreign_key_indexes.sql"
+      - "supabase/add_maintenance_foreign_key_indexes.sql"
       - "assets/js/maintenance-status.js"
       - "assets/js/maintenance-admin.js"
       - "assets/js/home-orders.js"
@@ -71,4 +72,4 @@ jobs:
         with:
           deno-version: v2.x
       - name: Type-check Supabase Edge Functions
-        run: deno check supabase/functions/worker-application-submit/index.ts supabase/functions/telegram-order-notify/index.ts
+        run: deno check supabase/functions/worker-application-submit/index.ts supabase/functions/telegram-order-notify/index.ts supabase/functions/inbox-send/index.ts
