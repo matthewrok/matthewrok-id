@@ -138,7 +138,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 ### CI dan batas pengujian
 
 - Perbaikan dashboard lanjutan pada 6 November: panel Rating & Testimoni kini berada di dalam kontainer dashboard terautentikasi (tidak tampil saat dashboard masih loading); kegagalan request ditangani dengan pesan dan tombol coba lagi; logout menampilkan error tanpa mengunci tombol selamanya. Parser JavaScript inline berhasil dijalankan melalui pemeriksaan statis. Browser/runtime test tetap belum dilakukan.
-- Pemeriksaan GitHub Actions untuk head PR saat audit tidak mengembalikan workflow run; belum ada bukti CI lulus.
+- GitHub Actions workflow Authentication regression tests pada head PR b1b83ecf607558fc167d8567050ae8153e27fa99 selesai dengan conclusion success (run #9).
 - Belum dilakukan browser smoke test, uji mobile, uji akun dengan role berbeda, uji koneksi terputus, maupun pengujian database aktif.
 - Tidak ada perubahan schema, RLS, RPC, Edge Function, atau konfigurasi Auth produksi pada tahap audit ini.
 
@@ -154,6 +154,6 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Source supabase/functions/worker-application-submit/index.ts kini mengambil role dan account_status langsung dari profiles menggunakan service-role key yang hanya berada di Edge Function.
 - Endpoint menolak akun tanpa profil, akun nonaktif, serta role selain member, sultan, matthew, dan pelanggan. Nilai role dinormalisasi ke huruf kecil sebelum dibandingkan.
 - Pemeriksaan ini tidak bergantung pada role dari browser, user_metadata, atau access guard frontend.
-- Regression test statis ditambahkan untuk memastikan kontrak otorisasi ini tidak hilang; workflow auth-regression kini berjalan juga ketika file Edge Function tersebut berubah.
+- Regression test kontrak otorisasi ditambahkan; workflow auth-regression kini berjalan juga ketika file Edge Function tersebut berubah. GitHub Actions run #9 pada head PR terbaru berstatus success.
 - BELUM diterapkan ke Supabase produksi. Source GitHub saja tidak mengubah fungsi yang sedang ter-deploy. Setelah PR ditinjau/di-merge, Edge Function harus di-deploy secara terencana lalu diuji dengan role member aktif, visitor/tanpa sesi, akun nonaktif, admin, WORKER, dan MACUL.
 - Catatan audit: supabase/admin-role-management.sql saat ini membatasi profiles.role pada member, admin, SULTAN, MATTHEW, dan PELANGGAN; kontrak tersebut belum memasukkan WORKER/MACUL. Jangan menjalankan constraint tersebut ulang sebelum skema role diselaraskan dengan desain role final.
