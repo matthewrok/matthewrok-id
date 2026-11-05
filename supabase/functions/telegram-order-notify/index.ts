@@ -225,8 +225,53 @@ Deno.serve(async (req: Request) => {
     [{ text: "⬅️ Menu Utama", callback_data: "menu" }]
   ] };
   const maintenanceText = (m: any) => {
-    const eta = m.estimated_end_at ? new Date(m.estimated_end_at).toLocaleString("id-ID",{timeZone:"Asia/Jakarta"})+" WIB" : "Belum ditentukan";
-    return "⚙️ <b>MAINTENANCE MODE</b>\\n\\nStatus: <b>"+(m.enabled?"AKTIF":"NONAKTIF")+"</b>\\nMode: <b>"+esc(String(m.mode||"full").toUpperCase())+"</b>\\nPesan: "+esc(m.message||"—")+"\\nModul: "+esc((m.affected_modules||[]).join(", ")||"Semua / tidak dipilih")+"\\nEstimasi: "+esc(eta)+"\\n\\nPilih tindakan di bawah. Semua perubahan dicatat di audit log.";
+    const active = Boolean(m.enabled);
+    const mode = String(m.mode || "full").toLowerCase();
+    const moduleNames: Record<string, string> = {
+      orders: "Pesanan / Order",
+      worker: "Worker",
+      macul: "MACUL",
+      inbox: "Inbox"
+    };
+    const modules = Array.isArray(m.affected_modules)
+      ? m.affected_modules.map((item: string) => moduleNames[item] || item).join(", ")
+      : "";
+    const modeLabel = mode === "full" ? "FULL — seluruh website" :
+      mode === "orders" ? "ORDER — layanan pesanan" :
+      mode === "system" ? "SYSTEM — modul tertentu" : mode.toUpperCase();
+    const eta = m.estimated_end_at
+      ? new Date(m.estimated_end_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) + " WIB"
+      : "Belum ditentukan";
+    const condition = active
+      ? "🔴 <b>SEDANG MAINTENANCE</b>"
+      : "🟢 <b>NORMAL — WEBSITE BEROPERASI</b>";
+    const affected = active
+      ? (mode === "full" ? "Seluruh halaman dan layanan" : mode === "orders" ? "Fitur pemesanan" : (modules || "Modul belum ditentukan"))
+      : "Tidak ada — seluruh modul dibuka";
+    return [
+      "⚙️ <b>PUSAT KONTROL MAINTENANCE</b>",
+      "━━━━━━━━━━━━━━━━━━",
+      "",
+      "🖥️ <b>KONDISI WEBSITE</b>",
+      condition,
+      "",
+      "🛠️ <b>PENGATURAN MAINTENANCE</b>",
+      "• Status: <b>" + (active ? "AKTIF" : "NONAKTIF") + "</b>",
+      "• Mode: <b>" + esc(modeLabel) + "</b>",
+      "• Area terdampak: " + esc(affected),
+      "",
+      "📝 <b>PESAN UNTUK PENGUNJUNG</b>",
+      esc(m.message || "—"),
+      "",
+      "⏱️ <b>ESTIMASI SELESAI</b>",
+      esc(eta),
+      "",
+      "━━━━━━━━━━━━━━━━━━",
+      "Pilih tindakan di bawah untuk mengubah status.",
+      "Setiap perubahan akan tercatat di audit log.",
+      "",
+      "<i>Catatan: kondisi di atas mengikuti pengaturan Maintenance Mode, bukan pemeriksaan ping server secara langsung.</i>"
+    ].join("\n");
   };
   const setMaintenanceFromTelegram = async (mode: string, module = "") => {
     const current = await getMaintenanceState();
