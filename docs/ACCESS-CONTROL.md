@@ -42,3 +42,14 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 - File HTML statis tetap dapat diminta langsung dari GitHub Pages; guard hanya mencegah halaman privat ditampilkan melalui alur normal browser.
 - Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, admin, belum verifikasi, dan suspended.
 - Lakukan pengujian setelah deployment dan periksa log Supabase bila ada kegagalan akses.
+
+## Temuan audit Supabase yang belum diubah
+
+Pemeriksaan advisor pada project menemukan beberapa hal yang perlu ditinjau terpisah dari perubahan frontend ini:
+
+- RLS aktif tanpa policy pada tabel joki_order_history dan telegram_command_state. Kondisi ini dapat disengaja jika akses memang hanya melalui backend/service role; jangan menambahkan policy publik hanya untuk menghilangkan peringatan.
+- Advisor menandai beberapa SECURITY DEFINER RPC yang dapat dipanggil oleh anon atau authenticated, termasuk fungsi publik untuk review/progress dan fungsi administratif. Periksa isi setiap fungsi, validasi token/identitas, search_path, serta kebutuhan akses sebelum mengubah EXECUTE grants. Jangan melakukan revoke massal karena beberapa fungsi memang menjadi API aplikasi.
+- Perlindungan password bocor (Have I Been Pwned) pada Supabase Auth saat audit masih nonaktif. Aktifkan melalui pengaturan Auth setelah memastikan kebijakan password yang dipakai.
+- Tabel profiles memiliki role macul pada satu akun saat audit. Role ini tidak termasuk allowlist guard; akun tersebut akan ditolak dari halaman privat sampai arti dan hak role macul dikonfirmasi. Tidak ada hak tambahan yang diberikan otomatis.
+
+Temuan ini dicatat untuk tindak lanjut. Tidak ada perubahan skema, policy, grant, function, maupun konfigurasi Auth yang dilakukan pada database produksi dalam PR ini.
