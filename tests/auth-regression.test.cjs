@@ -575,7 +575,7 @@ test("maintenance Inbox RLS blocks member reads and receipts while preserving ad
   const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-inbox-rls.sql"), "utf8");
   assert.match(sql, /is_maintenance_module_blocked/);
   assert.match(sql, /m\.mode='full'/);
-  assert.match(sql, /p_module='inbox'/);
+  assert.match(sql, /is_maintenance_module_blocked\('inbox'\)/);
   assert.match(sql, /Members read addressed inbox messages outside maintenance/);
   assert.match(sql, /Members read own inbox receipt outside maintenance/);
   assert.match(sql, /Members update own inbox receipt outside maintenance/);
