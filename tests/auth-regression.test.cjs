@@ -394,3 +394,12 @@ test("remaining public/member review SECURITY DEFINER RPCs pin an empty search_p
   }
   assert.equal((sql.match(/set search_path = ''/g) || []).length, 3);
 });
+
+
+test("tracking-token rollback is pre-release only and preserves legacy order tokens", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/tracking-token-v2-rollback.sql"), "utf8");
+  assert.match(sql, /PRE-RELEASE ROLLBACK ONLY/);
+  assert.match(sql, /Existing legacy token and order_number values are intentionally left untouched/);
+  assert.match(sql, /drop column if exists tracking_token/);
+  assert.doesNotMatch(sql, /delete from public\.joki_progress/i);
+});
