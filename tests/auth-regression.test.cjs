@@ -198,6 +198,12 @@ test("access guard permits every active registered role on member/worker pages",
   }
 });
 
+test("database role casing is normalized before access checks", async () => {
+  const upperCaseMacul = await runAccessGuard({ pathname: "/worker.html", role: "MACUL" });
+  assert.deepEqual(upperCaseMacul.redirects, []);
+  assert.equal(upperCaseMacul.classes.has("access-pending"), false);
+});
+
 test("admin pages are restricted to admin role", async t => {
   const allowed = await runAccessGuard({ pathname: "/admin/dashboard.html", role: "admin" });
   assert.deepEqual(allowed.redirects, []);
