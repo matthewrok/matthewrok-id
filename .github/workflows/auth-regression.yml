@@ -14,6 +14,7 @@ on:
       - "admin/joki-progress.html"
       - "supabase/tracking-token-v2.sql"
       - "supabase/tracking-token-v2-cutover.sql"
+      - "supabase/tracking-token-v2-rollback.sql"
       - "supabase/harden_remaining_rpc_search_paths.sql"
       - "supabase/functions/worker-application-submit/**"
       - "supabase/admin-role-management.sql"
