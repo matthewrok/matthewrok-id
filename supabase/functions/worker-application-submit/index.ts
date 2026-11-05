@@ -69,7 +69,7 @@ Deno.serve(async (req: Request) => {
   }
   const profile = Array.isArray(profileRows) ? profileRows[0] : null;
   const maintenanceResponse = await fetch(
-    `${supabaseUrl}/rest/v1/site_maintenance_config?id=eq.true&select=enabled,mode,affected_modules&limit=1`,
+    `${supabaseUrl}/rest/v1/site_maintenance_config?id=eq.true&select=enabled,mode,message,affected_modules&limit=1`,
     { headers }
   );
   const maintenanceRows = await maintenanceResponse.json();
