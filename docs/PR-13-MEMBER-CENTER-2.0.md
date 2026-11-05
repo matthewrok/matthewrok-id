@@ -201,3 +201,33 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Review leaked-password protection in Supabase Auth settings and test signup/password reset after enabling.
 - Browser smoke tests and real role matrix tests remain outstanding.
 - No Supabase production DDL, grants, Auth settings, Edge Function deployment, or PR merge was performed in this follow-up.
+
+### Release hardening follow-up — 6 November 2026
+
+#### Production changes completed
+- Supabase Edge Function `worker-application-submit` deployed as version 4, with `verify_jwt=true`.
+- The deployed source now validates Auth user/email confirmation and checks the current server-side profile role and account_status. Only active `member`, `sultan`, `matthew`, and `pelanggan` roles may apply; `worker`, `macul`, `akun`, visitor, admin, and inactive profiles are rejected.
+- The unused policy `Public submit worker application` was removed from production.
+- Direct table INSERT privileges were revoked from `anon` and `authenticated`; authenticated SELECT for applicants/admin and service-role INSERT remain.
+- Post-change metadata query confirmed the old INSERT policy is absent and the remaining grants match the intended server-side submission flow.
+
+#### Tracking token implementation staged in PR
+- `home-orders.js` now calls `create_joki_order_secure` and includes the private tracking token separately from the public order number in the customer's WhatsApp confirmation draft.
+- `joki-matthew.js` now calls the secure tracking/review RPC names and no longer treats order number as a tracking credential.
+- `admin-joki-progress.js` now reads/displays/copies `tracking_token`; manually created rows write both the legacy required token field and the new private tracking field.
+- Added `supabase/tracking-token-v2.sql`: additive expansion, 256-bit cryptographic token generation, unique index, insert trigger, secure order RPC, and secure lookup/review RPCs.
+- Added `supabase/tracking-token-v2-cutover.sql`: separate legacy RPC shutdown, explicitly gated until the new frontend is live and new tokens have been privately delivered to existing customers.
+- These tracking-token SQL files are staged only. They have NOT been applied to production. This avoids breaking the currently published frontend before the PR is merged and deployed.
+
+#### Production data and transition
+- Live `joki_progress` currently contains 3 orders and `joki_reviews` contains 0 reviews (counts only; no customer data was retrieved into this report).
+- The expansion migration preserves all existing legacy token/order_number values and backfills a new random token for each order. The admin panel will expose each new token after migration so the operator can privately distribute it.
+- Cutover must not run until customers have received their new tokens. Legacy token RPCs remain active during the transition window and must be revoked in the cutover phase after the new frontend is published.
+- No order rows were deleted or modified by the production changes made in this follow-up.
+
+#### QA / release gates
+- CI path filters now include the order/tracking frontend scripts and both tracking SQL files.
+- Added regression assertions for the secure RPC call paths, private token delivery, admin token management, and staged SQL grants/randomness.
+- Browser/device smoke tests and end-to-end order tests remain required after migration + frontend deployment.
+- Supabase leaked-password protection is still disabled; the available connected Supabase actions do not expose the Auth security-settings toggle. This must be enabled and verified in Supabase Dashboard.
+- PR #13 is not merged. No public frontend release was performed in this follow-up.
