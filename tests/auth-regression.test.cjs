@@ -452,3 +452,19 @@ test("shared blue theme overrides legacy red/gold surfaces on secondary pages", 
   }
   assert.match(css, /linear-gradient\(145deg,rgba\(15,42,73/);
 });
+
+
+test("RLS policy consolidation preserves role-specific visibility and admin operations", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/consolidate_permissive_rls_policies.sql"), "utf8");
+  assert.match(sql, /Users admins and Matthew can view profiles/);
+  assert.match(sql, /Public reads active all-audience notifications/);
+  assert.match(sql, /Members and admins read notifications/);
+  assert.match(sql, /Admins insert site notifications/);
+  assert.match(sql, /Admins update site notifications/);
+  assert.match(sql, /Admins delete site notifications/);
+  assert.match(sql, /Public reads usable vouchers/);
+  assert.match(sql, /Members and admins read vouchers/);
+  assert.match(sql, /Applicants and operators read worker applications/);
+  const cleanup = fs.readFileSync(path.join(ROOT, "supabase/remove_unused_anon_voucher_policy.sql"), "utf8");
+  assert.match(cleanup, /drop policy if exists "Public reads usable vouchers"/);
+});
