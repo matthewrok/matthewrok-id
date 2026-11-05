@@ -34,6 +34,8 @@ on:
       - "supabase/consolidate_permissive_rls_policies.sql"
       - "supabase/remove_unused_anon_voucher_policy.sql"
       - "supabase/maintenance-mode-v2.sql"
+      - "supabase/maintenance-mode-service-role-read.sql"
+      - "supabase/harden_admin_helpers_active_status.sql"
       - "supabase/add_maintenance_foreign_key_indexes.sql"
       - "supabase/add_maintenance_foreign_key_indexes.sql"
       - "assets/js/maintenance-status.js"
