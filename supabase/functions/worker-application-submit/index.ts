@@ -46,6 +46,32 @@ Deno.serve(async (req: Request) => {
     return json({ error: "Email harus diverifikasi sebelum mengirim pendaftaran." }, 403);
   }
 
+  // Authorization is checked against the server-side profile, never browser metadata.
+  const headers = {
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    "Content-Type": "application/json",
+  };
+  const profileResponse = await fetch(
+    `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=role,account_status&limit=1`,
+    { headers }
+  );
+  const profileRows = await profileResponse.json();
+  if (!profileResponse.ok) {
+    console.error("Worker applicant profile lookup failed", profileResponse.status, profileRows);
+    return json({ error: "Status akun tidak dapat diverifikasi. Silakan coba kembali." }, 503);
+  }
+  const profile = Array.isArray(profileRows) ? profileRows[0] : null;
+  const role = String(profile?.role ?? "").trim().toLowerCase();
+  const accountStatus = String(profile?.account_status ?? "").trim().toLowerCase();
+  const applicantRoles = ["member", "sultan", "matthew", "pelanggan"];
+  if (!profile || accountStatus !== "active") {
+    return json({ error: "Akun belum aktif atau tidak dapat diverifikasi." }, 403);
+  }
+  if (!applicantRoles.includes(role)) {
+    return json({ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker." }, 403);
+  }
+
   let input: Record<string, unknown>;
   try { input = await req.json(); } catch { return json({ error: "Format permintaan tidak valid." }, 400); }
 
@@ -63,12 +89,6 @@ Deno.serve(async (req: Request) => {
       whatsapp.length > 40 || !consent) {
     return json({ error: "Periksa kembali formulir. Persetujuan wajib dicentang." }, 400);
   }
-
-  const headers = {
-    apikey: serviceKey,
-    Authorization: `Bearer ${serviceKey}`,
-    "Content-Type": "application/json",
-  };
 
   const existingResponse = await fetch(
     `${supabaseUrl}/rest/v1/worker_applications?applicant_id=eq.${encodeURIComponent(user.id)}&select=id,status&order=created_at.desc&limit=1`,
