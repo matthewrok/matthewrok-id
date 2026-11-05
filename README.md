@@ -171,3 +171,18 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 ## Batas audit
 
 Pencarian referensi dan pemeriksaan sintaks adalah pemeriksaan statis. Itu tidak membuktikan tampilan visual, aksesibilitas, autentikasi, kebijakan RLS, integrasi Telegram, atau proses pesanan bekerja end-to-end. Catat bagian yang belum diuji dan jangan menyatakan lulus pengujian jika belum dijalankan.
+## Akses halaman privat dan autentikasi
+
+File assets/js/access-guard.js dijalankan setelah inisialisasi Supabase pada halaman privat. Guard memvalidasi sesi, memverifikasi pengguna melalui Auth, membaca profiles.role dan profiles.account_status, lalu hanya menampilkan halaman jika akun berstatus active dan role diizinkan.
+
+| Halaman | Role yang diizinkan |
+|---|---|
+| /admin/* | admin |
+| /worker.html | member, sultan, matthew, pelanggan, worker, admin |
+| /inbox.html, /your-order.html, /member-dashboard.html | Role terdaftar yang sama |
+
+Visitor menggunakan sessionStorage tersendiri dan tidak dianggap sebagai pengguna Supabase terautentikasi. Karena itu visitor tidak memenuhi pemeriksaan guard halaman privat. Parameter next setelah login dibatasi ke path privat pada origin website sendiri.
+
+**Batas keamanan penting:** GitHub Pages menyajikan HTML dan aset sebagai file statis. Guard browser hanya mengendalikan alur tampilan; ia bukan batas keamanan server dan tidak membuat file HTML tidak dapat diunduh. Semua data dan operasi sensitif wajib tetap dilindungi oleh Supabase RLS, validasi kepemilikan, serta pemeriksaan role di RPC/Edge Functions. Jangan pernah menaruh service-role key atau secret di frontend.
+
+Lihat docs/ACCESS-CONTROL.md untuk skenario uji manual. Pengujian browser dengan akun nyata perlu dilakukan sebelum menyatakan seluruh alur lulus end-to-end.
