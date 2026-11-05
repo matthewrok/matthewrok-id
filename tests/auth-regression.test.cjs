@@ -289,3 +289,20 @@ test("worker application Edge Function enforces active applicant roles server-si
   assert.match(source, /return json\(\{ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker\." \}, 403\)/);
   assert.doesNotMatch(source, /user_metadata[\s\S]{0,100}role/);
 });
+
+
+test("role management SQL preserves all operational worker roles", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/admin-role-management.sql"), "utf8");
+  for (const role of ["member", "admin", "SULTAN", "MATTHEW", "PELANGGAN", "WORKER", "MACUL", "AKUN"]) {
+    assert.match(sql, new RegExp("'" + role + "'::text"));
+  }
+});
+
+test("worker application function preserves both configured site origins and server-side role checks", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(source, /https:\\/\\/matthewrok\\.my\\.id/);
+  assert.match(source, /http:\\/\\/matthewrok\\.my\\.id/);
+  assert.match(source, /corsHeadersFor\(req\.headers\.get\("Origin"\)\)/);
+  assert.match(source, /select=role,account_status/);
+  assert.match(source, /applicantRoles\.includes\(role\)/);
+});
