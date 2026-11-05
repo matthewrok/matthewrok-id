@@ -385,3 +385,12 @@ test("admin progress page exposes the same blue theme as the public portal", () 
   const html = fs.readFileSync(path.join(ROOT, "admin/joki-progress.html"), "utf8");
   assert.match(html, /name="theme-color" content="#071426"/);
 });
+
+
+test("remaining public/member review SECURITY DEFINER RPCs pin an empty search_path", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_remaining_rpc_search_paths.sql"), "utf8");
+  for (const name of ["get_public_joki_reviews", "get_my_reviewed_order_ids", "submit_member_joki_review"]) {
+    assert.match(sql, new RegExp("alter function public\\." + name));
+  }
+  assert.equal((sql.match(/set search_path = ''/g) || []).length, 3);
+});
