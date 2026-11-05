@@ -1,0 +1,44 @@
+/* MATTHEW JOKI — shared royal-blue authentication theme and navigation lock */
+body.auth-page,body.auth-experience{
+  --bg:#071326;--panel:rgba(10,29,53,.97);--gold:#8bd8ff;--orange:#78d8ff;
+  --text:#f1f6ff;--muted:#a9bddb;--border:rgba(112,174,255,.25);
+  color-scheme:dark;color:#f1f6ff;
+  background:radial-gradient(ellipse at 12% 4%,rgba(43,111,224,.22),transparent 42%),radial-gradient(ellipse at 92% 30%,rgba(32,164,219,.13),transparent 38%),linear-gradient(145deg,#071426,#081a30 55%,#050f1e)!important;
+}
+body.auth-page .auth-container,body.auth-experience .auth-container{
+  background:linear-gradient(145deg,rgba(14,39,67,.98),rgba(7,23,42,.98))!important;
+  border-color:rgba(112,174,255,.25)!important;
+  box-shadow:0 24px 80px rgba(0,0,0,.38)!important;
+}
+body.auth-page .auth-container:before,body.auth-experience .auth-container:before{color:rgba(120,216,255,.22);text-shadow:0 0 12px rgba(70,160,255,.3)}
+body.auth-page h1,body.auth-page h2,body.auth-experience h1,body.auth-experience h2{color:#eef6ff;text-shadow:none}
+body.auth-page .eyebrow,body.auth-experience .eyebrow{color:#78d8ff!important}
+body.auth-page a,body.auth-experience a{color:#8bd8ff}
+body.auth-page .auth-form input,body.auth-experience .auth-form input{
+  background:#07182b!important;color:#eff7ff!important;border-color:rgba(116,173,220,.3)!important
+}
+body.auth-page .auth-form input:focus,body.auth-experience .auth-form input:focus{
+  border-color:#78d8ff!important;box-shadow:0 0 0 3px rgba(117,200,255,.14)!important
+}
+body.auth-page .auth-form button,body.auth-experience .auth-form button{
+  background:linear-gradient(135deg,#347fe8,#2456bd)!important;color:#fff!important;border:1px solid #6bbdff!important;
+  box-shadow:0 8px 26px rgba(38,111,220,.25)!important
+}
+body.auth-page .back-link,body.auth-page .auth-link,body.auth-page footer,
+body.auth-experience footer{color:#9bb3d2}
+body.auth-page .auth-message.success,body.auth-experience .auth-message.success{color:#8de0c1}
+body.auth-page .auth-message.error,body.auth-experience .auth-message.error{color:#ffaaa8}
+body.auth-page .security-note,body.auth-experience .security-note{border-color:rgba(112,174,255,.18);color:#9eb6d4}
+body.auth-page .auth-shell{position:relative;z-index:1}
+body.auth-page .auth-container:before{animation:none}
+body.auth-page .global-menu,body.auth-page .global-menu *,
+body.auth-page .global-inbox-trigger,body.auth-page .global-menu-trigger,body.auth-page .global-menu-panel,
+body.auth-experience .global-menu,body.auth-experience .global-menu *,
+body.auth-experience .global-inbox-trigger,body.auth-experience .global-menu-trigger,body.auth-experience .global-menu-panel,
+body:has(#loginForm) .global-menu,body:has(#loginForm) .global-inbox-trigger,
+body:has(#registerForm) .global-menu,body:has(#registerForm) .global-inbox-trigger,
+body:has(#forgotPasswordForm) .global-menu,body:has(#forgotPasswordForm) .global-inbox-trigger,
+body:has(#resetPasswordForm) .global-menu,body:has(#resetPasswordForm) .global-inbox-trigger{
+  display:none!important;visibility:hidden!important;pointer-events:none!important
+}
+@media(prefers-reduced-motion:reduce){body.auth-experience:after{animation:none!important}}
