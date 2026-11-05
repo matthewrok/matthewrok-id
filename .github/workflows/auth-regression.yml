@@ -7,25 +7,30 @@ on:
       - "assets/js/auth.js"
       - "assets/js/access-guard.js"
       - "assets/js/session-manager.js"
+      - "assets/js/supabase.js"
       - "assets/js/home-orders.js"
       - "assets/js/joki-matthew.js"
       - "assets/js/admin-joki-progress.js"
-      - "joki-matthew.html"
-      - "admin/joki-progress.html"
-      - "admin/dashboard.html"
-      - "calculator-resource.html"
-      - "email-confirmed.html"
-      - "requirements-city-hall.html"
-      - "support-matthew.html"
+      - "assets/js/worker-application.js"
+      - "assets/js/maintenance-status.js"
+      - "assets/js/maintenance-admin.js"
       - "assets/css/blue-theme.css"
-      - "inbox.html"
       - "index.html"
       - "login.html"
-      - "member-dashboard.html"
       - "register.html"
       - "reset-password.html"
+      - "email-confirmed.html"
+      - "member-dashboard.html"
       - "worker.html"
+      - "inbox.html"
       - "your-order.html"
+      - "maintenance.html"
+      - "joki-matthew.html"
+      - "admin/dashboard.html"
+      - "admin/joki-progress.html"
+      - "calculator-resource.html"
+      - "requirements-city-hall.html"
+      - "support-matthew.html"
       - "supabase/tracking-token-v2.sql"
       - "supabase/tracking-token-v2-cutover.sql"
       - "supabase/tracking-token-v2-rollback.sql"
@@ -35,21 +40,14 @@ on:
       - "supabase/remove_unused_anon_voucher_policy.sql"
       - "supabase/maintenance-mode-v2.sql"
       - "supabase/maintenance-mode-service-role-read.sql"
-      - "supabase/harden_admin_helpers_active_status.sql"
-      - "supabase/add_maintenance_foreign_key_indexes.sql"
-      - "supabase/add_maintenance_foreign_key_indexes.sql"
-      - "assets/js/maintenance-status.js"
-      - "assets/js/maintenance-admin.js"
-      - "assets/js/home-orders.js"
-      - "supabase/functions/telegram-order-notify/**"
-      - "supabase/functions/worker-application-submit/**"
       - "supabase/maintenance-mode-inbox-rls.sql"
       - "supabase/maintenance-mode-telegram-rpc.sql"
-      - "supabase/maintenance-mode-service-role-read.sql"
-      - "maintenance.html"
-      - "supabase/functions/worker-application-submit/**"
-      - "supabase/functions/inbox-send/**"
+      - "supabase/harden_admin_helpers_active_status.sql"
+      - "supabase/add_maintenance_foreign_key_indexes.sql"
       - "supabase/admin-role-management.sql"
+      - "supabase/functions/inbox-send/**"
+      - "supabase/functions/telegram-order-notify/**"
+      - "supabase/functions/worker-application-submit/**"
       - "tests/**"
       - ".github/workflows/auth-regression.yml"
   workflow_dispatch:
@@ -57,10 +55,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: auth-regression-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   auth-regression:
     name: Login redirect, session cleanup, and role access
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
