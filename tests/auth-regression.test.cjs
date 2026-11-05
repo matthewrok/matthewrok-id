@@ -429,3 +429,26 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
     assert.ok(approved.has(theme), page + " has non-blue theme color: " + theme);
   }
 });
+
+
+test("all pages load the current shared blue theme cache version", () => {
+  const pages = [
+    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login.html", "member-dashboard.html", "register.html",
+    "requirements-city-hall.html", "reset-password.html",
+    "support-matthew.html", "worker.html", "your-order.html"
+  ];
+  for (const page of pages) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13/, page + " should load the current blue theme");
+  }
+});
+
+test("shared blue theme overrides legacy red/gold surfaces on secondary pages", () => {
+  const css = fs.readFileSync(path.join(ROOT, "assets/css/blue-theme.css"), "utf8");
+  for (const selector of [".resource-card", ".tax-info", ".stats div", ".search", ".notice", ".card"]) {
+    assert.ok(css.includes(selector), "missing shared blue override for " + selector);
+  }
+  assert.match(css, /linear-gradient\(145deg,rgba\(15,42,73/);
+});
