@@ -215,3 +215,49 @@ test("access guard redirects unauthenticated and inactive accounts to login", as
   assert.equal(suspended.redirects.length, 1);
   assert.match(suspended.redirects[0], /^\/login\.html\?next=/);
 });
+
+
+test("session manager cancels inactivity timer when Auth session is cleared", async () => {
+  let ready;
+  let authStateListener;
+  const scheduled = new Map();
+  const cleared = [];
+  let nextTimerId = 1;
+  const location = { pathname: "/login.html", replace() {} };
+  const localStorage = makeStorage();
+  const sessionStorage = makeStorage();
+  const client = {
+    auth: {
+      getSession: async () => ({ data: { session: { access_token: "test" } } }),
+      onAuthStateChange: callback => { authStateListener = callback; }
+    }
+  };
+  const document = {
+    addEventListener: (name, callback) => { if (name === "DOMContentLoaded") ready = callback; },
+    visibilityState: "visible",
+    getElementById: () => null
+  };
+  const window = {
+    supabaseClient: client,
+    location,
+    addEventListener() {},
+    setTimeout: (callback, delay) => {
+      const id = nextTimerId++;
+      scheduled.set(id, { callback, delay });
+      return id;
+    },
+    clearTimeout: id => {
+      cleared.push(id);
+      scheduled.delete(id);
+    }
+  };
+  vm.runInNewContext(fs.readFileSync(path.join(ROOT, "assets/js/session-manager.js"), "utf8"), {
+    window, document, location, localStorage, sessionStorage, Date, URLSearchParams, console
+  });
+  ready();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(scheduled.size, 1, "active session should receive an inactivity timer");
+  authStateListener("SIGNED_OUT", null);
+  assert.equal(scheduled.size, 0, "signed-out session should not retain an inactivity timer");
+  assert.equal(cleared.length, 1);
+});
