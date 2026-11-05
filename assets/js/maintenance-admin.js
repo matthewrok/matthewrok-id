@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const setBusy = busy => {
     form.querySelectorAll("input,select,textarea,button").forEach(x => x.disabled = busy);
     $("maintenanceDisableNow").disabled = busy;
+    if (!busy) updateModuleAvailability();
   };
   try {
     const { data: admin, error: adminError } = await db.rpc("is_admin");
