@@ -379,3 +379,9 @@ test("tracking and admin progress scripts parse without syntax errors", () => {
     assert.doesNotThrow(() => new Function(source), file + " should parse");
   }
 });
+
+
+test("admin progress page exposes the same blue theme as the public portal", () => {
+  const html = fs.readFileSync(path.join(ROOT, "admin/joki-progress.html"), "utf8");
+  assert.match(html, /name="theme-color" content="#071426"/);
+});
