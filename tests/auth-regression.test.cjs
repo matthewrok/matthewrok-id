@@ -596,3 +596,11 @@ test("Telegram maintenance RPC is service-role-only and validates an active admi
   assert.match(telegram, /chatId !== adminChatId \|\| senderId !== adminChatId/);
   assert.match(telegram, /service_set_maintenance/);
 });
+
+
+test("maintenance configuration is readable only by trusted server functions", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-service-role-read.sql"), "utf8");
+  assert.match(sql, /grant select on table public\.site_maintenance_config to service_role/);
+  assert.doesNotMatch(sql, /grant select[^;]*to anon/i);
+  assert.doesNotMatch(sql, /grant select[^;]*to authenticated/i);
+});
