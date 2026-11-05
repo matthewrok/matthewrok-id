@@ -370,8 +370,19 @@ Deno.serve(async (req: Request) => {
       return "📣 <b>PENGUMUMAN TERBARU</b>\\n\\n" + (rows.map((n:any) => "• #" + esc(n.id) + " " + esc(n.title) + " — " + (n.is_active ? "Aktif" : "Nonaktif")).join("\\n") || "Belum ada pengumuman.");
     }
     if (kind === "vouchers") {
-      const rows = await adminRead("vouchers", "select=id,code,description,discount_type,discount_value,is_active&order=created_at.desc&limit=10");
-      return "🎟️ <b>VOUCHER TERBARU</b>\\n\\n" + (rows.map((v:any) => "• #" + esc(v.id) + " " + esc(v.code) + " — " + esc(v.description) + " — " + (v.is_active ? "Aktif" : "Nonaktif")).join("\\n") || "Belum ada voucher.");
+      const rows = await adminRead("vouchers", "select=code,description,discount_type,discount_value,is_active&order=created_at.desc&limit=10");
+      const body = rows.map((v: any, index: number) => {
+        const discount = v.discount_type === "percent"
+          ? Number(v.discount_value || 0).toLocaleString("id-ID") + "%"
+          : money(v.discount_value);
+        return [
+          `${index + 1}. <b>${esc(v.code)}</b>`,
+          `   🏷️ Diskon: <b>${esc(discount)}</b>`,
+          `   📝 ${esc(v.description || "Tanpa keterangan")}`,
+          `   🔘 Status: ${v.is_active ? "🟢 Aktif" : "🔴 Nonaktif"}`
+        ].join("\\n");
+      }).join("\\n\\n");
+      return ["🎟️ <b>VOUCHER TERBARU</b>", "", body || "Belum ada voucher."].join("\\n");
     }
     if (kind === "visitors") {
       const rows = await adminRead("visitor_logs", "select=visitor_name,visited_at&order=visited_at.desc&limit=10");
