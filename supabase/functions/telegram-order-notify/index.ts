@@ -363,11 +363,23 @@ Deno.serve(async (req: Request) => {
     if (kind === "summary") return summaryText();
     if (kind === "roles") {
       const rows = await adminRead("profiles", "select=email,full_name,role,account_status&order=created_at.desc&limit=15");
-      return "👥 <b>ROLE AKUN TERBARU</b>\\n\\n" + (rows.map((p:any) => "• " + esc(p.full_name || p.email) + " — " + esc(p.email) + " — <b>" + esc(p.role) + "</b>").join("\\n") || "Belum ada akun.") + "\\n\\nPengubahan role akan ditambahkan melalui alur terkonfirmasi.";
+      const body = rows.map((p: any, index: number) => [
+        `${index + 1}. <b>${esc(p.full_name || "Tanpa nama")}</b>`,
+        `   ✉️ ${esc(p.email || "Email tidak tersedia")}`,
+        `   🏷️ Role: <b>${esc(p.role || "Belum ditentukan")}</b>`,
+        `   🔘 Akun: ${esc(p.account_status || "Status tidak tersedia")}`
+      ].join("\\n")).join("\\n\\n");
+      return ["👥 <b>DAFTAR ROLE AKUN</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada akun yang tercatat.", "", "Pilih akun pada tombol di bawah untuk melihat detail dan mengubah role."].join("\\n");
     }
     if (kind === "announcements") {
-      const rows = await adminRead("site_notifications", "select=id,title,is_active,audience,expires_at&order=created_at.desc&limit=10");
-      return "📣 <b>PENGUMUMAN TERBARU</b>\\n\\n" + (rows.map((n:any) => "• #" + esc(n.id) + " " + esc(n.title) + " — " + (n.is_active ? "Aktif" : "Nonaktif")).join("\\n") || "Belum ada pengumuman.");
+      const rows = await adminRead("site_notifications", "select=title,is_active,audience,expires_at&order=created_at.desc&limit=10");
+      const body = rows.map((n: any, index: number) => [
+        `${index + 1}. <b>${esc(n.title || "Tanpa judul")}</b>`,
+        `   👥 Target: ${esc(n.audience || "all")}`,
+        `   🔘 Status: ${n.is_active ? "🟢 Aktif" : "⚪ Nonaktif"}`,
+        `   ⏳ Berakhir: ${n.expires_at ? esc(new Date(n.expires_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })) + " WIB" : "Tidak ditentukan"}`
+      ].join("\\n")).join("\\n\\n");
+      return ["📣 <b>DAFTAR PENGUMUMAN TERBARU</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada pengumuman.", "", "Pilih pengumuman di bawah untuk melihat detail, mengedit, mengaktifkan, atau menghapusnya."].join("\\n");
     }
     if (kind === "vouchers") {
       const rows = await adminRead("vouchers", "select=code,description,discount_type,discount_value,is_active&order=created_at.desc&limit=10");
@@ -386,11 +398,20 @@ Deno.serve(async (req: Request) => {
     }
     if (kind === "visitors") {
       const rows = await adminRead("visitor_logs", "select=visitor_name,visited_at&order=visited_at.desc&limit=10");
-      return "👀 <b>KUNJUNGAN TERBARU</b>\\n\\n" + (rows.map((v:any) => "• " + esc(v.visitor_name) + " — " + esc(v.visited_at)).join("\\n") || "Belum ada data.");
+      const body = rows.map((v: any, index: number) => [
+        `${index + 1}. <b>${esc(v.visitor_name || "Pengunjung")}</b>`,
+        `   🕒 ${v.visited_at ? esc(new Date(v.visited_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })) + " WIB" : "Waktu tidak tersedia"}`
+      ].join("\\n")).join("\\n\\n");
+      return ["👀 <b>RIWAYAT KUNJUNGAN TERBARU</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada kunjungan yang tercatat."].join("\\n");
     }
     if (kind === "reviews") {
       const rows = await adminRead("joki_reviews", "select=client_name,rating,review_text,created_at&order=created_at.desc&limit=10");
-      return "⭐ <b>ULASAN TERBARU</b>\\n\\n" + (rows.map((v:any) => "⭐ " + esc(v.rating) + "/5 — " + esc(v.client_name || "Pelanggan") + "\\n" + esc(v.review_text)).join("\\n\\n") || "Belum ada ulasan.");
+      const body = rows.map((v: any, index: number) => [
+        `${index + 1}. <b>${esc(v.client_name || "Pelanggan")}</b> — ⭐ <b>${esc(v.rating)}/5</b>`,
+        `   💬 ${esc(v.review_text || "Tidak ada isi ulasan")}`,
+        `   🕒 ${v.created_at ? esc(new Date(v.created_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })) + " WIB" : "Waktu tidak tersedia"}`
+      ].join("\\n")).join("\\n\\n");
+      return ["⭐ <b>ULASAN PELANGGAN TERBARU</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada ulasan yang masuk.", "", "Pilih tombol ulasan di bawah jika ingin menghapus ulasan."].join("\\n");
     }
     return "Menu tidak dikenal.";
   };
