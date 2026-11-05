@@ -201,5 +201,6 @@ Lihat docs/ACCESS-CONTROL.md untuk skenario uji manual. Pengujian browser dengan
 - supabase/maintenance-mode-v2.sql — tabel konfigurasi, audit, admin RPC, dan enforcement order.
 - supabase/maintenance-mode-inbox-rls.sql — blokir Inbox saat modul maintenance aktif.
 - supabase/maintenance-mode-telegram-rpc.sql — RPC maintenance server-to-server khusus service_role.
+- supabase/maintenance-mode-service-role-read.sql — SELECT config maintenance hanya untuk service_role.
 - assets/js/maintenance-status.js dan assets/js/maintenance-admin.js — gate global dan panel kontrol admin.
 - maintenance.html — halaman FULL MAINTENANCE.
