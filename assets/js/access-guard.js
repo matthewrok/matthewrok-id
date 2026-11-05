@@ -1,11 +1,11 @@
 (() => {
   "use strict";
 
-  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+  const path = window.location.pathname.replace(new RegExp("/+$"), "") || "/";
   const rules = [
-    { test: /^\\/admin(?:\\/|$)/i, roles: ["admin"] },
-    { test: /^\\/worker\\.html$/i, roles: ["member", "sultan", "matthew", "pelanggan", "worker", "admin"] },
-    { test: /^\\/(?:inbox|your-order|member-dashboard)\\.html$/i, roles: ["member", "sultan", "matthew", "pelanggan", "worker", "admin"] }
+    { test: new RegExp("^/admin(?:/|$)", "i"), roles: ["admin"] },
+    { test: new RegExp("^/worker[.]html$", "i"), roles: ["member", "sultan", "matthew", "pelanggan", "worker", "admin"] },
+    { test: new RegExp("^/(?:inbox|your-order|member-dashboard)[.]html$", "i"), roles: ["member", "sultan", "matthew", "pelanggan", "worker", "admin"] }
   ];
   const rule = rules.find(item => item.test.test(path));
   if (!rule) return;
