@@ -255,7 +255,8 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
     }
   };
   vm.runInNewContext(fs.readFileSync(path.join(ROOT, "assets/js/session-manager.js"), "utf8"), {
-    window, document, location, localStorage, sessionStorage, Date, URLSearchParams, console
+    window, document, location, localStorage, sessionStorage, Date, URLSearchParams, console,
+    setTimeout: window.setTimeout.bind(window), clearTimeout: window.clearTimeout.bind(window)
   });
   ready();
   await new Promise(resolve => setImmediate(resolve));
