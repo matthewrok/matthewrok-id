@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
-  const roles = ["member", "sultan", "matthew", "pelanggan", "worker", "admin"];
+  const roles = ["member", "sultan", "matthew", "pelanggan", "worker", "macul", "admin"];
   const rules = [
     { test: /^\/admin(?:\/|$)/i, roles: ["admin"] },
     { test: /^\/worker[.]html$/i, roles },
