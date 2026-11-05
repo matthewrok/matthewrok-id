@@ -561,3 +561,11 @@ test("login and homepage initialize Supabase only once per page", () => {
     assert.equal((html.match(/(?:src=["'])\/?assets\/js\/supabase\.js/g) || []).length, 1, page + " should initialize one Supabase client");
   }
 });
+
+
+test("maintenance foreign-key index follow-up covers both reported advisor findings", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/add_maintenance_foreign_key_indexes.sql"), "utf8");
+  assert.match(sql, /site_maintenance_audit_actor_id_idx/);
+  assert.match(sql, /site_maintenance_config_updated_by_idx/);
+  assert.match(sql, /create index if not exists/);
+});
