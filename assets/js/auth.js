@@ -109,7 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
           .select("account_status")
           .eq("id", currentUser.user.id)
           .maybeSingle();
-        if (statusError) throw statusError;
+        if (statusError) {
+          await client.auth.signOut({ scope: "local" });
+          throw statusError;
+        }
 
         // Hanya akun dengan profil yang eksplisit berstatus active yang boleh melanjutkan.
         const accountStatus = String(memberProfile?.account_status || "").trim().toLowerCase();
