@@ -234,7 +234,7 @@ Deno.serve(async (req: Request) => {
     const actorId = admins?.[0]?.id;
     if (!actorId) throw new Error("Admin profile missing");
     const enabled = mode !== "off";
-    const targetMode = mode === "off" ? (current.mode || "full") : mode;
+    const targetMode = mode === "off" ? "full" : mode;
     const modules = targetMode === "system" ? [module] : targetMode === "orders" ? ["orders"] : [];
     if (targetMode === "system" && !module) throw new Error("Pilih modul system maintenance");
     const response = await fetch(`${supabaseUrl}/rest/v1/rpc/service_set_maintenance`, {
