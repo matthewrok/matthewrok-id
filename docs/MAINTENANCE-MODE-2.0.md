@@ -37,8 +37,8 @@ If the maintenance configuration cannot be read, order creation and worker submi
 - All mutations are verified against an active admin profile in PostgreSQL; browser metadata/localStorage are not trusted.
 
 ## Telegram admin controls
-- Telegram admin panel now includes Maintenance Mode.
-- /maintenance opens the controls.
+- Telegram admin panel source in this PR includes Maintenance Mode.
+- /maintenance opens the controls after the PR branch's Telegram Edge Function is deployed.
 - Inline actions can disable maintenance or enable FULL, ORDER, or a selected SYSTEM module.
 - Telegram webhook validates the configured secret token and requires both chat ID and sender ID to match TELEGRAM_CHAT_ID.
 - The webhook uses a service_role-only RPC that also validates an active admin profile and records the audit entry.
@@ -61,7 +61,7 @@ If the maintenance configuration cannot be read, order creation and worker submi
 - Supabase migration maintenance_mode_inbox_rls applied.
 - Supabase migration maintenance_mode_telegram_rpc applied.
 - Edge Function worker-application-submit deployed as version 5 with verify_jwt=true.
-- Edge Function telegram-order-notify deployed as version 41 with verify_jwt=false; webhook secret and Telegram chat/sender validation remain enabled.
+- Production telegram-order-notify is currently version 42 (previous menu only, verify_jwt=false). The maintenance callback source is staged in this PR and must be deployed after the frontend is published, so the live bot cannot activate maintenance before the UI gate exists.
 - SQL syntax was tested inside rollback transactions before applying migrations.
 - Rollback-only role simulation verified that a member cannot read Inbox messages/receipts during Inbox maintenance while admin can still read them.
 - A rollback-only service_role test verified the Telegram maintenance RPC without persisting a config change or audit row.
