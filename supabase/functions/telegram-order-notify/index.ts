@@ -43,8 +43,8 @@ Deno.serve(async (req: Request) => {
   const formatTelegramText = (value: string) => String(value ?? "")
     .replace(/\\r\\n?/g, "\n")
     .replace(/\\n/g, "\n")
-    .replace(/[ \\t]+\\n/g, "\n")
-    .replace(/\\n{3,}/g, "\n\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
   const money = (v: unknown) => "Rp" + Number(v ?? 0).toLocaleString("id-ID");
   const baseHeaders = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json" };
