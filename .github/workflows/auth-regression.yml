@@ -1,0 +1,29 @@
+name: Authentication regression tests
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "assets/js/auth.js"
+      - "assets/js/access-guard.js"
+      - "assets/js/session-manager.js"
+      - "tests/**"
+      - ".github/workflows/auth-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auth-regression:
+    name: Login redirect, session cleanup, and role access
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run authentication regression tests
+        run: node --test tests/auth-regression.test.cjs
