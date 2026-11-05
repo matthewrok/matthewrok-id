@@ -10,6 +10,8 @@ on:
       - "assets/js/home-orders.js"
       - "assets/js/joki-matthew.js"
       - "assets/js/admin-joki-progress.js"
+      - "joki-matthew.html"
+      - "admin/joki-progress.html"
       - "supabase/tracking-token-v2.sql"
       - "supabase/tracking-token-v2-cutover.sql"
       - "supabase/functions/worker-application-submit/**"
