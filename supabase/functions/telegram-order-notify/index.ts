@@ -14,7 +14,7 @@ Deno.serve(async (req: Request) => {
   const sendMessage = async (chatId: string | number, text: string, extra: Record<string, unknown> = {}) => {
     const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", disable_web_page_preview: true, ...extra }),
+      body: JSON.stringify({ chat_id: chatId, text: formatTelegramText(text), parse_mode: "HTML", disable_web_page_preview: true, ...extra }),
     });
     const data = await res.json();
     if (!res.ok || !data.ok) console.error("Telegram sendMessage failed", data);
@@ -29,7 +29,7 @@ Deno.serve(async (req: Request) => {
   const editMessage = async (chatId: string, messageId: number, text: string, extra: Record<string, unknown> = {}) => {
     const res = await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, message_id: messageId, text, parse_mode: "HTML", disable_web_page_preview: true, ...extra }),
+      body: JSON.stringify({ chat_id: chatId, message_id: messageId, text: formatTelegramText(text), parse_mode: "HTML", disable_web_page_preview: true, ...extra }),
     });
     const data = await res.json();
     if (!data.ok) console.error("Telegram editMessageText failed", data);
@@ -37,6 +37,15 @@ Deno.serve(async (req: Request) => {
   };
 
   const esc = (v: unknown) => String(v ?? "-").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
+  // Normalize every bot response so older templates cannot show literal "\\n"
+  // sequences or inconsistent blank lines. Existing maintenance copy is preserved.
+  const formatTelegramText = (value: string) => String(value ?? "")
+    .replace(/\\r\\n?/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
   const money = (v: unknown) => "Rp" + Number(v ?? 0).toLocaleString("id-ID");
   const baseHeaders = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json" };
   const mainMenu = { inline_keyboard: [
