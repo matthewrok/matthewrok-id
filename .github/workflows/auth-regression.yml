@@ -43,6 +43,7 @@ on:
       - "supabase/functions/worker-application-submit/**"
       - "supabase/maintenance-mode-inbox-rls.sql"
       - "supabase/maintenance-mode-telegram-rpc.sql"
+      - "supabase/maintenance-mode-service-role-read.sql"
       - "maintenance.html"
       - "supabase/functions/worker-application-submit/**"
       - "supabase/functions/inbox-send/**"
