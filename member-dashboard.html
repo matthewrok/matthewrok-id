@@ -64,8 +64,8 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(35,111,22
 <section class="member-panel"><h2>Notification Center</h2><div id="notifications" class="member-empty">Belum ada notifikasi.</div></section>
 </div>
 <div class="member-panel" style="margin-top:16px"><h2>Informasi Akun</h2><div class="member-profile"><div><span>Nama</span><strong id="profileName">—</strong></div><div><span>Email</span><strong id="profileEmail">—</strong></div><div><span>Role</span><strong id="profileRole">—</strong></div><div><span>Bergabung</span><strong id="profileJoined">—</strong></div></div></div><div class="member-panel" style="margin-top:16px"><h2>Membership Progress</h2><p id="levelDescription" class="member-muted">Mulai gunakan layanan MATTHEW JOKI untuk meningkatkan level keanggotaan.</p><div style="height:8px;background:#33242b;border-radius:20px;overflow:hidden;margin:14px 0"><div id="levelBar" style="height:100%;width:0;background:var(--gilt);border-radius:20px"></div></div><div id="nextLevel" class="member-status"></div></div>
-</section>
 <section class="member-panel" style="margin-top:16px"><h2>Rating & Testimoni</h2><p class="member-muted">Berikan penilaian untuk pesanan yang sudah selesai. Ulasan akan langsung tampil di halaman rating setelah berhasil dikirim. Nama hanya ditampilkan jika kamu mengizinkannya.</p><div id="reviewArea" class="member-empty">Memuat pesanan selesai...</div></section>
+</section>
 <p class="member-footer">MATTHEW JOKI · KINGDOM MEMBER CENTER</p></main>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
  const {data:{session}}=await client.auth.getSession();
  if(!session){location.replace("/login.html?next=member-dashboard.html");return;}
  const user=session.user;
+ try {
  const [{data:profile,error:profileError},{data:orders,error:ordersError}]=await Promise.all([
   client.from("profiles").select("full_name,role,account_status,created_at").eq("id",user.id).maybeSingle(),
   client.rpc("list_my_joki_orders")
@@ -113,7 +114,21 @@ document.addEventListener("DOMContentLoaded", async () => {
  document.getElementById("notifications").innerHTML=notes.length?notes.map(o=>'<div class="member-note"><strong>'+escapeHtml(o.order_number||"Pesanan")+' · '+escapeHtml(o.status||"Menunggu")+'</strong>'+escapeHtml(o.progress_note||("Status pesanan diperbarui. Progres "+(o.progress_percent||0)+"%."))+'<br><small>'+new Date(o.updated_at||o.created_at).toLocaleString("id-ID")+'</small></div>').join(""):'Belum ada pembaruan pesanan.';
  recent.addEventListener("click",e=>{const btn=e.target.closest("[data-invoice]");if(!btn)return;const o=list.find(x=>x.id===btn.dataset.invoice);if(o)printInvoice(o,user.email);});
  state.hidden=true;content.hidden=false;
- document.getElementById("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();location.replace("/login.html");});
+ document.getElementById("logoutBtn").addEventListener("click",async()=>{const button=document.getElementById("logoutBtn");button.disabled=true;try{const {error}=await client.auth.signOut();if(error)throw error;location.replace("/login.html");}catch(error){button.disabled=false;state.hidden=false;state.textContent="Logout belum berhasil. Periksa koneksi lalu coba lagi.";console.error("[Member Dashboard] logout",error);}});
+ } catch(error) {
+   console.error("[Member Dashboard] load",error);
+   content.hidden=true;
+   state.hidden=false;
+   state.textContent="Dashboard belum dapat dimuat. Periksa koneksi internet lalu muat ulang halaman.";
+   if(!state.querySelector("button")) {
+     const retry=document.createElement("button");
+     retry.type="button";
+     retry.textContent="COBA LAGI";
+     retry.style.cssText="display:block;margin-top:12px;padding:10px 14px;border-radius:8px;border:1px solid #5798e8;background:#12345d;color:#fff;cursor:pointer";
+     retry.addEventListener("click",()=>location.reload());
+     state.appendChild(retry);
+   }
+ }
  function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
  function printInvoice(o,email){
   const w=window.open("","_blank","width=760,height=800");if(!w){alert("Izinkan pop-up untuk mencetak invoice.");return;}
