@@ -116,3 +116,32 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 3. Tidak menghapus file/aset sebelum seluruh referensinya diverifikasi.
 4. Tidak menyatakan fitur selesai hanya karena checklist atau UI sudah dibuat.
 5. Perubahan harus tetap kompatibel dengan GitHub Pages dan Supabase yang sudah digunakan.
+
+## M. Audit statis lanjutan — 6 November 2026
+
+### Kontrak data yang berhasil diverifikasi
+- `list_my_joki_orders()` pada SQL repository mengembalikan `id`, `order_number`, `client_name`, `client_email`, `service_name`, `kingdom_number`, `quantity`, rincian harga, `status`, progres, dan timestamp. Kolom `total_price` yang dipakai statistik dan invoice tersedia pada kontrak SQL tersebut.
+- Fungsi daftar pesanan memfilter berdasarkan email akun terautentikasi dan hanya diberikan kepada role `authenticated`. Tetap perlu uji RLS/negatif di database aktif; pemeriksaan source bukan bukti konfigurasi produksi saat ini sama.
+- `submit_member_joki_review()` memeriksa sesi login, rating 1–5, panjang ulasan 5–700 karakter, kepemilikan pesanan berdasarkan email akun, status `Selesai`, dan menangani unique violation untuk mencegah ulasan ganda.
+- `get_public_joki_reviews()` hanya mengembalikan ulasan berstatus `approved` dan menyamarkan nama ketika pengguna tidak mengizinkan nama ditampilkan.
+- `create_joki_order()` pada SQL repository menolak sesi anonim, menyamakan email pesanan dengan email akun, memvalidasi Kingdom numerik dan kuantitas 4–12, memvalidasi produk/voucher, serta menghitung harga di backend.
+
+### Risiko dan pekerjaan yang masih terbuka
+- Halaman dashboard melakukan beberapa request Supabase setelah `DOMContentLoaded`; jalur `getSession()`/request paralel belum dibungkus satu penanganan exception menyeluruh. Kegagalan jaringan tertentu berpotensi meninggalkan state loading tanpa pesan pemulihan. Perlu diperbaiki dan diuji.
+- Aturan level Bronze/Silver/Gold/Diamond dihitung di frontend berdasarkan jumlah pesanan selesai. Belum ada bukti kebijakan loyalty bisnis final; jangan menganggap level ini sebagai benefit/otorisasi backend.
+- Statistik total nilai saat ini menjumlahkan `total_price` semua pesanan yang dikembalikan RPC, termasuk status selain selesai. Label saat ini adalah “Total Nilai Pesanan”, bukan omzet/total transaksi lunas; jangan mengganti label menjadi omzet sebelum status pembayaran tersedia dan didefinisikan.
+- Access guard browser adalah lapisan UX, bukan pengganti RLS/RPC. Pastikan seluruh akses data dan mutasi tetap dibatasi server-side.
+- Dashboard menampilkan panel ulasan di luar container dashboard yang disembunyikan selama pemuatan. Tinjau agar state loading/error dan konten terautentikasi konsisten serta tidak terjadi kilatan konten.
+- `member-review-moderation.sql` dan `order-kingdom-and-quantity-limit.sql` adalah source SQL di repository. Audit ini tidak memverifikasi checksum/versi fungsi yang sedang aktif di Supabase produksi.
+
+### CI dan batas pengujian
+- Pemeriksaan GitHub Actions untuk head PR saat audit tidak mengembalikan workflow run; belum ada bukti CI lulus.
+- Belum dilakukan browser smoke test, uji mobile, uji akun dengan role berbeda, uji koneksi terputus, maupun pengujian database aktif.
+- Tidak ada perubahan schema, RLS, RPC, Edge Function, atau konfigurasi Auth produksi pada tahap audit ini.
+
+### Langkah berikutnya
+1. Tangani exception jaringan dan state retry di dashboard tanpa mengubah kontrak RPC.
+2. Pindahkan panel ulasan ke state dashboard terautentikasi setelah data berhasil dimuat.
+3. Verifikasi aturan level member dan status transaksi dengan kebijakan bisnis yang disetujui.
+4. Tambahkan pemeriksaan sintaks dan smoke/regression test otomatis yang sesuai dengan struktur proyek.
+5. Jalankan uji browser serta verifikasi backend terpisah sebelum mengubah checklist menjadi selesai.
