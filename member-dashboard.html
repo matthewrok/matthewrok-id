@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="id"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#100b0d"><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#071a3a"><meta name="robots" content="noindex,nofollow">
 <title>Member Dashboard | MATTHEW JOKI</title>
 <link rel="stylesheet" href="/assets/css/tokens.css"><link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/assets/js/supabase.js"></script>
   <script src="/assets/js/access-guard.js?v=20261106-3"></script><script defer src="/assets/js/session-manager.js"></script>
 <style>
-body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(173,35,54,.14),transparent 34%),radial-gradient(ellipse at 90% 18%,rgba(191,151,83,.08),transparent 30%),#0c090c;color:var(--text)}
+body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(35,111,220,.2),transparent 36%),radial-gradient(ellipse at 90% 18%,rgba(28,76,150,.16),transparent 32%),#071426;color:var(--text)}
 .member-shell{width:min(1160px,92%);margin:0 auto;padding:28px 0 76px}.member-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}
-.member-brand{font-family:var(--display);letter-spacing:.08em;color:var(--gilt);font-size:16px;text-decoration:none}.member-brand small{display:block;color:var(--muted);font:10px var(--body);letter-spacing:.2em;margin-top:5px}
+.member-brand{font-family:var(--display);letter-spacing:.08em;color:#a9ceff;font-size:16px;text-decoration:none}.member-brand small{display:block;color:var(--muted);font:10px var(--body);letter-spacing:.2em;margin-top:5px}
 #logoutBtn{cursor:pointer;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.035);color:#ddd;padding:10px 16px;border-radius:9px;font-size:10px;letter-spacing:.12em}
-.member-hero{position:relative;overflow:hidden;padding:clamp(26px,5vw,52px);border:1px solid rgba(213,173,104,.23);border-radius:22px;background:radial-gradient(ellipse at 88% 5%,rgba(198,48,67,.24),transparent 42%),linear-gradient(125deg,rgba(48,27,34,.98),rgba(19,13,18,.98));box-shadow:0 22px 65px rgba(0,0,0,.2);margin-bottom:22px}
+.member-hero{position:relative;overflow:hidden;padding:clamp(26px,5vw,52px);border:1px solid rgba(213,173,104,.23);border-radius:22px;background:radial-gradient(ellipse at 88% 5%,rgba(38,111,220,.25),transparent 42%),linear-gradient(125deg,rgba(15,49,91,.98),rgba(8,24,47,.98));box-shadow:0 22px 65px rgba(0,0,0,.2);margin-bottom:22px}
 .member-hero:after{content:"M";position:absolute;right:5%;top:50%;transform:translateY(-50%);font:clamp(130px,23vw,250px)/1 var(--display);color:rgba(255,255,255,.025);pointer-events:none}
 .member-hero .eyebrow{color:var(--gilt);font-size:10px;font-weight:800;letter-spacing:.22em}.member-hero h1{position:relative;z-index:1;font-size:clamp(27px,5vw,46px);line-height:1.12;margin:13px 0}
 .member-hero p{position:relative;z-index:1;max-width:620px;color:#b9aeb2;line-height:1.75;font-size:13px}
@@ -21,7 +21,7 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(173,35,54
 .member-actions a:hover,.member-actions button:hover{transform:translateY(-2px);border-color:var(--gilt);background:rgba(213,173,104,.13)}
 #loadState{padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
 .member-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}
-.member-stat,.member-panel{background:linear-gradient(145deg,rgba(34,25,31,.96),rgba(20,15,20,.96));border:1px solid rgba(255,255,255,.085);border-radius:16px;padding:21px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
+.member-stat,.member-panel{background:linear-gradient(145deg,rgba(17,43,76,.96),rgba(9,27,51,.96));border:1px solid rgba(255,255,255,.085);border-radius:16px;padding:21px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
 .member-stat{position:relative;overflow:hidden;min-height:112px}.member-stat:after{content:"";position:absolute;width:75px;height:75px;border:1px solid rgba(213,173,104,.12);border-radius:50%;right:-24px;bottom:-32px}
 .member-stat span{display:block;color:#9d9097;font-size:11px;letter-spacing:.04em}.member-stat strong{display:block;font:600 clamp(23px,3vw,30px) var(--display);margin-top:13px;color:var(--gilt)}
 .member-panels{display:grid;grid-template-columns:1.45fr 1fr;gap:16px}.member-panel h2{font-size:15px;letter-spacing:.025em;margin:0 0 15px}
@@ -39,6 +39,9 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(173,35,54
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 @media print{body{background:#fff!important;color:#111!important}.member-top,.member-actions,.member-footer,.global-menu{display:none!important}.member-shell{width:100%;padding:0}.member-panel,.member-hero,.member-stat{break-inside:avoid;background:#fff!important;color:#111!important;border:1px solid #bbb;box-shadow:none}.member-hero p,.member-stat span,.member-note,.member-order small,.member-muted{color:#444!important}.member-stat strong{color:#111!important}}
 </style><link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261104-2"><style>
+.member-profile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.member-profile span{display:block;color:#8eadd2;font-size:10px;margin-bottom:5px}.member-profile strong{font-size:12px;overflow-wrap:anywhere}
+@media(max-width:560px){.member-profile{grid-template-columns:1fr}}
+</style><style>
 /* Reserve a dedicated lane for the fixed Inbox + three-dot controls. */
 .member-top{padding-right:108px;box-sizing:border-box}
 .member-top #logoutBtn{position:relative;z-index:1;flex:0 0 auto;white-space:nowrap}
@@ -54,13 +57,13 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(173,35,54
 <div class="member-stat"><span>Total Pesanan</span><strong id="totalOrders">0</strong></div>
 <div class="member-stat"><span>Pesanan Selesai</span><strong id="completedOrders">0</strong></div>
 <div class="member-stat"><span>Dalam Proses</span><strong id="activeOrders">0</strong></div>
-<div class="member-stat"><span>Level Member</span><strong id="memberLevel">Bronze</strong></div>
+<div class="member-stat"><span>Level Member</span><strong id="memberLevel">Bronze</strong></div><div class="member-stat"><span>Pesanan Dibatalkan</span><strong id="cancelledOrders">0</strong></div><div class="member-stat"><span>Total Transaksi</span><strong id="totalSpent">Rp0</strong></div>
 </div>
 <div class="member-panels">
 <section class="member-panel"><h2>Pesanan Terbaru</h2><div id="recentOrders" class="member-empty">Belum ada pesanan.</div><div class="member-actions"><a href="/your-order.html">Buka Your Order</a></div></section>
 <section class="member-panel"><h2>Notification Center</h2><div id="notifications" class="member-empty">Belum ada notifikasi.</div></section>
 </div>
-<div class="member-panel" style="margin-top:16px"><h2>Membership Progress</h2><p id="levelDescription" class="member-muted">Mulai gunakan layanan MATTHEW JOKI untuk meningkatkan level keanggotaan.</p><div style="height:8px;background:#33242b;border-radius:20px;overflow:hidden;margin:14px 0"><div id="levelBar" style="height:100%;width:0;background:var(--gilt);border-radius:20px"></div></div><div id="nextLevel" class="member-status"></div></div>
+<div class="member-panel" style="margin-top:16px"><h2>Informasi Akun</h2><div class="member-profile"><div><span>Nama</span><strong id="profileName">—</strong></div><div><span>Email</span><strong id="profileEmail">—</strong></div><div><span>Role</span><strong id="profileRole">—</strong></div><div><span>Bergabung</span><strong id="profileJoined">—</strong></div></div></div><div class="member-panel" style="margin-top:16px"><h2>Membership Progress</h2><p id="levelDescription" class="member-muted">Mulai gunakan layanan MATTHEW JOKI untuk meningkatkan level keanggotaan.</p><div style="height:8px;background:#33242b;border-radius:20px;overflow:hidden;margin:14px 0"><div id="levelBar" style="height:100%;width:0;background:var(--gilt);border-radius:20px"></div></div><div id="nextLevel" class="member-status"></div></div>
 </section>
 <section class="member-panel" style="margin-top:16px"><h2>Rating & Testimoni</h2><p class="member-muted">Berikan penilaian untuk pesanan yang sudah selesai. Ulasan akan langsung tampil di halaman rating setelah berhasil dikirim. Nama hanya ditampilkan jika kamu mengizinkannya.</p><div id="reviewArea" class="member-empty">Memuat pesanan selesai...</div></section>
 <p class="member-footer">MATTHEW JOKI · KINGDOM MEMBER CENTER</p></main>
@@ -78,13 +81,19 @@ document.addEventListener("DOMContentLoaded", async () => {
  if(profileError){state.textContent="Profil gagal dimuat: "+profileError.message;return;}
  if(profile?.account_status==="suspended"){await client.auth.signOut();location.replace("/login.html?reason=suspended");return;}
  if(ordersError){state.textContent="Data pesanan gagal dimuat: "+ordersError.message;return;}
- const list=orders||[], done=list.filter(o=>o.status==="Selesai").length, active=list.filter(o=>!["Selesai","Ditunda"].includes(o.status)).length;
+ const list=Array.isArray(orders)?orders:[], done=list.filter(o=>o.status==="Selesai").length, cancelled=list.filter(o=>o.status==="Dibatalkan").length, active=list.filter(o=>!["Selesai","Dibatalkan","Ditunda"].includes(o.status)).length;
  const levels=[{name:"Bronze",min:0,next:3},{name:"Silver",min:3,next:8},{name:"Gold",min:8,next:15},{name:"Diamond",min:15,next:null}];
  const level=[...levels].reverse().find(x=>done>=x.min)||levels[0], next=levels.find(x=>x.min===level.next);
  document.getElementById("memberName").textContent=profile?.full_name||user.email.split("@")[0];
  document.getElementById("totalOrders").textContent=list.length;
  document.getElementById("completedOrders").textContent=done;
  document.getElementById("activeOrders").textContent=active;
+ document.getElementById("cancelledOrders").textContent=cancelled;
+ document.getElementById("totalSpent").textContent=money(list.reduce((sum,o)=>sum+Number(o.total_price||0),0));
+ document.getElementById("profileName").textContent=profile?.full_name||"Belum diatur";
+ document.getElementById("profileEmail").textContent=user.email||"—";
+ document.getElementById("profileRole").textContent=profile?.role||"MEMBER";
+ document.getElementById("profileJoined").textContent=profile?.created_at?new Date(profile.created_at).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"—";
  document.getElementById("memberLevel").textContent=level.name;
  document.getElementById("levelDescription").textContent="Level "+level.name+" · dihitung dari jumlah pesanan berstatus Selesai.";
  const progress=next?Math.min(100,Math.round((done-level.min)/(next.min-level.min)*100)):100;
