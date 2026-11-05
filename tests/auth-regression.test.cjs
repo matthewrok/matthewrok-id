@@ -115,6 +115,13 @@ test("successful login for every supported role always redirects to homepage, ig
   }
 });
 
+test("active account status is normalized before login is accepted", async () => {
+  const h = makeLoginHarness({ accountStatus: " ACTIVE " });
+  await h.submit();
+  assert.deepEqual(h.redirects, ["/index.html"]);
+  assert.equal(h.signOutCalls.length, 0);
+});
+
 test("login signs out locally when the profile is missing or inactive", async t => {
   for (const accountStatus of ["suspended", null, "pending", ""]) {
     const h = makeLoginHarness({ accountStatus });
