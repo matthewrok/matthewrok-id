@@ -138,7 +138,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 ### CI dan batas pengujian
 
 - Perbaikan dashboard lanjutan pada 6 November: panel Rating & Testimoni kini berada di dalam kontainer dashboard terautentikasi (tidak tampil saat dashboard masih loading); kegagalan request ditangani dengan pesan dan tombol coba lagi; logout menampilkan error tanpa mengunci tombol selamanya. Parser JavaScript inline berhasil dijalankan melalui pemeriksaan statis. Browser/runtime test tetap belum dilakukan.
-- GitHub Actions workflow Authentication regression tests pada head PR b1b83ecf607558fc167d8567050ae8153e27fa99 selesai dengan conclusion success (run #9).
+- GitHub Actions workflow Authentication regression tests pada head PR 1737aeccde1d019525d977270e2a258788d1363c selesai dengan conclusion success (run #16). Job Login redirect, session cleanup, and role access berhasil.
 - Belum dilakukan browser smoke test, uji mobile, uji akun dengan role berbeda, uji koneksi terputus, maupun pengujian database aktif.
 - Tidak ada perubahan schema, RLS, RPC, Edge Function, atau konfigurasi Auth produksi pada tahap audit ini.
 
@@ -168,3 +168,5 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Security Advisor menandai beberapa SECURITY DEFINER RPC yang dapat dipanggil anon/authenticated. Endpoint publik dan endpoint login perlu ditinjau satu per satu berdasarkan isi fungsi, parameter, dan grants; tidak semua temuan otomatis merupakan kerentanan. Advisor juga menandai leaked-password protection nonaktif.
 - process_worker_application_decision memetakan worker_type akun ke role AKUN dan macul ke MACUL, membuat pesan Inbox, serta membatasi aktor pada admin/MATTHEW. RPC tidak dapat dipanggil anon/authenticated; Telegram Edge Function memverifikasi secret webhook dan chat/sender ID admin sebelum menjalankannya.
 - Rekomendasi: evaluasi dan cabut anonymous INSERT worker_applications setelah audit frontend; aktifkan leaked-password protection di Auth; audit SECURITY DEFINER RPC; dan deploy Edge Function worker setelah diff versi aktif dengan branch ditinjau.
+
+- Pengujian CI run #16 mencakup file auth regression, kontrak role Edge Function, CORS HTTP/HTTPS, dan role SQL; seluruh test berhasil.
