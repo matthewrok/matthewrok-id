@@ -12,12 +12,12 @@
     showMessage("lookupMessage", "");
     setBusy($("lookupButton"), true, "MEMERIKSA...", "CEK PROGRES");
     try {
-      const {data, error} = await db.rpc("lookup_joki_progress", {p_token: token});
+      const {data, error} = await db.rpc("lookup_joki_progress_secure", {p_token: token});
       if (error) throw error;
       const order = Array.isArray(data) ? data[0] : data;
       if (!order) { showMessage("lookupMessage", "Token tidak ditemukan. Periksa kembali token dari admin.", "error"); return; }
       $("resultService").textContent = order.service_name || "Layanan Joki";
-      $("resultOrderNumber").textContent = order.order_number || order.token || token;
+      $("resultOrderNumber").textContent = order.order_number || "—";
       $("resultQuantity").textContent = order.quantity ? order.quantity + " karakter" : "-";
       $("resultTotal").textContent = Number(order.total_price) > 0 ? "Rp" + Number(order.total_price).toLocaleString("id-ID") : "Menunggu konfirmasi";
       $("resultStatus").textContent = order.status || "Menunggu";
@@ -32,7 +32,7 @@
       syncReviewIdentity();
       $("existingReview").classList.add("hidden");
       if (order.status === "Selesai") {
-        const {data: priorReview, error: reviewLookupError} = await db.rpc("lookup_joki_review", {p_token: token});
+        const {data: priorReview, error: reviewLookupError} = await db.rpc("lookup_joki_review_secure", {p_token: token});
         if (!reviewLookupError && priorReview && priorReview.length) {
           $("reviewSection").classList.add("hidden");
           const review = priorReview[0];
@@ -122,7 +122,7 @@
     const button = $("submitReview");
     setBusy(button, true, "MENGIRIM...", "KIRIM ULASAN");
     try {
-      const {error} = await db.rpc("submit_joki_review", {
+      const {error} = await db.rpc("submit_joki_review_secure", {
         p_token: token,
         p_rating: rating,
         p_review_text: $("reviewText").value.trim(),
