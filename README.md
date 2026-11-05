@@ -133,7 +133,7 @@ Saat mengubah login/registrasi/verifikasi/reset password, periksa bersama-sama:
 - `assets/js/auth.js`, `assets/js/supabase.js`, `assets/js/session-manager.js`
 - Site URL dan Redirect URLs pada konfigurasi Supabase.
 
-Konfirmasi email tidak seharusnya otomatis dianggap sebagai login; ikuti alur aplikasi yang meminta pengguna login secara terpisah.
+Konfirmasi email tidak seharusnya otomatis dianggap sebagai login; ikuti alur aplikasi yang meminta pengguna login secara terpisah. Setelah login akun berhasil, seluruh role diarahkan ke `/index.html`; parameter `?next=` sengaja diabaikan. Handler login juga hanya melanjutkan jika profil pengguna tersedia dan `account_status` bernilai `active`.
 
 ## Cache dan versi aset
 
