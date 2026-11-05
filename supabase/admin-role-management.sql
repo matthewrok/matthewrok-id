@@ -1,11 +1,12 @@
 -- Admin-only member role promotion and role-change audit for MATTHEW JOKI.
--- Safe to rerun in Supabase SQL Editor.
+-- Safe to rerun in Supabase SQL Editor only after reviewing the current role values.
+-- Preserve all operational roles already used by the website: WORKER, MACUL, and AKUN.
 
 alter table public.profiles
   drop constraint if exists profiles_role_check;
 alter table public.profiles
   add constraint profiles_role_check
-  check (role = any (array['member'::text, 'admin'::text, 'SULTAN'::text, 'MATTHEW'::text, 'PELANGGAN'::text]));
+  check (role = any (array['member'::text, 'admin'::text, 'SULTAN'::text, 'MATTHEW'::text, 'PELANGGAN'::text, 'WORKER'::text, 'MACUL'::text, 'AKUN'::text]));
 
 create table if not exists public.profile_role_audit (
   id bigint generated always as identity primary key,

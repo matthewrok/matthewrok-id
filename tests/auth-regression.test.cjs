@@ -278,3 +278,356 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
   assert.equal(scheduled.size, 0, "signed-out session should not retain an inactivity timer");
   assert.equal(cleared.length, 1);
 });
+
+
+test("worker application Edge Function enforces active applicant roles server-side", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(source, /select=role,account_status/);
+  assert.match(source, /const applicantRoles = \["member", "sultan", "matthew", "pelanggan"\]/);
+  assert.match(source, /applicantRoles\.includes\(role\)/);
+  assert.match(source, /accountStatus !== "active"/);
+  assert.match(source, /return json\(\{ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker\." \}, 403\)/);
+  assert.doesNotMatch(source, /user_metadata[\s\S]{0,100}role/);
+});
+
+
+test("role management SQL preserves all operational worker roles", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/admin-role-management.sql"), "utf8");
+  for (const role of ["member", "admin", "SULTAN", "MATTHEW", "PELANGGAN", "WORKER", "MACUL", "AKUN"]) {
+    assert.match(sql, new RegExp("'" + role + "'::text"));
+  }
+});
+
+test("worker application function preserves both configured site origins and server-side role checks", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.ok(source.includes("https://matthewrok.my.id"));
+  assert.ok(source.includes("http://matthewrok.my.id"));
+  assert.match(source, /corsHeadersFor\(req\.headers\.get\("Origin"\)\)/);
+  assert.match(source, /select=role,account_status/);
+  assert.match(source, /applicantRoles\.includes\(role\)/);
+});
+
+
+test("worker application form uses the server-validated Edge Function, not direct table INSERT", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/worker-application.js"), "utf8");
+  assert.match(source, /functions\.invoke\(["']worker-application-submit["']/);
+  assert.doesNotMatch(source, /from\(["']worker_applications["']\)\s*\.insert\(/);
+  const endpoint = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(endpoint, /auth\/v1\/user/);
+  assert.match(endpoint, /profiles\?id=eq\./);
+  assert.match(endpoint, /SUPABASE_SERVICE_ROLE_KEY/);
+  assert.match(endpoint, /applicantRoles\.includes\(role\)/);
+});
+
+
+test("order flow uses private tracking-token RPC and shares token separately from order number", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(source, /rpc\(["']create_joki_order_secure["']/);
+  assert.match(source, /order\.tracking_token/);
+  assert.match(source, /No\. Order:/);
+  assert.match(source, /Token Pelacakan Rahasia:/);
+  assert.doesNotMatch(source, /rpc\(["']create_joki_order["']/);
+});
+
+test("public tracking and review UI call only secure tracking-token RPCs", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/joki-matthew.js"), "utf8");
+  assert.match(source, /lookup_joki_progress_secure/);
+  assert.match(source, /lookup_joki_review_secure/);
+  assert.match(source, /submit_joki_review_secure/);
+  assert.doesNotMatch(source, /rpc\(["']lookup_joki_progress["']/);
+  assert.doesNotMatch(source, /rpc\(["']lookup_joki_review["']/);
+  assert.doesNotMatch(source, /rpc\(["']submit_joki_review["']/);
+});
+
+test("admin progress panel manages and copies the private tracking token", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/admin-joki-progress.js"), "utf8");
+  assert.match(source, /tracking_token/);
+  assert.match(source, /payload\.tracking_token=payload\.token/);
+});
+
+test("tracking-token SQL uses 256-bit cryptographic randomness and explicit RPC grants", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/tracking-token-v2.sql"), "utf8");
+  assert.match(migration, /extensions\.gen_random_bytes\(32\)/);
+  assert.match(migration, /joki_progress_tracking_token_uidx/);
+  assert.match(migration, /create_joki_order_secure/);
+  assert.match(migration, /lookup_joki_progress_secure/);
+  assert.match(migration, /lookup_joki_review_secure/);
+  assert.match(migration, /submit_joki_review_secure/);
+  assert.match(migration, /set search_path = ''/);
+  const cutover = fs.readFileSync(path.join(ROOT, "supabase/tracking-token-v2-cutover.sql"), "utf8");
+  assert.match(cutover, /revoke all on function public\.lookup_joki_progress/);
+  assert.match(cutover, /revoke all on function public\.create_joki_order/);
+});
+
+
+test("tracking page requests a secret token and has valid input markup", () => {
+  const html = fs.readFileSync(path.join(ROOT, "joki-matthew.html"), "utf8");
+  assert.match(html, /TOKEN PELACAKAN/);
+  assert.match(html, /maxlength="80" autocomplete="off"/);
+  assert.match(html, /Nomor order tidak dapat digunakan/);
+  assert.doesNotMatch(html, /kode order yang sudah kamu terima/i);
+  assert.match(html, /name="theme-color" content="#071326"/);
+});
+
+test("tracking and admin progress scripts parse without syntax errors", () => {
+  for (const file of [
+    "assets/js/home-orders.js",
+    "assets/js/joki-matthew.js",
+    "assets/js/admin-joki-progress.js"
+  ]) {
+    const source = fs.readFileSync(path.join(ROOT, file), "utf8");
+    assert.doesNotThrow(() => new Function(source), file + " should parse");
+  }
+});
+
+
+test("admin progress page exposes the same blue theme as the public portal", () => {
+  const html = fs.readFileSync(path.join(ROOT, "admin/joki-progress.html"), "utf8");
+  assert.match(html, /name="theme-color" content="#071426"/);
+});
+
+
+test("remaining public/member review SECURITY DEFINER RPCs pin an empty search_path", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_remaining_rpc_search_paths.sql"), "utf8");
+  for (const name of ["get_public_joki_reviews", "get_my_reviewed_order_ids", "submit_member_joki_review"]) {
+    assert.match(sql, new RegExp("alter function public\\." + name));
+  }
+  assert.equal((sql.match(/set search_path = ''/g) || []).length, 3);
+});
+
+
+test("tracking-token rollback is pre-release only and preserves legacy order tokens", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/tracking-token-v2-rollback.sql"), "utf8");
+  assert.match(sql, /PRE-RELEASE ROLLBACK ONLY/);
+  assert.match(sql, /Existing legacy token and order_number values are intentionally left untouched/);
+  assert.match(sql, /drop column if exists tracking_token/);
+  assert.doesNotMatch(sql, /delete from public\.joki_progress/i);
+});
+
+
+test("legacy order RPC enforces the same active member-role allowlist during compatibility", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_legacy_order_rpc_role_access.sql"), "utf8");
+  assert.match(sql, /v_role not in \('member','sultan','matthew','pelanggan'\)/);
+  assert.match(sql, /v_account_status is distinct from 'active'/);
+  assert.match(sql, /revoke all on function public\.create_joki_order/);
+  assert.match(sql, /grant execute on function public\.create_joki_order[\s\S]*to authenticated/);
+});
+
+
+test("all website routes use the approved blue/navy browser theme colors", () => {
+  const pages = [
+    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login.html", "member-dashboard.html", "register.html",
+    "requirements-city-hall.html", "reset-password.html",
+    "support-matthew.html", "worker.html", "your-order.html"
+  ];
+  const approved = new Set(["#071326", "#071426", "#071a3a"]);
+  for (const page of pages) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
+    assert.ok(approved.has(theme), page + " has non-blue theme color: " + theme);
+  }
+});
+
+
+test("all pages load the current shared blue theme cache version", () => {
+  const pages = [
+    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login.html", "member-dashboard.html", "register.html",
+    "requirements-city-hall.html", "reset-password.html",
+    "support-matthew.html", "worker.html", "your-order.html"
+  ];
+  for (const page of pages) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13-mm2/, page + " should load the current blue theme");
+  }
+});
+
+test("shared blue theme overrides legacy red/gold surfaces on secondary pages", () => {
+  const css = fs.readFileSync(path.join(ROOT, "assets/css/blue-theme.css"), "utf8");
+  for (const selector of [".resource-card", ".tax-info", ".stats div", ".search", ".notice", ".card"]) {
+    assert.ok(css.includes(selector), "missing shared blue override for " + selector);
+  }
+  assert.match(css, /linear-gradient\(145deg,rgba\(15,42,73/);
+});
+
+
+test("RLS policy consolidation preserves role-specific visibility and admin operations", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/consolidate_permissive_rls_policies.sql"), "utf8");
+  assert.match(sql, /Users admins and Matthew can view profiles/);
+  assert.match(sql, /Public reads active all-audience notifications/);
+  assert.match(sql, /Members and admins read notifications/);
+  assert.match(sql, /Admins insert site notifications/);
+  assert.match(sql, /Admins update site notifications/);
+  assert.match(sql, /Admins delete site notifications/);
+  assert.match(sql, /Public reads usable vouchers/);
+  assert.match(sql, /Members and admins read vouchers/);
+  assert.match(sql, /Applicants and operators read worker applications/);
+  const cleanup = fs.readFileSync(path.join(ROOT, "supabase/remove_unused_anon_voucher_policy.sql"), "utf8");
+  assert.match(cleanup, /drop policy if exists "Public reads usable vouchers"/);
+});
+
+
+test("Maintenance Mode 2.0 has a server-enforced config, admin audit, and backend gates", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-v2.sql"), "utf8");
+  for (const item of [
+    "site_maintenance_config", "site_maintenance_audit",
+    "get_public_maintenance_status", "admin_set_maintenance",
+    "admin_get_maintenance_audit", "site_maintenance_config m"
+  ]) assert.ok(sql.includes(item), "maintenance SQL missing " + item);
+  assert.match(sql, /m\.mode = 'full'/);
+  assert.match(sql, /m\.mode = 'orders'/);
+  assert.match(sql, /'orders' = any\(m\.affected_modules\)/);
+  assert.match(sql, /Hanya admin aktif yang dapat mengubah maintenance mode/);
+  const worker = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
+  assert.match(worker, /site_maintenance_config/);
+  assert.match(worker, /maintenance\.mode === "full"/);
+  assert.match(worker, /affectedModules\.includes\("macul"\)/);
+});
+
+test("maintenance page, global gate, and admin control are wired across every route", () => {
+  const status = fs.readFileSync(path.join(ROOT, "assets/js/maintenance-status.js"), "utf8");
+  const admin = fs.readFileSync(path.join(ROOT, "assets/js/maintenance-admin.js"), "utf8");
+  const dashboard = fs.readFileSync(path.join(ROOT, "admin/dashboard.html"), "utf8");
+  const maintenancePage = fs.readFileSync(path.join(ROOT, "maintenance.html"), "utf8");
+  assert.match(status, /get_public_maintenance_status/);
+  assert.match(status, /location\.replace\("\/maintenance\.html"\)/);
+  assert.match(status, /db\.rpc\("is_admin"\)/);
+  assert.match(admin, /admin_set_maintenance/);
+  assert.match(admin, /admin_get_maintenance_audit/);
+  assert.match(dashboard, /maintenanceForm/);
+  assert.match(dashboard, /maintenanceDisableNow/);
+  assert.match(maintenancePage, /maintenanceMessage/);
+  for (const file of [
+    "index.html","login.html","register.html","reset-password.html","email-confirmed.html",
+    "member-dashboard.html","your-order.html","inbox.html","worker.html","joki-matthew.html",
+    "calculator-resource.html","requirements-city-hall.html","support-matthew.html",
+    "admin/dashboard.html","admin/joki-progress.html"
+  ]) {
+    const html=fs.readFileSync(path.join(ROOT,file),"utf8");
+    assert.match(html,/maintenance-status\.js/,"missing maintenance gate in "+file);
+  }
+  assert.doesNotThrow(()=>new Function(status));
+  assert.doesNotThrow(()=>new Function(admin));
+});
+
+
+test("checkout fails closed when order maintenance is active or status cannot be verified", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(source, /get_public_maintenance_status/);
+  assert.match(source, /state\.mode==="full"/);
+  assert.match(source, /state\.mode==="orders"/);
+  assert.match(source, /modules\.includes\("orders"\)/);
+  assert.match(source, /Status layanan tidak dapat diverifikasi/);
+});
+
+test("Telegram admin panel exposes maintenance controls through the service-only RPC", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/telegram-order-notify/index.ts"), "utf8");
+  assert.match(source, /callback_data: "maintenance"/);
+  assert.match(source, /data === "maintenance"/);
+  assert.match(source, /data\.startsWith\("maint\|"/);
+  assert.match(source, /service_set_maintenance/);
+  assert.match(source, /command:"maintenance"/);
+  assert.match(source, /chatId !== adminChatId \|\| senderId !== adminChatId/);
+});
+
+test("maintenance Telegram RPC is restricted to service_role and validates an active admin actor", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-telegram-rpc.sql"), "utf8");
+  assert.match(sql, /v_role is distinct from 'admin'/);
+  assert.match(sql, /v_status is distinct from 'active'/);
+  assert.match(sql, /revoke all on function public\.service_set_maintenance/);
+  assert.match(sql, /to service_role/);
+  assert.doesNotMatch(sql, /grant execute[^;]*to authenticated/i);
+});
+
+
+test("Inbox send Edge Function fails closed during maintenance and requires an active admin", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/inbox-send/index.ts"), "utf8");
+  assert.match(source, /site_maintenance_config/);
+  assert.match(source, /maintenanceResponse\.ok/);
+  assert.match(source, /maintenance\.mode === "full"/);
+  assert.match(source, /affectedModules\.includes\("inbox"\)/);
+  assert.match(source, /select=role,account_status/);
+  assert.match(source, /role !== "admin" \|\| accountStatus !== "active"/);
+  assert.match(source, /service_send_inbox_message/);
+});
+
+test("login and homepage initialize Supabase only once per page", () => {
+  for (const page of ["login.html", "index.html"]) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    assert.equal((html.match(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2/g) || []).length, 1, page + " should load Supabase JS once");
+    assert.equal((html.match(/(?:src=["'])\/?assets\/js\/supabase\.js/g) || []).length, 1, page + " should initialize one Supabase client");
+  }
+});
+
+
+test("maintenance foreign-key index follow-up covers both reported advisor findings", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/add_maintenance_foreign_key_indexes.sql"), "utf8");
+  assert.match(sql, /site_maintenance_audit_actor_id_idx/);
+  assert.match(sql, /site_maintenance_config_updated_by_idx/);
+  assert.match(sql, /create index if not exists/);
+});
+
+
+test("maintenance Inbox RLS blocks member reads and receipts while preserving admin recovery access", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-inbox-rls.sql"), "utf8");
+  assert.match(sql, /is_maintenance_module_blocked/);
+  assert.match(sql, /m\.mode='full'/);
+  assert.match(sql, /is_maintenance_module_blocked\('inbox'\)/);
+  assert.match(sql, /Members read addressed inbox messages outside maintenance/);
+  assert.match(sql, /Members read own inbox receipt outside maintenance/);
+  assert.match(sql, /Members update own inbox receipt outside maintenance/);
+  assert.match(sql, /or \(select public\.is_admin\(\)\)/);
+  assert.match(sql, /grant execute on function public\.is_maintenance_module_blocked\(text\) to authenticated/);
+  assert.doesNotMatch(sql, /grant execute on function public\.is_maintenance_module_blocked\(text\) to anon/);
+});
+
+test("Telegram maintenance RPC is service-role-only and validates an active admin actor", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-telegram-rpc.sql"), "utf8");
+  assert.match(sql, /v_role is distinct from 'admin'/);
+  assert.match(sql, /v_status is distinct from 'active'/);
+  assert.match(sql, /p_mode not in \('full','orders','system'\)/);
+  assert.match(sql, /grant execute on function public\.service_set_maintenance[\s\S]*to service_role/);
+  assert.match(sql, /revoke all on function public\.service_set_maintenance[\s\S]*from public, anon, authenticated/);
+  const telegram = fs.readFileSync(path.join(ROOT, "supabase/functions/telegram-order-notify/index.ts"), "utf8");
+  assert.match(telegram, /x-telegram-bot-api-secret-token/);
+  assert.match(telegram, /chatId !== adminChatId \|\| senderId !== adminChatId/);
+  assert.match(telegram, /service_set_maintenance/);
+});
+
+
+test("maintenance configuration is readable only by trusted server functions", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-service-role-read.sql"), "utf8");
+  assert.match(sql, /grant select on table public\.site_maintenance_config to service_role/);
+  assert.doesNotMatch(sql, /grant select[^;]*to anon/i);
+  assert.doesNotMatch(sql, /grant select[^;]*to authenticated/i);
+});
+
+
+test("admin helper hardening requires an active profile and preserves a locked search_path", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_admin_helpers_active_status.sql"), "utf8");
+  for (const name of ["is_admin", "is_current_user_admin"]) {
+    assert.ok(sql.includes("create or replace function public." + name + "()"));
+  }
+  assert.equal(sql.split("lower(trim(p.account_status)) = 'active'").length - 1, 2);
+  assert.equal(sql.split("set search_path = ''").length - 1, 2);
+});
+
+
+test("every public/private route loads Supabase before the maintenance gate", () => {
+  const pages = [
+    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login.html", "member-dashboard.html", "register.html",
+    "requirements-city-hall.html", "reset-password.html", "support-matthew.html",
+    "worker.html", "your-order.html", "maintenance.html"
+  ];
+  for (const page of pages) {
+    const html=fs.readFileSync(path.join(ROOT,page),"utf8");
+    assert.match(html,/@supabase\/supabase-js@2/,page+" must load Supabase SDK");
+    assert.match(html,/assets\/js\/supabase\.js/,page+" must initialize Supabase");
+    assert.match(html,/maintenance-status\.js/,page+" must load the maintenance gate");
+  }
+});

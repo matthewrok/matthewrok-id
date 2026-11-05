@@ -1,21 +1,27 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://matthewrok.my.id",
+const allowedOrigins = new Set([
+  "https://matthewrok.my.id",
+  "http://matthewrok.my.id",
+]);
+const corsHeadersFor = (origin: string | null) => ({
+  "Access-Control-Allow-Origin": origin && allowedOrigins.has(origin)
+    ? origin
+    : "https://matthewrok.my.id",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Vary": "Origin",
-};
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
-  });
-
+});
 const esc = (value: unknown) => String(value ?? "-")
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = corsHeadersFor(req.headers.get("Origin"));
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
+    });
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
@@ -46,11 +52,61 @@ Deno.serve(async (req: Request) => {
     return json({ error: "Email harus diverifikasi sebelum mengirim pendaftaran." }, 403);
   }
 
+  // Authorization is checked against the server-side profile, never browser metadata.
+  const headers = {
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    "Content-Type": "application/json",
+  };
+  const profileResponse = await fetch(
+    `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=role,account_status&limit=1`,
+    { headers }
+  );
+  const profileRows = await profileResponse.json();
+  if (!profileResponse.ok) {
+    console.error("Worker applicant profile lookup failed", profileResponse.status, profileRows);
+    return json({ error: "Status akun tidak dapat diverifikasi. Silakan coba kembali." }, 503);
+  }
+  const profile = Array.isArray(profileRows) ? profileRows[0] : null;
+  const maintenanceResponse = await fetch(
+    `${supabaseUrl}/rest/v1/site_maintenance_config?id=eq.true&select=enabled,mode,message,affected_modules&limit=1`,
+    { headers }
+  );
+  const maintenanceRows = await maintenanceResponse.json();
+  if (!maintenanceResponse.ok || !Array.isArray(maintenanceRows) || !maintenanceRows[0]) {
+    console.error("Worker maintenance status lookup failed", maintenanceResponse.status);
+    return json({ error: "Status layanan tidak dapat diverifikasi. Silakan coba kembali." }, 503);
+  }
+  const maintenance = maintenanceRows[0];
+  const affectedModules = Array.isArray(maintenance.affected_modules)
+    ? maintenance.affected_modules.map((value: unknown) => String(value).toLowerCase())
+    : [];
+  if (maintenance.enabled && maintenance.mode === "full") {
+    return json({ error: maintenance.message || "Pendaftaran worker sedang ditutup sementara." }, 503);
+  }
+  if (maintenance.enabled && maintenance.mode === "system" && affectedModules.includes("worker")) {
+    return json({ error: maintenance.message || "Modul worker sedang dalam pemeliharaan." }, 503);
+  }
+
+  const role = String(profile?.role ?? "").trim().toLowerCase();
+  const accountStatus = String(profile?.account_status ?? "").trim().toLowerCase();
+  const applicantRoles = ["member", "sultan", "matthew", "pelanggan"];
+  if (!profile || accountStatus !== "active") {
+    return json({ error: "Akun belum aktif atau tidak dapat diverifikasi." }, 403);
+  }
+  if (!applicantRoles.includes(role)) {
+    return json({ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker." }, 403);
+  }
+
   let input: Record<string, unknown>;
   try { input = await req.json(); } catch { return json({ error: "Format permintaan tidak valid." }, 400); }
 
   const applicantName = String(input.applicant_name ?? "").trim().replace(/\s+/g, " ");
   const workerType = String(input.worker_type ?? "");
+  if (maintenance.enabled && maintenance.mode === "system" &&
+      workerType === "macul" && affectedModules.includes("macul")) {
+    return json({ error: maintenance.message || "Modul MACUL sedang dalam pemeliharaan." }, 503);
+  }
   const playDuration = String(input.play_duration ?? "").trim();
   const accountCapacity = String(input.account_capacity ?? "").trim();
   const whatsapp = String(input.whatsapp_number ?? "").trim();
@@ -63,12 +119,6 @@ Deno.serve(async (req: Request) => {
       whatsapp.length > 40 || !consent) {
     return json({ error: "Periksa kembali formulir. Persetujuan wajib dicentang." }, 400);
   }
-
-  const headers = {
-    apikey: serviceKey,
-    Authorization: `Bearer ${serviceKey}`,
-    "Content-Type": "application/json",
-  };
 
   const existingResponse = await fetch(
     `${supabaseUrl}/rest/v1/worker_applications?applicant_id=eq.${encodeURIComponent(user.id)}&select=id,status&order=created_at.desc&limit=1`,

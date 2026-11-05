@@ -45,6 +45,7 @@ Deno.serve(async (req: Request) => {
     [{ text: "📣 Pengumuman", callback_data: "announcements" }, { text: "🎟️ Voucher", callback_data: "vouchers" }],
     [{ text: "👀 Pengunjung", callback_data: "visitors" }, { text: "⭐ Ulasan", callback_data: "reviews" }],
     [{ text: "🌐 Status Website", callback_data: "site_status" }],
+    [{ text: "⚙️ Maintenance Mode", callback_data: "maintenance" }],
     [{ text: "❔ Panduan & Perintah", callback_data: "help" }],
   ] };
   const helpText = [
@@ -52,6 +53,7 @@ Deno.serve(async (req: Request) => {
     "Pilih menu menggunakan tombol di bawah. Kamu juga masih bisa memakai perintah:",
     "/pesanan — daftar pesanan terbaru", "/detail NOMOR — detail pesanan",
     "/progress NOMOR PERSEN CATATAN — ubah progress", "/status NOMOR STATUS — ubah status",
+    "/maintenance — kelola mode maintenance website",
     "", "Perubahan melalui tombol akan meminta konfirmasi sebelum disimpan."
   ].join("\n");
 
@@ -80,6 +82,7 @@ Deno.serve(async (req: Request) => {
           { command: "detail", description: "Lihat detail pesanan berdasarkan nomor" },
           { command: "progress", description: "Ubah progress pesanan" },
           { command: "status", description: "Ubah status pesanan" },
+          { command: "maintenance", description: "Kelola mode maintenance website" },
           { command: "bantuan", description: "Lihat panduan perintah bot" }
         ] })
       });
@@ -209,6 +212,50 @@ Deno.serve(async (req: Request) => {
     return rows;
   };
 
+  const getMaintenanceState = async () => {
+    const rows = await adminRead("site_maintenance_config", "id=eq.true&select=enabled,mode,message,estimated_end_at,affected_modules,updated_at&limit=1");
+    if (!rows?.[0]) throw new Error("Maintenance config unavailable");
+    return rows[0];
+  };
+  const maintenanceKeyboard = { inline_keyboard: [
+    [{ text: "🟢 Nonaktifkan", callback_data: "maint|off" }, { text: "🔴 FULL", callback_data: "maint|full" }],
+    [{ text: "📦 ORDER", callback_data: "maint|orders" }],
+    [{ text: "⚙️ Worker", callback_data: "maint|system|worker" }, { text: "🌾 MACUL", callback_data: "maint|system|macul" }],
+    [{ text: "✉️ Inbox", callback_data: "maint|system|inbox" }, { text: "🛒 Order (System)", callback_data: "maint|system|orders" }],
+    [{ text: "⬅️ Menu Utama", callback_data: "menu" }]
+  ] };
+  const maintenanceText = (m: any) => {
+    const eta = m.estimated_end_at ? new Date(m.estimated_end_at).toLocaleString("id-ID",{timeZone:"Asia/Jakarta"})+" WIB" : "Belum ditentukan";
+    return "⚙️ <b>MAINTENANCE MODE</b>\\n\\nStatus: <b>"+(m.enabled?"AKTIF":"NONAKTIF")+"</b>\\nMode: <b>"+esc(String(m.mode||"full").toUpperCase())+"</b>\\nPesan: "+esc(m.message||"—")+"\\nModul: "+esc((m.affected_modules||[]).join(", ")||"Semua / tidak dipilih")+"\\nEstimasi: "+esc(eta)+"\\n\\nPilih tindakan di bawah. Semua perubahan dicatat di audit log.";
+  };
+  const setMaintenanceFromTelegram = async (mode: string, module = "") => {
+    const current = await getMaintenanceState();
+    const admins = await adminRead("profiles", "role=eq.admin&select=id&limit=1");
+    const actorId = admins?.[0]?.id;
+    if (!actorId) throw new Error("Admin profile missing");
+    const enabled = mode !== "off";
+    const targetMode = mode === "off" ? (current.mode || "full") : mode;
+    const modules = targetMode === "system" ? [module] : targetMode === "orders" ? ["orders"] : [];
+    if (targetMode === "system" && !module) throw new Error("Pilih modul system maintenance");
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/service_set_maintenance`, {
+      method: "POST",
+      headers: baseHeaders,
+      body: JSON.stringify({
+        p_actor_id: actorId,
+        p_enabled: enabled,
+        p_mode: targetMode,
+        p_message: current.message || "Website sedang dalam pemeliharaan. Silakan kembali beberapa saat lagi.",
+        p_estimated_end_at: null,
+        p_affected_modules: modules
+      })
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      console.error("Telegram maintenance update failed", response.status, result);
+      throw new Error(result?.message || "Maintenance update failed");
+    }
+    return result;
+  };
   const mutate = async (table: string, id: string, method: string, body?: Record<string, unknown>) => {
     const res = await fetch(`${supabaseUrl}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`, {
       method, headers: { ...baseHeaders, Prefer: "return=representation" },
@@ -289,6 +336,18 @@ Deno.serve(async (req: Request) => {
       const data = String(callback.data ?? "");
       if (data.length > 64) { await answerCallback(callback.id, "Tombol tidak valid. Buka ulang menu."); return Response.json({ok:true}); }
       await answerCallback(callback.id);
+      if (data === "maintenance") {
+        const state = await getMaintenanceState();
+        await editMessage(chatId, callback.message.message_id, maintenanceText(state), { reply_markup: maintenanceKeyboard });
+        return Response.json({ ok: true });
+      }
+      if (data.startsWith("maint|")) {
+        const [, action, module] = data.split("|");
+        const mode = action === "system" ? "system" : action;
+        const updated = await setMaintenanceFromTelegram(mode, module || "");
+        await editMessage(chatId, callback.message.message_id, maintenanceText(updated), { reply_markup: maintenanceKeyboard });
+        return Response.json({ ok: true });
+      }
       if (data === "site_status") {
         const targetUrl = "https://matthewrok.my.id/";
         const startedAt = Date.now();
@@ -564,10 +623,13 @@ Deno.serve(async (req: Request) => {
     const command = (parts[0] ?? "").split("@")[0].toLowerCase();
     const arg = parts[1];
     if (["/start", "/bantuan", "/help", "/panel"].includes(command)) {
-      const commandSetup = await fetch("https://api.telegram.org/bot" + botToken + "/setMyCommands", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({commands:[{command:"start",description:"Buka panel admin"},{command:"panel",description:"Tampilkan panel admin"},{command:"pesanan",description:"Lihat pesanan terbaru"},{command:"detail",description:"Detail pesanan"},{command:"progress",description:"Ubah progress pesanan"},{command:"status",description:"Ubah status pesanan"},{command:"bantuan",description:"Panduan bot"}]})});
+      const commandSetup = await fetch("https://api.telegram.org/bot" + botToken + "/setMyCommands", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({commands:[{command:"start",description:"Buka panel admin"},{command:"panel",description:"Tampilkan panel admin"},{command:"pesanan",description:"Lihat pesanan terbaru"},{command:"detail",description:"Detail pesanan"},{command:"progress",description:"Ubah progress pesanan"},{command:"status",description:"Ubah status pesanan"},{command:"maintenance",description:"Kelola mode maintenance website"},{command:"bantuan",description:"Panduan bot"}]})});
       const commandResult = await commandSetup.json();
       if (!commandResult.ok) console.error("Telegram setMyCommands failed", commandResult);
       await sendMessage(chatId, "🛠️ <b>PANEL ADMIN — MATTHEW JOKI</b>\n\n<b>OPERASIONAL</b>\nPesanan dan ringkasan.\n\n<b>PENGELOLAAN WEBSITE</b>\nRole akun, pengumuman, dan voucher.\n\n<b>AKTIVITAS & MASUKAN</b>\nPengunjung dan ulasan.\n\nPilih menu di bawah. Perintah /panel tersedia dari menu perintah Telegram.", { reply_markup: mainMenu });
+    } else if (command === "/maintenance") {
+      const state = await getMaintenanceState();
+      await sendMessage(chatId, maintenanceText(state), { reply_markup: maintenanceKeyboard });
     } else if (command === "/pesanan") {
       await showOrders(chatId);
     } else if (command === "/detail" || command === "/cari") {

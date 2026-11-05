@@ -52,12 +52,23 @@
     const visitorName=sessionStorage.getItem("matthewVisitorName");
     return visitorName?{name:visitorName,email:"",isVisitor:true}:null;
   }
+  async function getOrderMaintenanceMessage(){
+    const {data,error}=await db.rpc("get_public_maintenance_status");
+    if(error)return "Status layanan tidak dapat diverifikasi. Pemesanan sementara tidak dapat dilanjutkan.";
+    const state=Array.isArray(data)?data[0]:data;
+    if(!state?.enabled)return "";
+    const modules=Array.isArray(state.affected_modules)?state.affected_modules:[];
+    const blocked=state.mode==="full"||state.mode==="orders"||(state.mode==="system"&&modules.includes("orders"));
+    return blocked?(state.message||"Pemesanan sedang dinonaktifkan sementara oleh admin."):"";
+  }
   async function openOrder(code){
     const p=products[code];
     if(!p){console.error("[Joki Order] Kode produk tidak valid:",code);return;}
     const identity=await resolveIdentity();
     if(!identity?.name){alert("Sesi login belum terbaca. Muat ulang halaman atau login kembali.");return;}
     if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login dengan akun terverifikasi untuk memesan.");return;}
+    const maintenanceMessage=await getOrderMaintenanceMessage();
+    if(maintenanceMessage){alert(maintenanceMessage);return;}
     selected=code;
     completedWhatsappUrl=null;
     $("jokiOrderName").textContent=identity.name;
@@ -125,16 +136,16 @@
     let whatsappTab=null;
     try{whatsappTab=window.open("about:blank","_blank");}catch(_e){}
     button.disabled=true;button.textContent="MENYIMPAN PESANAN...";
-    $("jokiOrderMessage").textContent="Membuat nomor order unik...";
+    $("jokiOrderMessage").textContent="Membuat nomor order dan token pelacakan rahasia...";
     try{
-      const {data,error}=await db.rpc("create_joki_order",{
+      const {data,error}=await db.rpc("create_joki_order_secure",{
         p_client_name:identity.name,p_client_email:identity.email||"",
         p_product_code:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null,
         p_kingdom_number:kingdomNumber
       });
       if(error)throw error;
       const order=Array.isArray(data)?data[0]:data;
-      if(!order?.order_number)throw new Error("Nomor order belum berhasil dibuat.");
+      if(!order?.order_number||!order?.tracking_token)throw new Error("Nomor order atau token pelacakan belum berhasil dibuat.");
       const message=[
         "HALO MATTHEW, SAYA INGIN KONFIRMASI PESANAN JOKI.","",
         "=== DETAIL PESANAN MATTHEW JOKI ===",
@@ -144,7 +155,8 @@
         "Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price),
         "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
         "Progress: 0% — Menunggu Pembayaran / Administrasi","",
-        "Mohon konfirmasi detail pembayaran dan administrasi. Nomor order ini dapat digunakan untuk melacak progres:",
+        "Token Pelacakan Rahasia: "+order.tracking_token,"",
+        "Simpan token ini. Gunakan token tersebut (bukan nomor order) untuk melacak progres:",
         "https://matthewrok.my.id/joki-matthew.html","","Terima kasih."
       ].join("\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";

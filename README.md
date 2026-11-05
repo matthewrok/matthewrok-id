@@ -166,7 +166,16 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 
 - [Panduan struktur repository](docs/REPOSITORY-STRUCTURE.md)
 - [Riwayat audit dan cleanup](docs/AUDIT-CLEANUP.md)
+- [Rancangan Maintenance Mode 2.0](docs/MAINTENANCE-MODE-2.0.md)
+- [Checklist PR #13 — Member Center 2.0](docs/PR-13-MEMBER-CENTER-2.0.md)
 - [Rencana migrasi token pelacakan](docs/TRACKING-TOKEN-MIGRATION.md)
+- supabase/tracking-token-v2.sql — migrasi token pelacakan 256-bit (tahap expand sudah diterapkan di Supabase produksi).
+- supabase/tracking-token-v2-cutover.sql — pencabutan RPC token lama; jalankan setelah frontend baru tayang dan token baru sudah dikirim ke pelanggan.
+- supabase/tracking-token-v2-rollback.sql — rollback pra-rilis saja; jangan jalankan setelah frontend baru membuat pesanan.
+- supabase/harden_remaining_rpc_search_paths.sql — mengunci search_path tiga RPC SECURITY DEFINER tambahan.
+- supabase/harden_legacy_order_rpc_role_access.sql — menyamakan allowlist role/status pada RPC order lama selama masa kompatibilitas.
+- supabase/consolidate_permissive_rls_policies.sql — menggabungkan policy SELECT berulang tanpa memperluas akses.
+- supabase/remove_unused_anon_voucher_policy.sql — menghapus policy anon yang tidak punya table grant dan tidak diperlukan.
 
 ## Batas audit
 
@@ -186,3 +195,15 @@ Role worker memiliki dua jenis tugas: `macul` untuk petani/farmer dan `worker` u
 **Batas keamanan penting:** GitHub Pages menyajikan HTML dan aset sebagai file statis. Guard browser hanya mengendalikan alur tampilan; ia bukan batas keamanan server dan tidak membuat file HTML tidak dapat diunduh. Semua data dan operasi sensitif wajib tetap dilindungi oleh Supabase RLS, validasi kepemilikan, serta pemeriksaan role di RPC/Edge Functions. Jangan pernah menaruh service-role key atau secret di frontend.
 
 Lihat docs/ACCESS-CONTROL.md untuk skenario uji manual. Pengujian browser dengan akun nyata perlu dilakukan sebelum menyatakan seluruh alur lulus end-to-end.
+
+
+## Maintenance Mode 2.0
+- supabase/maintenance-mode-v2.sql — tabel konfigurasi, audit, admin RPC, dan enforcement order.
+- supabase/maintenance-mode-inbox-rls.sql — blokir Inbox saat modul maintenance aktif.
+- supabase/maintenance-mode-telegram-rpc.sql — RPC maintenance server-to-server khusus service_role.
+- supabase/maintenance-mode-service-role-read.sql — SELECT config maintenance hanya untuk service_role.
+- assets/js/maintenance-status.js dan assets/js/maintenance-admin.js — gate global dan panel kontrol admin.
+- maintenance.html — halaman FULL MAINTENANCE.
+- supabase/add_maintenance_foreign_key_indexes.sql — index untuk foreign key audit/config maintenance; migrasi `add_maintenance_foreign_key_indexes` sudah diterapkan.
+- supabase/harden_admin_helpers_active_status.sql — helper admin hanya mengakui akun berstatus active; migrasi `harden_admin_helpers_active_status` sudah diterapkan.
+- supabase/functions/inbox-send/index.ts — source Edge Function yang memblokir pengiriman saat Inbox/full maintenance dan mensyaratkan admin aktif; deploy setelah PR #13 dipublikasikan.
