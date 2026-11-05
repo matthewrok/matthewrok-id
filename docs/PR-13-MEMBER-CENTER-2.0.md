@@ -282,3 +282,28 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - GitHub Actions run #102 on head 07b25c2a15da4e26610c16e57b711a1b4c7b2862 completed successfully: 79 Node regression tests passed, 0 failed, and Deno type-check passed for worker and Telegram Edge Functions.
 - SQL migrations were tested in explicit rollback transactions before production application. The maintenance RPC role and RLS simulations were also run in rollback-only transactions; production maintenance remains disabled.
 - Remaining manual QA: browser/device test with a real admin login, real Telegram callback interaction, and real customer order flow after PR merge. No browser test is being claimed as passed.
+
+### Release hardening follow-up — 6 November 2026
+
+#### Additional fixes staged in PR #13
+- Removed duplicate Supabase CDN/client bootstrap tags from `login.html` and `index.html`; each page now initializes one client.
+- Updated `supabase/functions/inbox-send/index.ts`: the endpoint fails closed if maintenance state cannot be verified, blocks sends during FULL or Inbox maintenance, and requires an active admin profile. This source is staged in the PR; production still runs Inbox Edge Function version 2 and must be deployed after the PR is published.
+- Added static regression coverage for Inbox maintenance RLS, Telegram service-role maintenance RPC, active-admin helpers, index follow-up, and duplicate Supabase bootstrap.
+- CI now runs 80 Node regression assertions and Deno type-checks `worker-application-submit`, `telegram-order-notify`, and `inbox-send`.
+
+#### Production migrations and verification
+- Applied `add_maintenance_foreign_key_indexes` for `site_maintenance_audit.actor_id` and `site_maintenance_config.updated_by`. Performance Advisor no longer reports unindexed foreign keys.
+- Applied `harden_admin_helpers_active_status`: both `is_admin()` and `is_current_user_admin()` now require role admin and account_status active. A rollback-only simulation returned true for active, false for suspended, and true after restoration; the transaction was rolled back.
+- Applied `maintenance_mode_service_role_read`; `site_maintenance_config` has no direct SELECT grant for anon/authenticated. Service-role reads remain available to server-side functions.
+- Verified production migrations for maintenance mode v2, Inbox RLS, Telegram maintenance RPC, FK indexes, and active-admin helpers. Maintenance is currently disabled.
+- Telegram Edge Function version 41 matches the repository source. Worker application Edge Function remains version 4. Inbox Edge Function remains version 2 and does not yet include the new maintenance/active-admin checks from the PR source.
+
+#### Latest CI result
+- GitHub Actions run `42098173462` on head `f00c767d33cc2ee50086d1a2464d3d4fe1e043b7` completed successfully: 80 tests passed, 0 failed, 0 skipped; Deno type-check passed for all three Edge Functions.
+- Earlier failed runs were caused by an incorrect static assertion in the newly added Inbox RLS test; the assertion was corrected and the current PR head passed.
+
+#### Remaining release gates (not all are merge blockers)
+- Supabase Security Advisor still reports leaked-password protection disabled. Enabling it requires a signed-in project-admin session and is available on Pro plan and above. A browser check reached the Supabase sign-in page; no Supabase credentials are configured in the browser profile, so no setting was changed.
+- Nine unused-index notices remain. They are informational and have not been dropped because the current usage window does not prove the indexes are unnecessary.
+- Browser testing was performed only against the currently deployed `main` site, not a PR #13 preview. Full browser/device testing and real account-role matrix testing must be completed against the published PR build.
+- After the PR is merged and the frontend is live, deploy the staged `inbox-send` Edge Function, verify Inbox sends are blocked during maintenance and allowed only for active admins, deliver new tracking tokens privately to existing customers, and only then apply `tracking-token-v2-cutover.sql` to revoke legacy public token RPCs.
