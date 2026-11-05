@@ -204,3 +204,6 @@ Lihat docs/ACCESS-CONTROL.md untuk skenario uji manual. Pengujian browser dengan
 - supabase/maintenance-mode-service-role-read.sql — SELECT config maintenance hanya untuk service_role.
 - assets/js/maintenance-status.js dan assets/js/maintenance-admin.js — gate global dan panel kontrol admin.
 - maintenance.html — halaman FULL MAINTENANCE.
+- supabase/add_maintenance_foreign_key_indexes.sql — index untuk foreign key audit/config maintenance; migrasi `add_maintenance_foreign_key_indexes` sudah diterapkan.
+- supabase/harden_admin_helpers_active_status.sql — helper admin hanya mengakui akun berstatus active; migrasi `harden_admin_helpers_active_status` sudah diterapkan.
+- supabase/functions/inbox-send/index.ts — source Edge Function yang memblokir pengiriman saat Inbox/full maintenance dan mensyaratkan admin aktif; deploy setelah PR #13 dipublikasikan.
