@@ -65,3 +65,9 @@ jobs:
           node-version: 22
       - name: Run authentication regression tests
         run: node --test tests/auth-regression.test.cjs
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check Supabase Edge Functions
+        run: deno check supabase/functions/worker-application-submit/index.ts supabase/functions/telegram-order-notify/index.ts
