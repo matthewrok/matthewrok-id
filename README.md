@@ -195,3 +195,11 @@ Role worker memiliki dua jenis tugas: `macul` untuk petani/farmer dan `worker` u
 **Batas keamanan penting:** GitHub Pages menyajikan HTML dan aset sebagai file statis. Guard browser hanya mengendalikan alur tampilan; ia bukan batas keamanan server dan tidak membuat file HTML tidak dapat diunduh. Semua data dan operasi sensitif wajib tetap dilindungi oleh Supabase RLS, validasi kepemilikan, serta pemeriksaan role di RPC/Edge Functions. Jangan pernah menaruh service-role key atau secret di frontend.
 
 Lihat docs/ACCESS-CONTROL.md untuk skenario uji manual. Pengujian browser dengan akun nyata perlu dilakukan sebelum menyatakan seluruh alur lulus end-to-end.
+
+
+## Maintenance Mode 2.0
+- supabase/maintenance-mode-v2.sql — tabel konfigurasi, audit, admin RPC, dan enforcement order.
+- supabase/maintenance-mode-inbox-rls.sql — blokir Inbox saat modul maintenance aktif.
+- supabase/maintenance-mode-telegram-rpc.sql — RPC maintenance server-to-server khusus service_role.
+- assets/js/maintenance-status.js dan assets/js/maintenance-admin.js — gate global dan panel kontrol admin.
+- maintenance.html — halaman FULL MAINTENANCE.
