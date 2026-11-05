@@ -512,3 +512,32 @@ test("maintenance page, global gate, and admin control are wired across every ro
   assert.doesNotThrow(()=>new Function(status));
   assert.doesNotThrow(()=>new Function(admin));
 });
+
+
+test("checkout fails closed when order maintenance is active or status cannot be verified", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(source, /get_public_maintenance_status/);
+  assert.match(source, /state\.mode==="full"/);
+  assert.match(source, /state\.mode==="orders"/);
+  assert.match(source, /modules\.includes\("orders"\)/);
+  assert.match(source, /Status layanan tidak dapat diverifikasi/);
+});
+
+test("Telegram admin panel exposes maintenance controls through the service-only RPC", () => {
+  const source = fs.readFileSync(path.join(ROOT, "supabase/functions/telegram-order-notify/index.ts"), "utf8");
+  assert.match(source, /callback_data: "maintenance"/);
+  assert.match(source, /data === "maintenance"/);
+  assert.match(source, /data\.startsWith\("maint\|"/);
+  assert.match(source, /service_set_maintenance/);
+  assert.match(source, /command:"maintenance"/);
+  assert.match(source, /chatId !== adminChatId \|\| senderId !== adminChatId/);
+});
+
+test("maintenance Telegram RPC is restricted to service_role and validates an active admin actor", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/maintenance-mode-telegram-rpc.sql"), "utf8");
+  assert.match(sql, /v_role is distinct from 'admin'/);
+  assert.match(sql, /v_status is distinct from 'active'/);
+  assert.match(sql, /revoke all on function public\.service_set_maintenance/);
+  assert.match(sql, /to service_role/);
+  assert.doesNotMatch(sql, /grant execute[^;]*to authenticated/i);
+});
