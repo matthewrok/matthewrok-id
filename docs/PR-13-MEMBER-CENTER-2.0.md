@@ -269,3 +269,16 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 - Removed the anonymous voucher SELECT policy because anon has no table SELECT grant and visitors are not allowed to use vouchers.
 - Read-only role simulation inside rolled-back transactions verified: anon can read only public active notifications and cannot SELECT profiles/vouchers/worker applications; a member sees only their own profile and own worker applications; admin sees all 6 profiles, 4 worker applications, and operational notification/voucher rows.
 - Supabase Performance Advisor no longer reports multiple permissive policies. Six unused-index notices remain; no indexes were dropped without workload evidence.
+### Maintenance Mode 2.0 — implemented and deployed (6 November 2026)
+- Added canonical singleton config and append-only audit tables, public status RPC, admin-only update/audit RPCs, and service_role-only Telegram RPC.
+- FULL, ORDER, and SYSTEM modes are now wired into the admin dashboard, a branded maintenance page, and a global status gate across all site routes.
+- Database order RPCs reject orders during FULL/ORDER/affected-orders maintenance. Worker Edge Function version 5 enforces FULL/worker/MACUL gates and fails closed if the config cannot be read. Inbox RLS blocks non-admin message/receipt access during Inbox maintenance.
+- Telegram admin bot version 41 now has a Maintenance Mode menu and /maintenance command. It verifies the configured webhook secret and exact chat/sender ID before using the service_role-only RPC; each change is audited.
+- Applied migrations: maintenance_mode_v2_server_enforcement, maintenance_mode_inbox_rls, maintenance_mode_telegram_rpc, and maintenance_mode_service_role_read. Service_role has SELECT on config; anon/authenticated have no direct table access.
+- Verified production state remains disabled. Rollback-only tests confirmed a member is denied Inbox reads during Inbox maintenance while admin retains access, and service_role can call the maintenance RPC without persisting test state/audit entries.
+- The maintenance page and global status script are staged in PR branch; they will become visible after the PR is merged and GitHub Pages publishes the branch.
+
+### CI and static/runtime-source QA
+- GitHub Actions run #102 on head 07b25c2a15da4e26610c16e57b711a1b4c7b2862 completed successfully: 79 Node regression tests passed, 0 failed, and Deno type-check passed for worker and Telegram Edge Functions.
+- SQL migrations were tested in explicit rollback transactions before production application. The maintenance RPC role and RLS simulations were also run in rollback-only transactions; production maintenance remains disabled.
+- Remaining manual QA: browser/device test with a real admin login, real Telegram callback interaction, and real customer order flow after PR merge. No browser test is being claimed as passed.
