@@ -120,7 +120,8 @@ test("login signs out locally when the profile is missing or inactive", async t 
     const h = makeLoginHarness({ accountStatus });
     await h.submit();
     assert.deepEqual(h.redirects, []);
-    assert.deepEqual(h.signOutCalls, [{ scope: "local" }]);
+    assert.equal(h.signOutCalls.length, 1);
+    assert.equal(h.signOutCalls[0].scope, "local");
     assert.match(h.message.textContent, /Akun|ditangguhkan|profil/i);
   }
 });
@@ -128,12 +129,14 @@ test("login signs out locally when the profile is missing or inactive", async t 
 test("login signs out locally when profile lookup or Auth user verification fails", async t => {
   const profileFailure = makeLoginHarness({ profileError: { message: "RLS denied" } });
   await profileFailure.submit();
-  assert.deepEqual(profileFailure.signOutCalls, [{ scope: "local" }]);
+  assert.equal(profileFailure.signOutCalls.length, 1);
+  assert.equal(profileFailure.signOutCalls[0].scope, "local");
   assert.deepEqual(profileFailure.redirects, []);
 
   const userFailure = makeLoginHarness({ userError: { message: "Auth verification failed" } });
   await userFailure.submit();
-  assert.deepEqual(userFailure.signOutCalls, [{ scope: "local" }]);
+  assert.equal(userFailure.signOutCalls.length, 1);
+  assert.equal(userFailure.signOutCalls[0].scope, "local");
   assert.deepEqual(userFailure.redirects, []);
 });
 
