@@ -71,3 +71,58 @@ Tanggal: 4 November 2026
 3. Uji seluruh halaman di browser desktop dan ponsel serta periksa console/network.
 4. Uji alur autentikasi, visitor, pesanan, kalkulator, dan modul admin dengan akun/role yang sesuai.
 5. Audit RLS dan secret Edge Function secara terpisah dari pembersihan frontend.
+
+## Audit keamanan Supabase — 5 November 2026
+
+Pemeriksaan dilakukan secara read-only terhadap advisor Supabase, metadata tabel/RLS, definisi fungsi RPC, dan sumber Edge Functions aktif. Pemeriksaan ini bukan penetration test dan tidak mengubah database produksi.
+
+### Temuan prioritas
+
+1. **Token pelacakan pesanan memiliki entropi rendah.** Fungsi `public.create_joki_order` membuat nomor/token dengan awalan tanggal dan hanya 8 karakter heksadesimal acak. RPC `lookup_joki_progress`, `lookup_joki_review`, dan `submit_joki_review` dapat dipanggil oleh peran `anon`; fungsi pencarian tidak menunjukkan pembatasan percobaan atau pembatasan laju. Karena token menjadi kunci akses publik, kombinasi ini berisiko ditebak/di-enumerasi. Rekomendasi: tingkatkan token acak untuk pesanan baru menjadi setidaknya 128 bit dari sumber acak kriptografis, pisahkan token publik dari nomor pesanan bila memungkinkan, tambahkan rate limiting dan pemantauan, serta tinjau ulang eksposur data fungsi lookup. Token lama tetap memerlukan strategi migrasi tersendiri.
+2. **Perlindungan kata sandi bocor nonaktif.** Supabase Security Advisor melaporkan leaked-password protection belum diaktifkan. Tindakan yang disarankan: aktifkan melalui konfigurasi Auth proyek bila paket mendukung, lalu uji pendaftaran dan perubahan kata sandi.
+3. **Fungsi SECURITY DEFINER yang dapat dipanggil pengguna.** Advisor melaporkan beberapa RPC berhak istimewa. Pemeriksaan isi fungsi yang diambil menunjukkan `admin_set_member_role` memeriksa `auth.uid()` dan role `admin`; `admin_set_member_status` memakai pemeriksaan admin; `create_joki_order` menolak sesi anonim dan memvalidasi kuantitas 4–12, produk, email akun, Kingdom, dan voucher. Namun, seluruh fungsi tetap perlu audit otorisasi per fungsi dan uji negatif. Jangan mencabut grant massal tanpa memetakan pemanggil aplikasi karena dapat merusak fitur.
+4. **Tabel internal RLS tanpa policy.** Advisor mencatat `joki_order_history` dan `telegram_command_state` memiliki RLS aktif tanpa policy. Ini dapat disengaja untuk akses service-role/backend saja; pertahankan keadaan ini sampai pola akses backend diverifikasi.
+5. **Edge Functions yang menonaktifkan verifikasi JWT otomatis.** `telegram-order-notify` memeriksa secret webhook dan membatasi chat/pengirim ke chat admin yang dikonfigurasi. `inbox-send` memvalidasi bearer token melalui Auth, memeriksa email terverifikasi, lalu memverifikasi role admin sebelum mengirim pesan. Karena pemeriksaan dilakukan manual, perubahan fungsi harus mempertahankan pemeriksaan ini dan menguji permintaan tanpa token, token tidak valid, serta pengguna non-admin.
+
+### Temuan performa
+
+Advisor menandai beberapa indeks belum digunakan dan beberapa tabel memiliki policy permisif ganda. Tidak ada indeks atau policy yang dihapus/diubah karena statistik pemakaian dan semantik policy perlu ditinjau lebih lanjut; penghapusan indeks/policy secara spekulatif dapat menurunkan performa atau mengubah akses.
+
+### Status tindakan
+
+- [x] Pemeriksaan read-only advisor keamanan dan performa.
+- [x] Pemeriksaan definisi RPC yang dipilih serta alur otorisasi Edge Function.
+- [ ] Perbaikan token publik dan strategi kompatibilitas token lama.
+- [ ] Mengaktifkan leaked-password protection pada konfigurasi Auth.
+- [ ] Uji negatif end-to-end untuk role non-admin, visitor, dan token pelacakan tidak valid.
+- [ ] Audit lengkap seluruh RPC SECURITY DEFINER dan kebijakan RLS.
+
+**Catatan:** temuan ini dicatat sebagai pekerjaan lanjutan. Belum ada perubahan schema, grant, Edge Function, atau konfigurasi Auth produksi yang dilakukan dalam audit ini.
+
+## Pemeriksaan lanjutan pelacakan progres — 5 November 2026
+
+Pemeriksaan definisi RPC Supabase dan pemanggil frontend menemukan ketidaksesuaian kontrak yang perlu dibereskan sebelum perubahan skema keamanan diterapkan:
+
+- `lookup_joki_progress(text)` saat ini mengembalikan `client_name, service_name, status, progress_percent, progress_note, updated_at`.
+- `assets/js/joki-matthew.js` juga membaca `order_number, quantity, total_price`. Kolom-kolom tersebut tidak tersedia pada hasil RPC saat ini, sehingga nomor order, jumlah karakter, dan total dapat tampil sebagai tanda hubung/teks fallback.
+- `create_joki_order` menyimpan nilai yang sama pada `token` dan `order_number`. Memisahkan kode order publik dan token rahasia akan memerlukan perubahan terkoordinasi pada skema, RPC pembuatan/pencarian/ulasan, frontend, dan alur admin.
+- Jangan menjalankan perubahan DDL produksi sampai semua pemanggil fungsi, halaman admin, riwayat order, dan alur ulasan telah dipetakan. Perubahan harus mempertahankan akses untuk pesanan lama atau menyediakan strategi transisi eksplisit.
+- Perbaikan yang direkomendasikan: kontrak lookup minimal mengembalikan data progres yang memang boleh dilihat pemilik token, termasuk nomor order, jumlah karakter, dan total jika kebijakan privasi mengizinkan; lalu gunakan token pelacakan berentropi tinggi yang terpisah, dan tambahkan pembatasan percobaan/monitoring sesuai kemampuan backend.
+
+Catatan ini berasal dari pemeriksaan definisi fungsi dan kode frontend; belum merupakan perubahan database. Uji browser dan end-to-end tetap diperlukan.
+
+
+## Kandidat perbaikan kontrak lookup — 5 November 2026
+
+- Menambahkan `supabase/lookup-joki-progress-contract.sql` pada branch kerja untuk menyelaraskan hasil RPC dengan data yang memang dibaca halaman pelacakan: nomor order, nama client, layanan, jumlah karakter, total, status, persentase, catatan, dan waktu pembaruan.
+- Skrip ini **belum dijalankan di Supabase produksi**. Skrip diberi penanda kandidat karena masih menggunakan `joki_progress.token` lama sebagai kunci lookup dan dengan sendirinya tidak menyelesaikan masalah entropi token.
+- Sebelum penerapan, perubahan lookup ini harus digabungkan secara terkoordinasi dengan desain token pelacakan baru, kompatibilitas pesanan lama, dan pemeriksaan pemanggil Telegram/admin. Jangan menjalankan skrip ini secara terpisah sebagai perbaikan keamanan final.
+- Perubahan ini memperbaiki kontrak data yang tidak lengkap pada level rancangan; validasi runtime masih menunggu penerapan migrasi dan uji end-to-end.
+
+## Hardening token buatan admin — 5 November 2026
+
+- `assets/js/admin-joki-progress.js` sekarang menghasilkan token untuk pesanan manual admin menggunakan 32 byte dari `crypto.getRandomValues` (256 bit), ditampilkan dalam kelompok heksadesimal agar lebih mudah dibaca.
+- `joki-matthew.html` menerima input kode hingga 80 karakter dan memperjelas instruksi agar kode pelacakan tidak dibagikan secara publik.
+- Perubahan ini hanya mengeraskan token yang dibuat melalui formulir admin manual. **Token otomatis dari `create_joki_order` belum diperbaiki** dan masih memakai format lama; lookup dan ulasan masih mencari kolom `token`. Jadi temuan utama keamanan belum dianggap selesai.
+- Perubahan berada di branch `feature/blue-login-experience`; belum masuk produksi dan belum diuji di browser.
+- Langkah berikutnya tetap migrasi terkoordinasi: token rahasia terpisah dari nomor order, cara aman mengirim token baru ke pelanggan, transisi order lama, pembaruan RPC order/review, dan pengujian akses tanpa token/role yang tidak berhak.

@@ -5,72 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#071326">
-  <meta name="description" content="Kingdom Member Access — login atau masuk sebagai visitor di Matthew Joki.">
-  <title>Kingdom Member Access | Matthew Joki</title>
+  <meta name="description" content="Masuk ke MATTHEW JOKI untuk mengelola pesanan, melacak progres, dan mengakses layanan member. Tamu juga dapat menjelajahi website dengan akses terbatas.">
+  <title>Login &amp; Visitor Access | MATTHEW JOKI</title>
   <link rel="stylesheet" href="assets/css/auth.css?v=20261105-login-final">
+  <link rel="stylesheet" href="assets/css/modern-theme.css?v=20261105">
+  <link rel="stylesheet" href="assets/css/blue-theme.css?v=20261104-2">
+  <link rel="stylesheet" href="assets/css/login-layout.css?v=20261105-1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/supabase.js"></script>
   <script defer src="assets/js/auth.js?v=20261105-eye-icon"></script>
   <script defer src="assets/js/session-manager.js"></script>
-  <link rel="stylesheet" href="assets/css/modern-theme.css">
-<link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261104-2">
 </head>
-<body>
-  <main class="auth-shell">
-    <section class="auth-container login-page">
-      <div class="brand-mark"><img src="assets/images/brand/logo-matthew.png?v=20261105" alt="Logo Matthew"></div>
-      <p class="eyebrow">MATTHEW JOKI <span>·</span> MATTHEW.rmn</p>
-      <h1>Selamat Datang</h1>
-      <p class="intro">Masuk ke akunmu untuk melanjutkan ke dunia Matthew Joki.</p>
-
-      <section class="login-panel" aria-labelledby="loginHeading"><form id="loginForm" class="auth-form">
-        <div class="panel-heading"><span class="panel-kicker">AREA MEMBER</span><h2 class="section-title" id="loginHeading">Masuk ke Akun</h2><p>Gunakan email dan password terdaftar.</p></div>
-        <label for="loginEmail">Email</label>
-        <input id="loginEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
-        <label for="loginPassword">Password</label>
-        <div class="password-wrap">
-          <input id="loginPassword" name="password" type="password" placeholder="Minimal 6 karakter" autocomplete="current-password" minlength="6" required>
-          <button class="password-toggle" type="button" data-toggle-password="loginPassword" aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+<body class="auth-experience">
+  <main class="auth-shell login-experience">
+    <section class="auth-container login-page" aria-label="Akses MATTHEW JOKI">
+      <div class="login-story">
+        <a class="login-brand" href="login.html" aria-label="MATTHEW JOKI">
+          <span class="brand-mark"><img src="assets/images/brand/logo-matthew.png?v=20261105" alt="Logo Matthew"></span>
+          <span class="brand-copy"><strong>MATTHEW JOKI</strong><small>OFFICIAL SERVICE PORTAL</small></span>
+        </a>
+        <p class="eyebrow">MATTHEW.RMN <span>·</span> TRUSTED ROK SERVICE</p>
+        <h1>Selamat Datang<span class="headline-accent">.</span></h1>
+        <p class="intro">Masuk untuk mengelola pesanan joki, memantau progres, melihat invoice, dan menerima pesan resmi dari Matthew.</p>
+        <div class="login-benefits" aria-label="Keunggulan member">
+          <article class="login-benefit"><span class="benefit-index">01</span><span><strong>Akun terverifikasi</strong><small>Login dengan email yang sudah diverifikasi.</small></span></article>
+          <article class="login-benefit"><span class="benefit-index">02</span><span><strong>Lacak progres pesanan</strong><small>Pantau status pekerjaan dan pembaruan admin.</small></span></article>
+          <article class="login-benefit"><span class="benefit-index">03</span><span><strong>Inbox resmi Matthew</strong><small>Pesan, pengumuman, dan informasi layanan.</small></span></article>
         </div>
-        <label class="remember-row" for="rememberMe"><input id="rememberMe" type="checkbox" checked> <span>Ingat email saya di perangkat ini</span></label>
-        <div class="login-options"><p class="remember-note">Email akan diingat. Password tidak disimpan. Sesi akan berakhir setelah 30 menit tanpa aktivitas.</p><div class="login-links"><a class="forgot-link" href="reset-password.html">Lupa kata sandi?</a><a class="register-cta" href="register.html">
-            <span class="register-cta-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20c.3-3.4 2.4-5.5 6.2-5.5 2.2 0 3.9.7 4.9 2"/><path d="M18 8v8M14 12h8"/></svg>
-            </span>
-            <span class="register-cta-copy"><strong>Daftar sekarang</strong><small>Buat akun Matthew Joki</small></span>
-            <svg class="register-cta-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a></div></div>
-        <button id="loginButton" type="submit">LOGIN</button>
-      </form></section>
+        <div class="login-trust"><span class="trust-dot"></span><span>100+ transaksi telah dikerjakan tanpa keluhan</span></div>
+      </div>
 
-      <div class="guest-divider"><span>ATAU</span></div>
+      <div class="login-access">
+        <section class="login-panel" aria-labelledby="loginHeading">
+          <form id="loginForm" class="auth-form">
+            <div class="panel-heading"><span class="panel-kicker">AREA MEMBER</span><h2 class="section-title" id="loginHeading">Masuk ke Akun</h2><p>Gunakan email dan password terdaftar.</p></div>
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
+            <label for="loginPassword">Password</label>
+            <div class="password-wrap">
+              <input id="loginPassword" name="password" type="password" placeholder="Minimal 6 karakter" autocomplete="current-password" minlength="6" required>
+              <button class="password-toggle" type="button" data-toggle-password="loginPassword" aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+            </div>
+            <label class="remember-row" for="rememberMe"><input id="rememberMe" type="checkbox" checked> <span>Ingat email saya di perangkat ini</span></label>
+            <div class="login-options">
+              <p class="remember-note">Email akan diingat. Password tidak disimpan. Sesi akan berakhir setelah 30 menit tanpa aktivitas.</p>
+              <div class="login-links">
+                <a class="forgot-link" href="reset-password.html">Lupa kata sandi?</a>
+                <a class="register-cta" href="register.html">
+                  <span class="register-cta-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20c.3-3.4 2.4-5.5 6.2-5.5 2.2 0 3.9.7 4.9 2"/><path d="M18 8v8M14 12h8"/></svg></span>
+                  <span class="register-cta-copy"><strong>Daftar sekarang</strong><small>Buat akun Matthew Joki</small></span>
+                  <svg class="register-cta-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </div>
+            <button id="loginButton" type="submit">LOGIN</button>
+          </form>
+        </section>
 
-      <section class="visitor-panel" aria-labelledby="visitorHeading">
-        <div class="visitor-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM6 20c.4-4 2.4-6 6-6s5.6 2 6 6H6Z"/></svg></div>
-        <h2 id="visitorHeading">Jelajahi sebagai Tamu</h2>
-        <p class="visitor-note">Belum punya akun? Tidak masalah! Kamu tetap bisa menjelajahi website sebagai tamu tanpa email dan password.</p>
-        <form id="visitorForm" class="auth-form visitor-form">
-          <label for="visitorName">Nama pengunjung</label>
-          <input id="visitorName" name="visitorName" type="text" placeholder="Contoh: Matthew" autocomplete="name" minlength="2" maxlength="60" required>
-          <button id="visitorButton" type="submit">MASUK SEBAGAI TAMU</button>
-        </form>
-        <div class="visitor-help">
-          <h3>ℹ️ Bantuan Visitor</h3>
-          <ul>
-            <li>Cukup isi nama, minimal 2 karakter.</li>
-            <li>Tidak perlu mendaftar atau membuat password.</li>
-            <li>Nama digunakan untuk mencatat kunjungan website.</li>
-            <li>Akses tamu bersifat sementara dan berakhir setelah 30 menit tidak aktif.</li>
-            <li>Beberapa fitur khusus member mungkin memerlukan akun.</li>
-          </ul>
-        </div>
-      </section>
-
-      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
-      <p class="auth-link help-link">Butuh bantuan? <a href="mailto:ownrxcebsb@gmail.com?subject=Bantuan%20Login%20Matthew%20Joki">Hubungi admin</a></p>
-      <div class="security-note">🔒 Koneksi login diproses melalui sistem autentikasi. Jangan bagikan password kepada siapa pun.</div>
+        <div class="guest-divider"><span>ATAU JELAJAHI TANPA AKUN</span></div>
+        <section class="visitor-panel" aria-labelledby="visitorHeading">
+          <div class="visitor-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM6 20c.4-4 2.4-6 6-6s5.6 2 6 6H6Z"/></svg></div>
+          <h2 id="visitorHeading">Jelajahi sebagai Tamu</h2>
+          <p class="visitor-note">Belum punya akun? Kamu tetap bisa menjelajahi website sebagai tamu tanpa email dan password.</p>
+          <form id="visitorForm" class="auth-form visitor-form">
+            <label for="visitorName">Nama pengunjung</label>
+            <input id="visitorName" name="visitorName" type="text" placeholder="Contoh: Matthew" autocomplete="name" minlength="2" maxlength="60" required>
+            <button id="visitorButton" type="submit">MASUK SEBAGAI TAMU</button>
+          </form>
+          <details class="visitor-help">
+            <summary>Bantuan akses tamu</summary>
+            <ul>
+              <li>Cukup isi nama, minimal 2 karakter.</li>
+              <li>Tidak perlu mendaftar atau membuat password.</li>
+              <li>Akses tamu berakhir setelah 30 menit tidak aktif.</li>
+              <li>Tamu tidak dapat membuat pesanan atau memakai voucher.</li>
+            </ul>
+          </details>
+        </section>
+        <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+        <p class="auth-link help-link">Butuh bantuan? <a href="mailto:ownrxcebsb@gmail.com?subject=Bantuan%20Login%20Matthew%20Joki">Hubungi admin</a></p>
+        <div class="security-note">🔒 Jangan bagikan password kepada siapa pun. Verifikasi email membantu menjaga keamanan akunmu.</div>
+      </div>
     </section>
-    <footer>© <span data-current-year>2026</span> MATTHEW JOKI · THE DRAGON KINGDOM</footer>
+    <footer>© <span data-current-year>2026</span> MATTHEW JOKI · OFFICIAL SERVICE PORTAL</footer>
   </main>
 </body>
 </html>

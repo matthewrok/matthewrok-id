@@ -88,7 +88,8 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 - `style.css` — gaya dasar/beranda.
 - `modern-theme.css`, `blue-theme.css`, `home-blue-redesign.css` — tema dan desain beranda.
 - `global-menu.css` — menu global.
-- `auth.css`, `auth-visitor.css` — autentikasi dan akses visitor.
+- `auth.css`, `auth-visitor.css` — autentikasi dasar dan akses visitor.
+- `login-layout.css` — tata letak login responsif, benefit member, akses tamu, dan animasi meteor biru.
 - `calculator.css`, `requirements.css` — halaman tools.
 - `joki-matthew.css`, `your-order.css`, `worker-inbox.css`, `support.css` — layanan dan halaman terkait.
 - `admin-dashboard.css`, `tokens.css`, `floating-cs.css` — admin, token desain, dan tombol CS.
@@ -165,6 +166,7 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 
 - [Panduan struktur repository](docs/REPOSITORY-STRUCTURE.md)
 - [Riwayat audit dan cleanup](docs/AUDIT-CLEANUP.md)
+- [Rencana migrasi token pelacakan](docs/TRACKING-TOKEN-MIGRATION.md)
 
 ## Batas audit
 
