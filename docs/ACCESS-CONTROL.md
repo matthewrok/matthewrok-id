@@ -24,7 +24,8 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 | 5 | Masuk sebagai visitor lalu buka halaman privat | Dialihkan ke login |
 | 6 | Member membuka /admin/dashboard.html | Akses ditolak |
 | 7 | Member berstatus active membuka dashboard/inbox/pesanan | Diizinkan |
-| 8 | Role `worker` (pembuat akun/penjoki akun) berstatus active membuka worker/inbox | Diizinkan |\n| 8a | Role `macul` (petani/farmer) berstatus active membuka worker/inbox | Diizinkan |
+| 8 | Role `worker` (pembuat akun/penjoki akun) berstatus active membuka worker/inbox | Diizinkan |
+| 8a | Role `macul` (petani/farmer) berstatus active membuka worker/inbox | Diizinkan |
 | 9 | Akun dengan status selain active | Sesi lokal diakhiri dan dialihkan ke login |
 | 10 | Akun belum verifikasi email | Dialihkan ke login |
 | 11 | Admin membuka halaman di /admin/ | Diizinkan |
@@ -41,7 +42,9 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 
 ## Batasan dan status verifikasi
 - File HTML statis tetap dapat diminta langsung dari GitHub Pages; guard hanya mencegah halaman privat ditampilkan melalui alur normal browser.
-- Login menolak melanjutkan jika profil tidak ditemukan atau `account_status` bukan `active`; status `suspended` mendapat pesan khusus.\n- Setelah login berhasil, semua role diarahkan ke `/index.html`; parameter `next` tidak digunakan sebagai tujuan redirect.\n- Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, macul, admin, belum verifikasi, profil hilang, dan suspended.
+- Login menolak melanjutkan jika profil tidak ditemukan atau `account_status` bukan `active`; status `suspended` mendapat pesan khusus.
+- Setelah login berhasil, semua role diarahkan ke `/index.html`; parameter `next` tidak digunakan sebagai tujuan redirect.
+- Pemeriksaan statis bukan pengganti uji browser dengan akun visitor, member, worker, macul, admin, belum verifikasi, profil hilang, dan suspended.
 - Lakukan pengujian setelah deployment dan periksa log Supabase bila ada kegagalan akses.
 
 ## Temuan audit Supabase yang belum diubah
