@@ -57,7 +57,8 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 
 ## H. Keamanan, akses, dan privasi
 - [ ] Audit access guard untuk dashboard, pesanan, Inbox, worker, Macul, dan halaman admin.
-- [ ] Pastikan WORKER dan MACUL tetap role terpisah; jangan gabungkan otorisasi keduanya.
+- [x] Edge Function pendaftaran worker memeriksa role dan account_status dari tabel profiles di server; hanya member, SULTAN, MATTHEW, dan PELANGGAN aktif yang dapat mengajukan. WORKER/MACUL ditolak di endpoint.
+- [ ] Pastikan WORKER dan MACUL tetap role terpisah pada seluruh alur persetujuan, pengelolaan role, dan akses halaman; jangan gabungkan otorisasi keduanya.
 - [ ] Periksa seluruh query dashboard terhadap RLS dan kepemilikan data.
 - [x] Render nama/ulasan/order dan invoice dashboard menggunakan escaping HTML pada output dinamis; audit XSS seluruh halaman masih terbuka.
 - [x] Logout menampilkan penanganan error dan tombol kembali aktif jika signOut gagal; perlu uji runtime multi-tab.
@@ -147,3 +148,12 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 3. Verifikasi aturan level member dan status transaksi dengan kebijakan bisnis yang disetujui.
 4. Tambahkan pemeriksaan sintaks dan smoke/regression test otomatis yang sesuai dengan struktur proyek.
 5. Jalankan uji browser serta verifikasi backend terpisah sebelum mengubah checklist menjadi selesai.
+
+
+### Hardening tambahan — validasi pendaftaran worker di server
+- Source supabase/functions/worker-application-submit/index.ts kini mengambil role dan account_status langsung dari profiles menggunakan service-role key yang hanya berada di Edge Function.
+- Endpoint menolak akun tanpa profil, akun nonaktif, serta role selain member, sultan, matthew, dan pelanggan. Nilai role dinormalisasi ke huruf kecil sebelum dibandingkan.
+- Pemeriksaan ini tidak bergantung pada role dari browser, user_metadata, atau access guard frontend.
+- Regression test statis ditambahkan untuk memastikan kontrak otorisasi ini tidak hilang; workflow auth-regression kini berjalan juga ketika file Edge Function tersebut berubah.
+- BELUM diterapkan ke Supabase produksi. Source GitHub saja tidak mengubah fungsi yang sedang ter-deploy. Setelah PR ditinjau/di-merge, Edge Function harus di-deploy secara terencana lalu diuji dengan role member aktif, visitor/tanpa sesi, akun nonaktif, admin, WORKER, dan MACUL.
+- Catatan audit: supabase/admin-role-management.sql saat ini membatasi profiles.role pada member, admin, SULTAN, MATTHEW, dan PELANGGAN; kontrak tersebut belum memasukkan WORKER/MACUL. Jangan menjalankan constraint tersebut ulang sebelum skema role diselaraskan dengan desain role final.
