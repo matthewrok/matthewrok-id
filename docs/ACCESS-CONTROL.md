@@ -10,6 +10,7 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 - Guard membaca role dan account_status dari profil pengguna.
 - Hanya account_status active yang diizinkan.
 - /admin/* hanya untuk role admin.
+- Kelompok worker terdiri dari dua role: `macul` untuk petani/farmer dan `worker` untuk pembuat akun atau penjoki akun. Keduanya diizinkan pada halaman worker, Inbox, pesanan, dan dashboard member, tetapi tidak pada /admin/*.
 - Visitor disimpan di sessionStorage dan tidak mempunyai sesi Auth, sehingga tidak lolos guard.
 - Parameter next hanya menerima path privat yang diizinkan pada origin yang sama.
 
@@ -23,7 +24,7 @@ Mendokumentasikan perlindungan halaman privat dan skenario uji sebelum publikasi
 | 5 | Masuk sebagai visitor lalu buka halaman privat | Dialihkan ke login |
 | 6 | Member membuka /admin/dashboard.html | Akses ditolak |
 | 7 | Member berstatus active membuka dashboard/inbox/pesanan | Diizinkan |
-| 8 | Worker berstatus active membuka worker/inbox | Diizinkan |
+| 8 | Role `worker` (pembuat akun/penjoki akun) berstatus active membuka worker/inbox | Diizinkan |\n| 8a | Role `macul` (petani/farmer) berstatus active membuka worker/inbox | Diizinkan |
 | 9 | Akun dengan status selain active | Sesi lokal diakhiri dan dialihkan ke login |
 | 10 | Akun belum verifikasi email | Dialihkan ke login |
 | 11 | Admin membuka halaman di /admin/ | Diizinkan |
@@ -50,6 +51,6 @@ Pemeriksaan advisor pada project menemukan beberapa hal yang perlu ditinjau terp
 - RLS aktif tanpa policy pada tabel joki_order_history dan telegram_command_state. Kondisi ini dapat disengaja jika akses memang hanya melalui backend/service role; jangan menambahkan policy publik hanya untuk menghilangkan peringatan.
 - Advisor menandai beberapa SECURITY DEFINER RPC yang dapat dipanggil oleh anon atau authenticated, termasuk fungsi publik untuk review/progress dan fungsi administratif. Periksa isi setiap fungsi, validasi token/identitas, search_path, serta kebutuhan akses sebelum mengubah EXECUTE grants. Jangan melakukan revoke massal karena beberapa fungsi memang menjadi API aplikasi.
 - Perlindungan password bocor (Have I Been Pwned) pada Supabase Auth saat audit masih nonaktif. Aktifkan melalui pengaturan Auth setelah memastikan kebijakan password yang dipakai.
-- Tabel profiles memiliki role macul pada satu akun saat audit. Role ini tidak termasuk allowlist guard; akun tersebut akan ditolak dari halaman privat sampai arti dan hak role macul dikonfirmasi. Tidak ada hak tambahan yang diberikan otomatis.
+- Tabel profiles memiliki role `macul` pada satu akun saat audit. Pengguna telah mengonfirmasi bahwa `macul` adalah role petani/farmer, sedangkan `worker` adalah pembuat akun atau penjoki akun. Keduanya kini masuk allowlist halaman privat non-admin. Tidak ada akses admin yang diberikan kepada keduanya.
 
 Temuan ini dicatat untuk tindak lanjut. Tidak ada perubahan skema, policy, grant, function, maupun konfigurasi Auth yang dilakukan pada database produksi dalam PR ini.
