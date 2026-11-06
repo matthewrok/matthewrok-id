@@ -79,9 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
  if(!client){state.textContent="Layanan akun belum tersedia. Muat ulang halaman.";return;}
  try {
  const withTimeout=(promise,label,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" melewati batas waktu. Periksa koneksi internet lalu coba lagi.")),ms))]);
- const {data:{session}}=await withTimeout(client.auth.getSession(),"Pemeriksaan sesi akun");
- if(!session){location.replace("/login.html?next=member-dashboard.html");return;}
- const user=session.user;
+ const accessReady=window.__matthewAccessReady;
+ if(!accessReady) throw new Error("Pemeriksaan akses akun belum siap. Muat ulang halaman.");
+ await withTimeout(accessReady,"Verifikasi akses akun");
+ const user=window.__matthewVerifiedUser;
+ if(!user) throw new Error("Sesi akun tidak ditemukan. Silakan login kembali.");
  const [{data:profile,error:profileError},{data:orders,error:ordersError}]=await withTimeout(Promise.all([
   client.from("profiles").select("full_name,role,account_status,created_at").eq("id",user.id).maybeSingle(),
   client.rpc("list_my_joki_orders")
