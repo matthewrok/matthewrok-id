@@ -19,7 +19,13 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(35,111,22
 .member-actions{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
 .member-actions a,.member-actions button{border:1px solid rgba(213,173,104,.35);background:rgba(213,173,104,.07);color:var(--gilt);padding:11px 15px;border-radius:9px;font-weight:800;font-size:10px;letter-spacing:.07em;text-decoration:none;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
 .member-actions a:hover,.member-actions button:hover{transform:translateY(-2px);border-color:var(--gilt);background:rgba(213,173,104,.13)}
-#loadState{padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
+#loadState{display:flex;align-items:center;gap:12px;padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);min-height:78px}
+#loadState .loading-spinner{width:19px;height:19px;flex:0 0 19px;border:2px solid rgba(143,190,255,.22);border-top-color:#8fc5ff;border-right-color:#6ee7ff;border-radius:50%;animation:memberSpin .8s linear infinite}
+#loadState .loading-copy{min-width:0}
+#loadState .loading-copy strong{display:block;color:#cfe2ff;font-size:13px;font-weight:700}
+#loadState .loading-copy small{display:block;margin-top:4px;color:#91a8cb;font-size:11px;line-height:1.5}
+@keyframes memberSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#loadState .loading-spinner{animation-duration:2s}}
 .member-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}
 .member-stat,.member-panel{background:linear-gradient(145deg,rgba(17,43,76,.96),rgba(9,27,51,.96));border:1px solid rgba(255,255,255,.085);border-radius:16px;padding:21px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
 .member-stat{position:relative;overflow:hidden;min-height:112px}.member-stat:after{content:"";position:absolute;width:75px;height:75px;border:1px solid rgba(213,173,104,.12);border-radius:50%;right:-24px;bottom:-32px}
@@ -49,9 +55,9 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(35,111,22
 </style>
 </head><body>
 <main class="member-shell">
-<div class="member-top"><a class="member-brand" href="/index.html">MATTHEW JOKI <small>KINGDOM MEMBER CENTER</small></a><button id="logoutBtn" class="member-actions" style="margin:0">KELUAR</button></div>
+<div class="member-top"><a class="member-brand" href="/index.html">MATTHEW JOKI <small>KINGDOM MEMBER CENTER</small></a></div>
 <section class="member-hero"><span class="eyebrow">PERSONAL KINGDOM SPACE</span><h1>Halo, <span id="memberName">Member</span>.</h1><p>Selamat datang di pusat aktivitas akun MATTHEW JOKI. Pantau pesanan, notifikasi, dan perkembangan keanggotaanmu di sini.</p><div class="member-actions"><a href="/your-order.html">Lihat Semua Pesanan</a><a href="/index.html">Jelajahi Layanan</a></div></section>
-<div id="loadState" class="member-muted">Memuat data akun...</div>
+<div id="loadState" class="member-muted" role="status" aria-live="polite"><span class="loading-spinner" aria-hidden="true"></span><span class="loading-copy"><strong>Memuat data akun...</strong><small>Menghubungkan ke server. Waktu pemuatan bergantung pada koneksi internet.</small></span></div>
 <section id="dashboardContent" hidden>
 <div class="member-grid">
 <div class="member-stat"><span>Total Pesanan</span><strong id="totalOrders">0</strong></div>
@@ -71,14 +77,15 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(35,111,22
 document.addEventListener("DOMContentLoaded", async () => {
  const client=window.supabaseClient, state=document.getElementById("loadState"), content=document.getElementById("dashboardContent");
  if(!client){state.textContent="Layanan akun belum tersedia. Muat ulang halaman.";return;}
- const {data:{session}}=await client.auth.getSession();
+ try {
+ const withTimeout=(promise,label,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" melewati batas waktu. Periksa koneksi internet lalu coba lagi.")),ms))]);
+ const {data:{session}}=await withTimeout(client.auth.getSession(),"Pemeriksaan sesi akun");
  if(!session){location.replace("/login.html?next=member-dashboard.html");return;}
  const user=session.user;
- try {
- const [{data:profile,error:profileError},{data:orders,error:ordersError}]=await Promise.all([
+ const [{data:profile,error:profileError},{data:orders,error:ordersError}]=await withTimeout(Promise.all([
   client.from("profiles").select("full_name,role,account_status,created_at").eq("id",user.id).maybeSingle(),
   client.rpc("list_my_joki_orders")
- ]);
+ ]),"Pengambilan profil dan pesanan");
  if(profileError){state.textContent="Profil gagal dimuat: "+profileError.message;return;}
  if(profile?.account_status==="suspended"){await client.auth.signOut();location.replace("/login.html?reason=suspended");return;}
  if(ordersError){state.textContent="Data pesanan gagal dimuat: "+ordersError.message;return;}
@@ -114,12 +121,11 @@ document.addEventListener("DOMContentLoaded", async () => {
  document.getElementById("notifications").innerHTML=notes.length?notes.map(o=>'<div class="member-note"><strong>'+escapeHtml(o.order_number||"Pesanan")+' · '+escapeHtml(o.status||"Menunggu")+'</strong>'+escapeHtml(o.progress_note||("Status pesanan diperbarui. Progres "+(o.progress_percent||0)+"%."))+'<br><small>'+new Date(o.updated_at||o.created_at).toLocaleString("id-ID")+'</small></div>').join(""):'Belum ada pembaruan pesanan.';
  recent.addEventListener("click",e=>{const btn=e.target.closest("[data-invoice]");if(!btn)return;const o=list.find(x=>x.id===btn.dataset.invoice);if(o)printInvoice(o,user.email);});
  state.hidden=true;content.hidden=false;
- document.getElementById("logoutBtn").addEventListener("click",async()=>{const button=document.getElementById("logoutBtn");button.disabled=true;try{const {error}=await client.auth.signOut();if(error)throw error;location.replace("/login.html");}catch(error){button.disabled=false;state.hidden=false;state.textContent="Logout belum berhasil. Periksa koneksi lalu coba lagi.";console.error("[Member Dashboard] logout",error);}});
  } catch(error) {
    console.error("[Member Dashboard] load",error);
    content.hidden=true;
    state.hidden=false;
-   state.textContent="Dashboard belum dapat dimuat. Periksa koneksi internet lalu muat ulang halaman.";
+   state.innerHTML='<span class="loading-spinner" aria-hidden="true" style="animation:none;border-top-color:#ffb86b"></span><span class="loading-copy"><strong>Data akun belum berhasil dimuat.</strong><small>'+escapeHtml(error?.message||"Periksa koneksi internet lalu coba lagi.")+'</small></span>';
    if(!state.querySelector("button")) {
      const retry=document.createElement("button");
      retry.type="button";
