@@ -113,8 +113,13 @@ document.addEventListener("DOMContentLoaded", async () => {
  const recent=document.getElementById("recentOrders");
  recent.innerHTML=list.length?list.slice(0,5).map(o=>'<div class="member-order"><div><strong>'+escapeHtml(o.service_name||"Layanan")+'</strong><small>'+escapeHtml(o.order_number||"—")+' · Kingdom '+escapeHtml(o.kingdom_number||"—")+' · '+escapeHtml(o.status||"Menunggu")+' · '+money(o.total_price)+'</small></div><button type="button" data-invoice="'+escapeHtml(o.id)+'">INVOICE</button></div>').join(""):'<div class="member-empty">Belum ada pesanan. Pesanan yang dibuat dengan email akun ini akan muncul di sini.</div>';
  const reviewArea=document.getElementById("reviewArea");
- const {data: reviewedIdsData,error: reviewedIdsError}=await client.rpc("get_my_reviewed_order_ids");
- if(reviewedIdsError){reviewArea.textContent="Status ulasan belum dapat diperiksa. Silakan muat ulang halaman.";console.error(reviewedIdsError);}
+ // Core account and order data is already available; do not hold the whole dashboard for optional review history.
+ state.hidden=true;
+ content.hidden=false;
+ reviewArea.textContent="Memeriksa riwayat ulasan...";
+ const reviewResult=await withTimeout(client.rpc("get_my_reviewed_order_ids"),"Pemeriksaan riwayat ulasan",8000).catch(error=>({data:null,error}));
+ const reviewedIdsData=reviewResult.data, reviewedIdsError=reviewResult.error;
+ if(reviewedIdsError){reviewArea.textContent="Riwayat ulasan sementara tidak tersedia. Informasi akun dan pesanan tetap dapat digunakan.";console.warn("[Member Dashboard] reviews",reviewedIdsError);}
  const reviewedIds=new Set((reviewedIdsData||[]).map(x=>x.order_id));
  const completedForReview=list.filter(o=>o.status==="Selesai"&&!reviewedIds.has(o.id));
  reviewArea.innerHTML=reviewedIdsError?"":completedForReview.length?completedForReview.map(o=>'<form class="review-form" data-review-order="'+escapeHtml(o.id)+'" style="padding:14px 0;border-top:1px solid var(--line)"><strong>'+escapeHtml(o.service_name||"Layanan")+' · '+escapeHtml(o.order_number||"Pesanan")+'</strong><label style="display:block;margin:10px 0 5px;color:var(--muted)">Rating</label><select name="rating" required><option value="5">★★★★★ — Sangat puas</option><option value="4">★★★★ — Puas</option><option value="3">★★★ — Cukup</option><option value="2">★★ — Kurang</option><option value="1">★ — Tidak puas</option></select><textarea name="review" minlength="5" maxlength="700" required placeholder="Ceritakan pengalamanmu (5–700 karakter)..." style="display:block;width:100%;margin:10px 0;min-height:85px"></textarea><label style="display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px"><input type="checkbox" name="display_name"> Izinkan nama saya ditampilkan bersama ulasan</label><button type="submit" class="member-actions" style="margin:12px 0 0">KIRIM ULASAN</button></form>').join(""):'<div class="member-empty">Belum ada pesanan selesai yang dapat diberi rating.</div>';
