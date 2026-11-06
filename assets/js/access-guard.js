@@ -29,10 +29,12 @@
 
     const { data: sessionData, error: sessionError } = await client.auth.getSession();
     if (sessionError || !sessionData?.session) return redirectToLogin();
+    window.__matthewVerifiedSession = sessionData.session;
 
     const { data: userData, error: userError } = await client.auth.getUser();
     const user = userData?.user;
     if (userError || !user || !user.email_confirmed_at) return redirectToLogin();
+    window.__matthewVerifiedUser = user;
 
     const { data: profile, error: profileError } = await client
       .from("profiles")
@@ -63,8 +65,9 @@
   }
 
   const timeout = window.setTimeout(redirectToLogin, 10000);
-  verifyAccess().catch(error => {
+  window.__matthewAccessReady = verifyAccess().catch(error => {
     console.error("[MATTHEW access guard]", error);
     redirectToLogin();
+    throw error;
   }).finally(() => window.clearTimeout(timeout));
 })();
