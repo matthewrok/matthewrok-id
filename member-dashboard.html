@@ -74,7 +74,9 @@ body{min-height:100vh;background:radial-gradient(ellipse at 12% 0,rgba(35,111,22
 </section>
 <p class="member-footer">MATTHEW JOKI · KINGDOM MEMBER CENTER</p></main>
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
+// This script is placed at the end of body; initialize immediately. Do not wait for DOMContentLoaded,
+// because DOMContentLoaded also waits for deferred UI/maintenance scripts and can leave this loader stuck.
+(async () => {
  const client=window.supabaseClient;
  const state=document.getElementById("loadState");
  const content=document.getElementById("dashboardContent");
@@ -159,6 +161,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if(!invoiceTab){URL.revokeObjectURL(invoiceUrl);alert("Tab invoice diblokir browser. Izinkan pop-up untuk situs MATTHEW JOKI lalu coba lagi.");return;}
   window.setTimeout(()=>URL.revokeObjectURL(invoiceUrl),60000);
  }
-});
+})();
 </script><script defer src="/assets/js/global-menu.js?v=20261104-13"></script>  <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body></html>
