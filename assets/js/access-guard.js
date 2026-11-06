@@ -5,7 +5,7 @@
   const rules = [
     { test: /^\/admin(?:\/|$)/i, roles: ["admin"] },
     { test: /^\/worker[.]html$/i, roles },
-    { test: /^\/(?:inbox|your-order|member-dashboard)[.]html$/i, roles }
+    { test: /^\/(?:inbox|your-order)[.]html$/i, roles }
   ];
   const rule = rules.find(item => item.test.test(path));
   if (!rule) return;
