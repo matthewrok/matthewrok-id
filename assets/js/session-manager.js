@@ -18,8 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function initialize() {
-    const { data } = await client.auth.getSession();
-    activeSession = Boolean(data.session || sessionStorage.getItem("matthewVisitorName"));
+    let session = null;
+    if (window.__matthewAccessReady) {
+      try {
+        await window.__matthewAccessReady;
+        session = window.__matthewVerifiedSession || null;
+      } catch (_) {
+        return;
+      }
+    } else {
+      const { data, error } = await client.auth.getSession();
+      if (error) { console.warn("[MATTHEW session]", error); return; }
+      session = data.session || null;
+    }
+    activeSession = Boolean(session || sessionStorage.getItem("matthewVisitorName"));
     if (!activeSession) return;
     const last = Number(localStorage.getItem(activityKey) || Date.now());
     const remaining = timeout - (Date.now() - last);
