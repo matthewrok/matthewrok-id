@@ -59,16 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resendButton) resendButton.hidden = true;
   }
 
-  function safeStorageGet(storage, key) {
-    try { return storage.getItem(key); }
+  function safeStorageGet(storageName, key) {
+    try { return window[storageName].getItem(key);
     catch (error) { console.warn("[MATTHEW auth] Storage read unavailable:", error); return null; }
   }
-  function safeStorageSet(storage, key, value) {
-    try { storage.setItem(key, value); return true; }
+  function safeStorageSet(storageName, key, value) {
+    try { window[storageName].setItem(key, value); return true; }
     catch (error) { console.warn("[MATTHEW auth] Storage write unavailable:", error); return false; }
   }
-  function safeStorageRemove(storage, key) {
-    try { storage.removeItem(key); }
+  function safeStorageRemove(storageName, key) {
+    try { window[storageName].removeItem(key); }
     catch (error) { console.warn("[MATTHEW auth] Storage cleanup unavailable:", error); }
   }
 
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (loginForm) {
-    const savedEmail = safeStorageGet(localStorage, "matthewRememberedEmail");
+    const savedEmail = safeStorageGet("localStorage", "matthewRememberedEmail");
     const emailField = document.getElementById("loginEmail");
     const rememberField = document.getElementById("rememberMe");
     if (savedEmail && emailField) { emailField.value = savedEmail; if (rememberField) rememberField.checked = true; }
@@ -137,9 +137,9 @@ document.addEventListener("DOMContentLoaded", () => {
               : "Akun belum aktif atau profilnya belum tersedia. Hubungi Matthew untuk bantuan."
           );
         }
-        safeStorageRemove(sessionStorage, "matthewVisitorName");
-        if (rememberField?.checked) safeStorageSet(localStorage, "matthewRememberedEmail", email);
-        else safeStorageRemove(localStorage, "matthewRememberedEmail");
+        safeStorageRemove("sessionStorage", "matthewVisitorName");
+        if (rememberField?.checked) safeStorageSet("localStorage", "matthewRememberedEmail", email);
+        else safeStorageRemove("localStorage", "matthewRememberedEmail");
         showMessage("Login berhasil. Membuka kerajaan...", "success");
         // Setelah login, semua role diarahkan ke halaman utama MATTHEW JOKI.
         // Parameter ?next sengaja diabaikan agar login tidak membuka halaman worker/admin.
@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { error } = await client.from("visitor_logs").insert({ visitor_name: visitorName });
         if (error) throw error;
-        safeStorageSet(sessionStorage, "matthewVisitorName", visitorName);
+        safeStorageSet("sessionStorage", "matthewVisitorName", visitorName);
         showMessage("Berhasil masuk sebagai tamu. Mengalihkan...", "success");
         window.location.assign("index.html");
       } catch (error) {
