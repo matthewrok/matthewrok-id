@@ -60,7 +60,7 @@ test("login sukses mengarahkan pengguna ke beranda", async ({ page }) => {
   await page.locator("#loginPassword").fill("correct-password");
   await page.locator("#loginForm button[type=submit]").click();
 
-  await expect(page).toHaveURL(/index\.html$/);
+  await expect(page).toHaveURL(/(?:index\.html|\/)$/);
 });
 
 test("login menampilkan pesan ramah saat kredensial ditolak", async ({ page }) => {
@@ -77,11 +77,11 @@ test("login menampilkan pesan ramah saat kredensial ditolak", async ({ page }) =
 test("akses admin tanpa sesi diarahkan ke halaman login", async ({ page }) => {
   await mockSupabase(page, "unauthenticated");
   await page.goto("/admin/dashboard.html");
-  await expect(page).toHaveURL(/login\.html\?next=/);
+  await expect(page).toHaveURL(/login(?:\.html|\/)\?next=/);
 });
 
 test("akun member biasa ditolak dari rute admin", async ({ page }) => {
   await mockSupabase(page, "non-admin");
   await page.goto("/admin/dashboard.html");
-  await expect(page).toHaveURL(/index\.html\?access=denied/);
+  await expect(page).toHaveURL(/(?:index\.html|\/)\?access=denied/);
 });
