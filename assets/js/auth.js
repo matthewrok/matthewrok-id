@@ -125,14 +125,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (loginForm) {
     const savedEmail = safeStorageGet("localStorage", "matthewRememberedEmail");
-    const emailField = document.getElementById("loginEmail");
+    const emailField = document.getElementById("email") || document.getElementById("loginEmail");
     const rememberField = document.getElementById("rememberMe");
     if (savedEmail && emailField) { emailField.value = savedEmail; if (rememberField) rememberField.checked = true; }
     // Keep the login page visible even when a member session already exists.
     loginForm.addEventListener("submit", async event => {
       event.preventDefault(); showMessage(""); hideResendButton(); setBusy(loginForm, true, "MEMERIKSA AKUN...");
       const email = emailField.value.trim();
-      const password = document.getElementById("loginPassword").value;
+      const passwordField = document.getElementById("password") || document.getElementById("loginPassword");
+      const password = passwordField.value;
       try {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
