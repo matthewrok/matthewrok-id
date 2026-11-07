@@ -229,7 +229,7 @@ test("access guard redirects unauthenticated and inactive accounts to login", as
 
   const suspended = await runAccessGuard({ pathname: "/worker.html", role: "worker", accountStatus: "suspended" });
   assert.equal(suspended.redirects.length, 1);
-  assert.match(suspended.redirects[0], /^\/login\.html\?next=/);
+  assert.match(suspended.redirects[0], /^\/login\/\?next=/);
 });
 
 
