@@ -446,6 +446,23 @@ test("all pages load the current shared blue theme cache version", () => {
 });
 
 
+
+test("canonical auth routes include brand favicon and root-relative assets", () => {
+  const routes = [
+    ["login/index.html", "/login/"],
+    ["register/index.html", "/register/"],
+    ["reset-password/index.html", "/reset-password/"],
+    ["email-confirmed/index.html", "/email-confirmed/"]
+  ];
+  for (const [file, canonical] of routes) {
+    const html = fs.readFileSync(path.join(ROOT, file), "utf8");
+    assert.match(html, /rel="icon"[^>]+logo-matthew\.png/, file + " should load the brand favicon");
+    assert.ok(html.includes('rel="canonical" href="https://matthewrok.my.id' + canonical + '"'), file + " should declare its canonical URL");
+    const relativeAssets = html.match(/(?:src|href)=["'](?!\/|https?:|#|mailto:|data:)[^"']+["']/g) || [];
+    assert.deepEqual(relativeAssets, [], file + " must not use fragile relative asset paths");
+  }
+});
+
 test("legacy auth URLs preserve query strings and hashes when redirecting to pretty routes", () => {
   const legacyRoutes = [
     ["login.html", "/login/"],
