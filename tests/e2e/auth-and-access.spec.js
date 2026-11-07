@@ -80,6 +80,34 @@ test("akses admin tanpa sesi diarahkan ke halaman login", async ({ page }) => {
   await expect(page).toHaveURL(/login(?:\.html|\/)\?next=/);
 });
 
+
+test("onboarding member opens for a verified user and closes with keyboard", async ({ page }) => {
+  await page.goto("/404.html");
+  await page.setContent(`
+    <button id="previousFocus" type="button">Previous</button>
+    <div id="memberOnboarding" role="dialog" aria-modal="true" aria-labelledby="memberOnboardingTitle" hidden>
+      <h2 id="memberOnboardingTitle">Selamat datang</h2>
+      <button id="memberOnboardingDone" type="button">Mengerti</button>
+    </div>
+  `);
+  await page.evaluate(() => {
+    window.supabaseClient = {
+      auth: { getUser: async () => ({ data: { user: { id: "e2e-onboarding-user" } }, error: null }) }
+    };
+  });
+  await page.addScriptTag({ url: "/assets/js/member-onboarding.js" });
+
+  const dialog = page.locator("#memberOnboarding");
+  const done = page.locator("#memberOnboardingDone");
+  await expect(dialog).toBeVisible();
+  await expect(done).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(done).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  expect(await page.evaluate(() => localStorage.getItem("matthew_joki_member_onboarding_v1:e2e-onboarding-user"))).toBe("done");
+});
+
 test("akun member biasa ditolak dari rute admin", async ({ page }) => {
   await mockSupabase(page, "non-admin");
   await page.goto("/admin/dashboard.html");
