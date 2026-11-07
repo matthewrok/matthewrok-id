@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <style>
+    <style id="app-like-home-redesign">
         :root {
             --bg-main: #050505;
             --bg-card: #0a0a0a;
@@ -318,7 +318,7 @@
                     <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
                     <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
                     <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required>
-                    <small>Wajib diisi dengan angka Kingdom kamu.</small>
+                    <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
                     <label for="jokiOrderQuantity">Jumlah karakter (minimal 4, maksimal 12)</label>
                     <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" required>
                     <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
@@ -343,6 +343,9 @@
                 </div>
             </section>
         </main>
+
+        <span id="quickAccessTitle" hidden></span>
+        <span id="kingdom-tools" hidden></span>
 
         <!-- Bottom navigation -->
         <nav class="bottom-nav">
