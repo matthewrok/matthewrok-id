@@ -10,7 +10,7 @@
     const token = $("progressToken").value.trim().toUpperCase();
     $("progressResult").classList.add("hidden");
     showMessage("lookupMessage", "");
-    setBusy($("lookupButton"), true, "MEMERIKSA...", "CEK PROGRES");
+    setBusy($("lookupButton"), true, "MEMERIKSA...", "BUKA PESANAN");
     try {
       const {data, error} = await db.rpc("lookup_joki_progress_secure", {p_token: token});
       if (error) throw error;
@@ -20,7 +20,17 @@
       $("resultOrderNumber").textContent = order.order_number || "—";
       $("resultQuantity").textContent = order.quantity ? order.quantity + " karakter" : "-";
       $("resultTotal").textContent = Number(order.total_price) > 0 ? "Rp" + Number(order.total_price).toLocaleString("id-ID") : "Menunggu konfirmasi";
-      $("resultStatus").textContent = order.status || "Menunggu";
+      const statusBadge = $("resultStatus");
+      const orderStatus = String(order.status || "Menunggu").trim();
+      statusBadge.textContent = orderStatus;
+      statusBadge.classList.remove("process", "success", "cancel");
+      if (orderStatus.toLocaleLowerCase("id-ID") === "selesai") {
+        statusBadge.classList.add("success");
+      } else if (orderStatus.toLocaleLowerCase("id-ID") === "dibatalkan") {
+        statusBadge.classList.add("cancel");
+      } else {
+        statusBadge.classList.add("process");
+      }
       $("resultClient").textContent = order.client_name || "Client";
       $("resultPercent").textContent = Math.max(0, Math.min(100, Number(order.progress_percent) || 0)) + "%";
       $("resultBar").style.width = $("resultPercent").textContent;
@@ -45,7 +55,7 @@
     } catch (error) {
       showMessage("lookupMessage", "Belum dapat memeriksa token. Pastikan setup database sudah selesai.", "error");
       console.error(error);
-    } finally { setBusy($("lookupButton"), false, "MEMERIKSA...", "CEK PROGRES"); }
+    } finally { setBusy($("lookupButton"), false, "MEMERIKSA...", "BUKA PESANAN"); }
   });
   // Interactive star rating: selecting star N fills stars 1 through N.
   const starPicker = document.querySelector(".star-picker");
