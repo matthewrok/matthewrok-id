@@ -417,8 +417,8 @@ test("legacy order RPC enforces the same active member-role allowlist during com
 test("all website routes use the approved blue/navy browser theme colors", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
-    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login.html", "member-dashboard.html", "register.html",
+    "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login/index.html", "member-dashboard.html", "register.html",
     "requirements-city-hall.html", "reset-password.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
@@ -434,14 +434,29 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
 test("all pages load the current shared blue theme cache version", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
-    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login.html", "member-dashboard.html", "register.html",
+    "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login/index.html", "member-dashboard.html", "register.html",
     "requirements-city-hall.html", "reset-password.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13-mm2/, page + " should load the current blue theme");
+  }
+});
+
+
+test("legacy auth URLs preserve query strings and hashes when redirecting to pretty routes", () => {
+  const legacyRoutes = [
+    ["login.html", "/login/"],
+    ["register.html", "/register/"],
+    ["reset-password.html", "/reset-password/"],
+    ["email-confirmed.html", "/email-confirmed/"]
+  ];
+  for (const [file, route] of legacyRoutes) {
+    const html = fs.readFileSync(path.join(ROOT, file), "utf8");
+    assert.match(html, new RegExp("location\\.replace\\(\\\"" + route.replaceAll("/", "\\/") + "\\\"\\+location\\.search\\+location\\.hash\\)"), file + " should preserve query and hash");
+    assert.match(html, new RegExp("http-equiv=\\\"refresh\\\""), file + " should have a no-JS fallback");
   }
 });
 
@@ -501,7 +516,7 @@ test("maintenance page, global gate, and admin control are wired across every ro
   assert.match(dashboard, /maintenanceDisableNow/);
   assert.match(maintenancePage, /maintenanceMessage/);
   for (const file of [
-    "index.html","login.html","register.html","reset-password.html","email-confirmed.html",
+    "index.html","login/index.html","register/index.html","reset-password/index.html","email-confirmed/index.html",
     "member-dashboard.html","your-order.html","inbox.html","worker.html","joki-matthew.html",
     "calculator-resource.html","requirements-city-hall.html","support-matthew.html",
     "admin/dashboard.html","admin/joki-progress.html"
@@ -555,7 +570,7 @@ test("Inbox send Edge Function fails closed during maintenance and requires an a
 });
 
 test("login and homepage initialize Supabase only once per page", () => {
-  for (const page of ["login.html", "index.html"]) {
+  for (const page of ["login/index.html", "index.html"]) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     assert.equal((html.match(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2/g) || []).length, 1, page + " should load Supabase JS once");
     assert.equal((html.match(/(?:src=["'])\/?assets\/js\/supabase\.js/g) || []).length, 1, page + " should initialize one Supabase client");
@@ -619,8 +634,8 @@ test("admin helper hardening requires an active profile and preserves a locked s
 test("every public/private route loads Supabase before the maintenance gate", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
-    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login.html", "member-dashboard.html", "register.html",
+    "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login/index.html", "member-dashboard.html", "register.html",
     "requirements-city-hall.html", "reset-password.html", "support-matthew.html",
     "worker.html", "your-order.html", "maintenance.html"
   ];
