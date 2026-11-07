@@ -99,7 +99,7 @@
       // Satu pintu autentikasi: gunakan halaman login.html yang baru.
       // Jangan tampilkan formulir login lama yang masih tertanam di index.html.
       site?.classList.add("hidden");
-      window.location.replace("/login.html");
+      window.location.replace("/login/");
       return;
     }
 
@@ -157,7 +157,7 @@
     if (sessionStorage.getItem("matthewVisitorName")) {
       sessionStorage.removeItem("matthewVisitorName");
       localStorage.removeItem("matthewLastActivity");
-      window.location.replace("login.html");
+      window.location.replace("/login/");
       return;
     }
     const { error } = await db.auth.signOut();
