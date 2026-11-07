@@ -4,92 +4,197 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#071326">
-  <meta name="description" content="Masuk ke MATTHEW JOKI untuk mengelola pesanan, melacak progres, dan mengakses layanan member. Tamu juga dapat menjelajahi website dengan akses terbatas.">
-  <title>Login &amp; Visitor Access | MATTHEW JOKI</title>
-  <link rel="stylesheet" href="assets/css/auth.css?v=20261105-login-final">
-  <link rel="stylesheet" href="assets/css/modern-theme.css?v=20261105">
-  <link rel="stylesheet" href="assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
-  <link rel="stylesheet" href="assets/css/login-layout.css?v=20261105-1">
-  <link rel="stylesheet" href="assets/css/auth-blue.css?v=20261106-1">
+  <meta name="theme-color" content="#0b132b">
+  <meta name="description" content="Login member atau masuk sebagai tamu ke MATTHEW JOKI.">
+  <title>Login | MATTHEW JOKI</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/supabase.js"></script>
-  <script defer src="assets/js/auth.js?v=20261106-home-redirect"></script>
+  <script defer src="assets/js/auth.js?v=20261107-matthew-login"></script>
   <script defer src="assets/js/session-manager.js"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#0b132b;--panel:#111c44;--border:#1e2d5a;--blue:#3b82f6;--muted:#94a3b8;--text:#e8eefc}
+    *{box-sizing:border-box}
+    html,body{min-height:100%;margin:0}
+    body{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    button,input{font:inherit}
+    .login-card{width:min(100%,400px);padding:clamp(22px,6vw,32px);background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:0 22px 65px rgba(0,0,0,.28)}
+    .brand{text-align:center;margin-bottom:23px}
+    .brand h1{font-size:22px;letter-spacing:.13em;margin:0 0 17px;font-weight:800}
+    .tabs{display:flex;gap:4px;padding:4px;background:#20283e;border:1px solid #303a54;border-radius:12px}
+    .tab{flex:1;border:0;border-radius:9px;padding:10px 12px;background:transparent;color:#aab6cc;font-size:14px;font-weight:700;cursor:pointer;transition:background .3s,color .3s,box-shadow .3s}
+    .tab[aria-selected=true]{background:#3b82f6;color:white;box-shadow:0 4px 12px rgba(59,130,246,.25)}
+    .panel-stage{display:grid;margin-top:22px}
+    .tab-panel{grid-area:1/1;min-width:0;opacity:0;transform:translateY(9px);visibility:hidden;pointer-events:none;transition:opacity .3s ease,transform .3s ease,visibility .3s}
+    .tab-panel.active{opacity:1;transform:translateY(0);visibility:visible;pointer-events:auto}
+    .field{margin-bottom:15px}
+    label.field-label{display:block;margin:0 0 8px;color:#dce6fa;font-size:13px;font-weight:650}
+    .input-wrap{position:relative}
+    .input-icon{position:absolute;left:14px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:#7184a9;pointer-events:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .input-wrap input{width:100%;height:48px;padding:0 44px 0 43px;border:1px solid #26365f;border-radius:10px;outline:none;background:#0b132b;color:#edf3ff;font-size:14px;transition:border-color .2s,box-shadow .2s}
+    .input-wrap input::placeholder{color:#64748b;opacity:1}
+    .input-wrap input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+    .password-toggle{position:absolute;right:8px;top:50%;display:grid;place-items:center;width:34px;height:34px;transform:translateY(-50%);border:0;border-radius:7px;background:transparent;color:#8ea2c8;cursor:pointer}
+    .password-toggle:hover{background:#1b2a50;color:#dce8ff}
+    .password-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .options{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:1px 0 17px}
+    .remember{display:flex;align-items:center;gap:8px;color:#aab8d1;font-size:11px;cursor:pointer}
+    .remember input{position:absolute;width:1px;height:1px;opacity:0}
+    .checkmark{width:16px;height:16px;display:grid;place-items:center;flex:none;border:1px solid #64748b;border-radius:4px;color:transparent;font-size:12px;line-height:1;transition:.18s}
+    .remember input:checked+.checkmark{background:#102d60;border-color:#3b82f6;color:#60a5fa}
+    .remember input:focus-visible+.checkmark{outline:3px solid rgba(59,130,246,.25);outline-offset:2px}
+    a{color:#60a5fa;text-decoration:none}
+    a:hover{text-decoration:underline;color:#93c5fd}
+    .small-link{font-size:12px;white-space:nowrap}
+    .primary,.guest-button{width:100%;min-height:47px;border:0;border-radius:10px;color:white;font-size:13px;font-weight:800;letter-spacing:.045em;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s}
+    .primary{background:linear-gradient(90deg,#3b82f6,#2563eb);box-shadow:0 7px 18px rgba(37,99,235,.22)}
+    .guest-button{background:linear-gradient(90deg,#6366f1,#4f46e5);box-shadow:0 7px 18px rgba(79,70,229,.2)}
+    .primary:hover,.guest-button:hover{transform:translateY(-2px);box-shadow:0 11px 24px rgba(37,99,235,.3)}
+    .primary:active,.guest-button:active{transform:translateY(0)}
+    .primary:disabled,.guest-button:disabled{opacity:.7;cursor:wait;transform:none;box-shadow:none}
+    #error-message{display:none;margin:0 0 13px;padding:9px 11px;border:1px solid rgba(239,68,68,.45);border-radius:8px;background:rgba(239,68,68,.1);color:#f87171;font-size:12px;line-height:1.45}
+    #authMessage{margin:10px 0 0;font-size:12px;line-height:1.5;color:#fca5a5}
+    #authMessage.success{color:#86efac}
+    .below{margin:15px 0 0;text-align:center;color:#9aa9c4;font-size:12px}
+    .guest-note{margin:0 0 16px;color:#9aa9c4;font-size:12px;line-height:1.5}
+    .admin-help{margin:19px 0 0;padding-top:15px;border-top:1px solid var(--border);text-align:center;color:#8191b0;font-size:11px}
+    @media(max-height:650px){body{padding:10px}.login-card{padding:19px 22px}.brand{margin-bottom:15px}.brand h1{margin-bottom:12px}.panel-stage{margin-top:16px}.field{margin-bottom:11px}.options{margin-bottom:12px}.admin-help{margin-top:13px;padding-top:11px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+  </style>
 </head>
-<body class="auth-page auth-experience login-auth-page">
-  <main class="auth-shell login-experience">
-    <section class="auth-container login-page" aria-label="Akses MATTHEW JOKI">
-      <div class="login-story">
-        <a class="login-brand" href="login.html" aria-label="MATTHEW JOKI">
-          <span class="brand-mark"><img src="assets/images/brand/logo-matthew.png?v=20261105" alt="Logo Matthew"></span>
-          <span class="brand-copy"><strong>MATTHEW JOKI</strong><small>OFFICIAL SERVICE PORTAL</small></span>
-        </a>
-        <p class="eyebrow">MATTHEW.RMN <span>·</span> TRUSTED ROK SERVICE</p>
-        <h1>Selamat Datang<span class="headline-accent">.</span></h1>
-        <p class="intro">Masuk untuk mengelola pesanan joki, memantau progres, melihat invoice, dan menerima pesan resmi dari Matthew.</p>
-        <div class="login-benefits" aria-label="Keunggulan member">
-          <article class="login-benefit"><span class="benefit-index">01</span><span><strong>Akun terverifikasi</strong><small>Login dengan email yang sudah diverifikasi.</small></span></article>
-          <article class="login-benefit"><span class="benefit-index">02</span><span><strong>Lacak progres pesanan</strong><small>Pantau status pekerjaan dan pembaruan admin.</small></span></article>
-          <article class="login-benefit"><span class="benefit-index">03</span><span><strong>Inbox resmi Matthew</strong><small>Pesan, pengumuman, dan informasi layanan.</small></span></article>
-        </div>
-        <div class="login-trust"><span class="trust-dot"></span><span>100+ transaksi telah dikerjakan tanpa keluhan</span></div>
+<body>
+  <main class="login-card" aria-label="Akses MATTHEW JOKI">
+    <header class="brand">
+      <h1>MATTHEW JOKI</h1>
+      <div class="tabs" role="tablist" aria-label="Pilih jenis akses">
+        <button class="tab" id="memberTab" type="button" role="tab" aria-selected="true" aria-controls="memberPanel">Member</button>
+        <button class="tab" id="guestTab" type="button" role="tab" aria-selected="false" aria-controls="guestPanel">Tamu</button>
       </div>
+    </header>
 
-      <div class="login-access">
-        <section class="login-panel" aria-labelledby="loginHeading">
-          <form id="loginForm" class="auth-form">
-            <div class="panel-heading"><span class="panel-kicker">AREA MEMBER</span><h2 class="section-title" id="loginHeading">Masuk ke Akun</h2><p>Gunakan email dan password terdaftar.</p></div>
-            <label for="loginEmail">Email</label>
-            <input id="loginEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
-            <label for="loginPassword">Password</label>
-            <div class="password-wrap">
-              <input id="loginPassword" name="password" type="password" placeholder="Minimal 6 karakter" autocomplete="current-password" minlength="6" required>
-              <button class="password-toggle" type="button" data-toggle-password="loginPassword" aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+    <div class="panel-stage">
+      <section class="tab-panel active" id="memberPanel" role="tabpanel" aria-labelledby="memberTab">
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label class="field-label" for="loginEmail">Email</label>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+              <input id="loginEmail" name="email" type="email" placeholder="Masukkan email Anda" autocomplete="email" required>
             </div>
-            <label class="remember-row" for="rememberMe"><input id="rememberMe" type="checkbox" checked> <span>Ingat email saya di perangkat ini</span></label>
-            <div class="login-options">
-              <p class="remember-note">Email akan diingat. Password tidak disimpan. Sesi akan berakhir setelah 30 menit tanpa aktivitas.</p>
-              <div class="login-links">
-                <a class="forgot-link" href="reset-password.html">Lupa kata sandi?</a>
-                <a class="register-cta" href="register.html">
-                  <span class="register-cta-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20c.3-3.4 2.4-5.5 6.2-5.5 2.2 0 3.9.7 4.9 2"/><path d="M18 8v8M14 12h8"/></svg></span>
-                  <span class="register-cta-copy"><strong>Daftar sekarang</strong><small>Buat akun Matthew Joki</small></span>
-                  <svg class="register-cta-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-              </div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="loginPassword">Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>
+              <input id="loginPassword" name="password" type="password" placeholder="Masukkan password Anda" autocomplete="current-password" minlength="6" required>
+              <button class="password-toggle" type="button" data-toggle-password="loginPassword" aria-label="Tampilkan password" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
+              </button>
             </div>
-            <button id="loginButton" type="submit">LOGIN</button>
-          </form>
-        </section>
+          </div>
+          <div class="options">
+            <label class="remember" for="rememberMe">
+              <input id="rememberMe" type="checkbox">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span>Ingat saya di perangkat ini</span>
+            </label>
+            <a class="small-link" href="reset-password.html">Lupa kata sandi?</a>
+          </div>
+          <div id="error-message" role="alert" aria-live="polite"></div>
+          <button class="primary" id="loginButton" type="submit">LOGIN</button>
+          <p class="below">Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
+        </form>
+      </section>
 
-        <div class="guest-divider"><span>ATAU JELAJAHI TANPA AKUN</span></div>
-        <section class="visitor-panel" aria-labelledby="visitorHeading">
-          <div class="visitor-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM6 20c.4-4 2.4-6 6-6s5.6 2 6 6H6Z"/></svg></div>
-          <h2 id="visitorHeading">Jelajahi sebagai Tamu</h2>
-          <p class="visitor-note">Belum punya akun? Kamu tetap bisa menjelajahi website sebagai tamu tanpa email dan password.</p>
-          <form id="visitorForm" class="auth-form visitor-form">
-            <label for="visitorName">Nama pengunjung</label>
-            <input id="visitorName" name="visitorName" type="text" placeholder="Contoh: Matthew" autocomplete="name" minlength="2" maxlength="60" required>
-            <button id="visitorButton" type="submit">MASUK SEBAGAI TAMU</button>
-          </form>
-          <details class="visitor-help">
-            <summary>Bantuan akses tamu</summary>
-            <ul>
-              <li>Cukup isi nama, minimal 2 karakter.</li>
-              <li>Tidak perlu mendaftar atau membuat password.</li>
-              <li>Akses tamu berakhir setelah 30 menit tidak aktif.</li>
-              <li>Tamu tidak dapat membuat pesanan atau memakai voucher.</li>
-            </ul>
-          </details>
-        </section>
-        <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
-        <p class="auth-link help-link">Butuh bantuan? <a href="mailto:ownrxcebsb@gmail.com?subject=Bantuan%20Login%20Matthew%20Joki">Hubungi admin</a></p>
-        <div class="security-note">🔒 Jangan bagikan password kepada siapa pun. Verifikasi email membantu menjaga keamanan akunmu.</div>
-      </div>
-    </section>
-    <footer>© <span data-current-year>2026</span> MATTHEW JOKI · OFFICIAL SERVICE PORTAL</footer>
+      <section class="tab-panel" id="guestPanel" role="tabpanel" aria-labelledby="guestTab" aria-hidden="true">
+        <form id="visitorForm">
+          <div class="field">
+            <label class="field-label" for="visitorName">Nama Pengunjung</label>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.5-4 3-6 7.5-6s7 2 7.5 6"/></svg>
+              <input id="visitorName" name="visitorName" type="text" placeholder="Masukkan nama Anda" autocomplete="name" minlength="2" maxlength="60" required>
+            </div>
+          </div>
+          <button class="guest-button" id="visitorButton" type="submit">MASUK SEBAGAI TAMU</button>
+          <p class="below">Ingin melacak pesanan? <a href="#member" id="backToMember">Login Member</a></p>
+        </form>
+      </section>
+    </div>
+    <p id="authMessage" role="status" aria-live="polite"></p>
+    <p class="admin-help">Mengalami kendala? <a href="mailto:ownrxcebsb@gmail.com?subject=Bantuan%20Login%20Matthew%20Joki">Hubungi Admin</a></p>
   </main>
+
+  <script>
+    (() => {
+      const memberTab = document.getElementById('memberTab');
+      const guestTab = document.getElementById('guestTab');
+      const memberPanel = document.getElementById('memberPanel');
+      const guestPanel = document.getElementById('guestPanel');
+      const errorBox = document.getElementById('error-message');
+      const authMessage = document.getElementById('authMessage');
+
+      function activateTab(tab) {
+        const isMember = tab === 'member';
+        memberTab.setAttribute('aria-selected', String(isMember));
+        guestTab.setAttribute('aria-selected', String(!isMember));
+        memberPanel.classList.toggle('active', isMember);
+        guestPanel.classList.toggle('active', !isMember);
+        memberPanel.setAttribute('aria-hidden', String(!isMember));
+        guestPanel.setAttribute('aria-hidden', String(isMember));
+        if (isMember) document.getElementById('loginEmail').focus({preventScroll:true});
+        else document.getElementById('visitorName').focus({preventScroll:true});
+        errorBox.style.display = 'none';
+      }
+      memberTab.addEventListener('click', () => activateTab('member'));
+      guestTab.addEventListener('click', () => activateTab('guest'));
+      document.getElementById('backToMember').addEventListener('click', event => {
+        event.preventDefault();
+        activateTab('member');
+      });
+
+      document.querySelectorAll('[data-toggle-password]').forEach(button => {
+        button.addEventListener('click', () => {
+          const input = document.getElementById(button.dataset.togglePassword);
+          const visible = input.type === 'password';
+          input.type = visible ? 'text' : 'password';
+          button.setAttribute('aria-label', visible ? 'Sembunyikan password' : 'Tampilkan password');
+          button.setAttribute('aria-pressed', String(visible));
+          button.innerHTML = visible
+            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.9A10.8 10.8 0 0 1 12 5.8c6.4 0 9.8 6.2 9.8 6.2a16 16 0 0 1-3.1 3.7M6.2 6.2C3.6 8 2.2 12 2.2 12s3.4 6.2 9.8 6.2c1.1 0 2.1-.2 3-.5"/></svg>'
+            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>';
+        });
+      });
+
+      // Auth logic stays connected to the site's existing Supabase authentication.
+      // Mirror backend errors into the compact alert above the member login button.
+      const observer = new MutationObserver(() => {
+        const text = authMessage.textContent.trim();
+        const isError = authMessage.classList.contains('error') || (text && !authMessage.classList.contains('success'));
+        errorBox.textContent = text;
+        errorBox.style.display = isError && text ? 'block' : 'none';
+      });
+      observer.observe(authMessage, {childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class']});
+
+      document.getElementById('loginForm').addEventListener('submit', () => {
+        const button = document.getElementById('loginButton');
+        if (!document.getElementById('loginForm').checkValidity()) return;
+        button.disabled = true;
+        button.style.opacity = '.7';
+        button.textContent = 'Memproses...';
+      });
+      document.getElementById('visitorForm').addEventListener('submit', () => {
+        const button = document.getElementById('visitorButton');
+        if (!document.getElementById('visitorForm').checkValidity()) return;
+        button.disabled = true;
+        button.style.opacity = '.7';
+        button.textContent = 'Memproses...';
+      });
+
+      if (new URLSearchParams(location.search).get('reason') === 'timeout') {
+        errorBox.textContent = 'Sesi berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.';
+        errorBox.style.display = 'block';
+      }
+    })();
+  </script>
   <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
 </html>
