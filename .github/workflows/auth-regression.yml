@@ -2,7 +2,6 @@ name: Authentication regression tests
 
 on:
   pull_request:
-    branches: [main]
     paths:
       - "assets/js/auth.js"
       - "assets/js/access-guard.js"
@@ -20,6 +19,11 @@ on:
       - "register.html"
       - "reset-password.html"
       - "email-confirmed.html"
+      - "login/**"
+      - "register/**"
+      - "reset-password/**"
+      - "email-confirmed/**"
+      - "404.html"
       - "member-dashboard.html"
       - "worker.html"
       - "inbox.html"

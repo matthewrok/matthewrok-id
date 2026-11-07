@@ -20,7 +20,7 @@
     if (finished) return;
     finished = true;
     const next = location.pathname + location.search + location.hash;
-    location.replace("/login.html?next=" + encodeURIComponent(next));
+    location.replace("/login/?next=" + encodeURIComponent(next));
   };
 
   async function verifyAccess() {
@@ -56,7 +56,7 @@
     if (!rule.roles.includes(role)) {
       if (!finished) {
         finished = true;
-        location.replace("/index.html?access=denied");
+        location.replace("/?access=denied");
       }
       return;
     }
