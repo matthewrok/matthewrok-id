@@ -39,6 +39,8 @@
       .tab-content .grid{margin-top:14px}
     }
     @media(prefers-reduced-motion:reduce){.tab-content.active{animation:none}.admin-tab-menu .tab-btn{transition:none}}
+
+    .member-filters{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;margin:14px 0}.member-filters label{display:grid;gap:5px;color:#9fb3d9;font-size:11px;font-weight:700}.member-filters input,.member-filters select{width:100%;min-width:0;min-height:40px;padding:9px 11px;border:1px solid #294477;border-radius:9px;background:#0b1730;color:#e8f0ff;font:12px inherit}.filter-reset{min-height:40px;padding:8px 13px;border:1px solid #31558e;border-radius:9px;background:#142b50;color:#dbeafe;font-weight:700;cursor:pointer}.order-manager-frame{display:block;width:100%;min-height:950px;border:1px solid #203b69;border-radius:14px;background:#071326}.embedded-admin-tools{margin:12px 0}.embedded-admin-tools .manage-progress-cta{max-width:100%;min-height:64px;margin:0}.order-manager-frame{height:1200px}@media(max-width:700px){.member-filters{grid-template-columns:1fr 1fr}.member-filters label:first-child{grid-column:1/-1}.filter-reset{width:100%}.order-manager-frame{min-height:1100px}}
   </style>
 </head>
 <body>
@@ -80,13 +82,13 @@
 
       <!-- TAB PESANAN -->
       <div id="tab-pesanan" class="tab-content" role="tabpanel" aria-labelledby="adminTabPesanan" aria-hidden="true">
-        <section class="section" id="orderManagement"><h2>01 · Pesanan & Progres</h2><p>Kelola token, progres pesanan, serta moderasi ulasan client.</p><a class="manage-progress-cta" href="/admin/joki-progress.html"><span aria-hidden="true">♛</span><span><strong>Buka Kelola Progres Client</strong><small>Kelola pesanan, token, progres, dan rating client</small></span><span class="cta-arrow" aria-hidden="true">→</span></a></section>
+        <section class="section" id="orderManagement"><h2>01 · Pesanan & Progres</h2><p>Kelola pesanan, token pelacakan, progres pengerjaan, dan moderasi ulasan langsung dari tab ini.</p><div class="embedded-admin-tools"><a class="manage-progress-cta" href="/admin/joki-progress.html" target="_blank" rel="noopener"><span aria-hidden="true">↗</span><span><strong>Buka di halaman penuh</strong><small>Gunakan tampilan terpisah jika membutuhkan ruang lebih luas</small></span><span class="cta-arrow" aria-hidden="true">↗</span></a></div><iframe id="orderManagerFrame" class="order-manager-frame" src="/admin/joki-progress.html?embed=1" title="Pengelolaan pesanan dan progres client" loading="lazy"></iframe></section>
       </div>
 
       <!-- TAB PENGGUNA -->
       <div id="tab-pengguna" class="tab-content" role="tabpanel" aria-labelledby="adminTabPengguna" aria-hidden="true">
         <section class="section" id="roleManagement"><h2>02 · Pengaturan Role</h2><p>Promosikan akun ke role <strong>SULTAN</strong>, <strong>MATTHEW</strong>, atau <strong>PELANGGAN</strong>. Perubahan hanya dapat dilakukan oleh admin dan tidak dapat digunakan untuk mengubah role admin.</p><div class="table-responsive table-wrap"><table><thead><tr><th>Nama</th><th>ID Akun</th><th>Role Saat Ini</th><th>Promote Member</th></tr></thead><tbody id="membersBody"><tr><td colspan="4">Memuat anggota…</td></tr></tbody></table></div></section>
-        <section class="section" id="userManagement"><h2>04 · Manajemen Pengguna</h2><p>Kelola status akun tanpa menghapus akun atau riwayat pesanan. Akun admin dan akun sendiri dilindungi.</p><div class="table-responsive table-wrap"><table><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="managedMembersBody"><tr><td colspan="5">Memuat pengguna…</td></tr></tbody></table></div></section>
+        <section class="section" id="userManagement"><h2>04 · Manajemen Pengguna</h2><p>Kelola status akun tanpa menghapus akun atau riwayat pesanan. Akun admin dan akun sendiri dilindungi.</p><div class="member-filters"><label for="memberSearch">Cari nama / email<input id="memberSearch" type="search" placeholder="Ketik nama atau email…"></label><label for="memberRoleFilter">Role<select id="memberRoleFilter"><option value="">Semua role</option><option>admin</option><option>MATTHEW</option><option>SULTAN</option><option>PELANGGAN</option><option>WORKER</option><option>member</option><option>Visitor</option></select></label><label for="memberStatusFilter">Status<select id="memberStatusFilter"><option value="">Semua status</option><option value="active">Aktif</option><option value="suspended">Ditangguhkan</option></select></label><button id="clearMemberFilters" class="filter-reset" type="button">Reset filter</button></div><div class="table-responsive table-wrap"><table><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="managedMembersBody"><tr><td colspan="5">Memuat pengguna…</td></tr></tbody></table></div></section>
       </div>
 
       <!-- TAB PESAN & PROMO -->
@@ -163,6 +165,8 @@
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
+
+    document.addEventListener('DOMContentLoaded',()=>{const frame=document.getElementById('orderManagerFrame');if(!frame)return;const resize=()=>{try{const doc=frame.contentDocument;if(!doc)return;const update=()=>{const h=Math.max(doc.body?.scrollHeight||0,doc.documentElement?.scrollHeight||0,900);frame.style.height=(h+24)+'px';};update();if(doc.body&&'ResizeObserver'in window){const observer=new ResizeObserver(update);observer.observe(doc.body);if(doc.documentElement)observer.observe(doc.documentElement);}doc.addEventListener('load',update,true);setTimeout(update,500);setTimeout(update,1500);}catch(e){frame.style.height='1400px';}};frame.addEventListener('load',resize);});
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-admin-tab]').forEach(link => {
         link.addEventListener('click', event => {
