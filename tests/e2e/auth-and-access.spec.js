@@ -24,7 +24,8 @@ async function mockSupabase(page, mode) {
                 getUser: async function () {
                   return { data: { user: { id: "e2e-user", email: "member@example.test", email_confirmed_at: "2026-01-01T00:00:00Z" } }, error: null };
                 },
-                signOut: async function () { return { error: null }; }
+                signOut: async function () { return { error: null }; },
+                onAuthStateChange: function () { return { data: { subscription: { unsubscribe: function () {} } } }; }
               },
               from: function () {
                 return {
