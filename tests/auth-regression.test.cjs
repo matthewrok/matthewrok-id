@@ -433,7 +433,7 @@ test("legacy order RPC enforces the same active member-role allowlist during com
 
 test("all website routes use the approved blue/navy browser theme colors", () => {
   const pages = [
-    "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
+    "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
     "login/index.html", "member-dashboard.html", "register/index.html",
     "requirements-city-hall.html", "reset-password/index.html",
@@ -447,6 +447,27 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
   }
 });
 
+
+test("Shadow Reign calculator preserves its approved dark palette and calculator UI contract", () => {
+  const html = fs.readFileSync(path.join(ROOT, "calculator-resource.html"), "utf8");
+  assert.match(html, /name="theme-color" content="#050505"/);
+  assert.doesNotMatch(html, /blue-theme\\.css/);
+  for (const id of [
+    "level", "tax", "food", "wood", "stone", "gold", "activeResourceName",
+    "sharedQuickButtons", "calculate", "clear", "result", "resourceDetails",
+    "grossResult", "taxResult", "netResult", "grossLabel", "taxLabel",
+    "netLabel", "grossBar", "taxBar", "netBar"
+  ]) {
+    assert.equal((html.match(new RegExp('id="' + id + '"', "g")) || []).length, 1, id + " must exist exactly once");
+  }
+  assert.match(html, /grid-template-columns: 1fr 1fr/);
+  assert.match(html, /\\.resource-card\\.active/);
+  assert.match(html, /\\.result-section\\.show/);
+  assert.match(html, /result\\.classList\\.toggle\\("show"/);
+  assert.match(html, /item\\.classList\\.toggle\\("active"/);
+  assert.match(html, /calculator\\.js\\?v=20261104-1/);
+  assert.doesNotMatch(html, /Cek Progres|Matthew-Raditya|joki-matthew\\.html/);
+});
 
 test("all pages load the current shared blue theme cache version", () => {
   const pages = [
