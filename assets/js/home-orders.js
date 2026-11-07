@@ -62,6 +62,8 @@
     return blocked?(state.message||"Pemesanan sedang dinonaktifkan sementara oleh admin."):"";
   }
   async function openOrder(code){
+    // Accept the lowercase product identifiers used by the supplied homepage template.
+    code=String(code||"").trim().toUpperCase();
     const p=products[code];
     if(!p){console.error("[Joki Order] Kode produk tidak valid:",code);return;}
     const identity=await resolveIdentity();
