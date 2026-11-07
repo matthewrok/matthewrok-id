@@ -233,6 +233,24 @@ test("access guard redirects unauthenticated and inactive accounts to login", as
 });
 
 
+
+test("member onboarding dialog is mounted once in the dashboard, outside invoice markup", () => {
+  const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  const dialog = html.indexOf('<div id="memberOnboarding"');
+  assert.notEqual(dialog, -1, "dashboard should contain the onboarding dialog");
+  assert.equal((html.match(/id="memberOnboarding"/g) || []).length, 1, "dialog must appear only once");
+  const lastOpenScript = html.lastIndexOf("<script", dialog);
+  const lastClosedScript = html.lastIndexOf("</script>", dialog);
+  assert.ok(lastClosedScript > lastOpenScript, "dialog markup must be outside JavaScript and invoice template strings");
+  assert.equal((html.match(/member-onboarding\.js/g) || []).length, 1, "onboarding script must be loaded exactly once");
+  assert.ok(html.indexOf('member-onboarding.js') > dialog, "onboarding behavior should load after its dialog markup");
+
+  const script = fs.readFileSync(path.join(ROOT, "assets/js/member-onboarding.js"), "utf8");
+  assert.doesNotThrow(() => new Function(script));
+  assert.match(script, /event\.key === "Escape"/);
+  assert.match(script, /event\.key === "Tab"/);
+});
+
 test("session manager cancels inactivity timer when Auth session is cleared", async () => {
   let ready;
   let authStateListener;
