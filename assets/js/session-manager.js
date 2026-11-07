@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sessionStorage.getItem("matthewVisitorName")) sessionStorage.removeItem("matthewVisitorName");
     else await client.auth.signOut();
     localStorage.removeItem(activityKey);
-    if (!loginPage) location.replace("login.html?reason=timeout");
+    if (!loginPage) location.replace("/login/?reason=timeout");
   }
 
   async function initialize() {
