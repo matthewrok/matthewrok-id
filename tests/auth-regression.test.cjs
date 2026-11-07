@@ -435,7 +435,7 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login/index.html", "member-dashboard.html", "register/index.html",
+    "login/index.html", "register/index.html",
     "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
@@ -445,6 +445,8 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
     const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
     assert.ok(approved.has(theme), page + " has non-blue theme color: " + theme);
   }
+  const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.match(shadowReign, /name="theme-color" content="#050505"/);
 });
 
 
@@ -452,7 +454,7 @@ test("all pages load the current shared blue theme cache version", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login/index.html", "member-dashboard.html", "register/index.html",
+    "login/index.html", "register/index.html",
     "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
@@ -460,6 +462,8 @@ test("all pages load the current shared blue theme cache version", () => {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13-mm2/, page + " should load the current blue theme");
   }
+  const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.doesNotMatch(shadowReign, /blue-theme\.css/, "Shadow Reign dashboard keeps its approved black/gold palette");
 });
 
 
@@ -679,4 +683,33 @@ test("every public/private route loads Supabase before the maintenance gate", ()
     assert.match(html,/assets\/js\/supabase\.js/,page+" must initialize Supabase");
     assert.match(html,/maintenance-status\.js/,page+" must load the maintenance gate");
   }
+});
+
+
+test("Shadow Reign member dashboard preserves its tab layout, mapped data targets, and Supabase flows", () => {
+  const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  for (const id of [
+    "memberName", "profileEmail", "totalOrders", "completedOrders", "activeOrders",
+    "cancelledOrders", "memberLevel", "levelBar", "recentOrders", "notifications",
+    "reviewArea", "tab-pesanan", "tab-notif", "tab-ulasan", "dashboardContent", "loadState"
+  ]) {
+    assert.equal((html.match(new RegExp('id="' + id + '"', "g")) || []).length, 1, id + " must exist exactly once");
+  }
+  for (const source of [
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "/assets/js/supabase.js",
+    "/assets/js/access-guard.js?v=20261107-authfix1",
+    "/assets/js/session-manager.js?v=20261107-authfix1"
+  ]) assert.ok(html.includes(source), "missing required head script " + source);
+  for (const rpc of ["list_my_joki_orders", "get_my_reviewed_order_ids", "submit_member_joki_review"]) {
+    assert.ok(html.includes(rpc), "missing existing member RPC " + rpc);
+  }
+  assert.match(html, /function switchTab/);
+  assert.match(html, /getSession\(\)/);
+  assert.match(html, /getUser\(\)/);
+  assert.match(html, /member-onboarding\.js/);
+  assert.match(html, /maintenance-status\.js/);
+  const inlineScripts = [...html.matchAll(/<script(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/g)];
+  assert.equal(inlineScripts.length, 1);
+  assert.doesNotThrow(() => new Function(inlineScripts[0][1]));
 });
