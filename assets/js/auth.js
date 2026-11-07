@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function safeStorageGet(storageName, key) {
-    try { return window[storageName].getItem(key);
+    try { return window[storageName].getItem(key); }
     catch (error) { console.warn("[MATTHEW auth] Storage read unavailable:", error); return null; }
   }
   function safeStorageSet(storageName, key, value) {
