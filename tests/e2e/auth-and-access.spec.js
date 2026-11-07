@@ -2,6 +2,7 @@ const { test, expect } = require("@playwright/test");
 
 async function mockSupabase(page, mode) {
   await page.addInitScript((value) => { window.__mockSupabaseMode = value; }, mode);
+  await page.route("https://browser.sentry-cdn.com/**", route => route.fulfill({ status: 200, contentType: "application/javascript", body: "window.Sentry = { init: function () {} };" }));
   await page.route("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2", route =>
     route.fulfill({
       status: 200,
@@ -47,6 +48,16 @@ async function mockSupabase(page, mode) {
     })
   );
 }
+
+test("login sukses mengarahkan pengguna ke beranda", async ({ page }) => {
+  await mockSupabase(page, "login-success");
+  await page.goto("/login.html");
+  await page.locator("#loginEmail").fill("member@example.test");
+  await page.locator("#loginPassword").fill("correct-password");
+  await page.locator("#loginForm button[type=submit]").click();
+
+  await expect(page).toHaveURL(/index\.html$/);
+});
 
 test("login menampilkan pesan ramah saat kredensial ditolak", async ({ page }) => {
   await mockSupabase(page, "login-failure");
