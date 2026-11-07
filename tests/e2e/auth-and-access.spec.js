@@ -34,6 +34,9 @@ async function mockSupabase(page, mode) {
                         return {
                           maybeSingle: async function () {
                             return { data: { role: mode === "non-admin" ? "member" : "admin", account_status: "active" }, error: null };
+                          },
+                          single: async function () {
+                            return { data: { role: "member", full_name: "E2E Member", account_status: "active" }, error: null };
                           }
                         };
                       }
