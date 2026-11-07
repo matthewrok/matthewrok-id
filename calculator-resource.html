@@ -1,169 +1,244 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#071326">
+<meta name="theme-color" content="#050505">
 <meta name="description" content="Hitung pajak Trading Post Rise of Kingdoms dan estimasi resource bersih dengan kalkulator Matthew Joki.">
-  <link rel="canonical" href="https://matthewrok.my.id/calculator-resource.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Matthew Joki">
-  <meta property="og:title" content="Resource Tax Calculator | Matthew Joki">
-  <meta property="og:description" content="Hitung pajak Trading Post Rise of Kingdoms dan estimasi resource bersih dengan kalkulator Matthew Joki.">
-  <meta property="og:url" content="https://matthewrok.my.id/calculator-resource.html">
-  <meta name="twitter:card" content="summary">
 <title>Resource Tax Calculator | Matthew Joki</title>
-<link rel="stylesheet" href="assets/css/calculator.css">
-<script defer src="assets/js/calculator.js?v=20261104-1"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/assets/js/supabase.js"></script>
-  <script defer src="/assets/js/session-manager.js"></script>
-  <link rel="stylesheet" href="assets/css/modern-theme.css">
-  <link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
-  <script defer src="/assets/js/global-menu.js?v=20261104-11"></script>
-<link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
+
+<style>
+    :root {
+        --bg-main: #050505;
+        --bg-card: #0a0a0a;
+        --bg-input: #121212;
+        --text-main: #f3f4f6;
+        --text-muted: #9ca3af;
+        --border-color: #262626;
+        --accent-gold: #d4af37;
+        --accent-red: #ef4444;
+        --accent-green: #10b981;
+        --font-serif: 'Cinzel', serif;
+        --font-sans: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-sans); background-color: var(--bg-main); color: var(--text-main); padding-bottom: 40px; overflow-x: hidden; }
+    .container { max-width: 480px; margin: 0 auto; padding: 15px; }
+
+    /* HEADER */
+    .top-nav { display: flex; justify-content: flex-start; align-items: center; margin-bottom: 20px; }
+    .btn-back { color: var(--text-muted); text-decoration: none; font-size: 12px; font-weight: 500; transition: 0.3s; }
+    .btn-back:hover { color: white; }
+
+    /* TITLE */
+    .page-title { text-align: center; margin-bottom: 25px; }
+    .page-title h1 { font-family: var(--font-serif); font-size: 24px; margin-bottom: 8px; color: var(--accent-gold); line-height: 1.2; }
+    .page-title p { font-size: 12px; color: var(--text-muted); }
+
+    /* GRID LAYOUT */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; }
+    
+    /* FORM CONTROLS */
+    .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; display: block; }
+    .form-select { width: 100%; background: var(--bg-input); color: white; border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; font-family: var(--font-sans); font-size: 13px; outline: none; appearance: none; }
+    .form-select:focus { border-color: var(--accent-gold); }
+    .tax-value { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--accent-gold); text-align: center; margin-top: 5px; }
+
+    /* RESOURCE INPUTS */
+    .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .resource-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; transition: 0.2s; cursor: pointer; }
+    .resource-card.active { border-color: var(--accent-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); }
+    .resource-card label { display: block; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+    .resource-card input { width: 100%; background: transparent; border: none; color: white; font-size: 18px; font-weight: 600; outline: none; }
+    .resource-card input::placeholder { color: #444; }
+
+    /* QUICK ADD */
+    .quick-add-panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+    .quick-add-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .quick-add-heading strong { font-size: 12px; color: var(--accent-gold); }
+    .quick-add-heading span { font-size: 10px; color: var(--text-muted); }
+    .quick-add-heading b { color: white; }
+    .quick-add-panel p { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; }
+    .quick-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .quick-buttons button { background: var(--bg-input); border: 1px solid var(--border-color); color: white; padding: 10px 0; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .quick-buttons button:hover { background: #1a1a1a; border-color: var(--accent-gold); color: var(--accent-gold); }
+
+    /* ACTION BUTTONS */
+    .action-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+    .btn-primary { width: 100%; background: white; color: black; border: none; padding: 14px; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
+    .btn-primary:hover { background: #e5e7eb; }
+    .btn-secondary { width: 100%; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-secondary:hover { background: #1a1a1a; color: white; }
+
+    /* RESULT SECTION */
+    .result-section { display: none; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+    .result-section.show { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .result-section h2 { font-family: var(--font-serif); font-size: 18px; color: var(--accent-gold); text-align: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    #resourceDetails { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.6; }
+    
+    /* TOTAL CARD & GRAPH */
+    .total-card { background: var(--bg-input); border-radius: 6px; padding: 15px; margin-bottom: 20px; }
+    .total-card div { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .total-card strong { display: block; font-family: var(--font-serif); font-size: 20px; color: white; margin-top: 4px; }
+    
+    .graph-title { font-size: 12px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: center; }
+    .graph-row { margin-bottom: 12px; }
+    .graph-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; color: var(--text-muted); }
+    .graph-label b { color: white; }
+    .graph-track { height: 6px; background: #1a1a1a; border-radius: 10px; overflow: hidden; }
+    .graph-bar { height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; }
+    .gross-bar { background: var(--accent-gold); }
+    .tax-bar { background: var(--accent-red); }
+    .net-bar { background: var(--accent-green); }
+
+    /* FOOTER NOTE */
+    .note { font-size: 10px; color: #666; line-height: 1.6; text-align: justify; border-top: 1px solid var(--border-color); padding-top: 15px; }
+</style>
 </head>
-
 <body>
+
 <main class="container">
+    <!-- HEADER (Hanya tombol kembali) -->
+    <div class="top-nav">
+        <a class="btn-back" href="index.html">← Kembali</a>
+    </div>
 
-<a class="back" href="index.html">← Kembali ke Beranda</a>
-<a class="back" href="joki-matthew.html" style="margin-left:16px">Joki Matthew · Cek Progres →</a>
+    <div class="page-title">
+        <h1>Resource Tax<br>Calculator</h1>
+        <p>Rise of Kingdoms Trading Post</p>
+    </div>
 
-<section class="panel">
+    <!-- LEVEL & TAX -->
+    <div class="grid-2">
+        <div class="card">
+            <label class="card-label" for="level">Level Trading Post</label>
+            <select id="level" class="form-select"></select>
+        </div>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+            <label class="card-label" style="text-align: center;">Pajak</label>
+            <div class="tax-value" id="tax">23%</div>
+        </div>
+    </div>
 
-<h1>Resource Tax Calculator</h1>
+    <!-- RESOURCE INPUTS (Grid 2x2) -->
+    <div class="resource-grid">
+        <div class="resource-card active" data-resource="food">
+            <label for="food">FOOD</label>
+            <input id="food" class="resource-input" inputmode="numeric" placeholder="0">
+        </div>
+        <div class="resource-card" data-resource="wood">
+            <label for="wood">WOOD</label>
+            <input id="wood" class="resource-input" inputmode="numeric" placeholder="0">
+        </div>
+        <div class="resource-card" data-resource="stone">
+            <label for="stone">STONE</label>
+            <input id="stone" class="resource-input" inputmode="numeric" placeholder="0">
+        </div>
+        <div class="resource-card" data-resource="gold">
+            <label for="gold">GOLD</label>
+            <input id="gold" class="resource-input" inputmode="numeric" placeholder="0">
+        </div>
+    </div>
 
-<p class="subtitle">
-Rise of Kingdoms Trading Post<br>
-Hitung pajak dan resource bersih setiap jenis resource.
-</p>
+    <!-- QUICK ADD -->
+    <div class="quick-add-panel" aria-label="Penambah resource bersama">
+        <div class="quick-add-heading">
+            <strong>PENAMBAH RESOURCE</strong>
+            <span>Kolom aktif: <b id="activeResourceName">FOOD</b></span>
+        </div>
+        <p>Pilih kolom di atas, lalu tekan nominal di bawah. Angka hanya ditambahkan ke kolom yang dipilih.</p>
+        <div class="quick-buttons" id="sharedQuickButtons">
+            <button type="button" data-add="10000000">+10 JUTA</button>
+            <button type="button" data-add="100000000">+100 JUTA</button>
+            <button type="button" data-add="500000000">+500 JUTA</button>
+        </div>
+    </div>
 
-<label for="level">Level Trading Post</label>
-<select id="level"></select>
+    <!-- ACTIONS -->
+    <div class="action-group">
+        <button type="button" class="btn-primary" id="calculate">HITUNG RESOURCE</button>
+        <button type="button" class="btn-secondary" id="clear">CLEAR</button>
+    </div>
 
-<div class="tax-info">
-Persentase Pajak
-<strong id="tax">23%</strong>
-</div>
+    <!-- RESULT SECTION (Tersembunyi sampai dihitung) -->
+    <div class="result-section" id="result" aria-live="polite">
+        <h2>Hasil Perhitungan</h2>
+        <div id="resourceDetails"></div>
+        
+        <div class="total-card">
+            <div>Total Resource Awal</div>
+            <strong id="grossResult">0</strong>
+            <div style="margin-top:12px">Total Pajak</div>
+            <strong id="taxResult" style="color:var(--accent-red)">0</strong>
+            <div style="margin-top:12px">Total Resource Bersih</div>
+            <strong id="netResult" style="color:var(--accent-green)">0</strong>
+        </div>
 
-<div class="resource-grid">
+        <div class="graph-title">Grafik Perbandingan</div>
+        <div class="graph-row">
+            <div class="graph-label"><span>Resource Awal</span><b id="grossLabel">0</b></div>
+            <div class="graph-track"><div class="graph-bar gross-bar" id="grossBar"></div></div>
+        </div>
+        <div class="graph-row">
+            <div class="graph-label"><span>Pajak</span><b id="taxLabel">0</b></div>
+            <div class="graph-track"><div class="graph-bar tax-bar" id="taxBar"></div></div>
+        </div>
+        <div class="graph-row">
+            <div class="graph-label"><span>Resource Bersih</span><b id="netLabel">0</b></div>
+            <div class="graph-track"><div class="graph-bar net-bar" id="netBar"></div></div>
+        </div>
+    </div>
 
-<div class="resource-card">
-<label for="food">FOOD</label>
-<input id="food" class="resource-input" inputmode="numeric" placeholder="0">
-
-
-</div>
-
-<div class="resource-card">
-<label for="wood">WOOD</label>
-<input id="wood" class="resource-input" inputmode="numeric" placeholder="0">
-
-
-</div>
-
-<div class="resource-card">
-<label for="stone">STONE</label>
-<input id="stone" class="resource-input" inputmode="numeric" placeholder="0">
-
-
-</div>
-
-<div class="resource-card">
-<label for="gold">GOLD</label>
-<input id="gold" class="resource-input" inputmode="numeric" placeholder="0">
-
-
-</div>
-
-</div>
-
-<div class="quick-add-panel" aria-label="Penambah resource bersama">
-  <div class="quick-add-heading">
-    <strong>PENAMBAH RESOURCE</strong>
-    <span>Kolom aktif: <b id="activeResourceName">FOOD</b></span>
-  </div>
-  <p>Pilih kolom FOOD, WOOD, STONE, atau GOLD, lalu tekan nominal di bawah. Angka hanya ditambahkan ke kolom yang dipilih.</p>
-  <div class="quick-buttons" id="sharedQuickButtons">
-    <button type="button" data-add="10000000">+10 JUTA</button>
-    <button type="button" data-add="100000000">+100 JUTA</button>
-    <button type="button" data-add="500000000">+500 JUTA</button>
-  </div>
-</div>
-
-<button type="button" class="clear-button" id="clear">CLEAR</button>
-
-<button type="button" class="calculate-button" id="calculate">
-HITUNG RESOURCE
-</button>
-
-<div class="result" id="result" aria-live="polite">
-
-<h2>Hasil Perhitungan</h2>
-
-<div id="resourceDetails"></div>
-
-<div class="total-card">
-<div>Total Resource Awal</div>
-<strong id="grossResult">0</strong>
-
-<div style="margin-top:12px">Total Pajak</div>
-<strong id="taxResult" style="color:#ffaaa1">0</strong>
-
-<div style="margin-top:12px">Total Resource Bersih</div>
-<strong id="netResult">0</strong>
-</div>
-
-<div class="graph-title">Grafik Perbandingan Resource</div>
-
-<div class="graph-row">
-<div class="graph-label">
-<span>Resource Awal</span>
-<b id="grossLabel">0</b>
-</div>
-<div class="graph-track">
-<div class="graph-bar gross-bar" id="grossBar"></div>
-</div>
-</div>
-
-<div class="graph-row">
-<div class="graph-label">
-<span>Pajak</span>
-<b id="taxLabel">0</b>
-</div>
-<div class="graph-track">
-<div class="graph-bar tax-bar" id="taxBar"></div>
-</div>
-</div>
-
-<div class="graph-row">
-<div class="graph-label">
-<span>Resource Bersih</span>
-<b id="netLabel">0</b>
-</div>
-<div class="graph-track">
-<div class="graph-bar net-bar" id="netBar"></div>
-</div>
-</div>
-
-</div>
-
-<p class="note">
-* Pilih salah satu kolom resource, lalu gunakan satu penambah bersama untuk menambahkan angka ke kolom tersebut.
-Setiap klik menambahkan jumlah ke nilai sebelumnya.
-Perhitungan pajak menggunakan total resource gabungan.
-Hasil per jenis resource dibulatkan ke bawah.
-</p>
-
-</section>
-
-<footer>Matthew-Raditya</footer>
+    <p class="note">
+        * Pilih salah satu kolom resource, lalu gunakan satu penambah bersama untuk menambahkan angka ke kolom tersebut.
+        Setiap klik menambahkan jumlah ke nilai sebelumnya.
+        Perhitungan pajak menggunakan total resource gabungan.
+        Hasil per jenis resource dibulatkan ke bawah.
+    </p>
 
 </main>
 
-<script>document.querySelectorAll('[data-current-year]').forEach(el => el.textContent = new Date().getFullYear());</script>
-  <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
+<!-- JS Asli -->
+<script src="assets/js/calculator.js?v=20261104-1"></script>
+<script>
+    // Adapter UI: mempertahankan calculator.js asli sambil mengaktifkan class yang dipakai desain Shadow Reign.
+    (() => {
+        const result = document.getElementById("result");
+        if (result) {
+            const syncResultVisibility = () => {
+                result.classList.toggle("show", result.style.display === "block");
+            };
+            new MutationObserver(syncResultVisibility).observe(result, {
+                attributes: true,
+                attributeFilter: ["style"]
+            });
+            syncResultVisibility();
+        }
+
+        const cards = [...document.querySelectorAll(".resource-card")];
+        const selectCard = card => {
+            cards.forEach(item => item.classList.toggle("active", item === card));
+        };
+        cards.forEach(card => {
+            card.addEventListener("click", () => selectCard(card), true);
+            const input = card.querySelector(".resource-input");
+            input?.addEventListener("focus", () => selectCard(card), true);
+        });
+    })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/js/supabase.js"></script>
+<script src="/assets/js/session-manager.js"></script>
+<script src="/assets/js/global-menu.js?v=20261104-11"></script>
+<script src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
 </html>
