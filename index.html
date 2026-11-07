@@ -38,7 +38,16 @@
 <link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
   <link rel="stylesheet" href="/assets/css/home-blue-redesign.css?v=20261104-2">
   <link rel="stylesheet" href="/assets/css/floating-cs.css?v=20261104-2">
-  <style>#authScreen{display:none!important}</style>
+  <style>#authScreen{display:none!important}@media(max-width:700px){.app-bento-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app-hero .hero-content{max-width:100%}.app-hero .hero-trust{flex-wrap:wrap}.app-hero .app-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.app-hero .app-stats>div{padding:10px 8px}.app-hero .app-stats strong{font-size:1.1rem}.app-hero .app-stats span{font-size:.62rem}}.app-quick-access{padding-top:26px;padding-bottom:22px}.app-hero .app-hero-top{position:relative;z-index:1}.app-hero .app-stats{position:relative;z-index:1}
+</style>
+  <style id="app-like-home-redesign">
+:root{--bg-main:#060b19;--bg-card:#0f172a;--bg-card-hover:#1e293b;--text-main:#f8fafc;--text-muted:#94a3b8;--accent-blue:#3b82f6;--accent-green:#10b981;--border-color:#1e293b;--nav-height:65px}
+html{scroll-behavior:smooth;scroll-padding-top:88px}body{background:var(--bg-main);color:var(--text-main);padding-bottom:calc(var(--nav-height) + 28px)}#site{max-width:100%;overflow:clip}#site>header{position:sticky;top:0;z-index:100;background:rgba(6,11,25,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border-color)}#site>header .container.nav{min-height:68px}.brand{color:var(--text-main)}.brand small{color:var(--text-muted)}.app-auth-actions{display:flex;align-items:center;gap:7px;margin-left:auto}.app-auth-actions a{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:11px;text-decoration:none;font-size:.76rem;font-weight:800;white-space:nowrap}.app-login-link{color:#bfdbfe;border:1px solid rgba(96,165,250,.35)}.app-register-link{color:#fff;background:#2563eb;border:1px solid #3b82f6}#site:has(#navUser:not(:empty)) .app-auth-actions{display:none!important}.announcement-ticker{margin:10px auto;max-width:1180px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-card)}
+.app-hero{position:relative;isolation:isolate;padding:clamp(24px,5vw,56px);margin:24px auto 34px;border:1px solid rgba(59,130,246,.25);border-radius:30px;background:radial-gradient(ellipse at 85% 10%,rgba(59,130,246,.22),transparent 42%),linear-gradient(145deg,#101c35,#080f20 68%);overflow:hidden}.app-hero-glow{position:absolute;z-index:-1;width:340px;height:340px;right:-100px;top:-120px;border-radius:50%;background:rgba(59,130,246,.18);filter:blur(60px)}.app-hero-top{display:flex;align-items:center;gap:9px;color:#86efac;font-size:.72rem;font-weight:800;letter-spacing:.12em}.app-live-dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 14px #10b981}.app-hero-tag{margin-left:auto;color:#93c5fd;border:1px solid rgba(59,130,246,.35);padding:7px 10px;border-radius:99px;font-size:.65rem}.app-hero-copy{max-width:680px;padding:42px 0 24px}.app-kicker,.eyebrow{color:#60a5fa;letter-spacing:.16em;font-size:.72rem;font-weight:800}.app-hero h1{font-size:clamp(2.5rem,8vw,5.5rem);line-height:.98;letter-spacing:-.055em;margin:12px 0 18px;font-weight:950}.app-hero h1 span{color:#60a5fa}.app-hero .hero-description{max-width:560px;color:#cbd5e1;font-size:1rem;line-height:1.75}.app-hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:24px}.app-hero .btn-primary{display:inline-flex;gap:14px;align-items:center;background:var(--accent-blue);color:white;padding:13px 20px;border-radius:13px;font-weight:850;text-decoration:none}.app-text-link{color:#bfdbfe;text-decoration:none;font-weight:700}.app-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:620px;margin:12px 0 28px}.app-stats>div{padding:14px 16px;border:1px solid var(--border-color);border-radius:16px;background:rgba(15,23,42,.72)}.app-stats strong,.app-stats span{display:block}.app-stats strong{font-size:1.45rem}.app-stats span{font-size:.72rem;color:var(--text-muted);margin-top:3px}.app-bento-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.app-bento-card{position:relative;min-height:130px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:5px;padding:18px;border:1px solid var(--border-color);border-radius:20px;background:linear-gradient(145deg,rgba(30,41,59,.96),rgba(15,23,42,.96));color:var(--text-main);text-decoration:none;transition:transform .2s,border-color .2s}.app-bento-card:hover{transform:translateY(-3px);border-color:#3b82f6}.app-bento-card.app-bento-wide{grid-column:span 2;flex-direction:row;align-items:center;justify-content:flex-start;min-height:130px}.app-bento-icon{font-size:1.55rem;color:#60a5fa}.app-bento-card small{font-size:.64rem;letter-spacing:.12em;color:#93c5fd}.app-bento-card strong{font-size:1rem}.app-bento-card em{font-size:.72rem;color:var(--text-muted);font-style:normal}.app-bento-card>b{position:absolute;right:16px;top:15px;color:#93c5fd}.app-section{margin:42px auto}.joki-products{padding:28px 0}.joki-product-rail{display:flex!important;overflow-x:auto;gap:16px;padding:8px 4px 18px;scroll-snap-type:x mandatory;scrollbar-width:thin}.joki-product-card{flex:0 0 min(320px,84vw);scroll-snap-align:start;background:var(--bg-card);border:1px solid var(--border-color);border-radius:22px}.app-order-flow,.app-faq{padding:28px 0}.app-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.app-steps article{display:flex;gap:15px;padding:20px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:18px}.app-steps article>span{font-weight:900;color:#60a5fa;font-size:1.2rem}.app-steps h3{margin:0 0 6px}.app-steps p,.app-faq p{margin:0;color:var(--text-muted);line-height:1.65;font-size:.9rem}.feature-grid{gap:14px}.feature-card,.royal-card,.review-summary,.public-reviews{background:var(--bg-card);border-color:var(--border-color);border-radius:20px}.app-faq-list{display:grid;gap:10px}.app-faq details{background:var(--bg-card);border:1px solid var(--border-color);border-radius:15px;padding:17px 19px}.app-faq summary{cursor:pointer;font-weight:750;list-style:none}.app-faq summary::-webkit-details-marker{display:none}.app-faq summary:after{content:"+";float:right;color:#60a5fa;font-size:1.2rem}.app-faq details[open] summary:after{content:"−"}.app-faq details p{padding-top:12px}.public-reviews{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory}.public-reviews>*{flex:0 0 min(300px,85vw);scroll-snap-align:start}.app-bottom-nav{position:fixed;z-index:120;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(600px,calc(100% - 24px));min-height:68px;display:flex;align-items:center;justify-content:space-around;gap:4px;padding:8px 12px;border:1px solid rgba(148,163,184,.2);border-radius:24px;background:rgba(9,16,32,.92);backdrop-filter:blur(22px);box-shadow:0 14px 45px rgba(0,0,0,.42)}.app-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#94a3b8;text-decoration:none;min-width:0}.app-nav-item span{font-size:1.2rem;line-height:1.2}.app-nav-item small{font-size:.62rem;font-weight:700}.app-nav-item.is-active{color:#93c5fd}.app-nav-whatsapp{width:46px;height:46px;flex:0 0 46px;margin-top:-25px;display:grid;place-items:center;border-radius:18px;background:#10b981;color:#052e24;text-decoration:none;border:5px solid #0b1427;font-size:1.35rem;box-shadow:0 7px 22px rgba(16,185,129,.25)}footer{padding-bottom:30px;color:var(--text-muted)}#floatingCs{z-index:110;bottom:calc(var(--nav-height) + 28px + env(safe-area-inset-bottom))}
+@media(min-width:900px){.app-hero{max-width:1180px}.app-bottom-nav{bottom:22px;border-radius:999px}.app-nav-whatsapp{border-radius:50%}}
+@media(max-width:700px){.app-auth-actions{gap:5px}.app-auth-actions a{padding:8px 9px;font-size:.68rem}.brand small{font-size:.58rem}}@media(max-width:380px){.app-auth-actions a{padding:7px 7px;font-size:.64rem}}@media(max-width:700px){body{padding-bottom:calc(var(--nav-height) + 36px)}.app-hero{width:calc(100% - 24px);padding:22px 18px;border-radius:23px;margin:14px auto 24px}.app-hero-copy{padding:34px 0 20px}.app-stats{gap:7px}.app-stats>div{padding:12px 10px}.app-stats strong{font-size:1.2rem}.app-stats span{font-size:.64rem}.app-bento-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.app-bento-card{min-height:116px;padding:14px;border-radius:17px}.app-bento-card.app-bento-wide{grid-column:span 2;min-height:100px}.app-steps{grid-template-columns:1fr}.app-section{width:calc(100% - 32px)}.joki-products{padding:20px 0}.app-bottom-nav{min-height:62px;padding:6px 8px;border-radius:21px}.app-nav-whatsapp{width:42px;height:42px;flex-basis:42px}.app-nav-item small{font-size:.58rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.app-bento-card{transition:none}}
+</style>
   </head>
 
 <body>
@@ -66,6 +75,11 @@
             <small>MATTHEW JOKI · OFFICIAL PORTAL</small>
           </span>
         </a>
+
+        <div class="app-auth-actions" aria-label="Akses akun">
+          <a href="/login/" class="app-login-link">Login</a>
+          <a href="/register/" class="app-register-link">Daftar</a>
+        </div>
 
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="siteMenu">
           <span></span><span></span><span></span>
@@ -115,20 +129,50 @@
          DRAGON KINGDOM HERO
     ================================== -->
 
-    <section class="hero dragon-hero" aria-labelledby="hero-title">
+    <section class="hero dragon-hero app-hero" aria-labelledby="hero-title">
 <div class="hero-vignette" aria-hidden="true"></div>
       <div class="hero-content">
-        <h1 id="hero-title">MATTHEW</h1>
+        <div class="app-hero-top"><span class="app-live-dot" aria-hidden="true"></span><span>MATTHEW JOKI · OFFICIAL SERVICE</span></div>
+        <h1 id="hero-title">JOKI ROK TERPERCAYA</h1>
         <p class="hero-description">Kenali Matthew lebih dekat, jelajahi layanan joki Rise of Kingdoms, gunakan tools gratis, dan pantau progres pesanan dalam satu portal.</p>
         <div class="hero-actions">
           <a href="#about" class="btn btn-gold">KENALI MATTHEW <span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-trust"><span class="trust-mark">✦</span><span>PROFESIONAL</span><i></i><span>TERPERCAYA</span><i></i><span>RESPONSIF</span></div>
+        <div class="app-stats" aria-label="Statistik layanan"><div><strong>100+</strong><span>Transaksi</span></div><div><strong>2025</strong><span>Mulai melayani</span></div><div><strong>24/7</strong><span>Akses portal</span></div></div>
 
     <!-- =================================
          DAFTAR PRODUK JOKI
     ================================== -->
-    <section id="produk-joki" class="joki-products hero-product-strip" aria-labelledby="jokiProductsTitle">
+    
+      </div>
+
+
+
+
+
+      <a class="hero-scroll" href="#kingdom-tools" aria-label="Scroll ke layanan">JELAJAHI KERAJAAN <span>↓</span></a>
+      <div class="hero-index" aria-hidden="true">01 <span>/</span> DRAGON KINGDOM</div>
+    </section>
+
+    <section class="app-section app-quick-access container" aria-labelledby="quickAccessTitle">
+      <div class="eyebrow">SEMUA DALAM SATU PORTAL</div>
+      <h2 id="quickAccessTitle" class="section-title">JELAJAHI LAYANAN</h2>
+      <div class="line"></div>
+      <div class="app-bento-grid">
+        <a class="app-bento-card app-bento-wide" href="#produk-joki"><span class="app-bento-icon" aria-hidden="true">🏰</span><strong>Paket Joki</strong><small>Pilih layanan sesuai target akun</small></a>
+        <a class="app-bento-card" href="joki-matthew.html"><span class="app-bento-icon" aria-hidden="true">⌁</span><strong>Lacak Progress</strong><small>Pantau pesanan</small></a>
+        <a class="app-bento-card" href="calculator-resource.html"><span class="app-bento-icon" aria-hidden="true">⚖</span><strong>Resource Tools</strong><small>Kalkulator resource</small></a>
+        <a class="app-bento-card" href="requirements-city-hall.html"><span class="app-bento-icon" aria-hidden="true">♜</span><strong>City Hall Guide</strong><small>Syarat upgrade CH</small></a>
+        <a class="app-bento-card" href="support-matthew.html"><span class="app-bento-icon" aria-hidden="true">♥</span><strong>Support Matthew</strong><small>Dukung layanan</small></a>
+      </div>
+    </section>
+
+    <!-- =================================
+         KINGDOM FEATURES
+    ================================== -->
+
+    <section id="produk-joki" class="joki-products app-section" aria-labelledby="jokiProductsTitle">
       <div class="eyebrow">PILIHAN LAYANAN</div>
       <h2 id="jokiProductsTitle" class="section-title">DAFTAR PRODUK JOKI</h2>
       <div class="line"></div>
@@ -195,19 +239,15 @@
       </div>
       <p class="joki-product-note">*Deadline merupakan estimasi pengerjaan. Detail akun, ketersediaan slot, dan ketentuan pesanan dikonfirmasi terlebih dahulu melalui WhatsApp.</p>
     </section>
-      </div>
 
-
-
-
-
-      <a class="hero-scroll" href="#kingdom-tools" aria-label="Scroll ke layanan">JELAJAHI KERAJAAN <span>↓</span></a>
-      <div class="hero-index" aria-hidden="true">01 <span>/</span> DRAGON KINGDOM</div>
-    </section>
-
-    <!-- =================================
-         KINGDOM FEATURES
-    ================================== -->
+    <section class="app-section app-order-flow container" aria-labelledby="appOrderTitle">
+  <div class="eyebrow">SIMPLE & TRANSPARENT</div><h2 id="appOrderTitle" class="section-title">CARA MEMESAN</h2><div class="line"></div>
+  <div class="app-steps">
+    <article><span>01</span><div><h3>Pilih Paket</h3><p>Tentukan paket joki sesuai target perkembangan akunmu.</p></div></article>
+    <article><span>02</span><div><h3>Isi Detail</h3><p>Masukkan Kingdom dan jumlah karakter pada formulir pesanan.</p></div></article>
+    <article><span>03</span><div><h3>Konfirmasi</h3><p>Lanjutkan ke WhatsApp untuk konfirmasi detail dan proses pesanan.</p></div></article>
+  </div>
+</section>
 
     <section id="kingdom-tools" class="container kingdom-section">
 
@@ -277,9 +317,54 @@
 
     </section>
 
+    <section class="app-section app-faq container" aria-labelledby="appFaqTitle">
+  <div class="eyebrow">BUTUH INFORMASI?</div><h2 id="appFaqTitle" class="section-title">PERTANYAAN UMUM</h2><div class="line"></div>
+  <div class="app-faq-list">
+    <details><summary>Bagaimana cara membuat pesanan joki?</summary><p>Pilih paket yang tersedia, tekan tombol pesan, lengkapi Kingdom dan jumlah karakter, lalu lanjutkan konfirmasi melalui WhatsApp.</p></details>
+    <details><summary>Bagaimana cara melacak progres pesanan?</summary><p>Buka halaman Lacak Progress dan masukkan kode progres yang diberikan admin.</p></details>
+    <details><summary>Apakah saya bisa menggunakan tools tanpa memesan?</summary><p>Bisa. Kalkulator resource dan panduan persyaratan City Hall dapat digunakan melalui menu Tools.</p></details>
+    <details><summary>Apakah estimasi waktu pengerjaan pasti?</summary><p>Estimasi mengikuti paket. Detail akun, slot, dan ketentuan akhir akan dikonfirmasi sebelum pengerjaan.</p></details>
+  </div>
+</section>
+
     <!-- =================================
          ABOUT MATTHEW
     ================================== -->
+
+    
+
+    <!-- Layanan tetap tersedia melalui Daftar Produk Joki. -->
+
+    <div id="jokiOrderModal" class="joki-order-modal hidden" role="dialog" aria-modal="true" aria-labelledby="jokiOrderTitle">
+      <div class="joki-order-dialog">
+        <button type="button" class="joki-order-close" id="jokiOrderClose" aria-label="Tutup">×</button>
+        <p class="eyebrow">ORDER REGISTRATION</p>
+        <h2 id="jokiOrderTitle">BUAT PESANAN JOKI</h2>
+        <p class="joki-order-lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
+        <div class="joki-order-identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
+        <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
+        <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
+        <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required aria-describedby="jokiOrderKingdomHint">
+        <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
+        <label for="jokiOrderQuantity">Jumlah karakter (minimal 4, maksimal 12)</label>
+        <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" required>
+        <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
+        <div class="joki-order-total"><span>Subtotal</span><strong id="jokiOrderSubtotal">Rp17.000</strong></div><div class="joki-order-total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div><div class="joki-order-total"><span>Total estimasi</span><strong id="jokiOrderTotal">Rp17.000</strong></div>
+        <p class="joki-order-disclaimer">Setelah dibuat, sistem menyimpan nomor order dan status awal <b>Menunggu Pembayaran / Administrasi</b>. Pembayaran belum otomatis terkonfirmasi.</p>
+        <button type="button" class="joki-order-button" id="jokiOrderSubmit">BUAT PESANAN & LANJUT WHATSAPP ↗</button>
+        <p id="jokiOrderMessage" class="joki-order-message" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <!-- ULASAN CLIENT: tampil publik di halaman utama -->
+    <section id="client-reviews" class="section container reveal" aria-labelledby="clientReviewsTitle">
+      <div class="eyebrow">TRUST & EXPERIENCE</div>
+      <h2 id="clientReviewsTitle" class="section-title">ULASAN CLIENT</h2>
+      <div class="line"></div>
+      <p class="reviews-intro">Masukan dari pelanggan yang pernah menggunakan layanan yang tersedia di website ini.</p>
+      <div id="reviewSummary" class="review-summary"><strong>—</strong><span>Memuat rating client...</span></div>
+      <div id="publicReviews" class="public-reviews"><p class="hint">Memuat ulasan...</p></div>
+    </section>
 
     <section
       id="about"
@@ -329,39 +414,6 @@
 
     </section>
 
-    <!-- Layanan tetap tersedia melalui Daftar Produk Joki. -->
-
-    <div id="jokiOrderModal" class="joki-order-modal hidden" role="dialog" aria-modal="true" aria-labelledby="jokiOrderTitle">
-      <div class="joki-order-dialog">
-        <button type="button" class="joki-order-close" id="jokiOrderClose" aria-label="Tutup">×</button>
-        <p class="eyebrow">ORDER REGISTRATION</p>
-        <h2 id="jokiOrderTitle">BUAT PESANAN JOKI</h2>
-        <p class="joki-order-lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
-        <div class="joki-order-identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
-        <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
-        <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
-        <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required aria-describedby="jokiOrderKingdomHint">
-        <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
-        <label for="jokiOrderQuantity">Jumlah karakter (minimal 4, maksimal 12)</label>
-        <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" required>
-        <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
-        <div class="joki-order-total"><span>Subtotal</span><strong id="jokiOrderSubtotal">Rp17.000</strong></div><div class="joki-order-total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div><div class="joki-order-total"><span>Total estimasi</span><strong id="jokiOrderTotal">Rp17.000</strong></div>
-        <p class="joki-order-disclaimer">Setelah dibuat, sistem menyimpan nomor order dan status awal <b>Menunggu Pembayaran / Administrasi</b>. Pembayaran belum otomatis terkonfirmasi.</p>
-        <button type="button" class="joki-order-button" id="jokiOrderSubmit">BUAT PESANAN & LANJUT WHATSAPP ↗</button>
-        <p id="jokiOrderMessage" class="joki-order-message" aria-live="polite"></p>
-      </div>
-    </div>
-
-    <!-- ULASAN CLIENT: tampil publik di halaman utama -->
-    <section id="client-reviews" class="section container reveal" aria-labelledby="clientReviewsTitle">
-      <div class="eyebrow">TRUST & EXPERIENCE</div>
-      <h2 id="clientReviewsTitle" class="section-title">ULASAN CLIENT</h2>
-      <div class="line"></div>
-      <p class="reviews-intro">Masukan dari pelanggan yang pernah menggunakan layanan yang tersedia di website ini.</p>
-      <div id="reviewSummary" class="review-summary"><strong>—</strong><span>Memuat rating client...</span></div>
-      <div id="publicReviews" class="public-reviews"><p class="hint">Memuat ulasan...</p></div>
-    </section>
-
     <!-- =================================
          ADMIN DASHBOARD
     ================================== -->
@@ -403,6 +455,14 @@
     <a id="floatingCs" href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20menghubungi%20CS%20melalui%20website." target="_blank" rel="noopener noreferrer" aria-label="Hubungi Customer Service Matthew melalui WhatsApp" title="Hubungi Customer Service melalui WhatsApp">
       <span class="cs-icon" aria-hidden="true">☏</span>
     </a>
+
+    <nav class="app-bottom-nav" aria-label="Navigasi bawah">
+  <a class="app-nav-item is-active" href="#" aria-label="Beranda"><span>⌂</span><small>Beranda</small></a>
+  <a class="app-nav-item" href="joki-matthew.html" aria-label="Lacak progress"><span>⌁</span><small>Lacak</small></a>
+  <a class="app-nav-whatsapp" href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20joki." target="_blank" rel="noopener noreferrer" aria-label="Hubungi Matthew melalui WhatsApp"><span>☏</span></a>
+  <a class="app-nav-item" href="calculator-resource.html" aria-label="Tools"><span>⌗</span><small>Tools</small></a>
+  <a class="app-nav-item" href="#about" aria-label="Akun dan profil"><span>◉</span><small>Akun</small></a>
+</nav>
 
     <!-- =================================
          FOOTER
