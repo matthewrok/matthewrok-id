@@ -32,8 +32,8 @@
     const status=normalizedStatus(order);
     return status==="selesai" || status==="completed" || status==="complete";
   }
-  function isInProcess(order) { return !isCompleted(order); }
-  function renderOrder(order, history=[]) {
+  function isInProcess(order) { const status=normalizedStatus(order); return !isCompleted(order) && !["dibatalkan","cancelled","canceled","cancel"].includes(status); }
+  function renderOrder(order) {
     const card=document.createElement("article"); card.className="order-card";
     const statusText=String(order.status || "Menunggu");
     const completed=isCompleted(order);
@@ -83,7 +83,7 @@
     invoice.addEventListener("click",()=>{
       if(order.invoice_url) window.open(order.invoice_url,"_blank","noopener,noreferrer");
       else {
-        const detailText=["INVOICE MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Paket: "+(order.service_name||"—"),"Kingdom: "+(order.kingdom_number||"—"),"Jumlah karakter: "+(order.quantity||0),"Total: "+money(order.total_price),"Status: "+statusText,"Dibuat: "+date(order.created_at)].join("\\n");
+        const detailText=["INVOICE MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Paket: "+(order.service_name||"—"),"Kingdom: "+(order.kingdom_number||"—"),"Jumlah karakter: "+(order.quantity||0),"Total: "+money(order.total_price),"Status: "+statusText,"Dibuat: "+date(order.created_at)].join("\n");
         copyText(detailText,invoice);
       }
     });
@@ -163,8 +163,6 @@
       const {data,error}=await db.rpc("list_my_joki_orders");
       if(error) throw error;
       allOrders=Array.isArray(data)?data:[];
-      try { const result=await db.rpc("list_my_joki_order_history"); if(result.error) console.warn("[Your Order] Riwayat belum tersedia:",result.error); }
-      catch(historyError) { console.warn("[Your Order] Riwayat belum tersedia:",historyError); }
       setActiveFilter(activeFilter);
       if(!allOrders.length) setState("Belum ada pesanan yang terhubung dengan email akun ini.");
       else setState("Ditemukan "+allOrders.length+" pesanan untuk akun "+(user.email||"ini")+".","success");
