@@ -49,6 +49,7 @@ on:
       - "supabase/functions/telegram-order-notify/**"
       - "supabase/functions/worker-application-submit/**"
       - "tests/**"
+      - "deno.json"
       - ".github/workflows/auth-regression.yml"
   workflow_dispatch:
 
