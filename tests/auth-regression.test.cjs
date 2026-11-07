@@ -461,12 +461,12 @@ test("Shadow Reign calculator preserves its approved dark palette and calculator
     assert.equal((html.match(new RegExp('id="' + id + '"', "g")) || []).length, 1, id + " must exist exactly once");
   }
   assert.match(html, /grid-template-columns: 1fr 1fr/);
-  assert.match(html, /\\.resource-card\\.active/);
-  assert.match(html, /\\.result-section\\.show/);
-  assert.match(html, /result\\.classList\\.toggle\\("show"/);
-  assert.match(html, /item\\.classList\\.toggle\\("active"/);
-  assert.match(html, /calculator\\.js\\?v=20261104-1/);
-  assert.doesNotMatch(html, /Cek Progres|Matthew-Raditya|joki-matthew\\.html/);
+  assert.ok(html.includes(".resource-card.active"));
+  assert.ok(html.includes(".result-section.show"));
+  assert.ok(html.includes("result.classList.toggle(\\"show\\""));
+  assert.ok(html.includes("item.classList.toggle(\\"active\\""));
+  assert.ok(html.includes("calculator.js?v=20261104-1"));
+  assert.ok(!["Cek Progres", "Matthew-Raditya", "joki-matthew.html"].some(value => html.includes(value)));
 });
 
 test("all pages load the current shared blue theme cache version", () => {
