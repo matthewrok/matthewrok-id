@@ -73,7 +73,7 @@ jobs:
         with:
           node-version: 22
       - name: Run authentication regression tests
-        run: node --test tests/auth-regression.test.cjs
+        run: node --test tests/*.test.cjs
       - name: Set up Deno
         uses: denoland/setup-deno@v2
         with:
