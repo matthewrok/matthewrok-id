@@ -37,6 +37,7 @@
     const card=document.createElement("article"); card.className="order-card";
     const statusText=String(order.status || "Menunggu");
     const completed=isCompleted(order);
+    const inProgress=normalizedStatus(order)==="proses";
     const progressValue=Math.max(0,Math.min(100,Number(order.progress_percent)||0));
 
     const head=document.createElement("div"); head.className="card-header";
@@ -52,7 +53,7 @@
     payment.textContent=paid?"Pembayaran Lunas":(order.payment_status||"Menunggu pembayaran");
     badges.append(status,payment); head.append(title,badges); card.appendChild(head);
 
-    if(!completed) {
+    if(inProgress) {
       const progressWrap=document.createElement("div"); progressWrap.className="mini-progress-wrap";
       const meta=document.createElement("div"); meta.className="mini-progress-meta";
       const label=document.createElement("span"); label.textContent="PROGRESS PESANAN";
