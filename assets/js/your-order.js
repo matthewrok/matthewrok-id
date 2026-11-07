@@ -25,84 +25,152 @@
     const v=document.createElement("strong"); v.textContent=escapeText(value);
     cell.append(l,v); grid.appendChild(cell);
   }
-  function renderOrder(order, history=[]) {
-    const card=document.createElement("article"); card.className="your-order-card";
-    const head=document.createElement("div"); head.className="your-order-card-head";
-    const titleWrap=document.createElement("div");
-    const title=document.createElement("h3"); title.className="your-order-service"; title.textContent=order.service_name||"Layanan Joki";
-    const created=document.createElement("div"); created.className="your-order-date"; created.textContent="Dibuat "+date(order.created_at);
-    titleWrap.append(title,created);
-    const status=document.createElement("span"); status.className="your-order-status"; status.textContent=order.status||"Menunggu";
-    head.append(titleWrap,status); card.appendChild(head);
-
-    const codeRow=document.createElement("div"); codeRow.className="your-order-code-row";
-    const codeWrap=document.createElement("div"); const label=document.createElement("span"); label.className="your-order-code-label"; label.textContent="KODE PESANAN";
-    const code=document.createElement("strong"); code.className="your-order-code"; code.textContent=order.order_number||"Belum tersedia"; codeWrap.append(label,code);
-    const copy=document.createElement("button"); copy.type="button"; copy.className="copy-order-code"; copy.textContent="⧉ Salin kode"; copy.addEventListener("click",()=>copyText(order.order_number||"",copy));
-    codeRow.append(codeWrap,copy); card.appendChild(codeRow);
-
-    const total=document.createElement("div"); total.className="your-order-total-row";
-    const totalLabel=document.createElement("span"); totalLabel.textContent="Total pesanan";
-    const amount=document.createElement("strong"); amount.textContent=money(order.total_price); total.append(totalLabel,amount); card.appendChild(total);
-    const progress=document.createElement("div"); progress.className="your-order-progress";
-    const bar=document.createElement("span"); bar.style.width=Math.max(0,Math.min(100,Number(order.progress_percent)||0))+"%"; progress.appendChild(bar); card.appendChild(progress);
-
-    const actions=document.createElement("div"); actions.className="your-order-actions";
-    const detailButton=document.createElement("button"); detailButton.type="button"; detailButton.className="order-detail-toggle"; detailButton.textContent="⌄ Lihat rincian";
-    const details=document.createElement("section"); details.className="order-details"; details.hidden=true;
-    const grid=document.createElement("div"); grid.className="order-details-grid";
-    addDetail(grid,"Kode pesanan",order.order_number||"—");
-    addDetail(grid,"Nama client",order.client_name||"—");
-    addDetail(grid,"Email akun",order.client_email||"—");
-    addDetail(grid,"Paket layanan",order.service_name||"—");
-    addDetail(grid,"Kingdom",order.kingdom_number||"—");
-    addDetail(grid,"Jumlah karakter",Number(order.quantity||0)+" karakter");
-    addDetail(grid,"Harga per karakter",money(order.unit_price));
-    addDetail(grid,"Subtotal",money(order.subtotal_price ?? order.total_price));
-    addDetail(grid,"Voucher",order.voucher_code||"Tidak digunakan");
-    addDetail(grid,"Diskon voucher",money(order.discount_amount));
-    addDetail(grid,"Total akhir",money(order.total_price));
-    addDetail(grid,"Status",order.status||"Menunggu");
-    addDetail(grid,"Progress",Math.max(0,Math.min(100,Number(order.progress_percent)||0))+"%");
-    addDetail(grid,"Dibuat pada",date(order.created_at));
-    addDetail(grid,"Pembaruan terakhir",date(order.updated_at));
-    details.appendChild(grid);
-    const note=document.createElement("p"); note.className="order-detail-note"; note.textContent="Catatan admin: "+(order.progress_note||"Belum ada catatan dari admin."); details.appendChild(note);
-    const copyDetails=document.createElement("button"); copyDetails.type="button"; copyDetails.className="copy-order-code"; copyDetails.textContent="⧉ Salin detail pesanan";
-    copyDetails.addEventListener("click",()=>copyText([
-      "DETAIL PESANAN MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Nama: "+(order.client_name||"—"),"Email: "+(order.client_email||"—"),"Paket: "+(order.service_name||"—"),"Kingdom: "+(order.kingdom_number||"—"),"Jumlah karakter: "+(order.quantity||0),"Harga per karakter: "+money(order.unit_price),"Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak digunakan"),"Diskon: "+money(order.discount_amount),"Total: "+money(order.total_price),"Status: "+(order.status||"Menunggu"),"Progress: "+(Number(order.progress_percent)||0)+"%","Dibuat: "+date(order.created_at),"Update: "+date(order.updated_at),"Catatan admin: "+(order.progress_note||"Belum ada catatan")
-    ].join("\n"),copyDetails));
-    details.appendChild(copyDetails);
-    detailButton.setAttribute("aria-expanded","false");
-    detailButton.addEventListener("click",()=>{const isOpen=!details.hidden;details.hidden=isOpen;detailButton.textContent=isOpen?"⌄ Lihat rincian":"⌃ Sembunyikan rincian";detailButton.setAttribute("aria-expanded",String(!isOpen));});
-    actions.appendChild(detailButton);
-    const tracker=document.createElement("a"); tracker.href="/joki-matthew.html"; tracker.className="order-detail-toggle"; tracker.textContent="♛ Lacak progress"; tracker.style.textDecoration="none"; actions.appendChild(tracker);
-    card.append(actions,details); return card;
+  function normalizedStatus(order) {
+    return String(order.status || "Menunggu").trim().toLowerCase();
   }
+  function isCompleted(order) {
+    const status=normalizedStatus(order);
+    return status==="selesai" || status==="completed" || status==="complete";
+  }
+  function isInProcess(order) { return !isCompleted(order); }
+  function renderOrder(order, history=[]) {
+    const card=document.createElement("article"); card.className="order-card";
+    const statusText=String(order.status || "Menunggu");
+    const completed=isCompleted(order);
+    const progressValue=Math.max(0,Math.min(100,Number(order.progress_percent)||0));
+
+    const head=document.createElement("div"); head.className="card-header";
+    const title=document.createElement("div");
+    const heading=document.createElement("h3"); heading.textContent=order.service_name||"Layanan Joki";
+    const created=document.createElement("p"); created.className="your-order-date"; created.textContent="Dibuat "+date(order.created_at);
+    title.append(heading,created);
+    const badges=document.createElement("div"); badges.className="badge-group";
+    const status=document.createElement("span"); status.className="status-badge "+(completed?"status-success":"status-process"); status.textContent=statusText;
+    const payment=document.createElement("span"); payment.className="payment-badge";
+    const paid=Boolean(order.is_paid || order.payment_status==="paid" || order.payment_status==="lunas" || order.payment_status==="Lunas");
+    payment.classList.add(paid?"payment-lunas":"payment-unpaid");
+    payment.textContent=paid?"Pembayaran Lunas":(order.payment_status||"Menunggu pembayaran");
+    badges.append(status,payment); head.append(title,badges); card.appendChild(head);
+
+    if(!completed) {
+      const progressWrap=document.createElement("div"); progressWrap.className="mini-progress-wrap";
+      const meta=document.createElement("div"); meta.className="mini-progress-meta";
+      const label=document.createElement("span"); label.textContent="PROGRESS PESANAN";
+      const percent=document.createElement("strong"); percent.textContent=progressValue+"%";
+      meta.append(label,percent);
+      const track=document.createElement("div"); track.className="mini-progress-track";
+      const fill=document.createElement("div"); fill.className="mini-progress-fill"; fill.style.width=progressValue+"%";
+      fill.setAttribute("role","progressbar"); fill.setAttribute("aria-valuemin","0"); fill.setAttribute("aria-valuemax","100"); fill.setAttribute("aria-valuenow",String(progressValue)); fill.setAttribute("aria-label","Progress pesanan");
+      track.appendChild(fill); progressWrap.append(meta,track); card.appendChild(progressWrap);
+    }
+
+    const body=document.createElement("div"); body.className="card-body";
+    const grid=document.createElement("div"); grid.className="details-grid";
+    addDetail(grid,"Kode Pesanan",order.order_number||"—");
+    addDetail(grid,"Kingdom",order.kingdom_number||"—");
+    addDetail(grid,"Jumlah Karakter",Number(order.quantity||0)+" karakter");
+    addDetail(grid,"Tanggal Pesanan",date(order.created_at));
+    body.appendChild(grid);
+
+    const footer=document.createElement("div"); footer.className="card-footer";
+    const price=document.createElement("div");
+    const priceLabel=document.createElement("span"); priceLabel.className="price-label"; priceLabel.textContent="Total Pembayaran";
+    const priceValue=document.createElement("strong"); priceValue.className="price-value"; priceValue.textContent=money(order.total_price);
+    price.append(priceLabel,priceValue);
+    const actions=document.createElement("div"); actions.className="action-buttons";
+    const invoice=document.createElement("button"); invoice.type="button"; invoice.className="btn-action"; invoice.textContent="Invoice";
+    invoice.addEventListener("click",()=>{
+      if(order.invoice_url) window.open(order.invoice_url,"_blank","noopener,noreferrer");
+      else {
+        const detailText=["INVOICE MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Paket: "+(order.service_name||"—"),"Kingdom: "+(order.kingdom_number||"—"),"Jumlah karakter: "+(order.quantity||0),"Total: "+money(order.total_price),"Status: "+statusText,"Dibuat: "+date(order.created_at)].join("\\n");
+        copyText(detailText,invoice);
+      }
+    });
+    actions.appendChild(invoice);
+    if(completed) {
+      const reorder=document.createElement("a"); reorder.href="/index.html"; reorder.className="btn-action primary"; reorder.textContent="Pesan Lagi"; actions.appendChild(reorder);
+    } else {
+      const tracker=document.createElement("a"); tracker.href="/joki-matthew.html"; tracker.className="btn-action primary"; tracker.textContent="Lacak"; actions.appendChild(tracker);
+    }
+    footer.append(price,actions); body.appendChild(footer); card.appendChild(body);
+
+    const details=document.createElement("section"); details.className="order-details"; details.hidden=true;
+    const detailGrid=document.createElement("div"); detailGrid.className="details-grid";
+    addDetail(detailGrid,"Nama Client",order.client_name||"—");
+    addDetail(detailGrid,"Email Akun",order.client_email||"—");
+    addDetail(detailGrid,"Paket Layanan",order.service_name||"—");
+    addDetail(detailGrid,"Harga per Karakter",money(order.unit_price));
+    addDetail(detailGrid,"Subtotal",money(order.subtotal_price??order.total_price));
+    addDetail(detailGrid,"Voucher",order.voucher_code||"Tidak digunakan");
+    addDetail(detailGrid,"Diskon",money(order.discount_amount));
+    addDetail(detailGrid,"Pembaruan Terakhir",date(order.updated_at));
+    details.appendChild(detailGrid);
+    const note=document.createElement("p"); note.textContent="Catatan admin: "+(order.progress_note||"Belum ada catatan dari admin."); details.appendChild(note);
+    const toggle=document.createElement("button"); toggle.type="button"; toggle.className="btn-action"; toggle.textContent="Lihat Rincian";
+    toggle.setAttribute("aria-expanded","false");
+    toggle.addEventListener("click",()=>{details.hidden=!details.hidden;toggle.textContent=details.hidden?"Lihat Rincian":"Tutup Rincian";toggle.setAttribute("aria-expanded",String(!details.hidden));});
+    body.appendChild(toggle); card.appendChild(details);
+    return card;
+  }
+  let allOrders=[];
+  let activeFilter="all";
+  function applyFilter() {
+    const list=$("ordersList"), empty=$("emptyState");
+    const visible=allOrders.filter(order=>activeFilter==="all" || (activeFilter==="success"?isCompleted(order):isInProcess(order)));
+    list.replaceChildren(...visible.map(order=>renderOrder(order)));
+    list.style.display=visible.length?"flex":"none";
+    if(empty) {
+      empty.classList.toggle("show",allOrders.length===0 || visible.length===0);
+      const heading=empty.querySelector("h3"), paragraph=empty.querySelector("p"), link=empty.querySelector("a");
+      if(heading) heading.textContent=allOrders.length===0?"Belum Ada Pesanan":"Tidak Ada Pesanan";
+      if(paragraph) paragraph.textContent=allOrders.length===0?"Kamu belum pernah melakukan pemesanan joki.":"Tidak ada pesanan yang cocok dengan filter ini.";
+      if(link) link.textContent=allOrders.length===0?"Mulai Pesan Sekarang":"Lihat Semua Pesanan";
+      if(link && allOrders.length>0) link.onclick=(event)=>{event.preventDefault();setActiveFilter("all");};
+    }
+  }
+  function setActiveFilter(filter) {
+    activeFilter=filter;
+    document.querySelectorAll(".filter-btn").forEach(button=>{
+      const active=button.dataset.filter===filter;
+      button.classList.toggle("active",active);
+      button.setAttribute("aria-pressed",String(active));
+    });
+    applyFilter();
+  }
+  document.querySelectorAll(".filter-btn").forEach(button=>button.addEventListener("click",()=>setActiveFilter(button.dataset.filter||"all")));
+
   async function loadOrders() {
     if (loadingOrders) return;
-    loadingOrders = true;
-    const list=$("ordersList"); list.replaceChildren();
+    loadingOrders=true;
+    const list=$("ordersList");
     if(!db){setState("Layanan pesanan belum siap. Muat ulang halaman.","error");loadingOrders=false;return;}
-    const button=$("refreshOrders"); button.disabled=true;
+    const button=$("refreshOrders"); if(button) button.disabled=true;
     try {
       const {data:{user},error:authError}=await db.auth.getUser();
       if(authError) throw authError;
-      if(!user){setState("Silakan login menggunakan akun member untuk melihat pesanan.","error");const box=document.createElement("div");box.className="order-empty";const title=document.createElement("strong");title.textContent="Login diperlukan";const p=document.createElement("p");p.textContent="Masuk ke akun yang digunakan saat membuat pesanan, lalu buka kembali halaman Your Order.";const link=document.createElement("a");link.href="/login.html";link.className="order-detail-toggle";link.textContent="Login / Daftar";box.append(title,p,link);list.appendChild(box);return;}
+      if(!user) {
+        allOrders=[]; list.replaceChildren(); list.style.display="flex";
+        const empty=$("emptyState"); if(empty) empty.classList.remove("show");
+        setState("Silakan login menggunakan akun member untuk melihat pesanan.","error");
+        const box=document.createElement("div"); box.className="order-card card-body";
+        const title=document.createElement("strong"); title.textContent="Login diperlukan";
+        const p=document.createElement("p"); p.textContent="Masuk ke akun yang digunakan saat membuat pesanan, lalu buka kembali halaman Your Order.";
+        const link=document.createElement("a"); link.href="/login.html"; link.className="btn-action primary"; link.textContent="Login / Daftar";
+        box.append(title,p,link); list.appendChild(box); return;
+      }
       setState("Memuat pesanan milik akun ini…");
       const {data,error}=await db.rpc("list_my_joki_orders");
       if(error) throw error;
-      const orders=Array.isArray(data)?data:[];
-      let history=[];
-      try { const result=await db.rpc("list_my_joki_order_history"); if(!result.error && Array.isArray(result.data)) history=result.data; }
+      allOrders=Array.isArray(data)?data:[];
+      try { const result=await db.rpc("list_my_joki_order_history"); if(result.error) console.warn("[Your Order] Riwayat belum tersedia:",result.error); }
       catch(historyError) { console.warn("[Your Order] Riwayat belum tersedia:",historyError); }
-      if(!orders.length){setState("Belum ada pesanan yang terhubung dengan email akun ini.");const box=document.createElement("div");box.className="order-empty";const title=document.createElement("strong");title.textContent="Belum ada pesanan";const p=document.createElement("p");p.textContent="Pesanan baru akan muncul di sini setelah dibuat menggunakan akun ini.";const link=document.createElement("a");link.href="/index.html";link.className="order-detail-toggle";link.textContent="Lihat paket joki";box.append(title,p,link);list.appendChild(box);return;}
-      orders.forEach(order=>list.appendChild(renderOrder(order,history.filter(item=>item.order_id===order.id))));
-      setState("Ditemukan "+orders.length+" pesanan untuk akun "+(user.email||"ini")+".","success");
+      setActiveFilter(activeFilter);
+      if(!allOrders.length) setState("Belum ada pesanan yang terhubung dengan email akun ini.");
+      else setState("Ditemukan "+allOrders.length+" pesanan untuk akun "+(user.email||"ini")+".","success");
     } catch(error) {
       console.error("[Your Order]",error);
       setState("Pesanan belum dapat dimuat. Pastikan kamu login dan fungsi list_my_joki_orders tersedia di database. "+(error.message||""),"error");
-    } finally {button.disabled=false;loadingOrders=false;}
+    } finally {if(button) button.disabled=false;loadingOrders=false;}
   }
   $("refreshOrders")?.addEventListener("click",loadOrders);
   window.setInterval(() => { if (!document.hidden) loadOrders(); }, 45000);
