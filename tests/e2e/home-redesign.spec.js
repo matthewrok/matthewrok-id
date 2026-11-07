@@ -5,6 +5,7 @@ async function openStaticHome(page, viewport) {
   // These checks target the delivered markup and CSS; auth/realtime behavior is
   // covered separately by the existing authentication regression workflow.
   await page.route("**/*.js*", route => route.abort());
+  await page.route("https://**/*", route => route.abort());
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.evaluate(() => document.querySelector("#site")?.classList.remove("hidden"));
   await page.waitForFunction(() => {
