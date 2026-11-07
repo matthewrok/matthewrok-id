@@ -20,7 +20,7 @@
     } catch (_) { setState("Tidak dapat menyalin otomatis. Tekan lama kode pesanan untuk menyalinnya.","error"); }
   }
   function addDetail(grid,label,value) {
-    const cell=document.createElement("div"); cell.className="order-detail-cell";
+    const cell=document.createElement("div"); cell.className="detail-item";
     const l=document.createElement("span"); l.textContent=label;
     const v=document.createElement("strong"); v.textContent=escapeText(value);
     cell.append(l,v); grid.appendChild(cell);
