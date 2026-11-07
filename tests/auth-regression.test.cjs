@@ -463,8 +463,8 @@ test("Shadow Reign calculator preserves its approved dark palette and calculator
   assert.match(html, /grid-template-columns: 1fr 1fr/);
   assert.ok(html.includes(".resource-card.active"));
   assert.ok(html.includes(".result-section.show"));
-  assert.ok(html.includes("result.classList.toggle(\\"show\\""));
-  assert.ok(html.includes("item.classList.toggle(\\"active\\""));
+  assert.ok(html.includes('result.classList.toggle("show"'));
+  assert.ok(html.includes('item.classList.toggle("active"'));
   assert.ok(html.includes("calculator.js?v=20261104-1"));
   assert.ok(!["Cek Progres", "Matthew-Raditya", "joki-matthew.html"].some(value => html.includes(value)));
 });
