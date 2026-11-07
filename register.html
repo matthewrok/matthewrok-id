@@ -1,98 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#071326">
-  <meta name="description" content="Buat akun Matthew Joki — Dragon Kingdom.">
-  <title>Daftar Akun | MATTHEW JOKI</title>
-  <link rel="stylesheet" href="assets/css/auth.css?v=20261107-compact-auth">
-  <link rel="stylesheet" href="assets/css/modern-theme.css?v=20261105">
-  <link rel="stylesheet" href="assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
-  <link rel="stylesheet" href="assets/css/auth-blue.css?v=20261106-1">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="assets/js/supabase.js"></script>
-  <script defer src="assets/js/auth.js?v=20261107-auth-ui"></script>
-  <script defer src="assets/js/session-manager.js"></script>
-  <style>
-    .auth-container{height:auto;min-height:0;padding:clamp(21px,4vw,30px)!important}
-    .brand-mark{width:60px;height:60px;margin:0 auto 13px;display:grid;place-items:center}
-    .brand-mark img{display:block;width:60px;height:auto;max-height:60px;object-fit:contain}
-    .auth-container .eyebrow{margin-top:0}
-    .auth-container h1{margin-top:3px;margin-bottom:7px}
-    .auth-container .intro{margin-bottom:16px}
-    .auth-form{gap:7px}
-    .auth-form label{margin-top:5px}
-    .auth-form input{min-height:45px;padding-top:10px;padding-bottom:10px}
-    .password-wrap{position:relative;display:flex;align-items:center;width:100%}
-    .password-wrap input{padding-right:52px!important}
-    .password-wrap .password-toggle{position:absolute;right:7px;top:50%;display:grid;place-items:center;width:36px;height:36px;min-height:36px;margin:0;padding:8px;transform:translateY(-50%);border:0!important;border-radius:8px!important;background:transparent!important;box-shadow:none!important;color:#8bdfff!important;cursor:pointer}
-    .password-wrap .password-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-    .auth-form button{margin-top:8px;min-height:45px}
-    .auth-message:empty{display:none}
-    #error-message{display:none;margin:0 0 10px;padding:9px 11px;border:1px solid rgba(239,68,68,.45);border-radius:8px;background:rgba(239,68,68,.1);color:#fca5a5;font-size:12px}
-    @media(max-height:760px){.auth-shell{padding-top:12px;padding-bottom:12px}.auth-container{padding:19px!important}.brand-mark{width:48px;height:48px;margin-bottom:8px}.brand-mark img{width:48px;max-height:48px}.auth-container .intro{margin-bottom:11px}.auth-form{gap:5px}.auth-form input{min-height:42px}.auth-form button{min-height:42px}}
-    @media(prefers-reduced-motion:reduce){.password-toggle{transition:none!important}}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta http-equiv="refresh" content="0;url=/register/">
+  <title>Mengalihkan… | MATTHEW JOKI</title>
+  <link rel="canonical" href="https://matthewrok.my.id/register/">
+  <script>location.replace("/register/"+location.search+location.hash);</script>
 </head>
-<body class="auth-page register-page">
-  <main class="auth-shell">
-    <a class="back-link" href="index.html">← Kembali ke beranda</a>
-    <section class="auth-container">
-      <div class="brand-mark">
-        <img src="assets/images/brand/logo-matthew.png" alt="Logo Matthew" width="60" height="60">
-      </div>
-      <p class="eyebrow">JOIN THE DRAGON KINGDOM</p>
-      <h1>BUAT AKUN</h1>
-      <p class="intro">Daftar untuk menjadi bagian dari komunitas Matthew Joki.</p>
-
-      <div id="error-message" role="alert" aria-live="polite"></div>
-
-      <form id="registerForm" class="auth-form">
-        <label for="registerName">Nama lengkap</label>
-        <input id="registerName" name="name" type="text" placeholder="Nama kamu" autocomplete="name" maxlength="80" required>
-
-        <label for="registerEmail">Email</label>
-        <input id="registerEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
-
-        <label for="registerPassword">Password</label>
-        <div class="password-wrap">
-          <input id="registerPassword" name="password" type="password" placeholder="Minimal 6 karakter" autocomplete="new-password" minlength="6" required>
-          <button class="password-toggle" type="button" data-toggle-password="registerPassword" aria-label="Tampilkan password" aria-pressed="false">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
-          </button>
-        </div>
-
-        <label for="registerConfirmPassword">Konfirmasi password</label>
-        <div class="password-wrap">
-          <input id="registerConfirmPassword" name="confirmPassword" type="password" placeholder="Tulis ulang password" autocomplete="new-password" minlength="6" required>
-          <button class="password-toggle" type="button" data-toggle-password="registerConfirmPassword" aria-label="Tampilkan password" aria-pressed="false">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.4 6.2-9.8 6.2S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
-          </button>
-        </div>
-
-        <button id="registerButton" type="submit">BUAT AKUN</button>
-      </form>
-
-      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
-      <p class="auth-link">Sudah punya akun? <a href="login.html">Login di sini</a></p>
-    </section>
-    <footer>© <span data-current-year>2026</span> MATTHEW JOKI · OFFICIAL SERVICE PORTAL</footer>
-  </main>
-
-  <script>
-    (() => {
-      const message = document.getElementById('authMessage');
-      const errorBox = document.getElementById('error-message');
-      const observer = new MutationObserver(() => {
-        const isError = message.classList.contains('error');
-        errorBox.textContent = isError ? message.textContent : '';
-        errorBox.style.display = isError && message.textContent.trim() ? 'block' : 'none';
-      });
-      observer.observe(message, {childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class']});
-    })();
-  </script>
-  <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
+<body>
+  <p>Halaman dipindahkan. <a href="/register/">Lanjutkan ke halaman MATTHEW JOKI</a>.</p>
 </body>
 </html>
