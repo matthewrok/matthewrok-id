@@ -418,8 +418,8 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login/index.html", "member-dashboard.html", "register.html",
-    "requirements-city-hall.html", "reset-password.html",
+    "login/index.html", "member-dashboard.html", "register/index.html",
+    "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
   const approved = new Set(["#071326", "#071426", "#071a3a"]);
@@ -435,8 +435,8 @@ test("all pages load the current shared blue theme cache version", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login/index.html", "member-dashboard.html", "register.html",
-    "requirements-city-hall.html", "reset-password.html",
+    "login/index.html", "member-dashboard.html", "register/index.html",
+    "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
   for (const page of pages) {
@@ -635,8 +635,8 @@ test("every public/private route loads Supabase before the maintenance gate", ()
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login/index.html", "member-dashboard.html", "register.html",
-    "requirements-city-hall.html", "reset-password.html", "support-matthew.html",
+    "login/index.html", "member-dashboard.html", "register/index.html",
+    "requirements-city-hall.html", "reset-password/index.html", "support-matthew.html",
     "worker.html", "your-order.html", "maintenance.html"
   ];
   for (const page of pages) {
