@@ -19,7 +19,7 @@ async function mockSupabase(page, mode) {
                     : { error: null };
                 },
                 getSession: async function () {
-                  return { data: { session: mode === "unauthenticated" ? null : { access_token: "test-token" } }, error: null };
+                  return { data: { session: mode === "unauthenticated" ? null : { access_token: "test-token", user: { id: "e2e-user", email: "member@example.test" } } }, error: null };
                 },
                 getUser: async function () {
                   return { data: { user: { id: "e2e-user", email: "member@example.test", email_confirmed_at: "2026-01-01T00:00:00Z" } }, error: null };
