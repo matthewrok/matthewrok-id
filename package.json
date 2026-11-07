@@ -1,0 +1,12 @@
+{
+  "name": "matthew-joki-site-checks",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test": "npm run test:e2e"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.51.1"
+  }
+}
