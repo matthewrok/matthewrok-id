@@ -709,7 +709,7 @@ test("Shadow Reign member dashboard preserves its tab layout, mapped data target
   assert.match(html, /getUser\(\)/);
   assert.match(html, /member-onboarding\.js/);
   assert.match(html, /maintenance-status\.js/);
-  const inlineScripts = [...html.matchAll(/<script(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/g)];
+  const inlineScripts = [...html.matchAll(new RegExp("<script(?![^>]*src=)[^>]*>([\\s\\S]*?)</script>", "g"))];
   assert.equal(inlineScripts.length, 1);
   assert.doesNotThrow(() => new Function(inlineScripts[0][1]));
 });
