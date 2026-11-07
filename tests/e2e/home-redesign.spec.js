@@ -22,6 +22,11 @@ test("homepage App-like menampilkan hero, Bento Grid, produk, FAQ, dan modal ord
   await expect(page.locator(".app-faq details")).toHaveCount(4);
   await expect(page.locator("#jokiOrderModal")).toHaveCount(1);
   await expect(page.locator(".app-bottom-nav")).toBeVisible();
+  await expect(page.locator(".app-auth-actions a")).toHaveCount(2);
+  expect(await page.locator("#about").evaluate(el => el.compareDocumentPosition(document.querySelector("#client-reviews")) & Node.DOCUMENT_POSITION_PRECEDING)).toBeTruthy();
+
+  await page.locator("#navUser").evaluate(el => { el.textContent = "Member E2E"; });
+  await expect(page.locator(".app-auth-actions")).toBeHidden();
 
   const columns = await page.locator(".app-bento-grid").evaluate(el => getComputedStyle(el).gridTemplateColumns.split(" ").length);
   expect(columns).toBe(2);
@@ -45,4 +50,9 @@ test("desktop memakai Bento Grid empat kolom dan dock navigasi terpusat", async 
   const dock = await page.locator(".app-bottom-nav").boundingBox();
   expect(dock).not.toBeNull();
   expect(Math.abs((dock.x + dock.width / 2) - 682.5)).toBeLessThan(2);
+
+  const cs = await page.locator("#floatingCs").boundingBox();
+  expect(cs).not.toBeNull();
+  const overlap = dock.x < cs.x + cs.width && dock.x + dock.width > cs.x && dock.y < cs.y + cs.height && dock.y + dock.height > cs.y;
+  expect(overlap).toBe(false);
 });
