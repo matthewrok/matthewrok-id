@@ -167,7 +167,8 @@
       document.querySelectorAll('[data-admin-tab]').forEach(link => {
         link.addEventListener('click', event => {
           const tabName = link.dataset.adminTab;
-          const button = document.querySelector('.admin-tab-menu [onclick*="openTab(\\'' + tabName + '\\'"]');
+          const buttonId = 'adminTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+          const button = document.getElementById(buttonId);
           if (button) {
             event.preventDefault();
             openTab(tabName, button);
