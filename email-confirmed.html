@@ -1,73 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#071326">
-  <title>Verifikasi Email | Matthew Joki</title>
-  <link rel="stylesheet" href="assets/css/auth.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="assets/css/modern-theme.css">
-  <link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-10">
-  <script defer src="/assets/js/global-menu.js?v=20261104-10"></script>
-<link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase.js"></script>
-  </head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta http-equiv="refresh" content="0;url=/email-confirmed/">
+  <title>Mengalihkan… | MATTHEW JOKI</title>
+  <link rel="canonical" href="https://matthewrok.my.id/email-confirmed/">
+  <script>location.replace("/email-confirmed/"+location.search+location.hash);</script>
+</head>
 <body>
-  <main class="auth-shell">
-    <section class="auth-container">
-      <div class="crown" aria-hidden="true">♛</div>
-      <p class="eyebrow">MATTHEW JOKI · EMAIL VERIFICATION</p>
-      <h1>VERIFIKASI EMAIL</h1>
-      <p class="intro" id="verifyMessage" role="status" aria-live="polite">Sedang memverifikasi alamat email kamu...</p>
-      <p class="auth-link" id="loginAction" hidden><a href="login.html">KEMBALI KE HALAMAN LOGIN</a></p>
-    </section>
-    <footer>© <span id="year"></span> MATTHEW JOKI · THE DRAGON KINGDOM</footer>
-  </main>
-  <script>
-    (async () => {
-      const message = document.getElementById("verifyMessage");
-      const action = document.getElementById("loginAction");
-      document.getElementById("year").textContent = new Date().getFullYear();
-      const params = new URLSearchParams(location.hash.slice(1));
-      const accessToken = params.get("access_token");
-      const refreshToken = params.get("refresh_token");
-      const errorText = params.get("error_description") || params.get("error");
-      history.replaceState(null, "", location.pathname + location.search);
-      if (errorText) {
-        message.textContent = "Link verifikasi tidak valid atau sudah kedaluwarsa. Silakan minta link verifikasi baru.";
-        action.hidden = false;
-        return;
-      }
-      if (!accessToken || !refreshToken) {
-        message.textContent = "Token verifikasi tidak ditemukan. Buka link terbaru yang dikirim ke Gmail kamu.";
-        action.hidden = false;
-        return;
-      }
-      const client = window.supabase.createClient(
-        "https://aqiwrgnxwtphhwikqtmn.supabase.co",
-        "sb_publishable_t1sQ82_X8C1sxgwgTGeOVw_g5gewmtv",
-        { auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false } }
-      );
-      try {
-        const { error: sessionError } = await client.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken
-        });
-        if (sessionError) throw sessionError;
-        const { error: signOutError } = await client.auth.signOut({ scope: "local" });
-        if (signOutError) throw signOutError;
-        message.textContent = "Alamat Gmail berhasil diverifikasi. Kamu belum login. Silakan kembali ke halaman login dan masuk menggunakan Gmail serta password yang sudah didaftarkan.";
-        action.hidden = false;
-      } catch (error) {
-        console.error("Email verification callback:", error);
-        message.textContent = "Verifikasi belum berhasil diproses. Pastikan link masih berlaku, lalu coba minta email verifikasi baru.";
-        action.hidden = false;
-      }
-    })();
-  </script>
-  <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
+  <p>Halaman dipindahkan. <a href="/email-confirmed/">Lanjutkan ke halaman MATTHEW JOKI</a>.</p>
 </body>
 </html>
