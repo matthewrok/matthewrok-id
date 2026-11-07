@@ -16,6 +16,8 @@
     <script src="/assets/js/supabase.js"></script>
     <script src="/assets/js/access-guard.js?v=20261107-authfix1"></script>
     <script defer src="/assets/js/session-manager.js?v=20261107-authfix1"></script>
+    <link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
+    <link rel="stylesheet" href="/assets/css/member-onboarding.css?v=20261107-pr4">
 
     <style>
         :root {
@@ -449,5 +451,22 @@
             }
         })();
     </script>
+    <script defer src="/assets/js/global-menu.js?v=20261104-13"></script>
+    <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
+    <div id="memberOnboarding" class="mj-onboarding" role="dialog" aria-modal="true" aria-labelledby="memberOnboardingTitle" aria-describedby="memberOnboardingDescription" hidden>
+      <section class="mj-onboarding__card">
+        <span class="mj-onboarding__eyebrow">MEMBER QUICK START</span>
+        <div class="mj-onboarding__icon" aria-hidden="true">✦</div>
+        <h2 id="memberOnboardingTitle">Selamat datang di Member Center!</h2>
+        <p id="memberOnboardingDescription">Semua aktivitas akun MATTHEW JOKI bisa kamu pantau dari satu tempat.</p>
+        <ul class="mj-onboarding__steps">
+          <li><b>1</b><span><strong>Pesanan terbaru</strong> — cek status, detail, dan invoice pesananmu.</span></li>
+          <li><b>2</b><span><strong>Notification Center</strong> — ikuti pembaruan progres dari admin.</span></li>
+          <li><b>3</b><span><strong>Rating & Testimoni</strong> — beri ulasan setelah pesanan selesai.</span></li>
+        </ul>
+        <button id="memberOnboardingDone" class="mj-onboarding__button" type="button">MENGERTI, LANJUTKAN</button>
+      </section>
+    </div>
+    <script defer src="/assets/js/member-onboarding.js?v=20261107-pr4"></script>
 </body>
 </html>
