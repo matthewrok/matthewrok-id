@@ -321,7 +321,7 @@
 
                 document.getElementById('memberName').textContent = profile.full_name || user.email?.split('@')[0] || 'Member';
                 document.getElementById('profileEmail').textContent = user.email || '—';
-                document.getElementById('memberLevel').textContent = level.name.toUpperCase() + ' MEMBER';
+                document.getElementById('memberLevel').textContent = String(profile.role || 'member').toUpperCase();
                 document.getElementById('totalOrders').textContent = String(orders.length);
                 document.getElementById('completedOrders').textContent = String(done);
                 document.getElementById('activeOrders').textContent = String(active);
