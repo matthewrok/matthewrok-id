@@ -59,6 +59,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resendButton) resendButton.hidden = true;
   }
 
+  function safeStorageGet(storageName, key) {
+    try { return window[storageName].getItem(key); }
+    catch (error) { console.warn("[MATTHEW auth] Storage read unavailable:", error); return null; }
+  }
+  function safeStorageSet(storageName, key, value) {
+    try { window[storageName].setItem(key, value); return true; }
+    catch (error) { console.warn("[MATTHEW auth] Storage write unavailable:", error); return false; }
+  }
+  function safeStorageRemove(storageName, key) {
+    try { window[storageName].removeItem(key); }
+    catch (error) { console.warn("[MATTHEW auth] Storage cleanup unavailable:", error); }
+  }
+
   function setBusy(form, busy, label) {
     const button = form.querySelector('button[type="submit"]');
     if (!button) return;
@@ -212,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { error } = await client.from("visitor_logs").insert({ visitor_name: visitorName });
         if (error) throw error;
-        sessionStorage.setItem("matthewVisitorName", visitorName);
+        safeStorageSet("sessionStorage", "matthewVisitorName", visitorName);
         showMessage("Berhasil masuk sebagai tamu. Mengalihkan...", "success");
         window.location.assign("/");
       } catch (error) {
