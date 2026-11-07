@@ -38,7 +38,8 @@
 <link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
   <link rel="stylesheet" href="/assets/css/home-blue-redesign.css?v=20261104-2">
   <link rel="stylesheet" href="/assets/css/floating-cs.css?v=20261104-2">
-  <style>#authScreen{display:none!important}</style>
+  <style>#authScreen{display:none!important}@media(max-width:700px){.app-bento-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app-hero .hero-content{max-width:100%}.app-hero .hero-trust{flex-wrap:wrap}.app-hero .app-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.app-hero .app-stats>div{padding:10px 8px}.app-hero .app-stats strong{font-size:1.1rem}.app-hero .app-stats span{font-size:.62rem}}.app-quick-access{padding-top:26px;padding-bottom:22px}.app-hero .app-hero-top{position:relative;z-index:1}.app-hero .app-stats{position:relative;z-index:1}
+</style>
   <style id="app-like-home-redesign">
 :root{--bg-main:#060b19;--bg-card:#0f172a;--bg-card-hover:#1e293b;--text-main:#f8fafc;--text-muted:#94a3b8;--accent-blue:#3b82f6;--accent-green:#10b981;--border-color:#1e293b;--nav-height:65px}
 html{scroll-behavior:smooth;scroll-padding-top:88px}body{background:var(--bg-main);color:var(--text-main);padding-bottom:calc(var(--nav-height) + 28px)}#site{max-width:100%;overflow:clip}#site>header{position:sticky;top:0;z-index:100;background:rgba(6,11,25,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border-color)}#site>header .container.nav{min-height:68px}.brand{color:var(--text-main)}.brand small{color:var(--text-muted)}.app-auth-actions{display:flex;align-items:center;gap:7px;margin-left:auto}.app-auth-actions a{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:11px;text-decoration:none;font-size:.76rem;font-weight:800;white-space:nowrap}.app-login-link{color:#bfdbfe;border:1px solid rgba(96,165,250,.35)}.app-register-link{color:#fff;background:#2563eb;border:1px solid #3b82f6}#site:has(#navUser:not(:empty)) .app-auth-actions{display:none!important}.announcement-ticker{margin:10px auto;max-width:1180px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-card)}
@@ -128,15 +129,17 @@ html{scroll-behavior:smooth;scroll-padding-top:88px}body{background:var(--bg-mai
          DRAGON KINGDOM HERO
     ================================== -->
 
-    <section class="hero dragon-hero" aria-labelledby="hero-title">
+    <section class="hero dragon-hero app-hero" aria-labelledby="hero-title">
 <div class="hero-vignette" aria-hidden="true"></div>
       <div class="hero-content">
-        <h1 id="hero-title">MATTHEW</h1>
+        <div class="app-hero-top"><span class="app-live-dot" aria-hidden="true"></span><span>MATTHEW JOKI · OFFICIAL SERVICE</span></div>
+        <h1 id="hero-title">JOKI ROK TERPERCAYA</h1>
         <p class="hero-description">Kenali Matthew lebih dekat, jelajahi layanan joki Rise of Kingdoms, gunakan tools gratis, dan pantau progres pesanan dalam satu portal.</p>
         <div class="hero-actions">
           <a href="#about" class="btn btn-gold">KENALI MATTHEW <span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-trust"><span class="trust-mark">✦</span><span>PROFESIONAL</span><i></i><span>TERPERCAYA</span><i></i><span>RESPONSIF</span></div>
+        <div class="app-stats" aria-label="Statistik layanan"><div><strong>100+</strong><span>Transaksi</span></div><div><strong>2025</strong><span>Mulai melayani</span></div><div><strong>24/7</strong><span>Akses portal</span></div></div>
 
     <!-- =================================
          DAFTAR PRODUK JOKI
@@ -150,6 +153,19 @@ html{scroll-behavior:smooth;scroll-padding-top:88px}body{background:var(--bg-mai
 
       <a class="hero-scroll" href="#kingdom-tools" aria-label="Scroll ke layanan">JELAJAHI KERAJAAN <span>↓</span></a>
       <div class="hero-index" aria-hidden="true">01 <span>/</span> DRAGON KINGDOM</div>
+    </section>
+
+    <section class="app-section app-quick-access container" aria-labelledby="quickAccessTitle">
+      <div class="eyebrow">SEMUA DALAM SATU PORTAL</div>
+      <h2 id="quickAccessTitle" class="section-title">JELAJAHI LAYANAN</h2>
+      <div class="line"></div>
+      <div class="app-bento-grid">
+        <a class="app-bento-card app-bento-wide" href="#produk-joki"><span class="app-bento-icon" aria-hidden="true">🏰</span><strong>Paket Joki</strong><small>Pilih layanan sesuai target akun</small></a>
+        <a class="app-bento-card" href="joki-matthew.html"><span class="app-bento-icon" aria-hidden="true">⌁</span><strong>Lacak Progress</strong><small>Pantau pesanan</small></a>
+        <a class="app-bento-card" href="calculator-resource.html"><span class="app-bento-icon" aria-hidden="true">⚖</span><strong>Resource Tools</strong><small>Kalkulator resource</small></a>
+        <a class="app-bento-card" href="requirements-city-hall.html"><span class="app-bento-icon" aria-hidden="true">♜</span><strong>City Hall Guide</strong><small>Syarat upgrade CH</small></a>
+        <a class="app-bento-card" href="support-matthew.html"><span class="app-bento-icon" aria-hidden="true">♥</span><strong>Support Matthew</strong><small>Dukung layanan</small></a>
+      </div>
     </section>
 
     <!-- =================================
