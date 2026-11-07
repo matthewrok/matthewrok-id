@@ -25,7 +25,12 @@
           delete event.request.headers;
         }
         if (event.extra) delete event.extra;
+        if (event.tags) delete event.tags;
+        if (event.contexts) delete event.contexts;
         if (event.message) event.message = scrubText(event.message);
+        if (event.transaction) event.transaction = scrubText(event.transaction);
+        if (event.culprit) event.culprit = scrubText(event.culprit);
+        if (event.logentry?.message) event.logentry.message = scrubText(event.logentry.message);
         if (Array.isArray(event.exception?.values)) {
           event.exception.values = event.exception.values.map(exception => ({
             ...exception,
@@ -38,6 +43,7 @@
           ).map(item => {
             const safe = { ...item };
             delete safe.data;
+            if (safe.message) safe.message = scrubText(safe.message);
             return safe;
           });
         }
