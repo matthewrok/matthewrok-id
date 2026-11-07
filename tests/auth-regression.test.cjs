@@ -225,7 +225,7 @@ test("admin pages are restricted to admin role", async t => {
 test("access guard redirects unauthenticated and inactive accounts to login", async () => {
   const visitor = await runAccessGuard({ pathname: "/worker.html", role: "member", session: false });
   assert.equal(visitor.redirects.length, 1);
-  assert.match(visitor.redirects[0], /^\/login\.html\?next=/);
+  assert.match(visitor.redirects[0], /^\/login\/\?next=/);
 
   const suspended = await runAccessGuard({ pathname: "/worker.html", role: "worker", accountStatus: "suspended" });
   assert.equal(suspended.redirects.length, 1);
