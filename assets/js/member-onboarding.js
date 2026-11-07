@@ -41,6 +41,18 @@
       if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
     };
     button.addEventListener("click", finish, { once: true });
+    overlay.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        finish();
+        return;
+      }
+      if (event.key === "Tab") {
+        // The dialog currently has one interactive control; keep keyboard focus inside it.
+        event.preventDefault();
+        button.focus();
+      }
+    });
   };
 
   if (document.readyState === "loading") {
