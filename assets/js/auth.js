@@ -59,17 +59,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resendButton) resendButton.hidden = true;
   }
 
+  function getStorage(storageName) {
+    try {
+      if (window && window[storageName]) return window[storageName];
+      if (typeof globalThis !== "undefined" && globalThis[storageName]) return globalThis[storageName];
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage access unavailable:", error);
+    }
+    return null;
+  }
   function safeStorageGet(storageName, key) {
-    try { return window[storageName].getItem(key); }
-    catch (error) { console.warn("[MATTHEW auth] Storage read unavailable:", error); return null; }
+    try {
+      const storage = getStorage(storageName);
+      return storage ? storage.getItem(key) : null;
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage read unavailable:", error);
+      return null;
+    }
   }
   function safeStorageSet(storageName, key, value) {
-    try { window[storageName].setItem(key, value); return true; }
-    catch (error) { console.warn("[MATTHEW auth] Storage write unavailable:", error); return false; }
+    try {
+      const storage = getStorage(storageName);
+      if (!storage) return false;
+      storage.setItem(key, value);
+      return true;
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage write unavailable:", error);
+      return false;
+    }
   }
   function safeStorageRemove(storageName, key) {
-    try { window[storageName].removeItem(key); }
-    catch (error) { console.warn("[MATTHEW auth] Storage cleanup unavailable:", error); }
+    try {
+      const storage = getStorage(storageName);
+      if (storage) storage.removeItem(key);
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage cleanup unavailable:", error);
+    }
   }
 
   function setBusy(form, busy, label) {
