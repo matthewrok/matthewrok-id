@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const { error } = await client.auth.resend({
             type: "signup",
             email: resendButton.dataset.email,
-            options: { emailRedirectTo: window.location.origin + "/email-confirmed.html" }
+            options: { emailRedirectTo: window.location.origin + "/email-confirmed/" }
           });
           if (error) throw error;
           showMessage("Jika akun tersebut menunggu verifikasi, link baru telah dikirim. Periksa Gmail, termasuk folder Spam.", "success");
@@ -59,17 +59,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resendButton) resendButton.hidden = true;
   }
 
+  function getStorage(storageName) {
+    try {
+      if (window && window[storageName]) return window[storageName];
+      if (typeof globalThis !== "undefined" && globalThis[storageName]) return globalThis[storageName];
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage access unavailable:", error);
+    }
+    return null;
+  }
   function safeStorageGet(storageName, key) {
-    try { return window[storageName].getItem(key); }
-    catch (error) { console.warn("[MATTHEW auth] Storage read unavailable:", error); return null; }
+    try {
+      const storage = getStorage(storageName);
+      return storage ? storage.getItem(key) : null;
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage read unavailable:", error);
+      return null;
+    }
   }
   function safeStorageSet(storageName, key, value) {
-    try { window[storageName].setItem(key, value); return true; }
-    catch (error) { console.warn("[MATTHEW auth] Storage write unavailable:", error); return false; }
+    try {
+      const storage = getStorage(storageName);
+      if (!storage) return false;
+      storage.setItem(key, value);
+      return true;
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage write unavailable:", error);
+      return false;
+    }
   }
   function safeStorageRemove(storageName, key) {
-    try { window[storageName].removeItem(key); }
-    catch (error) { console.warn("[MATTHEW auth] Storage cleanup unavailable:", error); }
+    try {
+      const storage = getStorage(storageName);
+      if (storage) storage.removeItem(key);
+    } catch (error) {
+      console.warn("[MATTHEW auth] Storage cleanup unavailable:", error);
+    }
   }
 
   function setBusy(form, busy, label) {
@@ -143,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage("Login berhasil. Membuka kerajaan...", "success");
         // Setelah login, semua role diarahkan ke halaman utama MATTHEW JOKI.
         // Parameter ?next sengaja diabaikan agar login tidak membuka halaman worker/admin.
-        window.location.replace("/index.html");
+        window.location.replace("/");
       } catch (error) {
         showMessage(friendlyAuthError(error) || "Login gagal. Periksa kembali email dan password.", "error");
         if (/email not confirmed|email_not_confirmed/i.test(String(error?.message || ""))) showResendButton(email);
@@ -159,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("resetEmail").value.trim();
       try {
         const { error } = await client.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + "/reset-password.html"
+          redirectTo: window.location.origin + "/reset-password/"
         });
         if (error) throw error;
         showMessage("Jika email terdaftar, link pemulihan telah dikirim. Periksa inbox dan folder spam.", "success");
@@ -227,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (error) throw error;
         safeStorageSet("sessionStorage", "matthewVisitorName", visitorName);
         showMessage("Berhasil masuk sebagai tamu. Mengalihkan...", "success");
-        window.location.assign("index.html");
+        window.location.assign("/");
       } catch (error) {
         console.error("Visitor logging failed:", error);
         if (error && (error.code === "42P01" || error.code === "42501" || /visitor_logs|permission|policy|relation/i.test(error.message || ""))) {
@@ -250,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (password.length < 6) { showMessage("Password minimal 6 karakter.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       if (password !== confirmPassword) { showMessage("Konfirmasi password tidak sama. Periksa kembali penulisannya.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       try {
-        const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed.html" } });
+        const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed/" } });
         if (error) throw error;
         if (data.session) await client.auth.signOut({ scope: "local" });
         showMessage("Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual. Jika email belum masuk, kamu bisa meminta link verifikasi baru di bawah.", "success");

@@ -37,7 +37,7 @@ function makeLoginHarness({ role = "member", accountStatus = "active", profileEr
   const passwordField = { value: "correct-password" };
   const rememberField = { checked: false };
   const location = {
-    pathname: "/login.html",
+    pathname: "/login/",
     search: "?next=%2Fworker.html",
     origin: "https://matthewrok.my.id",
     replace: target => redirects.push(target),
@@ -109,7 +109,7 @@ test("successful login for every supported role always redirects to homepage, ig
     await t.test(role, async () => {
       const h = makeLoginHarness({ role });
       await h.submit();
-      assert.deepEqual(h.redirects, ["/index.html"]);
+      assert.deepEqual(h.redirects, ["/"]);
       assert.equal(h.signOutCalls.length, 0);
     });
   }
@@ -118,7 +118,7 @@ test("successful login for every supported role always redirects to homepage, ig
 test("active account status is normalized before login is accepted", async () => {
   const h = makeLoginHarness({ accountStatus: " ACTIVE " });
   await h.submit();
-  assert.deepEqual(h.redirects, ["/index.html"]);
+  assert.deepEqual(h.redirects, ["/"]);
   assert.equal(h.signOutCalls.length, 0);
 });
 
@@ -217,7 +217,7 @@ test("admin pages are restricted to admin role", async t => {
   for (const role of ROLES.filter(item => item !== "admin")) {
     await t.test(role, async () => {
       const result = await runAccessGuard({ pathname: "/admin/dashboard.html", role });
-      assert.deepEqual(result.redirects, ["/index.html?access=denied"]);
+      assert.deepEqual(result.redirects, ["/?access=denied"]);
     });
   }
 });
@@ -225,11 +225,11 @@ test("admin pages are restricted to admin role", async t => {
 test("access guard redirects unauthenticated and inactive accounts to login", async () => {
   const visitor = await runAccessGuard({ pathname: "/worker.html", role: "member", session: false });
   assert.equal(visitor.redirects.length, 1);
-  assert.match(visitor.redirects[0], /^\/login\.html\?next=/);
+  assert.match(visitor.redirects[0], /^\/login\/\?next=/);
 
   const suspended = await runAccessGuard({ pathname: "/worker.html", role: "worker", accountStatus: "suspended" });
   assert.equal(suspended.redirects.length, 1);
-  assert.match(suspended.redirects[0], /^\/login\.html\?next=/);
+  assert.match(suspended.redirects[0], /^\/login\/\?next=/);
 });
 
 
@@ -239,7 +239,7 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
   const scheduled = new Map();
   const cleared = [];
   let nextTimerId = 1;
-  const location = { pathname: "/login.html", replace() {} };
+  const location = { pathname: "/login/", replace() {} };
   const localStorage = makeStorage();
   const sessionStorage = makeStorage();
   const client = {
@@ -417,9 +417,9 @@ test("legacy order RPC enforces the same active member-role allowlist during com
 test("all website routes use the approved blue/navy browser theme colors", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
-    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login.html", "member-dashboard.html", "register.html",
-    "requirements-city-hall.html", "reset-password.html",
+    "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login/index.html", "member-dashboard.html", "register/index.html",
+    "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
   const approved = new Set(["#071326", "#071426", "#071a3a"]);
@@ -434,14 +434,46 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
 test("all pages load the current shared blue theme cache version", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
-    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login.html", "member-dashboard.html", "register.html",
-    "requirements-city-hall.html", "reset-password.html",
+    "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login/index.html", "member-dashboard.html", "register/index.html",
+    "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13-mm2/, page + " should load the current blue theme");
+  }
+});
+
+
+
+test("canonical auth routes include brand favicon and root-relative assets", () => {
+  const routes = [
+    ["login/index.html", "/login/"],
+    ["register/index.html", "/register/"],
+    ["reset-password/index.html", "/reset-password/"],
+    ["email-confirmed/index.html", "/email-confirmed/"]
+  ];
+  for (const [file, canonical] of routes) {
+    const html = fs.readFileSync(path.join(ROOT, file), "utf8");
+    assert.match(html, /rel="icon"[^>]+logo-matthew\.png/, file + " should load the brand favicon");
+    assert.ok(html.includes('rel="canonical" href="https://matthewrok.my.id' + canonical + '"'), file + " should declare its canonical URL");
+    const relativeAssets = html.match(/(?:src|href)=["'](?!\/|https?:|#|mailto:|data:)[^"']+["']/g) || [];
+    assert.deepEqual(relativeAssets, [], file + " must not use fragile relative asset paths");
+  }
+});
+
+test("legacy auth URLs preserve query strings and hashes when redirecting to pretty routes", () => {
+  const legacyRoutes = [
+    ["login.html", "/login/"],
+    ["register.html", "/register/"],
+    ["reset-password.html", "/reset-password/"],
+    ["email-confirmed.html", "/email-confirmed/"]
+  ];
+  for (const [file, route] of legacyRoutes) {
+    const html = fs.readFileSync(path.join(ROOT, file), "utf8");
+    assert.match(html, new RegExp("location\\.replace\\(\\\"" + route.replaceAll("/", "\\/") + "\\\"\\+location\\.search\\+location\\.hash\\)"), file + " should preserve query and hash");
+    assert.match(html, new RegExp("http-equiv=\\\"refresh\\\""), file + " should have a no-JS fallback");
   }
 });
 
@@ -501,7 +533,7 @@ test("maintenance page, global gate, and admin control are wired across every ro
   assert.match(dashboard, /maintenanceDisableNow/);
   assert.match(maintenancePage, /maintenanceMessage/);
   for (const file of [
-    "index.html","login.html","register.html","reset-password.html","email-confirmed.html",
+    "index.html","login/index.html","register/index.html","reset-password/index.html","email-confirmed/index.html",
     "member-dashboard.html","your-order.html","inbox.html","worker.html","joki-matthew.html",
     "calculator-resource.html","requirements-city-hall.html","support-matthew.html",
     "admin/dashboard.html","admin/joki-progress.html"
@@ -555,7 +587,7 @@ test("Inbox send Edge Function fails closed during maintenance and requires an a
 });
 
 test("login and homepage initialize Supabase only once per page", () => {
-  for (const page of ["login.html", "index.html"]) {
+  for (const page of ["login/index.html", "index.html"]) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     assert.equal((html.match(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2/g) || []).length, 1, page + " should load Supabase JS once");
     assert.equal((html.match(/(?:src=["'])\/?assets\/js\/supabase\.js/g) || []).length, 1, page + " should initialize one Supabase client");
@@ -619,9 +651,9 @@ test("admin helper hardening requires an active profile and preserves a locked s
 test("every public/private route loads Supabase before the maintenance gate", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html", "calculator-resource.html",
-    "email-confirmed.html", "inbox.html", "index.html", "joki-matthew.html",
-    "login.html", "member-dashboard.html", "register.html",
-    "requirements-city-hall.html", "reset-password.html", "support-matthew.html",
+    "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
+    "login/index.html", "member-dashboard.html", "register/index.html",
+    "requirements-city-hall.html", "reset-password/index.html", "support-matthew.html",
     "worker.html", "your-order.html", "maintenance.html"
   ];
   for (const page of pages) {
