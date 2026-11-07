@@ -37,7 +37,7 @@ function makeLoginHarness({ role = "member", accountStatus = "active", profileEr
   const passwordField = { value: "correct-password" };
   const rememberField = { checked: false };
   const location = {
-    pathname: "/login.html",
+    pathname: "/login/",
     search: "?next=%2Fworker.html",
     origin: "https://matthewrok.my.id",
     replace: target => redirects.push(target),
@@ -109,7 +109,7 @@ test("successful login for every supported role always redirects to homepage, ig
     await t.test(role, async () => {
       const h = makeLoginHarness({ role });
       await h.submit();
-      assert.deepEqual(h.redirects, ["/index.html"]);
+      assert.deepEqual(h.redirects, ["/"]);
       assert.equal(h.signOutCalls.length, 0);
     });
   }
@@ -118,7 +118,7 @@ test("successful login for every supported role always redirects to homepage, ig
 test("active account status is normalized before login is accepted", async () => {
   const h = makeLoginHarness({ accountStatus: " ACTIVE " });
   await h.submit();
-  assert.deepEqual(h.redirects, ["/index.html"]);
+  assert.deepEqual(h.redirects, ["/"]);
   assert.equal(h.signOutCalls.length, 0);
 });
 
@@ -217,7 +217,7 @@ test("admin pages are restricted to admin role", async t => {
   for (const role of ROLES.filter(item => item !== "admin")) {
     await t.test(role, async () => {
       const result = await runAccessGuard({ pathname: "/admin/dashboard.html", role });
-      assert.deepEqual(result.redirects, ["/index.html?access=denied"]);
+      assert.deepEqual(result.redirects, ["/?access=denied"]);
     });
   }
 });
@@ -239,7 +239,7 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
   const scheduled = new Map();
   const cleared = [];
   let nextTimerId = 1;
-  const location = { pathname: "/login.html", replace() {} };
+  const location = { pathname: "/login/", replace() {} };
   const localStorage = makeStorage();
   const sessionStorage = makeStorage();
   const client = {
