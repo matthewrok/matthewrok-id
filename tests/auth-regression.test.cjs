@@ -753,7 +753,7 @@ test("Your Order retrieves the private tracking token without exposing it in ord
   assert.match(source, /rpc\("get_my_joki_tracking_token"/);
   assert.match(source, /sessionStorage\.setItem\("matthewProgressToken"/);
   assert.match(source, /window\.location\.assign\("\/joki-matthew\.html"\)/);
-  assert.doesNotMatch(source, /tracking_token/);
+  assert.doesNotMatch(source, /order\.tracking_token/);
 });
 
 test("tracking accepts a token copied from a WhatsApp label and explains legacy order-code rotation", () => {
