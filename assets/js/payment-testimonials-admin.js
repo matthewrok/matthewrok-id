@@ -77,16 +77,17 @@
       if (!text || !line.bbox) continue;
       const digits = text.replace(/\D/g,"");
       const hasNpwp = digits.length === 15 || digits.length === 16;
+      const hasNpwpLabel = /\\bNPWP\\b/i.test(text);
       const hasReferenceLabel = /\b(ref(?:erence)?|referensi|no\.?\s*(?:ref|referensi)|nomor\s*referensi|transaction\s*id|id\s*transaksi|no\.?\s*transaksi)\b/i.test(text);
-      if (hasNpwp || hasReferenceLabel) {
+      if (hasNpwp || hasNpwpLabel || hasReferenceLabel) {
         masks.push({
           x0:Math.max(0,(line.bbox.x0-8)/ocrScale),
           y0:Math.max(0,(line.bbox.y0-5)/ocrScale),
           x1:Math.min(bitmap.width,(line.bbox.x1+8)/ocrScale),
           y1:Math.min(bitmap.height,(line.bbox.y1+5)/ocrScale),
-          type:hasNpwp ? "NPWP" : "Ref"
+          type:(hasNpwp || hasNpwpLabel) ? "NPWP" : "Ref"
         });
-        const labelOnly = hasReferenceLabel && !text.replace(/\\b(ref(?:erence)?|referensi|no\\.?|nomor|transaction|id|transaksi)\\b/gi,"").replace(/[\\s:：#.-]/g,"");
+        const labelOnly = (hasReferenceLabel || hasNpwpLabel) && !text.replace(/\\b(npwp|ref(?:erence)?|referensi|no\\.?|nomor|transaction|id|transaksi)\\b/gi,"").replace(/[\\s:：#.-]/g,"");
         const nextLine = lines[index+1];
         if (labelOnly && nextLine?.bbox) {
           masks.push({
@@ -94,7 +95,7 @@
             y0:Math.max(0,(nextLine.bbox.y0-5)/ocrScale),
             x1:Math.min(bitmap.width,(nextLine.bbox.x1+8)/ocrScale),
             y1:Math.min(bitmap.height,(nextLine.bbox.y1+5)/ocrScale),
-            type:"Ref"
+            type:hasNpwpLabel ? "NPWP" : "Ref"
           });
         }
       }
