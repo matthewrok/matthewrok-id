@@ -84,13 +84,13 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 
 ### CSS utama
 - `style.css` — gaya dasar/beranda.
-- `modern-theme.css`, `blue-theme.css`, `home-blue-redesign.css` — tema dan desain beranda.
+- `blue-theme.css`, `style.css` — gaya dasar dan penyelarasan tema biru.
 - `global-menu.css` — menu global.
 - `auth.css`, `auth-visitor.css` — autentikasi dasar dan akses visitor.
 - `login-layout.css` — tata letak login responsif, benefit member, akses tamu, dan animasi meteor biru.
 - `calculator.css`, `requirements.css` — halaman tools.
 - `joki-matthew.css`, `your-order.css`, `worker-inbox.css` — layanan dan halaman terkait.
-- `admin-dashboard.css`, `tokens.css`, `floating-cs.css` — admin, token desain, dan tombol CS.
+- `admin-dashboard.css`, `tokens.css` — gaya admin dan token desain.
 
 ### JavaScript utama
 - `supabase.js`, `session-manager.js` — inisialisasi Supabase dan pengelolaan sesi.
