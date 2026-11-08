@@ -87,7 +87,7 @@
           y1:Math.min(bitmap.height,(line.bbox.y1+5)/ocrScale),
           type:(hasNpwp || hasNpwpLabel) ? "NPWP" : "Ref"
         });
-        const labelOnly = (hasReferenceLabel || hasNpwpLabel) && !text.replace(/\b(npwp|ref(?:erence)?|referensi|no\.?|nomor|transaction|id|transaksi)\b/gi,"").replace(/[\\s:：#.-]/g,"");
+        const labelOnly = (hasReferenceLabel || hasNpwpLabel) && !text.replace(/\b(npwp|ref(?:erence)?|referensi|no\.?|nomor|transaction|id|transaksi)\b/gi,"").replace(/[\s:：#.-]/g,"");
         const nextLine = lines[index+1];
         if (labelOnly && nextLine?.bbox) {
           masks.push({
