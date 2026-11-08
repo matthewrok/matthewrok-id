@@ -1,0 +1,130 @@
+/*
+ * Shadow Reign Design System — shared foundations
+ * Version: 1.0.0
+ *
+ * Intentionally token-only: this file does not style page elements or alter
+ * existing layouts. Pages can adopt these variables incrementally without
+ * changing their JavaScript, DOM contracts, authentication, or Supabase flows.
+ */
+
+:root {
+  /* Core palette */
+  --sr-color-void: #050506;
+  --sr-color-obsidian: #0a0a0d;
+  --sr-color-surface: #101014;
+  --sr-color-surface-raised: #17171d;
+  --sr-color-surface-soft: #1e1e26;
+  --sr-color-border: rgba(214, 177, 104, 0.18);
+  --sr-color-border-strong: rgba(214, 177, 104, 0.38);
+
+  /* Text */
+  --sr-color-text: #f4efe5;
+  --sr-color-text-muted: #aaa39a;
+  --sr-color-text-subtle: #77716b;
+  --sr-color-heading: #fff8e9;
+
+  /* Royal gold accent */
+  --sr-color-gold: #d6b168;
+  --sr-color-gold-bright: #f0d18a;
+  --sr-color-gold-deep: #9b7335;
+  --sr-color-gold-wash: rgba(214, 177, 104, 0.1);
+
+  /* Semantic states */
+  --sr-color-success: #69bd8a;
+  --sr-color-warning: #e6b75f;
+  --sr-color-danger: #d86c70;
+  --sr-color-info: #8aa9d6;
+
+  /* Typography */
+  --sr-font-display: "Cinzel", Georgia, serif;
+  --sr-font-body: "Inter", "Segoe UI", sans-serif;
+  --sr-font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  /* Type scale */
+  --sr-text-xs: 0.75rem;
+  --sr-text-sm: 0.875rem;
+  --sr-text-md: 1rem;
+  --sr-text-lg: 1.125rem;
+  --sr-text-xl: 1.375rem;
+  --sr-text-2xl: clamp(1.65rem, 3vw, 2.35rem);
+  --sr-text-3xl: clamp(2rem, 5vw, 3.5rem);
+
+  /* Spacing */
+  --sr-space-1: 0.25rem;
+  --sr-space-2: 0.5rem;
+  --sr-space-3: 0.75rem;
+  --sr-space-4: 1rem;
+  --sr-space-5: 1.25rem;
+  --sr-space-6: 1.5rem;
+  --sr-space-8: 2rem;
+  --sr-space-10: 2.5rem;
+  --sr-space-12: 3rem;
+  --sr-space-16: 4rem;
+
+  /* Shape and elevation */
+  --sr-radius-sm: 0.5rem;
+  --sr-radius-md: 0.85rem;
+  --sr-radius-lg: 1.15rem;
+  --sr-radius-xl: 1.5rem;
+  --sr-radius-pill: 999px;
+  --sr-shadow-card: 0 14px 36px rgba(0, 0, 0, 0.34);
+  --sr-shadow-gold: 0 0 24px rgba(214, 177, 104, 0.12);
+  --sr-shadow-overlay: 0 24px 70px rgba(0, 0, 0, 0.62);
+
+  /* Motion */
+  --sr-ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sr-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --sr-duration-fast: 140ms;
+  --sr-duration-normal: 220ms;
+  --sr-duration-slow: 360ms;
+
+  /* Layout */
+  --sr-content-width: 1180px;
+  --sr-reading-width: 760px;
+  --sr-header-height: 72px;
+  --sr-page-gutter: clamp(1rem, 4vw, 2rem);
+
+  /* Layering */
+  --sr-z-base: 1;
+  --sr-z-sticky: 20;
+  --sr-z-dropdown: 40;
+  --sr-z-overlay: 80;
+  --sr-z-modal: 100;
+  --sr-z-toast: 120;
+}
+
+/*
+ * Optional adoption helpers. They only take effect when a page explicitly
+ * opts in by adding the .sr-theme class to its body element.
+ */
+body.sr-theme {
+  color: var(--sr-color-text);
+  background: var(--sr-color-void);
+  font-family: var(--sr-font-body);
+  color-scheme: dark;
+}
+
+.sr-theme :is(h1, h2, h3, h4, .sr-display) {
+  color: var(--sr-color-heading);
+  font-family: var(--sr-font-display);
+}
+
+.sr-theme :is(button, input, select, textarea) {
+  font: inherit;
+}
+
+.sr-theme :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--sr-color-gold-bright);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-theme *,
+  .sr-theme *::before,
+  .sr-theme *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
