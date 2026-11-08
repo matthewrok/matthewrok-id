@@ -107,8 +107,9 @@
       .single();
 
     if (error || !profile) {
-      app.showMessage("Profil belum tersedia. Coba login kembali.", "error");
-      await db.auth.signOut();
+      // A temporary profile/API failure must not destroy a valid Auth session.
+      app.showMessage("Profil sementara belum dapat dimuat. Periksa koneksi lalu coba lagi.", "error");
+      console.warn("[Home] Profil belum dapat dimuat:", error);
       return;
     }
 
@@ -154,7 +155,8 @@
   });
 
   db.auth.onAuthStateChange((event, session) => {
-    if (event === "INITIAL_SESSION") return;
+    // Token refresh happens silently; it should not trigger another profile query/render.
+    if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"].includes(event)) return;
     window.setTimeout(() => showUser(session?.user || null), 0);
   });
 
