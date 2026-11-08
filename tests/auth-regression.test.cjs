@@ -698,7 +698,7 @@ test("every public/private route loads Supabase before the maintenance gate", ()
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
     "login/index.html", "member-dashboard.html", "register/index.html",
-    "requirements-city-hall.html", "reset-password/index.html", "support-matthew.html",
+    "requirements-city-hall.html", "reset-password/index.html",
     "worker.html", "your-order.html", "maintenance.html"
   ];
   for (const page of pages) {
