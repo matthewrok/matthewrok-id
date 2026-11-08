@@ -18,6 +18,8 @@
   let processedFile = null;
   let previewRequest = 0;
   let previewUrl = null;
+  let ocrEnginePromise = null;
+  const privacyReview = document.getElementById("privacyReview");
 
   const setFeedback = (message, isError = false) => {
     feedback.textContent = message;
@@ -41,6 +43,47 @@
     return logo;
   }
 
+  async function loadOcrEngine() {
+    if (window.Tesseract) return window.Tesseract;
+    if (!ocrEnginePromise) {
+      ocrEnginePromise = new Promise((resolve,reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+        script.async = true;
+        script.onload = () => window.Tesseract ? resolve(window.Tesseract) : reject(new Error("Mesin OCR tidak tersedia."));
+        script.onerror = () => reject(new Error("Mesin OCR gagal dimuat. Periksa koneksi lalu coba lagi."));
+        document.head.append(script);
+      });
+    }
+    return ocrEnginePromise;
+  }
+
+  async function detectSensitiveLines(bitmap) {
+    setFeedback("Memindai NPWP dan nomor referensi pada gambar…");
+    const Tesseract = await loadOcrEngine();
+    const result = await Tesseract.recognize(bitmap,"eng");
+    const lines = result?.data?.lines || [];
+    if (!lines.length) throw new Error("Teks pada gambar belum dapat dipindai. Upload dibatalkan demi keamanan.");
+    const masks = [];
+    for (const line of lines) {
+      const text = String(line.text || "").trim();
+      if (!text || !line.bbox) continue;
+      const digits = text.replace(/\\D/g,"");
+      const hasNpwp = digits.length === 15 || digits.length === 16;
+      const hasReferenceLabel = /\\b(ref(?:erence)?|referensi|no\\.?\\s*(?:ref|referensi)|nomor\\s*referensi|transaction\\s*id|id\\s*transaksi|no\\.?\\s*transaksi)\\b/i.test(text);
+      if (hasNpwp || hasReferenceLabel) {
+        masks.push({
+          x0:Math.max(0,line.bbox.x0-8),
+          y0:Math.max(0,line.bbox.y0-5),
+          x1:Math.min(bitmap.width,line.bbox.x1+8),
+          y1:Math.min(bitmap.height,line.bbox.y1+5),
+          type:hasNpwp ? "NPWP" : "Ref"
+        });
+      }
+    }
+    return masks;
+  }
+
   async function createWatermarkedImage(file) {
     if (!file || !["image/jpeg","image/png","image/webp"].includes(file.type)) {
       throw new Error("Gunakan foto JPG, PNG, atau WebP.");
@@ -53,7 +96,7 @@
       bitmap = await createImageBitmap(file);
     }
     try {
-      const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
+      const sensitiveMasks = await detectSensitiveLines(bitmap);\n      const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
       const width = Math.max(1, Math.round(bitmap.width * scale));
       const height = Math.max(1, Math.round(bitmap.height * scale));
       const canvas = document.createElement("canvas");
@@ -113,7 +156,7 @@
         "image/webp", .88
       ));
       if (blob.size > MAX_OUTPUT_BYTES) throw new Error("Hasil watermark terlalu besar. Gunakan foto dengan resolusi atau ukuran file lebih kecil.");
-      return blob;
+      return {blob,masks:sensitiveMasks};
     } finally {
       bitmap.close?.();
     }
@@ -132,15 +175,15 @@
     }
     try {
       setFeedback("Memproses watermark untuk pratinjau…");
-      const blob = await createWatermarkedImage(file);
+      const result = await createWatermarkedImage(file);
       if (requestId !== previewRequest || fileInput.files?.[0] !== file) return;
-      processedBlob = blob;
+      processedBlob = result.blob;
       processedFile = file;
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       previewUrl = URL.createObjectURL(processedBlob);
       previewImage.src = previewUrl;
       previewWrap.hidden = false;
-      setFeedback("Watermark berhasil dibuat. Foto siap dipublikasikan.");
+      setFeedback(result.masks.length ? `Terdeteksi ${result.masks.length} area sensitif (NPWP/Ref) dan sudah disamarkan. Periksa seluruh foto sebelum publikasi.` : "Pemindaian selesai; tidak ditemukan pola NPWP/Ref yang dikenali. Periksa manual seluruh foto sebelum publikasi.");
     } catch (error) {
       if (requestId !== previewRequest) return;
       previewWrap.hidden = true;
@@ -253,7 +296,7 @@
       const file = fileInput.files?.[0];
       if (!file) throw new Error("Pilih foto pembayaran terlebih dahulu.");
       if (!processedBlob || processedFile !== file) await refreshPreview();
-      if (!processedBlob || processedFile !== file) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");
+      if (!processedBlob || processedFile !== file) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");\n      if (!privacyReview?.checked) throw new Error("Centang konfirmasi setelah memeriksa seluruh pratinjau dan memastikan tidak ada data sensitif yang terlihat.");
       const path = new Date().toISOString().slice(0,10) + "/" + crypto.randomUUID() + ".webp";
       const {error:uploadError} = await db.storage.from("payment-testimonials").upload(path,processedBlob,{
         contentType:"image/webp",upsert:false,cacheControl:"31536000"
@@ -277,7 +320,7 @@
       processedBlob = null;
       processedFile = null;
       await loadItems();
-      setFeedback("Berhasil! Watermark sudah menyatu permanen dengan foto dan dokumentasi langsung dipublikasikan.");
+      setFeedback("Berhasil! Penyamaran otomatis dan watermark sudah menyatu permanen dengan foto, lalu dokumentasi dipublikasikan.");
     } catch (error) {
       console.error("[Payment testimonials admin]",error);
       setFeedback(error.message || "Upload gagal. Periksa konfigurasi bucket dan policy Supabase.",true);
