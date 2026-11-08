@@ -34,7 +34,6 @@ on:
       - "admin/joki-progress.html"
       - "calculator-resource.html"
       - "requirements-city-hall.html"
-      - "support-matthew.html"
       - "supabase/tracking-token-v2.sql"
       - "supabase/tracking-token-v2-cutover.sql"
       - "supabase/tracking-token-v2-rollback.sql"
