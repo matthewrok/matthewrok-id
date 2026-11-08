@@ -557,7 +557,7 @@ Deno.serve(async (req: Request) => {
         return Response.json({ ok: true });
       }
       if (data === "menu" || data === "help") {
-        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PUSAT KONTROL — MATTHEW JOKI</b>\\n━━━━━━━━━━━━━━━━━━\\n\\n📦 <b>OPERASIONAL</b>\\nKelola pesanan dan pantau ringkasan aktivitas.\\n\\n👥 <b>PENGELOLAAN AKUN & WEBSITE</b>\\nAtur role akun, pengumuman, voucher, dan status website.\\n\\n📊 <b>AKTIVITAS & MASUKAN</b>\\nPantau kunjungan website serta ulasan pelanggan.\\n\\nPilih salah satu menu di bawah. Ketik /panel kapan saja untuk membuka panel ini kembali.", { reply_markup: mainMenu });
+        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PUSAT KONTROL — MATTHEW JOKI</b>\\n━━━━━━━━━━━━━━━━━━\\n\\n📦 <b>OPERASIONAL</b>\\nKelola pesanan dan pantau ringkasan aktivitas.\\n\\n👥 <b>PENGELOLAAN AKUN & WEBSITE</b>\\nPantau role otomatis, pengumuman, voucher, dan status website.\\n\\n📊 <b>AKTIVITAS & MASUKAN</b>\\nPantau kunjungan website serta ulasan pelanggan.\\n\\nPilih salah satu menu di bawah. Ketik /panel kapan saja untuk membuka panel ini kembali.", { reply_markup: mainMenu });
         return Response.json({ ok: true });
       }
       const messageId = callback.message?.message_id;
