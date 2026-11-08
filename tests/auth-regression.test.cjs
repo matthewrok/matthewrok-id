@@ -822,3 +822,13 @@ test("homepage does not sign members out when a profile query temporarily fails"
   assert.doesNotMatch(profileFailure, /auth\.signOut/);
   assert.match(source, /!\["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"\]\.includes\(event\)/);
 });
+
+
+test("homepage preconnects critical origins and loads optional Sentry only when configured", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  assert.match(html, /preconnect[^>]+cdn\\.jsdelivr\\.net/);
+  assert.match(html, /preconnect[^>]+aqiwrgnxwtphhwikqtmn\\.supabase\\.co/);
+  assert.match(html, /if \\(!String\\(window\\.MATTHEW_SENTRY_DSN \\|\\| ""\\)\\.trim\\(\\)\\) return/);
+  assert.match(html, /requestIdleCallback/);
+  assert.doesNotMatch(html, /<script defer src="https:\\/\\/browser\\.sentry-cdn\\.com/);
+});
