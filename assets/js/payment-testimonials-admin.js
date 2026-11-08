@@ -70,7 +70,8 @@
     const result = await Tesseract.recognize(ocrCanvas,"eng");
     const lines = result?.data?.lines || [];
     const masks = [];
-    for (const line of lines) {
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
       const text = String(line.text || "").trim();
       if (!text || !line.bbox) continue;
       const digits = text.replace(/\D/g,"");
@@ -84,6 +85,17 @@
           y1:Math.min(bitmap.height,line.bbox.y1+5),
           type:hasNpwp ? "NPWP" : "Ref"
         });
+        const labelOnly = hasReferenceLabel && !text.replace(/\\b(ref(?:erence)?|referensi|no\\.?|nomor|transaction|id|transaksi)\\b/gi,"").replace(/[\\s:：#.-]/g,"");
+        const nextLine = lines[index+1];
+        if (labelOnly && nextLine?.bbox) {
+          masks.push({
+            x0:Math.max(0,nextLine.bbox.x0-8),
+            y0:Math.max(0,nextLine.bbox.y0-5),
+            x1:Math.min(bitmap.width,nextLine.bbox.x1+8),
+            y1:Math.min(bitmap.height,nextLine.bbox.y1+5),
+            type:"Ref"
+          });
+        }
       }
     }
     return masks;
