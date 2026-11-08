@@ -96,10 +96,13 @@
         observeRevealElements();
         return;
       }
-      // Satu pintu autentikasi: gunakan halaman login.html yang baru.
-      // Jangan tampilkan formulir login lama yang masih tertanam di index.html.
-      site?.classList.add("hidden");
-      window.location.replace("/login/");
+      // Homepage bersifat publik. Pengunjung tanpa sesi tetap dapat melihat
+      // katalog, ulasan, FAQ, dan informasi layanan.
+      site?.classList.remove("hidden");
+      const navUser = document.getElementById("navUser");
+      if (navUser) navUser.textContent = "";
+      adminPanel?.classList.add("hidden");
+      observeRevealElements();
       return;
     }
 
