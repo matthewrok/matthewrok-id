@@ -474,7 +474,7 @@ test("Shadow Reign calculator preserves its approved dark palette and calculator
   assert.ok(!["Cek Progres", "Matthew-Raditya", "joki-matthew.html"].some(value => html.includes(value)));
 });
 
-test("all themed pages declare the approved shared or local theme", () => {
+test("all themed pages use the approved black browser theme", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
@@ -484,14 +484,12 @@ test("all themed pages declare the approved shared or local theme", () => {
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
-    const usesSharedBlueTheme = /blue-theme\.css\?v=20261106-blue-pr13-mm2/.test(html) || /blue-theme\.css\?v=20261106-blue-theme-pr13-mm2/.test(html);
-    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && (/fonts\.googleapis\.com\/css2\?family=(?:Cinzel|Inter)/.test(html) || html.includes("shadow-reign") || html.includes("sr-theme"));
-    assert.ok(usesSharedBlueTheme || ownsShadowReignTheme, page + " should declare the shared legacy theme or the Shadow Reign theme");
+    assert.match(html, /name="theme-color" content="#050505"/, page + " should declare the black theme");
+    assert.doesNotMatch(html, /blue-theme\.css|auth-blue\.css|login-layout\.css/, page + " must not load legacy blue styles");
   }
-  const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
-  assert.doesNotMatch(shadowReign, /blue-theme\.css/, "Shadow Reign dashboard keeps its approved black/gold palette");
+  const member = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.match(member, /name="theme-color" content="#050505"/);
 });
-
 
 
 test("canonical auth routes include brand favicon and root-relative assets", () => {
