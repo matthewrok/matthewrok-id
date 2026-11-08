@@ -107,10 +107,14 @@
         .price-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
         .price-value { font-family: var(--font-serif); font-size: 18px; color: var(--accent-gold); font-weight: 700; }
         
-        .action-buttons { display: flex; gap: 8px; }
-        .btn-action { background: transparent; border: 1px solid var(--border-color); color: white; padding: 7px 9px; border-radius: 6px; font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; line-height:1.2; }
-        .btn-action svg { width:13px; height:13px; flex:0 0 13px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
-        .action-buttons { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; }
+        .action-buttons { display: flex; gap: 6px; flex-wrap: nowrap; justify-content: flex-end; }
+        .btn-action { background: transparent; border: 1px solid var(--border-color); color: white; padding: 7px 9px; border-radius: 6px; font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; line-height: 1.2; }
+        .btn-action svg { width: 12px; height: 12px; flex: 0 0 12px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+        .btn-action:disabled { opacity: .65; cursor: wait; }
+        @media (max-width: 380px) {
+            .card-footer { align-items: flex-start; flex-direction: column; gap: 10px; }
+            .action-buttons { justify-content: flex-start; flex-wrap: nowrap; }
+        }
         .admin-note { display:flex; flex-direction:column; gap:4px; margin:16px 0 0; padding-top:12px; border-top:1px dashed var(--border-color); color:var(--text-muted); font-family:var(--font-sans); font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
         .admin-note strong { color:#d4af37; font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
         .btn-action:hover { background: white; color: black; }
@@ -123,7 +127,6 @@
         .empty-state svg { width: 50px; height: 50px; color: var(--text-muted); margin-bottom: 15px; opacity: 0.3; }
         .empty-state h3 { font-family: var(--font-serif); font-size: 18px; color: white; margin-bottom: 5px; }
         .empty-state p { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
-        @media(max-width:380px){.card-footer{align-items:flex-start;gap:10px;flex-wrap:wrap}.action-buttons{justify-content:flex-start}.btn-action{padding:7px 8px;font-size:9px}}
     </style>
 </head>
 <body>
@@ -170,7 +173,7 @@
     <script src="/assets/js/supabase.js"></script>
     <script src="/assets/js/access-guard.js?v=20261108-authfix2"></script>
     <script src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
-    <script src="/assets/js/your-order.js?v=20261108-token-recovery"></script>
+    <script src="/assets/js/your-order.js?v=20261108-invoice-pdf4"></script>
     <script src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
 </html>
