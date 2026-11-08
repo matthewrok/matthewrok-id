@@ -3,16 +3,29 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!client) return;
   const timeout = 30 * 60 * 1000;
   const activityKey = "matthewLastActivity";
+  const storageWriteInterval = 15000;
   let timer;
   let activeSession = false;
-  const loginPage = /(?:^|\/)login\.html$/.test(location.pathname);
+  let lastStorageWrite = 0;
+  const loginPage = /(?:^|\/)login(?:\.html|\/)?$/.test(location.pathname);
+
+  function writeActivity(force = false) {
+    const now = Date.now();
+    if (!force && now - lastStorageWrite < storageWriteInterval) return;
+    try {
+      localStorage.setItem(activityKey, String(now));
+      lastStorageWrite = now;
+    } catch (error) {
+      console.warn("[MATTHEW session] Activity storage unavailable:", error);
+    }
+  }
 
   async function expireSession() {
     clearTimeout(timer);
     if (!activeSession) return;
     activeSession = false;
     if (sessionStorage.getItem("matthewVisitorName")) sessionStorage.removeItem("matthewVisitorName");
-    else await client.auth.signOut();
+    else await client.auth.signOut({ scope: "local" });
     localStorage.removeItem(activityKey);
     if (!loginPage) location.replace("/login/?reason=timeout");
   }
@@ -33,23 +46,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     activeSession = Boolean(session || sessionStorage.getItem("matthewVisitorName"));
     if (!activeSession) return;
-    const last = Number(localStorage.getItem(activityKey) || Date.now());
+    let last = 0;
+    try { last = Number(localStorage.getItem(activityKey) || 0); } catch (_) {}
+    if (!last) last = Date.now();
     const remaining = timeout - (Date.now() - last);
     if (remaining <= 0) return expireSession();
-    localStorage.setItem(activityKey, String(last));
+    writeActivity(true);
     timer = setTimeout(expireSession, remaining);
   }
 
   function activity() {
     if (!activeSession || document.visibilityState !== "visible") return;
-    localStorage.setItem(activityKey, String(Date.now()));
+    writeActivity();
     clearTimeout(timer);
     timer = setTimeout(expireSession, timeout);
   }
 
-  ["click", "keydown", "scroll", "touchstart", "mousemove"].forEach(type =>
+  ["click", "keydown", "scroll", "touchstart"].forEach(type =>
     window.addEventListener(type, activity, { passive: true })
   );
+  if (window.matchMedia?.("(pointer: fine)").matches) {
+    let lastPointerActivity = 0;
+    window.addEventListener("mousemove", () => {
+      const now = Date.now();
+      if (now - lastPointerActivity < 1200) return;
+      lastPointerActivity = now;
+      activity();
+    }, { passive: true });
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") activity();
+  });
   window.addEventListener("storage", event => {
     if (!activeSession || event.key !== activityKey) return;
     clearTimeout(timer);

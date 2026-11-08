@@ -14,8 +14,8 @@
     <!-- Script Asli yang Harus Dipertahankan -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/assets/js/supabase.js"></script>
-    <script src="/assets/js/access-guard.js?v=20261107-authfix1"></script>
-    <script defer src="/assets/js/session-manager.js?v=20261107-authfix1"></script>
+    <script src="/assets/js/access-guard.js?v=20261108-authfix2"></script>
+    <script defer src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
 
     <link rel="stylesheet" href="/assets/css/member-onboarding.css?v=20261107-pr4">
 
@@ -275,21 +275,15 @@
             }
 
             try {
-                setStage('Memeriksa sesi login...');
-                const sessionResult = await withTimeout(client.auth.getSession(), 'Pemeriksaan sesi');
-                const session = sessionResult?.data?.session;
-                if (sessionResult.error || !session) {
-                    location.replace('/login.html?next=member-dashboard.html');
-                    return;
+                setStage('Memverifikasi sesi dan akun...');
+                // Access Guard melakukan satu pemeriksaan sesi bersama untuk semua halaman privat.
+                // Gunakan hasil yang sudah diverifikasi agar permintaan Auth tidak digandakan.
+                if (window.__matthewAccessReady) {
+                    await withTimeout(window.__matthewAccessReady, 'Verifikasi akses', 25000);
                 }
-
-                setStage('Memverifikasi akun...');
-                const userResult = await withTimeout(client.auth.getUser(), 'Verifikasi identitas');
-                const user = userResult?.data?.user;
-                if (userResult.error || !user || !user.email_confirmed_at) {
-                    location.replace('/login.html?next=member-dashboard.html');
-                    return;
-                }
+                const user = window.__matthewVerifiedUser || null;
+                const session = window.__matthewVerifiedSession || null;
+                if (!user || !session) return;
 
                 setStage('Memeriksa status keanggotaan...');
                 const profileResult = await withTimeout(

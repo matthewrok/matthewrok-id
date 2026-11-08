@@ -24,23 +24,6 @@
     authMessage.className = type;
   };
 
-  const observer = "IntersectionObserver" in window
-    ? new IntersectionObserver((entries, currentObserver) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("show");
-          currentObserver.unobserve(entry.target);
-        });
-      }, { threshold: 0.12 })
-    : null;
-
-  function observeRevealElements() {
-    document.querySelectorAll(".reveal").forEach((element) => {
-      if (observer) observer.observe(element);
-      else element.classList.add("show");
-    });
-  }
-
   async function loadMembers() {
     const rows = document.getElementById("memberRows");
     const message = document.getElementById("memberMessage");
@@ -87,7 +70,7 @@
         const navUser = document.getElementById("navUser");
         if (navUser) navUser.textContent = "Tamu: " + visitorName;
         adminPanel?.classList.add("hidden");
-        observeRevealElements();
+
         return;
       }
       // Homepage bersifat publik. Pengunjung tanpa sesi tetap dapat melihat
@@ -96,7 +79,7 @@
       const navUser = document.getElementById("navUser");
       if (navUser) navUser.textContent = "";
       adminPanel?.classList.add("hidden");
-      observeRevealElements();
+
       return;
     }
 
@@ -107,8 +90,9 @@
       .single();
 
     if (error || !profile) {
-      app.showMessage("Profil belum tersedia. Coba login kembali.", "error");
-      await db.auth.signOut();
+      // A temporary profile/API failure must not destroy a valid Auth session.
+      app.showMessage("Profil sementara belum dapat dimuat. Periksa koneksi lalu coba lagi.", "error");
+      console.warn("[Home] Profil belum dapat dimuat:", error);
       return;
     }
 
@@ -136,7 +120,7 @@
 
     // Admin navigation is intentionally kept off the homepage.
     adminPanel?.classList.add("hidden");
-    observeRevealElements();
+
   }
 
   app.showUser = showUser;
@@ -154,7 +138,8 @@
   });
 
   db.auth.onAuthStateChange((event, session) => {
-    if (event === "INITIAL_SESSION") return;
+    // Token refresh happens silently; it should not trigger another profile query/render.
+    if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"].includes(event)) return;
     window.setTimeout(() => showUser(session?.user || null), 0);
   });
 

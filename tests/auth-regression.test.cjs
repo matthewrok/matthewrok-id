@@ -435,7 +435,7 @@ test("legacy order RPC enforces the same active member-role allowlist during com
 });
 
 
-test("all website routes use the approved blue/navy browser theme colors", () => {
+test("all website routes use the approved black browser theme", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
@@ -443,14 +443,13 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
     "requirements-city-hall.html", "reset-password/index.html",
     "worker.html", "your-order.html"
   ];
-  const approved = new Set(["#071326", "#071426", "#071a3a", "#050505"]);
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
-    assert.ok(approved.has(theme), page + " has non-blue theme color: " + theme);
+    assert.equal(theme, "#050505", page + " should use the black theme color");
   }
-  const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
-  assert.match(shadowReign, /name="theme-color" content="#050505"/);
+  const member = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.match(member, /name="theme-color" content="#050505"/);
 });
 
 
@@ -475,7 +474,7 @@ test("Shadow Reign calculator preserves its approved dark palette and calculator
   assert.ok(!["Cek Progres", "Matthew-Raditya", "joki-matthew.html"].some(value => html.includes(value)));
 });
 
-test("all themed pages declare the approved shared or local theme", () => {
+test("all themed pages use the approved black browser theme", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
@@ -485,14 +484,12 @@ test("all themed pages declare the approved shared or local theme", () => {
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
-    const usesSharedBlueTheme = /blue-theme\.css\?v=20261106-blue-pr13-mm2/.test(html) || /blue-theme\.css\?v=20261106-blue-theme-pr13-mm2/.test(html);
-    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && (/fonts\.googleapis\.com\/css2\?family=(?:Cinzel|Inter)/.test(html) || html.includes("shadow-reign") || html.includes("sr-theme"));
-    assert.ok(usesSharedBlueTheme || ownsShadowReignTheme, page + " should declare the shared legacy theme or the Shadow Reign theme");
+    assert.match(html, /name="theme-color" content="#050505"/, page + " should declare the black theme");
+    assert.doesNotMatch(html, /blue-theme\.css|auth-blue\.css|login-layout\.css/, page + " must not load legacy blue styles");
   }
-  const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
-  assert.doesNotMatch(shadowReign, /blue-theme\.css/, "Shadow Reign dashboard keeps its approved black/gold palette");
+  const member = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.match(member, /name="theme-color" content="#050505"/);
 });
-
 
 
 test("canonical auth routes include brand favicon and root-relative assets", () => {
@@ -525,12 +522,10 @@ test("legacy auth URLs preserve query strings and hashes when redirecting to pre
   }
 });
 
-test("shared blue theme overrides legacy red/gold surfaces on secondary pages", () => {
-  const css = fs.readFileSync(path.join(ROOT, "assets/css/blue-theme.css"), "utf8");
-  for (const selector of [".resource-card", ".tax-info", ".stats div", ".search", ".notice", ".card"]) {
-    assert.ok(css.includes(selector), "missing shared blue override for " + selector);
+test("legacy blue theme stylesheets are removed from the repository", () => {
+  for (const file of ["blue-theme.css", "auth-blue.css", "login-layout.css"]) {
+    assert.equal(fs.existsSync(path.join(ROOT, "assets/css", file)), false, file + " should be deleted");
   }
-  assert.match(css, /linear-gradient\(145deg,rgba\(15,42,73/);
 });
 
 
@@ -725,15 +720,15 @@ test("Shadow Reign member dashboard preserves its tab layout, mapped data target
   for (const source of [
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
     "/assets/js/supabase.js",
-    "/assets/js/access-guard.js?v=20261107-authfix1",
-    "/assets/js/session-manager.js?v=20261107-authfix1"
+    "/assets/js/access-guard.js?v=20261108-authfix2",
+    "/assets/js/session-manager.js?v=20261108-authfix2"
   ]) assert.ok(html.includes(source), "missing required head script " + source);
   for (const rpc of ["list_my_joki_orders", "get_my_reviewed_order_ids", "submit_member_joki_review"]) {
     assert.ok(html.includes(rpc), "missing existing member RPC " + rpc);
   }
   assert.match(html, /function switchTab/);
-  assert.match(html, /getSession\(\)/);
-  assert.match(html, /getUser\(\)/);
+  assert.match(html, /__matthewVerifiedSession/);
+  assert.match(html, /__matthewVerifiedUser/);
   assert.match(html, /member-onboarding\.js/);
   assert.match(html, /maintenance-status\.js/);
   const inlineScripts = [...html.matchAll(new RegExp("<script(?![^>]*src=)[^>]*>([\\s\\S]*?)</script>", "g"))];
@@ -781,4 +776,54 @@ test("home Lacak navigation always opens Pesanan Saya, not the direct progress-t
   assert.ok(lacak, "home Lacak navigation item must exist");
   assert.match(lacak[0], /href="\/your-order\.html"/);
   assert.doesNotMatch(lacak[0], /joki-matthew\.html/);
+});
+
+
+test("private member dashboard uses the shared guard result instead of repeating Auth requests", () => {
+  const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.match(html, /access-guard\.js\?v=20261108-authfix2/);
+  assert.match(html, /session-manager\.js\?v=20261108-authfix2/);
+  assert.match(html, /await withTimeout\(window\.__matthewAccessReady/);
+  assert.match(html, /window\.__matthewVerifiedUser/);
+  assert.doesNotMatch(html, /location\.replace\('\/login\.html\?next=member-dashboard\.html'\)/);
+  const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
+  assert.match(guard, /member-dashboard\|worker\|inbox\|your-order/);
+  assert.match(guard, /20000/);
+  assert.match(guard, /Sesi kamu tetap disimpan/);
+  assert.doesNotMatch(guard, /signOut\(\{ scope: "local" \}\);\s*return redirectToLogin\(\);/);
+});
+
+test("session activity writes are throttled to reduce refresh and scroll overhead", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/session-manager.js"), "utf8");
+  assert.match(source, /storageWriteInterval = 15000/);
+  assert.match(source, /if \(!force && now - lastStorageWrite < storageWriteInterval\) return/);
+  assert.match(source, /document\.addEventListener\("visibilitychange"/);
+  assert.match(source, /pointer: fine/);
+});
+
+test("homepage has no legacy meteor or decorative reveal effects", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const home = fs.readFileSync(path.join(ROOT, "assets/js/home.js"), "utf8");
+  assert.doesNotMatch(html, /embers|home-effects/);
+  assert.doesNotMatch(home, /IntersectionObserver|observeRevealElements|\.reveal/);
+  const css = fs.readFileSync(path.join(ROOT, "assets/css/style.css"), "utf8");
+  assert.doesNotMatch(css, /meteorFall|\.meteor\b|\.embers\b/);
+  assert.match(css, /animation: none !important/);
+});
+
+test("homepage does not sign members out when a profile query temporarily fails", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home.js"), "utf8");
+  const profileFailure = source.slice(source.indexOf("if (error || !profile)"), source.indexOf("app.currentIdentity =", source.indexOf("if (error || !profile)")));
+  assert.doesNotMatch(profileFailure, /auth\.signOut/);
+  assert.match(source, /!\["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"\]\.includes\(event\)/);
+});
+
+
+test("homepage preconnects critical origins and loads optional Sentry only when configured", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  assert.match(html, /preconnect[^>]+cdn\.jsdelivr\.net/);
+  assert.match(html, /preconnect[^>]+aqiwrgnxwtphhwikqtmn\.supabase\.co/);
+  assert.match(html, /if \(!String\(window\.MATTHEW_SENTRY_DSN \|\| ""\)\.trim\(\)\) return/);
+  assert.match(html, /requestIdleCallback/);
+  assert.doesNotMatch(html, /<script defer src="https:\/\/browser\.sentry-cdn\.com/);
 });

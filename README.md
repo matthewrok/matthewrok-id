@@ -22,7 +22,7 @@ Website resmi MATTHEW untuk profil personal, informasi layanan, alat bantu *Rise
 - **Pelacakan pesanan** — status/progres dan informasi pesanan member.
 - **Member dashboard** — ringkasan akun dan pesanan/invoice.
 - **Inbox** — pesan resmi sesuai peran dan izin akun.
-- **Support** — informasi dukungan dan halaman donasi/QRIS.\n- **Bukti Pembayaran & Testimoni** — galeri publik dengan watermark permanen dan pengelolaan upload khusus admin.
+- **Bukti Pembayaran & Testimoni** — galeri publik dengan watermark permanen dan pengelolaan upload khusus admin.
 - **Admin** — dashboard, pengelolaan progres, akun/role, pengumuman, voucher, dan aktivitas sesuai modul yang diimplementasikan.
 - **Integrasi Telegram** — Edge Functions untuk notifikasi dan proses administratif terkait pesanan.
 
@@ -83,23 +83,21 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 ## Peta aset frontend
 
 ### CSS utama
-- `style.css` — gaya dasar/beranda.
-- `modern-theme.css`, `blue-theme.css`, `home-blue-redesign.css` — tema dan desain beranda.
+- `style.css` dan `tokens.css` — gaya dasar dan token desain gelap.
 - `global-menu.css` — menu global.
 - `auth.css`, `auth-visitor.css` — autentikasi dasar dan akses visitor.
-- `login-layout.css` — tata letak login responsif, benefit member, akses tamu, dan animasi meteor biru.
 - `calculator.css`, `requirements.css` — halaman tools.
 - `joki-matthew.css`, `your-order.css`, `worker-inbox.css` — layanan dan halaman terkait.
-- `admin-dashboard.css`, `tokens.css`, `floating-cs.css` — admin, token desain, dan tombol CS.
+- `admin-dashboard.css`, `tokens.css` — gaya admin dan token desain.
 
 ### JavaScript utama
 - `supabase.js`, `session-manager.js` — inisialisasi Supabase dan pengelolaan sesi.
 - `auth.js`, `home-auth.js`, `home-visitor.js` — alur akun.
-- `home.js`, `home-navigation.js`, `home-effects.js`, `home-announcement.js` — interaksi beranda.
+- `home.js`, `home-navigation.js`, `home-announcement.js` — logika dan interaksi beranda; efek dekoratif lama telah dihapus.
 - `home-orders.js`, `your-order.js`, `public-reviews.js` — pesanan dan ulasan.
 - `calculator.js`, `requirements.js` — tools.
 - `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.
-- `inbox.js`, `worker-application.js`, `joki-matthew.js`, `floating-cs.js`, `global-menu.js` — modul fitur terkait.
+- `inbox.js`, `worker-application.js`, `joki-matthew.js`, `global-menu.js` — modul fitur terkait.
 
 Jangan menghapus modul hanya karena tidak langsung terlihat di beranda. Telusuri seluruh HTML/CSS/JS, pemanggilan dinamis, dan halaman khusus sebelum menyimpulkan file tidak dipakai.
 
