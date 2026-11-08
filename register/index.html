@@ -214,15 +214,15 @@
         </div>
     </div>
 
-    <!-- Existing integrations: keep Supabase and auth scripts intact. -->
+    <!-- Existing integrations: keep Supabase, monitoring, and auth scripts intact. -->
+    <script defer src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js" crossorigin="anonymous"></script>
+    <script defer src="/assets/js/sentry-config.js?v=20261107-pr3"></script>
+    <script defer src="/assets/js/monitoring.js?v=20261107-pr3"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="/assets/js/supabase.js"></script>
     <script defer src="/assets/js/auth.js?v=20261108-register-shadow-reign"></script>
     <script defer src="/assets/js/session-manager.js"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
-    <script defer src="/assets/js/sentry-config.js?v=20261107-pr3"></script>
-    <script defer src="/assets/js/monitoring.js?v=20261107-pr3"></script>
-    <script defer src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js" crossorigin="anonymous"></script>
     <script>
         // Mirror auth.js status messages into the visible error/status area.
         (() => {
