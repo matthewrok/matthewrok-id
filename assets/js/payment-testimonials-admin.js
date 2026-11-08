@@ -14,6 +14,8 @@
   const count = document.getElementById("adminGalleryCount");
   const MAX_INPUT_BYTES = 10 * 1024 * 1024;
   const MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
+  const TARGET_OUTPUT_BYTES = 300 * 1024;
+  let processedStats = null;
   let processedBlob = null;
   let processedFile = null;
   let previewRequest = 0;
@@ -184,12 +186,54 @@
       ctx.fillText("MATTHEW JOKI",width/2,Math.min(height-14,logoY+logoHeight+Math.max(18,shortSide*.04)));
       ctx.restore();
 
-      const blob = await new Promise((resolve,reject) => canvas.toBlob(
-        result => result ? resolve(result) : reject(new Error("Gagal membuat file watermark.")),
-        "image/webp", .88
-      ));
-      if (blob.size > MAX_OUTPUT_BYTES) throw new Error("Hasil watermark terlalu besar. Gunakan foto dengan resolusi atau ukuran file lebih kecil.");
-      return {blob,masks:sensitiveMasks};
+      // Watermark dan penyamaran sudah ditanam sebelum proses kompresi.
+      // Coba kualitas tinggi lebih dulu, lalu turunkan resolusi bertahap bila perlu.
+      const qualitySteps = [.84,.78,.72,.66,.60,.54,.48,.42];
+      const scaleSteps = [1,.90,.80,.70,.60,.50,.42];
+      let bestBlob = null;
+      let bestWidth = width;
+      let bestHeight = height;
+      for (const outputScale of scaleSteps) {
+        const outputWidth = Math.max(1,Math.round(width*outputScale));
+        const outputHeight = Math.max(1,Math.round(height*outputScale));
+        const outputCanvas = document.createElement("canvas");
+        outputCanvas.width = outputWidth;
+        outputCanvas.height = outputHeight;
+        const outputContext = outputCanvas.getContext("2d",{alpha:false});
+        if (!outputContext) throw new Error("Browser tidak mendukung kompresi gambar.");
+        outputContext.fillStyle = "#fff";
+        outputContext.fillRect(0,0,outputWidth,outputHeight);
+        outputContext.drawImage(canvas,0,0,outputWidth,outputHeight);
+        for (const quality of qualitySteps) {
+          const candidate = await new Promise((resolve,reject) => outputCanvas.toBlob(
+            result => result ? resolve(result) : reject(new Error("Gagal mengompres foto WebP.")),
+            "image/webp",quality
+          ));
+          if (!bestBlob || candidate.size < bestBlob.size) {
+            bestBlob = candidate;
+            bestWidth = outputWidth;
+            bestHeight = outputHeight;
+          }
+          if (candidate.size <= TARGET_OUTPUT_BYTES) {
+            bestBlob = candidate;
+            bestWidth = outputWidth;
+            bestHeight = outputHeight;
+            break;
+          }
+        }
+        if (bestBlob?.size <= TARGET_OUTPUT_BYTES) break;
+      }
+      if (!bestBlob || bestBlob.size > MAX_OUTPUT_BYTES) {
+        throw new Error("Hasil foto masih terlalu besar setelah kompresi. Coba gunakan gambar yang lebih sederhana.");
+      }
+      if (bestBlob.size > TARGET_OUTPUT_BYTES) {
+        throw new Error("Foto belum bisa mencapai batas 300 KB tanpa mengurangi keterbacaan. Coba crop bagian yang tidak diperlukan atau gunakan gambar lebih kecil.");
+      }
+      return {
+        blob:bestBlob,
+        masks:sensitiveMasks,
+        stats:{originalBytes:file.size,compressedBytes:bestBlob.size,width:bestWidth,height:bestHeight}
+      };
     } finally {
       bitmap.close?.();
     }
@@ -199,6 +243,7 @@
     const requestId = ++previewRequest;
     processedBlob = null;
     processedFile = null;
+    processedStats = null;
     if (privacyReview) privacyReview.checked = false;
     const file = fileInput.files?.[0];
     if (!file) {
@@ -213,11 +258,16 @@
       if (requestId !== previewRequest || fileInput.files?.[0] !== file) return;
       processedBlob = result.blob;
       processedFile = file;
+      processedStats = result.stats;
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       previewUrl = URL.createObjectURL(processedBlob);
       previewImage.src = previewUrl;
       previewWrap.hidden = false;
-      setFeedback(result.masks.length ? `Terdeteksi ${result.masks.length} area sensitif (NPWP/Ref) dan sudah disamarkan. Periksa seluruh foto sebelum publikasi.` : "Pemindaian selesai; tidak ditemukan pola NPWP/Ref yang dikenali. Periksa manual seluruh foto sebelum publikasi.");
+      const originalKb = (result.stats.originalBytes/1024).toFixed(0);
+      const compressedKb = (result.stats.compressedBytes/1024).toFixed(0);
+      const reduction = Math.max(0,Math.round((1-result.stats.compressedBytes/result.stats.originalBytes)*100));
+      const compressionInfo = `Ukuran ${originalKb} KB → ${compressedKb} KB (${reduction}% lebih kecil, ${result.stats.width}×${result.stats.height}px).`;
+      setFeedback((result.masks.length ? `Terdeteksi ${result.masks.length} area sensitif (NPWP/Ref) dan sudah disamarkan. ` : "Pemindaian selesai; tidak ditemukan pola NPWP/Ref yang dikenali. ") + compressionInfo + " Periksa manual seluruh foto sebelum publikasi.");
     } catch (error) {
       if (requestId !== previewRequest) return;
       previewWrap.hidden = true;
@@ -332,6 +382,7 @@
       if (!processedBlob || processedFile !== file) await refreshPreview();
       if (!processedBlob || processedFile !== file) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");
       if (!privacyReview?.checked) throw new Error("Centang konfirmasi setelah memeriksa seluruh pratinjau dan memastikan tidak ada data sensitif yang terlihat.");
+      if (!processedStats || processedStats.compressedBytes > TARGET_OUTPUT_BYTES) throw new Error("Foto belum memenuhi target kompresi maksimal 300 KB. Pilih ulang foto atau crop bagian yang tidak diperlukan.");
       const path = new Date().toISOString().slice(0,10) + "/" + crypto.randomUUID() + ".webp";
       const {error:uploadError} = await db.storage.from("payment-testimonials").upload(path,processedBlob,{
         contentType:"image/webp",upsert:false,cacheControl:"31536000"
@@ -354,8 +405,10 @@
       previewUrl = null;
       processedBlob = null;
       processedFile = null;
+      const uploadedKb = processedStats ? (processedStats.compressedBytes/1024).toFixed(0) : "≤300";
+      processedStats = null;
       await loadItems();
-      setFeedback("Berhasil! Penyamaran otomatis dan watermark sudah menyatu permanen dengan foto, lalu dokumentasi dipublikasikan.");
+      setFeedback(`Berhasil! Foto sudah disamarkan, diberi watermark, dan dikompres menjadi ${uploadedKb} KB sebelum dipublikasikan.`);
     } catch (error) {
       console.error("[Payment testimonials admin]",error);
       setFeedback(error.message || "Upload gagal. Periksa konfigurasi bucket dan policy Supabase.",true);
