@@ -18,7 +18,6 @@ Tanggal: 4 November 2026
 ## Aset gambar yang dipertahankan
 
 - `assets/images/brand/logo-matthew.png` — logo utama yang direferensikan oleh `index.html`; dipindahkan dari root agar aset brand terstruktur.
-- `assets/images/qris-matthew.jpeg` — digunakan oleh `support-matthew.html`.
 - `assets/images/README.txt` — catatan bahwa visual naga/warrior hero dibuat dari inline SVG dan CSS.
 
 ## Verifikasi lanjutan — 4 November 2026
