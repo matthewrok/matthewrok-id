@@ -1,0 +1,21 @@
+/* Shadow Reign — Maintenance & 404 */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
+body.sr-theme{min-height:100vh;margin:0;padding:24px;display:grid;place-items:center;box-sizing:border-box;background:radial-gradient(ellipse at 50% -8%,rgba(214,177,104,.13),transparent 48%),linear-gradient(180deg,#09090c,#050506 68%,#08080b);color:var(--sr-color-text);font-family:var(--sr-font-body);color-scheme:dark}
+.sr-theme *{box-sizing:border-box}
+.sr-theme .sr-card{position:relative;overflow:hidden;width:min(680px,100%);padding:clamp(26px,5vw,48px);border:1px solid var(--sr-color-border-strong);border-radius:var(--sr-radius-xl);background:linear-gradient(145deg,rgba(23,23,29,.98),rgba(10,10,13,.98));box-shadow:var(--sr-shadow-card),var(--sr-shadow-gold);text-align:center}
+.sr-theme .sr-card::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,var(--sr-color-gold),transparent)}
+.sr-theme .sr-mark{width:58px;height:58px;margin:0 auto 16px;display:grid;place-items:center;border:1px solid var(--sr-color-border-strong);border-radius:50%;color:var(--sr-color-gold-bright);font-size:28px;box-shadow:var(--sr-shadow-gold)}
+.sr-theme .sr-eyebrow{display:inline-flex;padding:7px 13px;border:1px solid var(--sr-color-border-strong);border-radius:var(--sr-radius-pill);color:var(--sr-color-gold-bright);font-size:10px;font-weight:800;letter-spacing:.15em}
+.sr-theme .sr-card h1{margin:17px 0 12px;color:var(--sr-color-heading);font:700 clamp(27px,6vw,46px)/1.2 var(--sr-font-display);letter-spacing:.025em}
+.sr-theme .sr-card p{max-width:520px;margin:12px auto;color:var(--sr-color-text-muted);font-size:13px;line-height:1.85}
+.sr-theme .sr-card .sr-status{color:var(--sr-color-gold-bright);font-size:12px;font-weight:600}
+.sr-theme .sr-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:26px}
+.sr-theme .sr-button{display:inline-flex;min-height:46px;align-items:center;justify-content:center;padding:11px 21px;border:1px solid var(--sr-color-gold);border-radius:var(--sr-radius-md);background:linear-gradient(135deg,#9b7335,#4b3820);color:#fff8e9;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.08em;transition:transform var(--sr-duration-fast),filter var(--sr-duration-fast)}
+.sr-theme .sr-button:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.sr-theme .sr-footnote{margin-top:25px!important;color:var(--sr-color-text-subtle)!important;font-size:10px!important;letter-spacing:.04em}
+.sr-theme .sr-logo{width:68px;height:68px;object-fit:contain;margin:0 auto 18px}
+.sr-theme .sr-code{margin:0;color:var(--sr-color-gold-bright);font:900 clamp(66px,16vw,104px)/.95 var(--sr-font-display);letter-spacing:-.055em;text-shadow:0 8px 34px rgba(214,177,104,.12)}
+.sr-theme .sr-card .sr-notfound-title{margin-top:21px;font-size:clamp(21px,5vw,29px)}
+.sr-theme .sr-card .sr-description{max-width:390px;margin-bottom:26px}
+@media(max-width:480px){body.sr-theme{padding:16px}.sr-theme .sr-card{padding:27px 19px}.sr-theme .sr-button{width:100%}}
+@media(prefers-reduced-motion:reduce){.sr-theme *,.sr-theme *::before,.sr-theme *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
