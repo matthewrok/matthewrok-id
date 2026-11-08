@@ -16,7 +16,7 @@
     <script src="/assets/js/supabase.js"></script>
     <script src="/assets/js/access-guard.js?v=20261107-authfix1"></script>
     <script defer src="/assets/js/session-manager.js?v=20261107-authfix1"></script>
-    <link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
+
     <link rel="stylesheet" href="/assets/css/member-onboarding.css?v=20261107-pr4">
 
     <style>
@@ -42,6 +42,9 @@
         .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-serif); font-size: 15px; letter-spacing: 1px; font-weight: 600; }
         #logoutBtn { background: transparent; border: 1px solid var(--accent-red); color: var(--accent-red); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         #logoutBtn:hover { background: var(--accent-red); color: white; }
+        .dashboard-quick-links { display: flex; align-items: center; gap: 6px; }
+        .dashboard-quick-link { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; padding: 6px 9px; border: 1px solid var(--accent-gold); border-radius: 4px; color: var(--accent-gold); text-decoration: none; font-size: 10px; font-weight: 600; white-space: nowrap; }
+        .dashboard-quick-link:hover { background: rgba(212,175,55,.12); }
 
         /* PROFILE CARD */
         .profile-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
@@ -112,7 +115,11 @@
 
     <header class="top-nav">
         <div class="brand">MEMBER CENTER</div>
-        <button id="logoutBtn" type="button">KELUAR</button>
+        <div class="dashboard-quick-links" aria-label="Akses layanan">
+            <a class="dashboard-quick-link" href="/support-matthew.html">SUPPORT</a>
+            <a class="dashboard-quick-link" href="/worker.html">DAFTAR WORKER</a>
+            <button id="logoutBtn" type="button">KELUAR</button>
+        </div>
     </header>
 
     <main class="container">
@@ -451,7 +458,7 @@
             }
         })();
     </script>
-    <script defer src="/assets/js/global-menu.js?v=20261104-13"></script>
+
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
     <div id="memberOnboarding" class="mj-onboarding" role="dialog" aria-modal="true" aria-labelledby="memberOnboardingTitle" aria-describedby="memberOnboardingDescription" hidden>
       <section class="mj-onboarding__card">
