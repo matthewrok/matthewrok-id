@@ -739,6 +739,7 @@ test("Shadow Reign member dashboard preserves its tab layout, mapped data target
 
 test("owner-only tracking-token recovery is restricted to the authenticated order owner", () => {
   const sql = fs.readFileSync(path.join(ROOT, "supabase/restore-owner-tracking-token.sql"), "utf8");
+  const followup = fs.readFileSync(path.join(ROOT, "supabase/allow-active-owner-token-recovery.sql"), "utf8");
   assert.match(sql, /auth\.uid\(\)/);
   assert.match(sql, /email_confirmed_at is not null/);
   assert.match(sql, /lower\(trim\(coalesce\(j\.client_email/);
@@ -746,6 +747,8 @@ test("owner-only tracking-token recovery is restricted to the authenticated orde
   assert.match(sql, /revoke all on function public\.get_my_joki_tracking_token\(text\) from public, anon/);
   assert.match(sql, /grant execute on function public\.get_my_joki_tracking_token\(text\) to authenticated/);
   assert.match(sql, /set search_path = ''/);
+  assert.match(followup, /v_account_status is distinct from 'active'/);
+  assert.doesNotMatch(followup, /v_role|not in \('member'/);
 });
 
 test("Your Order retrieves the private tracking token without exposing it in order-list data or URLs", () => {
