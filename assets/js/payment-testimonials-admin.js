@@ -96,7 +96,8 @@
       bitmap = await createImageBitmap(file);
     }
     try {
-      const sensitiveMasks = await detectSensitiveLines(bitmap);\n      const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
+      const sensitiveMasks = await detectSensitiveLines(bitmap);
+      const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
       const width = Math.max(1, Math.round(bitmap.width * scale));
       const height = Math.max(1, Math.round(bitmap.height * scale));
       const canvas = document.createElement("canvas");
