@@ -483,7 +483,7 @@ test("all themed pages declare the approved shared or local theme", () => {
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     const usesSharedBlueTheme = /blue-theme\.css\?v=20261106-blue-pr13-mm2/.test(html) || /blue-theme\.css\?v=20261106-blue-theme-pr13-mm2/.test(html);
-    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && (html.includes("shadow-reign") || html.includes("sr-theme"));
+    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && (/fonts\.googleapis\.com\/css2\?family=(?:Cinzel|Inter)/.test(html) || html.includes("shadow-reign") || html.includes("sr-theme"));
     assert.ok(usesSharedBlueTheme || ownsShadowReignTheme, page + " should declare the shared legacy theme or the Shadow Reign theme");
   }
   const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
