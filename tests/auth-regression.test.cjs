@@ -769,7 +769,6 @@ test("tracking accepts a token copied from a WhatsApp label and explains legacy 
 
 
 test("home Lacak navigation always opens Pesanan Saya, not the direct progress-token page", () => {
-test("home Lacak navigation always opens Pesanan Saya, not the direct progress-token page", () => {
   const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
   const nav = html.match(/<nav class="bottom-nav">([\s\S]*?)<\/nav>/);
   assert.ok(nav, "home bottom navigation must exist");
