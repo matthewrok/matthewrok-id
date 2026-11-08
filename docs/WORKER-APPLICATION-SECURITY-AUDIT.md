@@ -5,7 +5,7 @@
 - `assets/js/worker-application.js` membaca status aplikasi milik akun yang login.
 - Pengiriman formulir dilakukan melalui `db.functions.invoke("worker-application-submit")`; frontend tidak melakukan INSERT langsung ke tabel.
 - Edge Function memverifikasi bearer token melalui Supabase Auth, memastikan email terverifikasi, lalu membaca `profiles.role` dan `account_status` memakai service role.
-- Hanya role aktif member, SULTAN, MATTHEW, dan PELANGGAN yang diizinkan mengajukan worker. MACUL, AKUN, WORKER, admin, visitor, serta akun nonaktif ditolak.
+- Hanya akun aktif dengan role `warga biasa`, `warga tidak biasa`, atau `warga sultan` yang dapat mengajukan worker. Jenis tugas `akun`/`macul` dan status aplikasi tetap terpisah dari role akun.
 - Insert aplikasi dilakukan server-side oleh Edge Function menggunakan service role. Notifikasi Telegram dikirim setelah row tersimpan.
 
 ## Temuan policy lama
