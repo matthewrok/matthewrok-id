@@ -300,7 +300,7 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
 test("worker application Edge Function enforces active applicant roles server-side", () => {
   const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
   assert.match(source, /select=role,account_status/);
-  assert.match(source, /const applicantRoles = \["member", "sultan", "matthew", "pelanggan"\]/);
+  assert.match(source, /const applicantRoles = \["warga biasa", "warga tidak biasa", "warga sultan"\]/);
   assert.match(source, /applicantRoles\.includes\(role\)/);
   assert.match(source, /accountStatus !== "active"/);
   assert.match(source, /return json\(\{ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker\." \}, 403\)/);
@@ -308,11 +308,14 @@ test("worker application Edge Function enforces active applicant roles server-si
 });
 
 
-test("role management SQL preserves all operational worker roles", () => {
-  const sql = fs.readFileSync(path.join(ROOT, "supabase/admin-role-management.sql"), "utf8");
-  for (const role of ["member", "admin", "SULTAN", "MATTHEW", "PELANGGAN", "WORKER", "MACUL", "AKUN"]) {
-    assert.match(sql, new RegExp("'" + role + "'::text"));
+test("new membership roles replace legacy profile roles", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/warga-membership-roles.sql"), "utf8");
+  for (const role of ["admin", "warga biasa", "warga tidak biasa", "warga sultan"]) {
+    assert.ok(migration.includes("'" + role + "'"));
   }
+  assert.match(migration, /completed_orders >= 19/);
+  assert.match(migration, /completed_orders >= 7/);
+  assert.match(migration, /create trigger .*membership_role/i);
 });
 
 test("worker application function preserves both configured site origins and server-side role checks", () => {
