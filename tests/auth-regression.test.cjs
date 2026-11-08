@@ -428,7 +428,7 @@ test("tracking-token rollback is pre-release only and preserves legacy order tok
 
 test("legacy order RPC enforces the same active member-role allowlist during compatibility", () => {
   const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_legacy_order_rpc_role_access.sql"), "utf8");
-  assert.match(sql, /v_role not in \('member','sultan','matthew','pelanggan'\)/);
+  assert.match(sql, /v_role not in \('warga biasa','warga tidak biasa','warga sultan'\)/);
   assert.match(sql, /v_account_status is distinct from 'active'/);
   assert.match(sql, /revoke all on function public\.create_joki_order/);
   assert.match(sql, /grant execute on function public\.create_joki_order[\s\S]*to authenticated/);
