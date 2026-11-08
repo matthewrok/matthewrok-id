@@ -20,7 +20,7 @@ test("homepage Shadow Reign menampilkan hero, produk, ulasan, FAQ, dan modal ord
   await expect(page.locator("#jokiOrderModal")).toHaveCount(1);
   await expect(page.locator("#jokiOrderModal")).toBeHidden();
   await expect(page.locator(".bottom-nav .nav-item")).toHaveCount(4);
-  await expect(page.locator("#floatingCs")).toBeVisible();
+  await expect(page.locator("#floatingPaymentProof")).toBeVisible();
   await expect(page.locator("#about .about-card")).toBeVisible();
   await expect(page.locator("#produk-joki [data-order-product]")).toHaveCount(3);
 });
@@ -32,10 +32,16 @@ test("homepage tidak memuat Global Menu lama dan shortcut layanan tetap tersedia
   await expect(page.locator("#menuToggle, #siteMenu")).toHaveCount(0);
   await expect(page.locator("#headerLoginBtn")).toHaveAttribute("href", "/login/");
   const paymentProofLink = page.locator("#headerInboxBtn");
-  await expect(paymentProofLink).toHaveAttribute("href", "https://matthewrok.my.id/testimonials.html");
-  await expect(paymentProofLink).toHaveAttribute("aria-label", "Buka Bukti Pembayaran");
-  await expect(paymentProofLink).toHaveAttribute("title", "Bukti Pembayaran");
+  await expect(paymentProofLink).toHaveAttribute("href", "/inbox.html");
+  await expect(paymentProofLink).toHaveAttribute("aria-label", "Buka Inbox");
+  await expect(paymentProofLink).toHaveAttribute("title", "Inbox");
   await expect(paymentProofLink.locator("svg")).toHaveCount(1);
+  const centerProof = page.locator("#floatingPaymentProof");
+  await expect(centerProof).toHaveAttribute("href", "/testimonials.html");
+  await expect(centerProof).toHaveAttribute("aria-label", "Buka Bukti Pembayaran dan Testimoni");
+  await expect(centerProof.locator("svg")).toHaveCount(1);
+  await expect(page.locator("#adminNavLink")).toHaveCount(0);
+  await expect(page.locator("#toolsMenu > summary")).toHaveCSS("align-items", "center");
   await expect(page.locator("footer a[href='/worker.html']")).toHaveText("Daftar Worker");
   await expect(page.locator(".bottom-nav #statusDot")).toHaveCount(1);
 });
@@ -44,11 +50,11 @@ for (const viewport of [
   { name: "mobile", width: 390, height: 844 },
   { name: "desktop", width: 1365, height: 900 }
 ]) {
-  test("bottom navigation dan tombol CS tetap berada di dalam viewport (" + viewport.name + ")", async ({ page }) => {
+  test("bottom navigation dan tombol Bukti Pembayaran tetap berada di dalam viewport (" + viewport.name + ")", async ({ page }) => {
     await openStaticHome(page, viewport);
 
     const nav = await page.locator(".bottom-nav").boundingBox();
-    const cs = await page.locator("#floatingCs").boundingBox();
+    const cs = await page.locator("#floatingPaymentProof").boundingBox();
     expect(nav).not.toBeNull();
     expect(cs).not.toBeNull();
 
@@ -57,7 +63,7 @@ for (const viewport of [
     expect(nav.y).toBeGreaterThanOrEqual(0);
     expect(nav.y + nav.height).toBeLessThanOrEqual(viewport.height + 1);
 
-    // The WhatsApp CS control is intentionally nested inside the bottom dock.
+    // The payment-proof shortcut is intentionally nested inside the bottom dock.
     expect(cs.x).toBeGreaterThanOrEqual(nav.x);
     expect(cs.x + cs.width).toBeLessThanOrEqual(nav.x + nav.width);
     expect(cs.y).toBeGreaterThanOrEqual(nav.y);
@@ -80,6 +86,8 @@ test("global popup menu dihapus dan tautan layanan tetap tersedia", async ({ pag
   expect(dashboardHtml).not.toContain("support-matthew.html");
   expect(dashboardHtml).not.toContain('href="/worker.html"');
   expect(dashboardHtml).toContain('id="logoutBtn"');
+  expect(dashboardHtml).toContain('id="adminDashboardBtn" href="/admin/dashboard.html" hidden');
+  expect(dashboardHtml).toContain("adminDashboardBtn.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin'");
 });
 
 test("tidak ada halaman HTML yang masih memuat Global Menu", async ({ request }) => {
