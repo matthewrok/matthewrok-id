@@ -111,6 +111,10 @@
         .btn-action { background: transparent; border: 1px solid var(--border-color); color: white; padding: 7px 9px; border-radius: 6px; font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; line-height: 1.2; }
         .btn-action svg { width: 12px; height: 12px; flex: 0 0 12px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
         .btn-action:disabled { opacity: .65; cursor: wait; }
+        @media (max-width: 380px) {
+            .card-footer { align-items: flex-start; flex-direction: column; gap: 10px; }
+            .action-buttons { justify-content: flex-start; flex-wrap: nowrap; }
+        }
         .admin-note { display:flex; flex-direction:column; gap:4px; margin:16px 0 0; padding-top:12px; border-top:1px dashed var(--border-color); color:var(--text-muted); font-family:var(--font-sans); font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
         .admin-note strong { color:#d4af37; font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
         .btn-action:hover { background: white; color: black; }
@@ -169,7 +173,7 @@
     <script src="/assets/js/supabase.js"></script>
     <script src="/assets/js/access-guard.js?v=20261108-authfix2"></script>
     <script src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
-    <script src="/assets/js/your-order.js?v=20261108-invoice-pdf2"></script>
+    <script src="/assets/js/your-order.js?v=20261108-invoice-pdf3"></script>
     <script src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
 </html>
