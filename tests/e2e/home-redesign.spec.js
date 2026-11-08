@@ -49,3 +49,40 @@ for (const viewport of [
     expect(cs.y + cs.height).toBeLessThanOrEqual(nav.y + nav.height);
   });
 }
+
+
+test("global popup menu dihapus dan tautan layanan tetap tersedia", async ({ page, request }) => {
+  await openStaticHome(page, { width: 390, height: 844 });
+
+  await expect(page.locator("#siteMenu, #menuToggle")).toHaveCount(0);
+  await expect(page.locator("footer a[href='/support-matthew.html']")).toHaveText("Support Matthew");
+  await expect(page.locator("footer a[href='/worker.html']")).toHaveText("Daftar Worker");
+
+  const dashboardResponse = await request.get("/member-dashboard.html");
+  expect(dashboardResponse.ok()).toBeTruthy();
+  const dashboardHtml = await dashboardResponse.text();
+  expect(dashboardHtml).not.toMatch(/id=["'](?:siteMenu|menuToggle)["']/i);
+  expect(dashboardHtml).not.toMatch(/global-menu\\.(?:js|css)/i);
+  expect(dashboardHtml).toContain('href="/support-matthew.html"');
+  expect(dashboardHtml).toContain('href="/worker.html"');
+  expect(dashboardHtml).toContain('id="logoutBtn"');
+});
+
+test("tidak ada halaman HTML yang masih memuat Global Menu", async ({ request }) => {
+  const pages = [
+    "/404.html", "/admin/dashboard.html", "/admin/joki-progress.html",
+    "/calculator-resource.html", "/email-confirmed.html", "/email-confirmed/",
+    "/inbox.html", "/", "/joki-matthew.html", "/login.html", "/login/",
+    "/maintenance.html", "/member-dashboard.html", "/register.html", "/register/",
+    "/requirements-city-hall.html", "/reset-password.html", "/reset-password/",
+    "/support-matthew.html", "/worker.html", "/your-order.html"
+  ];
+
+  for (const path of pages) {
+    const response = await request.get(path);
+    expect(response.ok(), path + " harus dapat diakses").toBeTruthy();
+    const html = await response.text();
+    expect(html, path + " tidak boleh memuat elemen Global Menu").not.toMatch(/id=["'](?:siteMenu|menuToggle)["']/i);
+    expect(html, path + " tidak boleh memuat asset Global Menu").not.toMatch(/global-menu\\.(?:js|css)/i);
+  }
+});
