@@ -8,11 +8,29 @@
   const actionIcon = name => ({invoice:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg>',track:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M10.5 7v4l3 2"/></svg>',reorder:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="m17 15 3 2-3 2"/></svg>',details:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>'})[name] || "";
   function loadExternalScript(src, globalName) {
     if (window[globalName]) return Promise.resolve();
-    const existing=document.querySelector('script[data-invoice-lib="'+globalName+'"]');
-    if(existing) return new Promise((resolve,reject)=>{existing.addEventListener("load",resolve,{once:true});existing.addEventListener("error",reject,{once:true});});
+    let script=document.querySelector('script[data-invoice-lib="'+globalName+'"]');
+    if (script?.dataset.loaded==="true" && !window[globalName]) {
+      script.remove();
+      script=null;
+    }
     return new Promise((resolve,reject)=>{
-      const script=document.createElement("script"); script.src=src; script.async=true; script.dataset.invoiceLib=globalName;
-      script.onload=resolve; script.onerror=()=>reject(new Error("Gagal memuat pustaka PDF")); document.head.appendChild(script);
+      let settled=false;
+      const finish=(error)=>{
+        if(settled) return;
+        settled=true;
+        window.clearTimeout(timeout);
+        if(error) reject(error); else if(window[globalName]) resolve(); else reject(new Error("Pustaka PDF tidak tersedia setelah dimuat."));
+      };
+      const timeout=window.setTimeout(()=>finish(new Error("Waktu pemuatan pustaka PDF habis.")),20000);
+      if(!script) {
+        script=document.createElement("script");
+        script.src=src;
+        script.async=true;
+        script.dataset.invoiceLib=globalName;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load",()=>{script.dataset.loaded="true";finish();},{once:true});
+      script.addEventListener("error",()=>finish(new Error("Gagal memuat pustaka PDF. Periksa koneksi internet.")),{once:true});
     });
   }
   const invoiceEscape=value=>String(value??"—").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -102,6 +120,10 @@
     document.body.appendChild(root);
     try {
       await document.fonts.ready;
+      await Promise.all([
+        document.fonts.load("700 31px Cinzel"),
+        document.fonts.load("400 12px Inter")
+      ]);
       const logo=root.querySelector("#invoiceBrandLogo");
       await waitForInvoiceLogo(logo);
       const canvas=await window.html2canvas(root,{scale:2,backgroundColor:"#050505",useCORS:true,logging:false,width:794,windowWidth:794});
