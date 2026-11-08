@@ -6,6 +6,104 @@
   const date = value => value ? new Date(value).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}) : "—";
   const escapeText = value => String(value ?? "");
   const actionIcon = name => ({invoice:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg>',track:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M10.5 7v4l3 2"/></svg>',reorder:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="m17 15 3 2-3 2"/></svg>',details:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>'})[name] || "";
+  function loadExternalScript(src, globalName) {
+    if (window[globalName]) return Promise.resolve();
+    const existing=document.querySelector('script[data-invoice-lib="'+globalName+'"]');
+    if(existing) return new Promise((resolve,reject)=>{existing.addEventListener("load",resolve,{once:true});existing.addEventListener("error",reject,{once:true});});
+    return new Promise((resolve,reject)=>{
+      const script=document.createElement("script"); script.src=src; script.async=true; script.dataset.invoiceLib=globalName;
+      script.onload=resolve; script.onerror=()=>reject(new Error("Gagal memuat pustaka PDF")); document.head.appendChild(script);
+    });
+  }
+  const invoiceEscape=value=>String(value??"—").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  async function downloadInvoicePdf(order) {
+    await Promise.all([
+      loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js","html2canvas"),
+      loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js","jspdf")
+    ]);
+    const issuedAt=new Date();
+    const amount=value=>"Rp"+Number(value||0).toLocaleString("id-ID");
+    const subtotal=order.subtotal_price??order.total_price??0;
+    const discount=Number(order.discount_amount||0);
+    const root=document.createElement("div");
+    root.style.cssText="position:fixed;left:-10000px;top:0;width:794px;z-index:-1;";
+    root.innerHTML=`
+      <article style="width:794px;padding:54px 58px;background:#050505;color:#f3f4f6;font-family:Inter,Arial,sans-serif;border:1px solid #262626;box-sizing:border-box;">
+        <header style="display:flex;align-items:center;gap:20px;padding-bottom:28px;border-bottom:1px solid #d4af37;">
+          <img id="invoiceBrandLogo" src="/assets/images/brand/logo-matthew.png" alt="Logo Matthew" style="width:88px;height:88px;object-fit:contain;">
+          <div style="flex:1">
+            <div style="font:700 13px Inter,Arial,sans-serif;letter-spacing:3px;color:#d4af37;">MATTHEW.RMN · TRUSTED ROK SERVICE</div>
+            <h1 style="font:700 31px Cinzel,Georgia,serif;letter-spacing:2px;margin:8px 0 4px;color:#fff;">MATTHEW JOKI</h1>
+            <div style="font:600 12px Inter,Arial,sans-serif;letter-spacing:2px;color:#a3a3a3;">INVOICE PESANAN</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:#9ca3af;">NOMOR INVOICE</div>
+            <div style="font-size:14px;font-weight:700;color:#d4af37;margin-top:5px;">${invoiceEscape(order.order_number)}</div>
+            <div style="font-size:10px;color:#9ca3af;margin-top:10px;">${invoiceEscape(issuedAt.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}))}</div>
+          </div>
+        </header>
+        <section style="padding:25px 0 20px;display:flex;justify-content:space-between;gap:30px;">
+          <div><div style="font-size:10px;letter-spacing:1.5px;color:#d4af37;margin-bottom:9px;">DITAGIHKAN KEPADA</div>
+            <div style="font-size:17px;font-weight:700;color:#fff;">${invoiceEscape(order.client_name||"Member MATTHEW")}</div>
+            <div style="font-size:12px;color:#9ca3af;margin-top:5px;">${invoiceEscape(order.client_email||"—")}</div>
+          </div>
+          <div style="text-align:right"><div style="font-size:10px;letter-spacing:1.5px;color:#d4af37;margin-bottom:9px;">INFORMASI PESANAN</div>
+            <div style="font-size:12px;color:#d1d5db;">Tanggal dibuat: ${invoiceEscape(date(order.created_at))}</div>
+            <div style="font-size:12px;color:#d1d5db;margin-top:5px;">Kingdom: <b style="color:#fff;">${invoiceEscape(order.kingdom_number||"—")}</b></div>
+          </div>
+        </section>
+        <div style="background:#101010;border:1px solid #292929;border-radius:8px;padding:18px 20px;margin-bottom:22px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#d4af37;margin-bottom:8px;">DETAIL LAYANAN</div>
+          <div style="font:700 18px Cinzel,Georgia,serif;color:#fff;">${invoiceEscape(order.service_name||"Layanan Joki")}</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:7px;">Jumlah karakter: ${invoiceEscape(order.quantity??"—")} karakter</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tbody>
+            <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Harga per karakter</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${amount(order.unit_price)}</td></tr>
+            <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Subtotal</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${amount(subtotal)}</td></tr>
+            <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Kode voucher</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${invoiceEscape(order.voucher_code||"Tidak digunakan")}</td></tr>
+            <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Diskon</td><td style="padding:12px 4px;text-align:right;color:#d4af37;border-bottom:1px solid #292929;">− ${amount(discount)}</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:20px;background:#17140b;border:1px solid #6b5520;border-radius:8px;margin-top:18px;">
+          <div><div style="font-size:10px;letter-spacing:1.5px;color:#d4af37;">TOTAL PEMBAYARAN</div><div style="font-size:10px;color:#9ca3af;margin-top:5px;">Sudah termasuk potongan voucher (jika ada)</div></div>
+          <div style="font:700 24px Cinzel,Georgia,serif;color:#e5c45a;">${amount(order.total_price)}</div>
+        </div>
+        <section style="display:flex;gap:14px;margin-top:20px;">
+          <div style="flex:1;padding:14px 16px;background:#101010;border:1px solid #292929;border-radius:7px;">
+            <div style="font-size:9px;letter-spacing:1px;color:#9ca3af;">STATUS PESANAN</div><div style="font-size:13px;font-weight:700;color:#fff;margin-top:6px;">${invoiceEscape(order.status||"Menunggu")}</div>
+          </div>
+          <div style="flex:1;padding:14px 16px;background:#101010;border:1px solid #292929;border-radius:7px;">
+            <div style="font-size:9px;letter-spacing:1px;color:#9ca3af;">PROGRES PEKERJAAN</div><div style="font-size:13px;font-weight:700;color:#d4af37;margin-top:6px;">${invoiceEscape(order.progress_percent??0)}%</div>
+          </div>
+        </section>
+        <section style="margin-top:20px;padding:15px 17px;background:#101010;border-left:3px solid #d4af37;">
+          <div style="font-size:9px;letter-spacing:1px;color:#d4af37;margin-bottom:7px;">CATATAN ADMIN</div>
+          <div style="font-size:11px;line-height:1.6;color:#d1d5db;">${invoiceEscape(order.progress_note||"Belum ada catatan dari admin.")}</div>
+        </section>
+        <footer style="margin-top:34px;padding-top:16px;border-top:1px solid #292929;text-align:center;">
+          <div style="font:700 14px Cinzel,Georgia,serif;letter-spacing:2px;color:#d4af37;">MATTHEW JOKI</div>
+          <div style="font-size:10px;color:#9ca3af;margin-top:6px;">Terima kasih telah mempercayakan layanan Rise of Kingdoms kepada kami.</div>
+          <div style="font-size:9px;color:#666;margin-top:12px;">Dokumen ini dibuat secara otomatis oleh sistem MATTHEW JOKI · ${invoiceEscape(issuedAt.toLocaleString("id-ID"))}</div>
+        </footer>
+      </article>`;
+    document.body.appendChild(root);
+    try {
+      await document.fonts.ready;
+      const logo=root.querySelector("#invoiceBrandLogo");
+      if(logo && !logo.complete) await new Promise((resolve,reject)=>{logo.onload=resolve;logo.onerror=reject;});
+      const canvas=await window.html2canvas(root,{scale:2,backgroundColor:"#050505",useCORS:true,logging:false,width:794,windowWidth:794});
+      const image=canvas.toDataURL("image/jpeg",0.96);
+      const {jsPDF}=window.jspdf;
+      const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+      const pageWidth=210,pageHeight=297,margin=8;
+      const ratio=Math.min((pageWidth-margin*2)/(canvas.width/2),(pageHeight-margin*2)/(canvas.height/2));
+      const width=(canvas.width/2)*ratio,height=(canvas.height/2)*ratio;
+      pdf.setFillColor(5,5,5); pdf.rect(0,0,pageWidth,pageHeight,"F");
+      pdf.addImage(image,"JPEG",(pageWidth-width)/2,(pageHeight-height)/2,width,height,undefined,"FAST");
+      pdf.save("Invoice-"+String(order.order_number||"MATTHEW").replace(/[^a-zA-Z0-9_-]/g,"-")+".pdf");
+    } finally { root.remove(); }
+  }
   let loadingOrders = false;
   function setState(message, type="") {
     const el=$("ordersState"); el.textContent=message; el.className="feature-state"+(type?" "+type:"");
@@ -81,12 +179,14 @@
     price.append(priceLabel,priceValue);
     const actions=document.createElement("div"); actions.className="action-buttons";
     const invoice=document.createElement("button"); invoice.type="button"; invoice.className="btn-action"; invoice.textContent="Invoice";
-    invoice.addEventListener("click",()=>{
-      if(order.invoice_url) window.open(order.invoice_url,"_blank","noopener,noreferrer");
-      else {
-        const detailText=["INVOICE MATTHEW JOKI","Kode: "+(order.order_number||"—"),"Paket: "+(order.service_name||"—"),"Kingdom: "+(order.kingdom_number||"—"),"Jumlah karakter: "+(order.quantity||0),"Total: "+money(order.total_price),"Status: "+statusText,"Dibuat: "+date(order.created_at)].join("\n");
-        copyText(detailText,invoice);
-      }
+    invoice.addEventListener("click",async()=>{
+      const originalText=invoice.textContent;
+      invoice.disabled=true; invoice.textContent="Membuat PDF…";
+      try { await downloadInvoicePdf(order); }
+      catch(error) {
+        console.error("[Your Order] Invoice PDF:",error);
+        setState("Invoice PDF belum dapat dibuat. Periksa koneksi lalu coba kembali.", "error");
+      } finally { invoice.disabled=false; invoice.textContent=originalText; }
     });
     actions.appendChild(invoice);
     const tracker=document.createElement("button");
