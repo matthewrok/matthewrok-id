@@ -107,7 +107,9 @@
         .toggle-password svg { width: 16px; height: 16px; }
 
         /* PESAN ERROR */
-        #error-message { display: none; background: rgba(220, 38, 38, 0.1); border: 1px solid #dc2626; color: #f87171; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 20px; text-align: center; z-index: 1; position: relative; }
+        #error-message { display: none; padding: 10px; border-radius: 6px; font-size: 12px; line-height: 1.5; margin-bottom: 20px; text-align: center; z-index: 1; position: relative; }
+        #error-message.status-error { background: rgba(220, 38, 38, 0.1); border: 1px solid #dc2626; color: #f87171; }
+        #error-message.status-success { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, .55); color: #93c5fd; }
 
         /* TOMBOL SUBMIT */
         .btn-submit { 
@@ -229,10 +231,11 @@
             const message = document.getElementById('authMessage');
             const errorBox = document.getElementById('error-message');
             const observer = new MutationObserver(() => {
-                const isError = message.classList.contains('error');
+                const type = message.classList.contains('error') ? 'error' : (message.classList.contains('success') ? 'success' : '');
                 const text = message.textContent.trim();
-                errorBox.textContent = isError ? text : '';
-                errorBox.style.display = isError && text ? 'block' : 'none';
+                errorBox.textContent = text;
+                errorBox.className = type ? 'status-' + type : '';
+                errorBox.style.display = text ? 'block' : 'none';
             });
             observer.observe(message, {childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class']});
         })();
