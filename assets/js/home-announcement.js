@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     track.textContent = "✦ " + announcement + " ✦";
     ticker.hidden = false;
 
-    // Keep the motion readable and avoid a long blank interval for short announcements.
-    const duration = Math.max(14, Math.min(36, announcement.length * 0.22));
-    track.style.animationDuration = duration + "s, 5s";
+    // Match the scrolling speed to the announcement length.
+    const duration = Math.max(16, Math.min(34, announcement.length * 0.32));
+    track.style.animationDuration = duration + "s";
   } catch (error) {
     // Fail closed: don't show stale or hard-coded text if public notifications cannot load.
     ticker.hidden = true;
