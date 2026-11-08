@@ -31,7 +31,11 @@ test("homepage tidak memuat Global Menu lama dan shortcut layanan tetap tersedia
 
   await expect(page.locator("#menuToggle, #siteMenu")).toHaveCount(0);
   await expect(page.locator("#headerLoginBtn")).toHaveAttribute("href", "/login/");
-  await expect(page.locator("#headerInboxBtn")).toHaveAttribute("href", "/inbox.html");
+  const paymentProofLink = page.locator("#headerInboxBtn");
+  await expect(paymentProofLink).toHaveAttribute("href", "https://matthewrok.my.id/testimonials.html");
+  await expect(paymentProofLink).toHaveAttribute("aria-label", "Buka Bukti Pembayaran");
+  await expect(paymentProofLink).toHaveAttribute("title", "Bukti Pembayaran");
+  await expect(paymentProofLink.locator("svg")).toHaveCount(1);
   await expect(page.locator("footer a[href='/worker.html']")).toHaveText("Daftar Worker");
   await expect(page.locator(".bottom-nav #statusDot")).toHaveCount(1);
 });
