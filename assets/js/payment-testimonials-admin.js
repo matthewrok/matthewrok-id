@@ -310,7 +310,8 @@
       const file = fileInput.files?.[0];
       if (!file) throw new Error("Pilih foto pembayaran terlebih dahulu.");
       if (!processedBlob || processedFile !== file) await refreshPreview();
-      if (!processedBlob || processedFile !== file) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");\n      if (!privacyReview?.checked) throw new Error("Centang konfirmasi setelah memeriksa seluruh pratinjau dan memastikan tidak ada data sensitif yang terlihat.");
+      if (!processedBlob || processedFile !== file) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");
+      if (!privacyReview?.checked) throw new Error("Centang konfirmasi setelah memeriksa seluruh pratinjau dan memastikan tidak ada data sensitif yang terlihat.");
       const path = new Date().toISOString().slice(0,10) + "/" + crypto.randomUUID() + ".webp";
       const {error:uploadError} = await db.storage.from("payment-testimonials").upload(path,processedBlob,{
         contentType:"image/webp",upsert:false,cacheControl:"31536000"
