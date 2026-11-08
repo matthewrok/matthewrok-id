@@ -786,39 +786,39 @@ test("home Lacak navigation always opens Pesanan Saya, not the direct progress-t
 
 test("private member dashboard uses the shared guard result instead of repeating Auth requests", () => {
   const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
-  assert.match(html, /access-guard\\.js\\?v=20261108-authfix2/);
-  assert.match(html, /session-manager\\.js\\?v=20261108-authfix2/);
-  assert.match(html, /await withTimeout\\(window\\.__matthewAccessReady/);
-  assert.match(html, /window\\.__matthewVerifiedUser/);
-  assert.doesNotMatch(html, /location\\.replace\\('\\/login\\.html\\?next=member-dashboard\\.html'\\)/);
+  assert.match(html, /access-guard\.js\?v=20261108-authfix2/);
+  assert.match(html, /session-manager\.js\?v=20261108-authfix2/);
+  assert.match(html, /await withTimeout\(window\.__matthewAccessReady/);
+  assert.match(html, /window\.__matthewVerifiedUser/);
+  assert.doesNotMatch(html, /location\.replace\('\/login\.html\?next=member-dashboard\.html'\)/);
   const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
-  assert.match(guard, /member-dashboard\\|worker\\|inbox\\|your-order/);
+  assert.match(guard, /member-dashboard\|worker\|inbox\|your-order/);
   assert.match(guard, /20000/);
   assert.match(guard, /Sesi kamu tetap disimpan/);
-  assert.doesNotMatch(guard, /signOut\\(\\{ scope: "local" \\}\\);\\s*return redirectToLogin\\(\\);/);
+  assert.doesNotMatch(guard, /signOut\(\{ scope: "local" \}\);\s*return redirectToLogin\(\);/);
 });
 
 test("session activity writes are throttled to reduce refresh and scroll overhead", () => {
   const source = fs.readFileSync(path.join(ROOT, "assets/js/session-manager.js"), "utf8");
   assert.match(source, /storageWriteInterval = 15000/);
-  assert.match(source, /if \\(!force && now - lastStorageWrite < storageWriteInterval\\) return/);
-  assert.match(source, /document\\.addEventListener\\("visibilitychange"/);
+  assert.match(source, /if \(!force && now - lastStorageWrite < storageWriteInterval\) return/);
+  assert.match(source, /document\.addEventListener\("visibilitychange"/);
   assert.match(source, /pointer: fine/);
 });
 
 test("homepage effects use a small animation budget and pause when the tab is hidden", () => {
   const source = fs.readFileSync(path.join(ROOT, "assets/js/home-effects.js"), "utf8");
-  assert.match(source, /isSmallScreen \\? 4 : 8/);
+  assert.match(source, /isSmallScreen \? 4 : 8/);
   assert.match(source, /visibilitychange/);
   const css = fs.readFileSync(path.join(ROOT, "assets/css/style.css"), "utf8");
-  assert.match(css, /\\.meteor \\{ will-change: auto; \\}/);
+  assert.match(css, /\.meteor \{ will-change: auto; \}/);
   assert.match(css, /max-width: 600px/);
-  assert.match(css, /realmImageReveal 1\\.1s/);
+  assert.match(css, /realmImageReveal 1\.1s/);
 });
 
 test("homepage does not sign members out when a profile query temporarily fails", () => {
   const source = fs.readFileSync(path.join(ROOT, "assets/js/home.js"), "utf8");
   const profileFailure = source.slice(source.indexOf("if (error || !profile)"), source.indexOf("app.currentIdentity =", source.indexOf("if (error || !profile)")));
-  assert.doesNotMatch(profileFailure, /auth\\.signOut/);
-  assert.match(source, /!\\["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"\\]\\.includes\\(event\\)/);
+  assert.doesNotMatch(profileFailure, /auth\.signOut/);
+  assert.match(source, /!\["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"\]\.includes\(event\)/);
 });
