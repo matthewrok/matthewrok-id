@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#071a35">
+  <link rel="icon" type="image/png" href="/assets/images/brand/logo-matthew.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/payment-testimonials.css?v=20261108-1">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script src="/assets/js/access-guard.js?v=20261106-3"></script>
+  <script defer src="/assets/js/session-manager.js"></script>
+  <script defer src="/assets/js/payment-testimonials-admin.js?v=20261108-1"></script>
+  <title>Kelola Testimoni Pembayaran | Admin MATTHEW JOKI</title>
+</head>
+<body class="testimonial-page admin-testimonial-page">
+  <header class="testimonial-header">
+    <a class="testimonial-brand" href="/"><img src="/assets/images/brand/logo-matthew.png" alt=""><span>MATTHEW JOKI<small>ADMIN · TESTIMONI</small></span></a>
+    <a class="back-home" href="/admin/dashboard.html">Dashboard Admin</a>
+  </header>
+  <main class="testimonial-main admin-testimonial-main">
+    <section class="testimonial-hero admin-hero">
+      <span class="eyebrow">ADMIN CONTROL CENTER</span>
+      <h1>Kelola Bukti <span>Pembayaran</span></h1>
+      <p>Upload bukti transaksi. Watermark hybrid akan ditanam langsung ke file gambar sebelum disimpan dan dipublikasikan.</p>
+    </section>
+    <section class="upload-panel">
+      <div class="panel-heading"><div><span class="eyebrow">NEW DOCUMENTATION</span><h2>Upload Bukti Pembayaran</h2></div><span class="secure-badge">ADMIN ONLY</span></div>
+      <form id="testimonialUploadForm" class="upload-form">
+        <label class="file-drop" for="paymentImage"><span class="upload-icon">＋</span><strong>Pilih foto pembayaran</strong><small>JPG, PNG, atau WebP · Maksimal 10 MB</small><input id="paymentImage" name="paymentImage" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+        <div id="imagePreviewWrap" class="image-preview-wrap" hidden><img id="imagePreview" alt="Pratinjau foto dengan watermark"><span>PREVIEW WATERMARK</span></div>
+        <label class="field-label" for="paymentCaption">Keterangan transaksi <span>(opsional)</span><input id="paymentCaption" name="caption" type="text" maxlength="140" placeholder="Contoh: Pelunasan paket CH13"></label>
+        <label class="field-label" for="paymentDate">Tanggal transaksi <span>(opsional)</span><input id="paymentDate" name="transactionDate" type="date"></label>
+        <div class="watermark-info"><strong>Watermark otomatis aktif</strong><span>Logo MATTHEW di bagian tengah + tulisan MATTHEW JOKI berulang diagonal. Watermark menyatu permanen dengan file gambar.</span></div>
+        <button id="uploadPaymentButton" class="primary-button" type="submit">Proses Watermark & Publikasikan</button>
+        <p id="uploadFeedback" class="form-feedback" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="gallery-section admin-gallery-section">
+      <div class="gallery-heading"><div><span class="eyebrow">PUBLISHED & ARCHIVED</span><h2>Dokumentasi Tersimpan</h2></div><span id="adminGalleryCount" class="gallery-count">Memuat…</span></div>
+      <div id="adminTestimonialsList" class="admin-testimonial-list"><p class="gallery-state">Memuat dokumentasi…</p></div>
+    </section>
+  </main>
+  <footer class="testimonial-footer">Area pengelolaan ini hanya tersedia untuk role admin.</footer>
+</body>
+</html>
