@@ -732,8 +732,8 @@ test("Shadow Reign member dashboard preserves its tab layout, mapped data target
     assert.ok(html.includes(rpc), "missing existing member RPC " + rpc);
   }
   assert.match(html, /function switchTab/);
-  assert.match(html, /getSession\(\)/);
-  assert.match(html, /getUser\(\)/);
+  assert.match(html, /__matthewVerifiedSession/);
+  assert.match(html, /__matthewVerifiedUser/);
   assert.match(html, /member-onboarding\.js/);
   assert.match(html, /maintenance-status\.js/);
   const inlineScripts = [...html.matchAll(new RegExp("<script(?![^>]*src=)[^>]*>([\\s\\S]*?)</script>", "g"))];
