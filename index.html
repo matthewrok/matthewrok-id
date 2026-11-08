@@ -19,7 +19,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
 
     <style id="app-like-home-redesign">
         :root {
@@ -66,6 +65,9 @@
             object-fit: contain;
         }
 
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .icon-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: white; width: 36px; height: 36px; border-radius: 8px; display: none; justify-content: center; align-items: center; text-decoration: none; }
+        .status-dot { position: absolute; top: 0; right: 25%; width: 8px; height: 8px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-main); box-shadow: 0 0 8px rgba(16,185,129,.6); display: none; }
         .btn-login { background: transparent; border: 1px solid var(--border-color); color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 11px; font-weight: 600; transition: 0.3s; }
         .btn-login:hover { background: white; color: black; }
 
@@ -190,7 +192,10 @@
         .admin-panel th,.admin-panel td { padding: 9px; border: 1px solid var(--border-color); text-align: left; }
         .admin-panel th { color: var(--accent-gold); }
         .brand-logo { display: block; }
-        .global-menu { top: 76px !important; }
+        .nav-item { position: relative; }
+        .footer-service-links { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; font-size: 10px; letter-spacing: .3px; }
+        .footer-service-links a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; }
+        .footer-service-links a:hover { color: var(--accent-gold); }
         .bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
         @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
     </style>
@@ -202,11 +207,14 @@
                 <img src="/assets/images/brand/logo-matthew.png" alt="Matthew Logo" class="brand-logo">
                 MATTHEW JOKI
             </div>
-            <a href="../login/" class="btn-login">LOGIN / DAFTAR</a>
+            <div class="header-actions">
+                <a href="/login/" class="btn-login" id="headerLoginBtn">LOGIN / DAFTAR</a>
+                <a href="/inbox.html" class="icon-btn" id="headerInboxBtn" title="Inbox" aria-label="Inbox">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+            </div>
             <span id="navUser" hidden></span>
             <a id="adminNavLink" href="/admin/dashboard.html" hidden>Admin</a>
-            <button id="menuToggle" type="button" hidden aria-label="Buka menu navigasi"></button>
-            <nav id="siteMenu" hidden aria-label="Navigasi utama"></nav>
         </header>
 
         <div class="announcement-ticker" id="announcementTicker" role="region" aria-label="Pengumuman" hidden>
@@ -383,14 +391,16 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 Tools
             </a>
-            <a href="#about" class="nav-item">
+            <a href="/member-dashboard.html" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span class="status-dot" id="statusDot" aria-hidden="true"></span>
                 Akun
             </a>
         </nav>
 
         <footer>
             © 2026 MATTHEW JOKI. ALL RIGHTS RESERVED.
+            <div class="footer-service-links"><a href="/support-matthew.html">Support Matthew</a><span aria-hidden="true">·</span><a href="/worker.html">Daftar Worker</a></div>
         </footer>
     </div>
 
@@ -404,15 +414,41 @@
     <script defer src="/assets/js/monitoring.js?v=20261107-pr3"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/assets/js/supabase.js?v=20261107-pr2"></script>
+    <script>
+      (() => {
+        const syncHeaderAuth = (session) => {
+          const loginBtn = document.getElementById("headerLoginBtn");
+          const inboxBtn = document.getElementById("headerInboxBtn");
+          const statusDot = document.getElementById("statusDot");
+          const loggedIn = Boolean(session);
+          if (loginBtn) loginBtn.style.display = loggedIn ? "none" : "block";
+          if (inboxBtn) inboxBtn.style.display = loggedIn ? "flex" : "none";
+          if (statusDot) statusDot.style.display = loggedIn ? "block" : "none";
+        };
+        document.addEventListener("DOMContentLoaded", async () => {
+          const client = window.supabaseClient;
+          if (!client) { syncHeaderAuth(null); return; }
+          try {
+            const { data, error } = await client.auth.getSession();
+            if (error) throw error;
+            syncHeaderAuth(data?.session || null);
+          } catch (error) {
+            console.warn("[Homepage auth UI] Gagal memeriksa sesi:", error);
+            syncHeaderAuth(null);
+          }
+          client.auth.onAuthStateChange((_event, session) => {
+            window.setTimeout(() => syncHeaderAuth(session), 0);
+          });
+        });
+      })();
+    </script>
     <script defer src="/assets/js/public-reviews.js?v=20261104-2"></script>
     <script defer src="/assets/js/session-manager.js?v=20261107-pr2"></script>
     <script defer src="/assets/js/home-announcement.js?v=20261104"></script>
     <script defer src="/assets/js/home.js?v=20261107-pr2"></script>
     <script defer src="/assets/js/home-visitor.js"></script>
     <script defer src="/assets/js/home-effects.js"></script>
-    <script defer src="/assets/js/home-navigation.js"></script>
     <script defer src="/assets/js/home-orders.js?v=20261104-5"></script>
-    <script defer src="/assets/js/global-menu.js?v=20261104-11"></script>
     <script defer src="/assets/js/floating-cs.js?v=20261104-2"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
