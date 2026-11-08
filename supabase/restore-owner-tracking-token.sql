@@ -42,7 +42,7 @@ begin
   from public.profiles p
   where p.id = v_user_id;
 
-  if coalesce(v_role, '') not in ('member', 'sultan', 'matthew', 'pelanggan')
+  if coalesce(v_role, '') not in ('warga biasa', 'warga tidak biasa', 'warga sultan')
      or v_account_status is distinct from 'active' then
     raise exception 'Akun ini tidak memiliki izin untuk mengambil token pesanan.';
   end if;
