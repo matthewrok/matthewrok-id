@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#071326">
+  <meta name="theme-color" content="#050505">
   <title>Admin Dashboard | Matthew ROK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/admin-dashboard.css?v=20261104-3">
   <!-- Optional error monitoring; DSN is configured in sentry-config.js. -->
   <script defer src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js" crossorigin="anonymous"></script>
@@ -18,8 +21,8 @@
   <script defer src="/assets/js/admin.js"></script>
   <script defer src="/assets/js/admin-features.js"></script>
   <script defer src="/assets/js/maintenance-admin.js?v=20261106-mm2"></script>
-  <link rel="stylesheet" href="/assets/css/modern-theme.css?v=20261104-4">
-  <link rel="stylesheet" href="/assets/css/blue-theme.css?v=20261106-blue-pr13-mm2">
+  <link rel="stylesheet" href="/assets/css/shadow-reign-design-system.css">
+  <link rel="stylesheet" href="/assets/css/shadow-reign-admin.css">
   <style>
     /* Tab navigation: mempertahankan palet biru yang sudah digunakan website. */
     .admin-tab-menu{display:flex;gap:9px;overflow-x:auto;padding:5px 2px 12px;margin:20px 0 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -45,7 +48,7 @@
     .member-filters{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;margin:14px 0}.member-filters label{display:grid;gap:5px;color:#9fb3d9;font-size:11px;font-weight:700}.member-filters input,.member-filters select{width:100%;min-width:0;min-height:40px;padding:9px 11px;border:1px solid #294477;border-radius:9px;background:#0b1730;color:#e8f0ff;font:12px 'Segoe UI',Tahoma,sans-serif}.filter-reset{min-height:40px;padding:8px 13px;border:1px solid #31558e;border-radius:9px;background:#142b50;color:#dbeafe;font-weight:700;cursor:pointer}.order-manager-frame{display:block;width:100%;min-height:950px;border:1px solid #203b69;border-radius:14px;background:#071326}.embedded-admin-tools{margin:12px 0}.embedded-admin-tools .manage-progress-cta{max-width:100%;min-height:64px;margin:0}.order-manager-frame{height:1200px}@media(max-width:700px){.member-filters{grid-template-columns:1fr 1fr}.member-filters label:first-child{grid-column:1/-1}.filter-reset{width:100%}.order-manager-frame{min-height:1100px}}
   </style>
 </head>
-<body>
+<body class="sr-theme admin-dashboard-page">
   <main class="wrap">
     <header class="top">
       <div><div class="eyebrow">MATTHEW JOKI · ADMIN CONTROL CENTER</div><h1>Pusat Kendali Admin</h1><p id="adminWelcome">Memverifikasi akses admin…</p><p class="admin-subtitle">Semua pekerjaan admin tersusun berdasarkan tugas. Pilih bagian yang ingin dikelola.</p></div>

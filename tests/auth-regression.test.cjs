@@ -397,9 +397,11 @@ test("tracking and admin progress scripts parse without syntax errors", () => {
 });
 
 
-test("admin progress page exposes the same blue theme as the public portal", () => {
+test("admin progress page uses the approved Shadow Reign theme", () => {
   const html = fs.readFileSync(path.join(ROOT, "admin/joki-progress.html"), "utf8");
-  assert.match(html, /name="theme-color" content="#071426"/);
+  assert.match(html, /name="theme-color" content="#050505"/);
+  assert.match(html, /shadow-reign-design-system\.css/);
+  assert.match(html, /class="sr-theme admin-progress-page"/);
 });
 
 
@@ -470,7 +472,7 @@ test("Shadow Reign calculator preserves its approved dark palette and calculator
   assert.ok(!["Cek Progres", "Matthew-Raditya", "joki-matthew.html"].some(value => html.includes(value)));
 });
 
-test("all pages load the current shared blue theme cache version", () => {
+test("all themed pages declare the approved shared or local theme", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
@@ -481,8 +483,8 @@ test("all pages load the current shared blue theme cache version", () => {
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     const usesSharedBlueTheme = /blue-theme\.css\?v=20261106-blue-pr13-mm2/.test(html) || /blue-theme\.css\?v=20261106-blue-theme-pr13-mm2/.test(html);
-    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && /fonts\.googleapis\.com\/css2\?family=(?:Cinzel|Inter)/.test(html);
-    assert.ok(usesSharedBlueTheme || ownsShadowReignTheme, page + " should load the shared blue theme or declare its local Shadow Reign theme");
+    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && (/fonts\.googleapis\.com\/css2\?family=(?:Cinzel|Inter)/.test(html) || html.includes("shadow-reign") || html.includes("sr-theme"));
+    assert.ok(usesSharedBlueTheme || ownsShadowReignTheme, page + " should declare the shared legacy theme or the Shadow Reign theme");
   }
   const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
   assert.doesNotMatch(shadowReign, /blue-theme\.css/, "Shadow Reign dashboard keeps its approved black/gold palette");

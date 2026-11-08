@@ -1,0 +1,117 @@
+/* Shadow Reign admin surfaces — scoped overrides only. */
+body.sr-theme.admin-dashboard-page,
+body.sr-theme.admin-progress-page {
+  min-height:100vh;
+  margin:0;
+  color:var(--sr-color-text);
+  background:
+    radial-gradient(ellipse at 50% -12%,rgba(214,177,104,.11),transparent 46%),
+    radial-gradient(ellipse at 0% 70%,rgba(105,83,49,.07),transparent 35%),
+    var(--sr-color-void);
+  font-family:var(--sr-font-body);
+  color-scheme:dark;
+}
+body.sr-theme.admin-dashboard-page :is(.wrap,.page){width:min(1180px,calc(100% - 32px));margin-inline:auto}
+body.sr-theme.admin-dashboard-page .wrap{padding:clamp(20px,4vw,38px) 0 56px}
+body.sr-theme.admin-dashboard-page .top{padding:0 0 22px;border-color:var(--sr-color-border);align-items:flex-start}
+body.sr-theme.admin-dashboard-page .eyebrow,
+body.sr-theme.admin-progress-page .eyebrow{color:var(--sr-color-gold);letter-spacing:.18em}
+body.sr-theme.admin-dashboard-page .top h1{color:var(--sr-color-heading);font:700 clamp(26px,5vw,40px)/1.2 var(--sr-font-display)}
+body.sr-theme.admin-dashboard-page :is(p,.admin-subtitle){color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page .actions :is(a,button){border-color:var(--sr-color-border-strong);border-radius:var(--sr-radius-sm);background:var(--sr-color-surface-raised);color:var(--sr-color-text);font-family:var(--sr-font-body)}
+body.sr-theme.admin-dashboard-page .actions button.primary{border-color:var(--sr-color-gold);background:linear-gradient(135deg,var(--sr-color-gold-bright),var(--sr-color-gold-deep));color:#17120a}
+body.sr-theme.admin-dashboard-page .notice{border-color:var(--sr-color-border);border-radius:var(--sr-radius-md);background:var(--sr-color-surface);color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page .notice.error{border-color:var(--sr-color-danger);color:#f0a5a7}
+body.sr-theme.admin-dashboard-page .admin-tab-menu{position:sticky;top:10px;z-index:var(--sr-z-sticky);display:flex;gap:8px;overflow-x:auto;margin:20px 0;padding:10px;border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-lg);background:rgba(10,10,13,.94);backdrop-filter:blur(16px);box-shadow:var(--sr-shadow-card);scrollbar-width:thin}
+body.sr-theme.admin-dashboard-page .admin-tab-menu .tab-btn{flex:0 0 auto;min-height:42px;padding:10px 14px;border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-pill);background:var(--sr-color-surface);color:var(--sr-color-text-muted);font:700 11px/1.2 var(--sr-font-body);white-space:nowrap}
+body.sr-theme.admin-dashboard-page .admin-tab-menu .tab-btn:hover{border-color:var(--sr-color-gold);color:var(--sr-color-heading)}
+body.sr-theme.admin-dashboard-page .admin-tab-menu .tab-btn.active{border-color:var(--sr-color-gold);background:linear-gradient(135deg,rgba(214,177,104,.22),rgba(155,115,53,.12));color:var(--sr-color-gold-bright);box-shadow:inset 0 0 0 1px rgba(214,177,104,.08),0 5px 18px rgba(0,0,0,.24)}
+body.sr-theme.admin-dashboard-page .admin-shortcuts{position:relative;top:auto;z-index:auto;grid-template-columns:repeat(3,minmax(0,1fr));border-color:var(--sr-color-border);border-radius:var(--sr-radius-lg);background:rgba(16,16,20,.88);box-shadow:var(--sr-shadow-card)}
+body.sr-theme.admin-dashboard-page .admin-shortcuts a{border-radius:var(--sr-radius-md);color:var(--sr-color-text)}
+body.sr-theme.admin-dashboard-page .admin-shortcuts a:hover,
+body.sr-theme.admin-dashboard-page .admin-shortcuts a:focus-visible{border-color:var(--sr-color-border-strong);background:var(--sr-color-gold-wash)}
+body.sr-theme.admin-dashboard-page .admin-shortcuts a>span{border-color:var(--sr-color-border-strong);color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-dashboard-page .admin-shortcuts small{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page .admin-guide{border-left-color:var(--sr-color-gold);border-radius:0 var(--sr-radius-sm) var(--sr-radius-sm) 0;background:var(--sr-color-gold-wash)}
+body.sr-theme.admin-dashboard-page .admin-guide strong{color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-dashboard-page .grid{gap:14px}
+body.sr-theme.admin-dashboard-page .card{border-color:var(--sr-color-border);border-radius:var(--sr-radius-lg);background:linear-gradient(145deg,rgba(25,25,30,.96),rgba(10,10,13,.98));box-shadow:var(--sr-shadow-card)}
+body.sr-theme.admin-dashboard-page .card::after{background:linear-gradient(90deg,transparent,var(--sr-color-gold),transparent)}
+body.sr-theme.admin-dashboard-page .label{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page .value{color:var(--sr-color-gold-bright);font-family:var(--sr-font-display)}
+body.sr-theme.admin-dashboard-page .section[id]{scroll-margin-top:100px;border-color:var(--sr-color-border);border-radius:var(--sr-radius-lg);background:linear-gradient(145deg,rgba(22,22,27,.96),rgba(10,10,13,.98));box-shadow:var(--sr-shadow-card)}
+body.sr-theme.admin-dashboard-page .section[id]>h2{border-color:var(--sr-color-border);color:var(--sr-color-gold-bright);font-family:var(--sr-font-display)}
+body.sr-theme.admin-dashboard-page .section[id]>p{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page :is(.table-wrap,.table-responsive){border-color:var(--sr-color-border);border-radius:var(--sr-radius-md);background:rgba(5,5,6,.48)}
+body.sr-theme.admin-dashboard-page table{border-collapse:collapse}
+body.sr-theme.admin-dashboard-page th{background:rgba(214,177,104,.09);color:var(--sr-color-gold-bright);border-color:var(--sr-color-border);font-family:var(--sr-font-body)}
+body.sr-theme.admin-dashboard-page td{color:var(--sr-color-text-muted);border-color:var(--sr-color-border)}
+body.sr-theme.admin-dashboard-page tbody tr:hover{background:rgba(214,177,104,.045)}
+body.sr-theme.admin-dashboard-page :is(.admin-form,.maintenance-control){border-color:var(--sr-color-border);border-radius:var(--sr-radius-md);background:rgba(5,5,6,.36)}
+body.sr-theme.admin-dashboard-page .admin-form label{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page :is(input,select,textarea){border:1px solid var(--sr-color-border-strong);border-radius:var(--sr-radius-sm);background:#09090c;color:var(--sr-color-text);font:13px var(--sr-font-body)}
+body.sr-theme.admin-dashboard-page :is(input,select,textarea):focus{border-color:var(--sr-color-gold-bright);box-shadow:0 0 0 3px var(--sr-color-gold-wash)}
+body.sr-theme.admin-dashboard-page .role-save{border-color:var(--sr-color-border-strong);border-radius:var(--sr-radius-sm);background:linear-gradient(135deg,var(--sr-color-gold-bright),var(--sr-color-gold-deep));color:#17120a}
+body.sr-theme.admin-dashboard-page .danger-action{border-color:rgba(216,108,112,.48);border-radius:var(--sr-radius-sm);background:rgba(216,108,112,.1);color:#f0a5a7}
+body.sr-theme.admin-dashboard-page .manage-progress-cta{border-color:var(--sr-color-border-strong);border-radius:var(--sr-radius-md);background:linear-gradient(120deg,rgba(214,177,104,.22),rgba(25,25,30,.96));color:var(--sr-color-heading);box-shadow:var(--sr-shadow-card)}
+body.sr-theme.admin-dashboard-page .manage-progress-cta>span:first-child{border-color:var(--sr-color-border-strong);color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-dashboard-page .manage-progress-cta small{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page .activity-item{border-color:var(--sr-color-border);border-radius:var(--sr-radius-md);background:var(--sr-color-surface)}
+body.sr-theme.admin-dashboard-page .activity-kind{border-color:var(--sr-color-border-strong);color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-dashboard-page .activity-item strong{color:var(--sr-color-heading)}
+body.sr-theme.admin-dashboard-page .activity-item p{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-dashboard-page footer{border-color:var(--sr-color-border);color:var(--sr-color-text-subtle)}
+/* Progress manager page and its iframe/embed presentation. */
+body.sr-theme.admin-progress-page .topbar{position:sticky;top:0;z-index:var(--sr-z-sticky);padding:14px max(5%,calc((100vw - 1160px)/2));border-color:var(--sr-color-border);background:rgba(8,8,11,.94);backdrop-filter:blur(14px)}
+body.sr-theme.admin-progress-page .brand{color:var(--sr-color-gold-bright);font-family:var(--sr-font-display)}
+body.sr-theme.admin-progress-page .brand small,
+body.sr-theme.admin-progress-page .topbar nav a{color:var(--sr-color-text-muted);font-family:var(--sr-font-body)}
+body.sr-theme.admin-progress-page .page{width:min(1100px,calc(100% - 32px))}
+body.sr-theme.admin-progress-page .hero{padding:clamp(38px,6vw,70px) 0 28px}
+body.sr-theme.admin-progress-page .hero h1{color:var(--sr-color-heading);font-family:var(--sr-font-display)}
+body.sr-theme.admin-progress-page .hero h1 em{color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-progress-page .intro{color:var(--sr-color-text-muted)}
+body.sr-theme.admin-progress-page .panel,
+body.sr-theme.admin-progress-page .review-form-card,
+body.sr-theme.admin-progress-page .progress-result{border-color:var(--sr-color-border);border-radius:var(--sr-radius-lg);background:linear-gradient(145deg,rgba(23,23,29,.97),rgba(9,9,12,.98));box-shadow:var(--sr-shadow-card)}
+body.sr-theme.admin-progress-page :is(.section-heading h2,.admin-toolbar h3,.review-form-heading h3,.admin-details summary,.result-top h3){color:var(--sr-color-gold-bright);font-family:var(--sr-font-display)}
+body.sr-theme.admin-progress-page :is(label,.hint,.privacy-note,.admin-intro){color:var(--sr-color-text-muted)}
+body.sr-theme.admin-progress-page :is(input,select,textarea,.input){border-color:var(--sr-color-border-strong);border-radius:var(--sr-radius-sm);background:#09090c;color:var(--sr-color-text);font-family:var(--sr-font-body)}
+body.sr-theme.admin-progress-page :is(input,select,textarea,.input):focus{border-color:var(--sr-color-gold-bright);box-shadow:0 0 0 3px var(--sr-color-gold-wash)}
+body.sr-theme.admin-progress-page .btn-gold{border-color:var(--sr-color-gold-bright);border-radius:var(--sr-radius-sm);background:linear-gradient(135deg,var(--sr-color-gold-bright),var(--sr-color-gold-deep));color:#17120a}
+body.sr-theme.admin-progress-page .btn-outline{border-color:var(--sr-color-border-strong);border-radius:var(--sr-radius-sm);background:transparent;color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-progress-page .order-form,
+body.sr-theme.admin-progress-page .review-card,
+body.sr-theme.admin-progress-page .admin-details{border-color:var(--sr-color-border);border-radius:var(--sr-radius-md);background:rgba(5,5,6,.45)}
+body.sr-theme.admin-progress-page th{border-color:var(--sr-color-border);background:rgba(214,177,104,.09);color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-progress-page td{border-color:var(--sr-color-border);color:var(--sr-color-text-muted)}
+body.sr-theme.admin-progress-page .progress-track{background:rgba(255,255,255,.1)}
+body.sr-theme.admin-progress-page .progress-track div{background:linear-gradient(90deg,var(--sr-color-gold-deep),var(--sr-color-gold-bright))}
+body.sr-theme.admin-progress-page .status-badge,
+body.sr-theme.admin-progress-page .level-badge{border:1px solid var(--sr-color-border-strong);background:var(--sr-color-gold-wash);color:var(--sr-color-gold-bright)}
+body.sr-theme.admin-progress-page .note-box{border-color:var(--sr-color-gold);background:var(--sr-color-gold-wash)}
+body.sr-theme.admin-progress-page .message.error{color:#f0a5a7}
+body.sr-theme.admin-progress-page .message.success{color:#9bdbb2}
+body.sr-theme.admin-progress-page footer{border-color:var(--sr-color-border);color:var(--sr-color-text-subtle)}
+html.admin-embedded body.sr-theme.admin-progress-page .page{width:100%;max-width:none;padding:12px}
+html.admin-embedded body.sr-theme.admin-progress-page .panel{margin:0;padding:14px}
+@media(max-width:850px){
+ body.sr-theme.admin-dashboard-page .admin-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ body.sr-theme.admin-dashboard-page .wrap{width:calc(100% - 24px);padding-top:18px}
+ body.sr-theme.admin-dashboard-page .admin-tab-menu{top:6px;margin:14px 0;padding:8px}
+ body.sr-theme.admin-dashboard-page .admin-tab-menu .tab-btn{min-height:40px;padding:9px 12px;font-size:10px}
+ body.sr-theme.admin-dashboard-page .admin-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ body.sr-theme.admin-dashboard-page .section[id]{padding:14px}
+ body.sr-theme.admin-progress-page .topbar{align-items:flex-start;flex-direction:column;gap:10px}
+ body.sr-theme.admin-progress-page .topbar nav{gap:12px}
+ body.sr-theme.admin-progress-page .hero{padding-top:36px}
+ body.sr-theme.admin-progress-page .token-row,
+ body.sr-theme.admin-progress-page .result-top{align-items:stretch;flex-direction:column}
+ body.sr-theme.admin-progress-page .token-row .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sr-theme.admin-dashboard-page *,
+ body.sr-theme.admin-progress-page *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
