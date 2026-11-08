@@ -353,8 +353,8 @@ Deno.serve(async (req: Request) => {
       ]), [{ text: "➕ Buat voucher", callback_data: "newvoucher" }], [{ text: "⬅️ Menu", callback_data: "menu" }]] };
     }
     if (kind === "roles") {
-      const rows = await adminRead("profiles", "select=id,email,full_name,role&order=created_at.desc&limit=15");
-      return { inline_keyboard: [...rows.map((x:any) => [{ text: String(x.full_name || x.email || x.id).slice(0,28)+" · "+x.role, callback_data: "roleuser|"+x.id }]), [{ text: "⬅️ Menu", callback_data: "menu" }]] };
+      const rows = await adminRead("profiles", "select=email,full_name,role&order=created_at.desc&limit=15");
+      return { inline_keyboard: [[{ text: "👥 " + rows.length + " akun · Role otomatis", callback_data: "menu" }], [{ text: "⬅️ Menu", callback_data: "menu" }]] };
     }
     if (kind === "reviews") {
       const rows = await adminRead("joki_reviews", "select=id,client_name,rating&order=created_at.desc&limit=10");
