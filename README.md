@@ -100,7 +100,7 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 - `home.js`, `home-navigation.js`, `home-effects.js`, `home-announcement.js` — interaksi beranda.
 - `home-orders.js`, `your-order.js`, `public-reviews.js` — pesanan dan ulasan.
 - `calculator.js`, `requirements.js` — tools.
-- `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.
+- `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.
 - `inbox.js`, `worker-application.js`, `joki-matthew.js`, `floating-cs.js`, `global-menu.js` — modul fitur terkait.
 
 Jangan menghapus modul hanya karena tidak langsung terlihat di beranda. Telusuri seluruh HTML/CSS/JS, pemanggilan dinamis, dan halaman khusus sebelum menyimpulkan file tidak dipakai.
@@ -169,7 +169,7 @@ Tidak perlu menambahkan folder cache/build untuk situs GitHub Pages statis ini. 
 - [Rancangan Maintenance Mode 2.0](docs/MAINTENANCE-MODE-2.0.md)
 - [Checklist PR #13 — Member Center 2.0](docs/PR-13-MEMBER-CENTER-2.0.md)
 - [Rencana migrasi token pelacakan](docs/TRACKING-TOKEN-MIGRATION.md)
-- supabase/tracking-token-v2.sql — migrasi token pelacakan 256-bit (tahap expand sudah diterapkan di Supabase produksi).
+- `supabase/payment_testimonials_setup.sql` — tabel, bucket, dan RLS untuk galeri bukti pembayaran (jalankan setelah PR digabung).\n- supabase/tracking-token-v2.sql — migrasi token pelacakan 256-bit (tahap expand sudah diterapkan di Supabase produksi).
 - supabase/tracking-token-v2-cutover.sql — pencabutan RPC token lama; jalankan setelah frontend baru tayang dan token baru sudah dikirim ke pelanggan.
 - supabase/tracking-token-v2-rollback.sql — rollback pra-rilis saja; jangan jalankan setelah frontend baru membuat pesanan.
 - supabase/harden_remaining_rpc_search_paths.sql — mengunci search_path tiga RPC SECURITY DEFINER tambahan.
