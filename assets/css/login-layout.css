@@ -15,14 +15,6 @@ body.auth-experience:before{
   background-image:linear-gradient(rgba(115,180,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(115,180,255,.045) 1px,transparent 1px);
   background-size:52px 52px;mask-image:linear-gradient(to bottom,#000,transparent 90%);
 }
-body.auth-experience:after{
-  content:"";position:fixed;z-index:0;pointer-events:none;top:-190px;right:18%;width:2px;height:145px;
-  background:linear-gradient(transparent,rgba(119,216,255,.9),transparent);
-  box-shadow:-210px 360px 0 -0.4px rgba(119,216,255,.55),230px 570px 0 -0.5px rgba(119,216,255,.65),-470px 720px 0 -0.5px rgba(119,216,255,.45);
-  filter:drop-shadow(0 0 8px rgba(74,171,255,.65));transform:rotate(32deg);
-  animation:authMeteorFall 13s linear infinite;
-}
-@keyframes authMeteorFall{0%{translate:0 -20vh;opacity:0}12%{opacity:.85}82%{opacity:.65}100%{translate:-32vw 125vh;opacity:0}}
 .login-experience{position:relative;z-index:1;width:min(100% - 40px,1240px)!important;max-width:1240px!important;margin:0 auto;padding:clamp(28px,5vh,58px) 0 24px!important}
 .login-page{
   display:grid!important;grid-template-columns:minmax(0,.95fr) minmax(430px,1.05fr);align-items:start;gap:clamp(30px,5vw,76px);
@@ -111,4 +103,4 @@ body.auth-experience:after{
  .login-page .login-panel{padding:18px 14px}
  .login-page .visitor-panel{padding:17px 13px}
 }
-@media(prefers-reduced-motion:reduce){body.auth-experience:after{animation:none}.login-page *{scroll-behavior:auto!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.login-page *{scroll-behavior:auto!important;transition:none!important}}
