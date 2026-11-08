@@ -87,7 +87,7 @@ test("global popup menu dihapus dan tautan layanan tetap tersedia", async ({ pag
   expect(dashboardHtml).not.toContain('href="/worker.html"');
   expect(dashboardHtml).toContain('id="logoutBtn"');
   expect(dashboardHtml).toContain('id="adminDashboardBtn" href="/admin/dashboard.html" hidden');
-  expect(dashboardHtml).toContain("adminDashboardBtn.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin'");
+  expect(dashboardHtml).toContain("if (adminDashboardBtn) adminDashboardBtn.hidden = normalizedRole !== 'admin'");
 });
 
 test("tidak ada halaman HTML yang masih memuat Global Menu", async ({ request }) => {
