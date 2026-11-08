@@ -68,9 +68,9 @@
     for (const line of lines) {
       const text = String(line.text || "").trim();
       if (!text || !line.bbox) continue;
-      const digits = text.replace(/\\D/g,"");
+      const digits = text.replace(/\D/g,"");
       const hasNpwp = digits.length === 15 || digits.length === 16;
-      const hasReferenceLabel = /\\b(ref(?:erence)?|referensi|no\\.?\\s*(?:ref|referensi)|nomor\\s*referensi|transaction\\s*id|id\\s*transaksi|no\\.?\\s*transaksi)\\b/i.test(text);
+      const hasReferenceLabel = /\b(ref(?:erence)?|referensi|no\.?\s*(?:ref|referensi)|nomor\s*referensi|transaction\s*id|id\s*transaksi|no\.?\s*transaksi)\b/i.test(text);
       if (hasNpwp || hasReferenceLabel) {
         masks.push({
           x0:Math.max(0,line.bbox.x0-8),
@@ -107,6 +107,19 @@
       ctx.fillStyle = "#fff";
       ctx.fillRect(0,0,width,height);
       ctx.drawImage(bitmap,0,0,width,height);
+      if (sensitiveMasks.length) {
+        ctx.save();
+        ctx.fillStyle = "#050505";
+        ctx.strokeStyle = "rgba(255,255,255,.55)";
+        ctx.lineWidth = Math.max(1,2*scale);
+        sensitiveMasks.forEach(mask => {
+          const x = mask.x0*scale, y = mask.y0*scale;
+          const w = (mask.x1-mask.x0)*scale, h = (mask.y1-mask.y0)*scale;
+          ctx.fillRect(x,y,w,h);
+          ctx.strokeRect(x,y,w,h);
+        });
+        ctx.restore();
+      }
 
       const shortSide = Math.min(width,height);
       const fontSize = Math.max(13, Math.round(shortSide * .035));
