@@ -90,6 +90,7 @@
 
       const userResult = await requestWithRetry(() => client.auth.getUser(), "Verifikasi identitas", currentAttempt);
       if (currentAttempt !== attemptId || terminal) return;
+      if (userResult?.error) return redirectToLogin();
       const user = userResult?.data?.user || session.user;
       if (!user || !user.email_confirmed_at) return redirectToLogin();
       window.__matthewVerifiedUser = user;
@@ -100,6 +101,7 @@
         .eq("id", user.id)
         .maybeSingle(), "Pemeriksaan profil", currentAttempt);
       if (currentAttempt !== attemptId || terminal) return;
+      if (profileResult?.error) throw new Error("Profil belum dapat diverifikasi: " + profileResult.error.message);
       const profile = profileResult?.data;
       if (!profile) return redirectToLogin();
 
