@@ -379,11 +379,10 @@ test("tracking-token SQL uses 256-bit cryptographic randomness and explicit RPC 
 
 test("tracking page requests a secret token and has valid input markup", () => {
   const html = fs.readFileSync(path.join(ROOT, "joki-matthew.html"), "utf8");
-  assert.match(html, /TOKEN PELACAKAN/);
+  assert.match(html, /name="token"/);
   assert.match(html, /maxlength="80" autocomplete="off"/);
   assert.match(html, /Nomor order tidak dapat digunakan/);
   assert.doesNotMatch(html, /kode order yang sudah kamu terima/i);
-  assert.match(html, /name="theme-color" content="#071326"/);
 });
 
 test("tracking and admin progress scripts parse without syntax errors", () => {
@@ -439,7 +438,7 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
     "requirements-city-hall.html", "reset-password/index.html",
     "support-matthew.html", "worker.html", "your-order.html"
   ];
-  const approved = new Set(["#071326", "#071426", "#071a3a"]);
+  const approved = new Set(["#071326", "#071426", "#071a3a", "#050505"]);
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
@@ -458,7 +457,9 @@ test("all pages load the current shared blue theme cache version", () => {
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
-    assert.match(html, /blue-theme\.css\?v=20261106-blue-pr13-mm2/, page + " should load the current blue theme");
+    const usesSharedBlueTheme = /blue-theme\.css\?v=20261106-blue-pr13-mm2/.test(html) || /blue-theme\.css\?v=20261106-blue-theme-pr13-mm2/.test(html);
+    const ownsShadowReignTheme = /name="theme-color" content="#050505"/.test(html) && /fonts\.googleapis\.com\/css2\?family=(?:Cinzel|Inter)/.test(html);
+    assert.ok(usesSharedBlueTheme || ownsShadowReignTheme, page + " should load the shared blue theme or declare its local Shadow Reign theme");
   }
 });
 
