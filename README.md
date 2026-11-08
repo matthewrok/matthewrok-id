@@ -22,7 +22,7 @@ Website resmi MATTHEW untuk profil personal, informasi layanan, alat bantu *Rise
 - **Pelacakan pesanan** — status/progres dan informasi pesanan member.
 - **Member dashboard** — ringkasan akun dan pesanan/invoice.
 - **Inbox** — pesan resmi sesuai peran dan izin akun.
-- **Support** — informasi dukungan dan halaman donasi/QRIS.
+- **Support** — informasi dukungan dan halaman donasi/QRIS.\n- **Bukti Pembayaran & Testimoni** — galeri publik dengan watermark permanen dan pengelolaan upload khusus admin.
 - **Admin** — dashboard, pengelolaan progres, akun/role, pengumuman, voucher, dan aktivitas sesuai modul yang diimplementasikan.
 - **Integrasi Telegram** — Edge Functions untuk notifikasi dan proses administratif terkait pesanan.
 
@@ -100,12 +100,12 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 - `home.js`, `home-navigation.js`, `home-effects.js`, `home-announcement.js` — interaksi beranda.
 - `home-orders.js`, `your-order.js`, `public-reviews.js` — pesanan dan ulasan.
 - `calculator.js`, `requirements.js` — tools.
-- `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.
+- `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.
 - `inbox.js`, `worker-application.js`, `joki-matthew.js`, `floating-cs.js`, `global-menu.js` — modul fitur terkait.
 
 Jangan menghapus modul hanya karena tidak langsung terlihat di beranda. Telusuri seluruh HTML/CSS/JS, pemanggilan dinamis, dan halaman khusus sebelum menyimpulkan file tidak dipakai.
 
-## Supabase dan backend
+## Supabase dan backend\n\n- `supabase/payment_testimonials_setup.sql` menyiapkan tabel, bucket publik, dan RLS untuk galeri bukti pembayaran. Jalankan setelah PR fitur digabung dan kebijakan ditinjau.
 
 Sumber SQL terdokumentasi disimpan di `supabase/*.sql`. Kode Edge Function ada di `supabase/functions/<nama-fungsi>/index.ts`, antara lain:
 
