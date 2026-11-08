@@ -87,7 +87,7 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 - `blue-theme.css`, `style.css` — gaya dasar dan penyelarasan tema biru.
 - `global-menu.css` — menu global.
 - `auth.css`, `auth-visitor.css` — autentikasi dasar dan akses visitor.
-- `login-layout.css` — tata letak login responsif, benefit member, akses tamu, dan animasi meteor biru.
+- `login-layout.css` — tata letak login responsif, benefit member, dan akses tamu tanpa animasi dekoratif.
 - `calculator.css`, `requirements.css` — halaman tools.
 - `joki-matthew.css`, `your-order.css`, `worker-inbox.css` — layanan dan halaman terkait.
 - `admin-dashboard.css`, `tokens.css` — gaya admin dan token desain.
@@ -95,7 +95,7 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 ### JavaScript utama
 - `supabase.js`, `session-manager.js` — inisialisasi Supabase dan pengelolaan sesi.
 - `auth.js`, `home-auth.js`, `home-visitor.js` — alur akun.
-- `home.js`, `home-navigation.js`, `home-effects.js`, `home-announcement.js` — interaksi beranda.
+- `home.js`, `home-navigation.js`, `home-announcement.js` — logika dan interaksi beranda; efek dekoratif lama telah dihapus.
 - `home-orders.js`, `your-order.js`, `public-reviews.js` — pesanan dan ulasan.
 - `calculator.js`, `requirements.js` — tools.
 - `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.
