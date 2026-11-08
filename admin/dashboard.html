@@ -24,12 +24,12 @@
   <link rel="stylesheet" href="/assets/css/shadow-reign-design-system.css">
   <link rel="stylesheet" href="/assets/css/shadow-reign-admin.css">
   <style>
-    /* Tab navigation: mempertahankan palet biru yang sudah digunakan website. */
+    /* Tab navigation: diselaraskan dengan palet Shadow Reign obsidian dan royal gold. */
     .admin-tab-menu{display:flex;gap:9px;overflow-x:auto;padding:5px 2px 12px;margin:20px 0 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
     .admin-tab-menu::-webkit-scrollbar{display:none}
-    .admin-tab-menu .tab-btn{flex:0 0 auto;min-height:42px;padding:10px 15px;border:1px solid #1e2d5a;border-radius:999px;background:#111c44;color:#94a3b8;font:700 12px/1.2 'Segoe UI',Tahoma,sans-serif;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s,border-color .2s,box-shadow .2s}
-    .admin-tab-menu .tab-btn:hover{border-color:#3b82f6;color:#fff}
-    .admin-tab-menu .tab-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.25)}
+    .admin-tab-menu .tab-btn{flex:0 0 auto;min-height:42px;padding:10px 15px;border:1px solid #5a482b;border-radius:999px;background:#17171d;color:#aaa39a;font:700 12px/1.2 'Segoe UI',Tahoma,sans-serif;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s,border-color .2s,box-shadow .2s}
+    .admin-tab-menu .tab-btn:hover{border-color:#9b7335;color:#fff}
+    .admin-tab-menu .tab-btn.active{background:#9b7335;border-color:#9b7335;color:#fff;box-shadow:0 4px 12px rgba(214,177,104,.25)}
     .tab-content{display:none;min-width:0}
     .tab-content.active{display:block;animation:adminTabFade .24s ease both}
     @keyframes adminTabFade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
@@ -38,14 +38,14 @@
     .table-responsive table{min-width:560px}
     .tab-content>.section:first-child{margin-top:0}
     @media(max-width:600px){
-      .admin-tab-menu{position:sticky;top:0;z-index:20;margin:12px -2px 16px;padding:9px 2px 11px;background:rgba(11,19,43,.96);backdrop-filter:blur(12px)}
+      .admin-tab-menu{position:sticky;top:0;z-index:20;margin:12px -2px 16px;padding:9px 2px 11px;background:rgba(10,10,13,.96);backdrop-filter:blur(12px)}
       .admin-tab-menu .tab-btn{min-height:40px;padding:9px 13px;font-size:11px}
       .tab-content .section[id]{margin-top:14px;padding:14px}
       .tab-content .grid{margin-top:14px}
     }
     @media(prefers-reduced-motion:reduce){.tab-content.active{animation:none}.admin-tab-menu .tab-btn{transition:none}}
 
-    .member-filters{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;margin:14px 0}.member-filters label{display:grid;gap:5px;color:#9fb3d9;font-size:11px;font-weight:700}.member-filters input,.member-filters select{width:100%;min-width:0;min-height:40px;padding:9px 11px;border:1px solid #294477;border-radius:9px;background:#0b1730;color:#e8f0ff;font:12px 'Segoe UI',Tahoma,sans-serif}.filter-reset{min-height:40px;padding:8px 13px;border:1px solid #31558e;border-radius:9px;background:#142b50;color:#dbeafe;font-weight:700;cursor:pointer}.order-manager-frame{display:block;width:100%;min-height:950px;border:1px solid #203b69;border-radius:14px;background:#071326}.embedded-admin-tools{margin:12px 0}.embedded-admin-tools .manage-progress-cta{max-width:100%;min-height:64px;margin:0}.order-manager-frame{height:1200px}@media(max-width:700px){.member-filters{grid-template-columns:1fr 1fr}.member-filters label:first-child{grid-column:1/-1}.filter-reset{width:100%}.order-manager-frame{min-height:1100px}}
+    .member-filters{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;margin:14px 0}.member-filters label{display:grid;gap:5px;color:#aaa39a;font-size:11px;font-weight:700}.member-filters input,.member-filters select{width:100%;min-width:0;min-height:40px;padding:9px 11px;border:1px solid #5a482b;border-radius:9px;background:#101014;color:#f4efe5;font:12px 'Segoe UI',Tahoma,sans-serif}.filter-reset{min-height:40px;padding:8px 13px;border:1px solid #9b7335;border-radius:9px;background:#2a2116;color:#fff8e9;font-weight:700;cursor:pointer}.order-manager-frame{display:block;width:100%;min-height:950px;border:1px solid #5a482b;border-radius:14px;background:#0a0a0d}.embedded-admin-tools{margin:12px 0}.embedded-admin-tools .manage-progress-cta{max-width:100%;min-height:64px;margin:0}.order-manager-frame{height:1200px}@media(max-width:700px){.member-filters{grid-template-columns:1fr 1fr}.member-filters label:first-child{grid-column:1/-1}.filter-reset{width:100%}.order-manager-frame{min-height:1100px}}
   </style>
 </head>
 <body class="sr-theme admin-dashboard-page">
