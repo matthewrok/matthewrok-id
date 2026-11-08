@@ -164,7 +164,7 @@ revoke all on function public.process_worker_application_decision(uuid, text, uu
 grant execute on function public.process_worker_application_decision(uuid, text, uuid) to service_role;
 
 
--- Allow the MATTHEW operator role to resolve member names when addressing Inbox messages.
+-- Only active ADMIN accounts can resolve member names for Inbox administration.
 create schema if not exists private;
 revoke all on schema private from public, anon;
 grant usage on schema private to authenticated;
