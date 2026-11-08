@@ -25,6 +25,18 @@ test("homepage Shadow Reign menampilkan hero, produk, ulasan, FAQ, dan modal ord
   await expect(page.locator("#produk-joki [data-order-product]")).toHaveCount(3);
 });
 
+
+test("homepage tidak memuat Global Menu lama dan shortcut layanan tetap tersedia", async ({ page }) => {
+  await openStaticHome(page, { width: 390, height: 844 });
+
+  await expect(page.locator("#menuToggle, #siteMenu")).toHaveCount(0);
+  await expect(page.locator("#headerLoginBtn")).toHaveAttribute("href", "/login/");
+  await expect(page.locator("#headerInboxBtn")).toHaveAttribute("href", "/inbox.html");
+  await expect(page.locator("footer a[href='/support-matthew.html']")).toHaveText("Support Matthew");
+  await expect(page.locator("footer a[href='/worker.html']")).toHaveText("Daftar Worker");
+  await expect(page.locator(".bottom-nav #statusDot")).toHaveCount(1);
+});
+
 for (const viewport of [
   { name: "mobile", width: 390, height: 844 },
   { name: "desktop", width: 1365, height: 900 }
