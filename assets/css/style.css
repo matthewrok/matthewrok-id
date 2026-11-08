@@ -2017,3 +2017,18 @@ h1,h2,h3,.brand,.section-title{font-family:var(--display)}
 .joki-voucher-toggle:active,.joki-voucher-check:active{transform:scale(.97);}
 .joki-voucher-toggle:focus-visible,.joki-voucher-check:focus-visible{outline:2px solid #e8c77e;outline-offset:2px;}
 @media(max-width:420px){.joki-order-voucher-row{gap:5px}.joki-voucher-toggle,.joki-voucher-check{padding:8px 9px;font-size:.74rem;min-height:42px}}
+
+
+/* Performance guardrails for mid-range phones and first paint. */
+.meteor { will-change: auto; }
+.meteor.is-paused { animation-play-state: paused; }
+@media (max-width: 600px) {
+  .dragon-hero .hero-cinematic-art img {
+    animation: realmImageReveal 1.1s ease-out both !important;
+    filter: none;
+  }
+  .dragon-hero .hero-content { animation: none !important; }
+  .dragon-hero .hero-sparks i { animation-duration: 7s; }
+  .orbit-back, .orbit-front { animation-duration: 36s; }
+  .warrior-halo { filter: blur(5px); animation-duration: 7s; }
+}
