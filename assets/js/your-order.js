@@ -96,7 +96,7 @@
       try {
         const {data,error}=await db.rpc("get_my_joki_tracking_token",{p_order_number:order.order_number});
         if(error) throw error;
-        const token=typeof data==="string"?data:(Array.isArray(data)?data[0]?.tracking_token:data?.tracking_token);
+        const token=typeof data==="string"?data:null;
         if(!token) throw new Error("Token belum tersedia untuk pesanan ini. Hubungi admin untuk bantuan.");
         sessionStorage.setItem("matthewProgressToken",token);
         window.location.assign("/joki-matthew.html");
