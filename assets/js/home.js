@@ -77,13 +77,7 @@
   }
 
   async function showUser(user) {
-    const adminNavLink = document.getElementById("adminNavLink");
     const adminPanel = document.getElementById("adminPanel");
-
-    if (adminNavLink) {
-      adminNavLink.style.display = "none";
-      adminNavLink.setAttribute("aria-hidden", "true");
-    }
 
     if (!user) {
       const visitorName = sessionStorage.getItem("matthewVisitorName");
@@ -140,16 +134,8 @@
       navUser.appendChild(role);
     }
 
-    if (profile.role === "admin") {
-      if (adminNavLink) {
-        adminNavLink.style.display = "flex";
-        adminNavLink.setAttribute("aria-hidden", "false");
-      }
-      adminPanel?.classList.remove("hidden");
-      await loadMembers();
-    } else {
-      adminPanel?.classList.add("hidden");
-    }
+    // Admin navigation is intentionally kept off the homepage.
+    adminPanel?.classList.add("hidden");
     observeRevealElements();
   }
 
