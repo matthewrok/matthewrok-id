@@ -368,8 +368,8 @@
                 document.getElementById('memberName').textContent = profile.full_name || user.email?.split('@')[0] || 'Member';
                 document.getElementById('profileEmail').textContent = user.email || '—';
                 document.getElementById('memberLevel').textContent = String(profile.role || 'warga biasa').toUpperCase();
-                const adminDashboardBtn = document.getElementById('adminDashboardBtn');
-                if (adminDashboardBtn) adminDashboardBtn.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin';
+                const adminDashboardButton = document.getElementById('adminDashboardBtn');
+                if (adminDashboardButton) adminDashboardButton.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin';
                 document.getElementById('totalOrders').textContent = String(orders.length);
                 document.getElementById('completedOrders').textContent = String(done);
                 document.getElementById('activeOrders').textContent = String(active);
