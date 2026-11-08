@@ -15,6 +15,8 @@
   const MAX_INPUT_BYTES = 10 * 1024 * 1024;
   const MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
   let processedBlob = null;
+  let processedFile = null;
+  let previewRequest = 0;
   let previewUrl = null;
 
   const setFeedback = (message, isError = false) => {
@@ -118,7 +120,9 @@
   }
 
   async function refreshPreview() {
+    const requestId = ++previewRequest;
     processedBlob = null;
+    processedFile = null;
     const file = fileInput.files?.[0];
     if (!file) {
       previewWrap.hidden = true;
@@ -128,13 +132,17 @@
     }
     try {
       setFeedback("Memproses watermark untuk pratinjau…");
-      processedBlob = await createWatermarkedImage(file);
+      const blob = await createWatermarkedImage(file);
+      if (requestId !== previewRequest || fileInput.files?.[0] !== file) return;
+      processedBlob = blob;
+      processedFile = file;
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       previewUrl = URL.createObjectURL(processedBlob);
       previewImage.src = previewUrl;
       previewWrap.hidden = false;
       setFeedback("Watermark berhasil dibuat. Foto siap dipublikasikan.");
     } catch (error) {
+      if (requestId !== previewRequest) return;
       previewWrap.hidden = true;
       setFeedback(error.message || "Foto tidak dapat diproses.", true);
     }
@@ -244,8 +252,8 @@
       const user = await verifyAdmin();
       const file = fileInput.files?.[0];
       if (!file) throw new Error("Pilih foto pembayaran terlebih dahulu.");
-      if (!processedBlob) await refreshPreview();
-      if (!processedBlob) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");
+      if (!processedBlob || processedFile !== file) await refreshPreview();
+      if (!processedBlob || processedFile !== file) throw new Error("Foto belum berhasil diproses. Periksa pesan pratinjau.");
       const path = new Date().toISOString().slice(0,10) + "/" + crypto.randomUUID() + ".webp";
       const {error:uploadError} = await db.storage.from("payment-testimonials").upload(path,processedBlob,{
         contentType:"image/webp",upsert:false,cacheControl:"31536000"
@@ -267,6 +275,7 @@
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       previewUrl = null;
       processedBlob = null;
+      processedFile = null;
       await loadItems();
       setFeedback("Berhasil! Watermark sudah menyatu permanen dengan foto dan dokumentasi langsung dipublikasikan.");
     } catch (error) {
