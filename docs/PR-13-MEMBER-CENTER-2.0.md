@@ -57,7 +57,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 
 ## H. Keamanan, akses, dan privasi
 - [ ] Audit access guard untuk dashboard, pesanan, Inbox, worker, Macul, dan halaman admin.
-- [x] Edge Function pendaftaran worker memeriksa role dan account_status dari tabel profiles di server; hanya member, SULTAN, MATTHEW, dan PELANGGAN aktif yang dapat mengajukan. WORKER/MACUL ditolak di endpoint.
+- [x] Edge Function pendaftaran worker memeriksa role dan account_status dari tabel profiles di server; hanya WARGA BIASA, WARGA TIDAK BIASA, dan WARGA SULTAN aktif yang dapat mengajukan. WORKER/MACUL ditolak di endpoint.
 - [ ] Pastikan WORKER dan MACUL tetap role terpisah pada seluruh alur persetujuan, pengelolaan role, dan akses halaman; jangan gabungkan otorisasi keduanya.
 - [ ] Periksa seluruh query dashboard terhadap RLS dan kepemilikan data.
 - [x] Render nama/ulasan/order dan invoice dashboard menggunakan escaping HTML pada output dinamis; audit XSS seluruh halaman masih terbuka.
@@ -76,7 +76,7 @@ Menjadikan PR ini sebagai pembaruan besar untuk pengalaman member, dimulai dari 
 ## J. Audit seluruh website di dalam PR ini
 - [ ] Beranda dan alur login/register/reset: redirect, tombol, tampilan, dan validasi.
 - [ ] Pemisahan Visitor vs akun terdaftar; Visitor tidak boleh memesan atau memakai voucher.
-- [ ] Konsistensi role ADMIN, SULTAN, MATTHEW, PELANGGAN, MEMBER, WORKER, dan MACUL.
+- [ ] Konsistensi role ADMIN, WARGA BIASA, WARGA TIDAK BIASA, dan WARGA SULTAN.
 - [ ] Alur pemesanan, voucher, kode pesanan, dan notifikasi Telegram.
 - [ ] Halaman Your Order dan pelacakan progres.
 - [ ] Inbox Matthew dan batasan admin-only send.
