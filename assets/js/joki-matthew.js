@@ -7,11 +7,18 @@
   const setBusy = (button, busy, busyText, normalText) => { button.disabled = busy; button.textContent = busy ? busyText : normalText; };
   $("lookupForm").addEventListener("submit", async event => {
     event.preventDefault();
-    const token = $("progressToken").value.trim().toUpperCase();
+    const rawToken = $("progressToken").value.trim().toUpperCase();
+    // Allow pasting the whole WhatsApp line (label + token), not only the token itself.
+    const tokenMatch = rawToken.match(/MJ-[A-F0-9]{64}/);
+    const token = tokenMatch ? tokenMatch[0] : rawToken.replace(/\s+/g, "");
     $("progressResult").classList.add("hidden");
     showMessage("lookupMessage", "");
     setBusy($("lookupButton"), true, "MEMERIKSA...", "BUKA PESANAN");
     try {
+      if (/^MJ-\d{6}-[A-F0-9]{8}$/.test(token)) {
+        showMessage("lookupMessage", "Kode pesanan lama bukan token pelacakan rahasia yang baru. Login ke akun pemilik pesanan, buka Pesanan Saya, lalu tekan Lacak untuk mengambil token baru secara aman.", "error");
+        return;
+      }
       const {data, error} = await db.rpc("lookup_joki_progress_secure", {p_token: token});
       if (error) throw error;
       const order = Array.isArray(data) ? data[0] : data;
@@ -147,5 +154,16 @@
       showMessage("reviewMessage", error.message || "Ulasan belum dapat dikirim. Pastikan setup ulasan sudah dijalankan.", "error");
     } finally { setBusy(button, false, "MENGIRIM...", "KIRIM ULASAN"); }
   });
+
+  // Orders opened from Pesanan Saya pass the owner-only token through sessionStorage,
+  // never through a URL/query string or browser history.
+  const recoveredToken = sessionStorage.getItem("matthewProgressToken");
+  if (recoveredToken) {
+    sessionStorage.removeItem("matthewProgressToken");
+    $("progressToken").value = recoveredToken;
+    const clearButton = $("clearTokenBtn");
+    if (clearButton) clearButton.style.display = "block";
+    window.setTimeout(() => $("lookupForm").requestSubmit(), 0);
+  }
 
 })();

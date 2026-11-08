@@ -88,10 +88,27 @@
       }
     });
     actions.appendChild(invoice);
+    const tracker=document.createElement("button");
+    tracker.type="button"; tracker.className="btn-action primary"; tracker.textContent="Lacak";
+    tracker.addEventListener("click",async()=>{
+      const originalText=tracker.textContent;
+      tracker.disabled=true; tracker.textContent="Menyiapkan token…";
+      try {
+        const {data,error}=await db.rpc("get_my_joki_tracking_token",{p_order_number:order.order_number});
+        if(error) throw error;
+        const token=typeof data==="string"?data:null;
+        if(!token) throw new Error("Token belum tersedia untuk pesanan ini. Hubungi admin untuk bantuan.");
+        sessionStorage.setItem("matthewProgressToken",token);
+        window.location.assign("/joki-matthew.html");
+      } catch(error) {
+        console.error("[Your Order] Token recovery:",error);
+        setState(error.message||"Token pelacakan belum dapat dipulihkan. Pastikan kamu login dengan akun pemilik pesanan.","error");
+        tracker.disabled=false; tracker.textContent=originalText;
+      }
+    });
+    actions.appendChild(tracker);
     if(completed) {
-      const reorder=document.createElement("a"); reorder.href="/index.html"; reorder.className="btn-action primary"; reorder.textContent="Pesan Lagi"; actions.appendChild(reorder);
-    } else {
-      const tracker=document.createElement("a"); tracker.href="/joki-matthew.html"; tracker.className="btn-action primary"; tracker.textContent="Lacak"; actions.appendChild(tracker);
+      const reorder=document.createElement("a"); reorder.href="/index.html"; reorder.className="btn-action"; reorder.textContent="Pesan Lagi"; actions.appendChild(reorder);
     }
     footer.append(price,actions); body.appendChild(footer); card.appendChild(body);
 
