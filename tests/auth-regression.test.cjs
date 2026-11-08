@@ -766,3 +766,14 @@ test("tracking accepts a token copied from a WhatsApp label and explains legacy 
   assert.match(source, /Pesanan Saya/);
   assert.match(source, /matthewProgressToken/);
 });
+
+
+test("home Lacak navigation always opens Pesanan Saya, not the direct progress-token page", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const nav = html.match(/<nav class="bottom-nav">([\\s\\S]*?)<\\/nav>/);
+  assert.ok(nav, "home bottom navigation must exist");
+  const lacak = nav[1].match(/<a\\b(?=[^>]*class="nav-item")(?=[^>]*>)[^>]*>[\\s\\S]*?\\bLacak\\b[\\s\\S]*?<\\/a>/);
+  assert.ok(lacak, "home Lacak navigation item must exist");
+  assert.match(lacak[0], /href="\\/your-order\\.html"/);
+  assert.doesNotMatch(lacak[0], /joki-matthew\\.html/);
+});
