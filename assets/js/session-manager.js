@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       activity();
     }, { passive: true });
   }
-  window.addEventListener("visibilitychange", () => {
+  document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") activity();
   });
   window.addEventListener("storage", event => {
