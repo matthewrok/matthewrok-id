@@ -26,7 +26,10 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: var(--font-sans); background-color: var(--bg-main); color: var(--text-main); padding-bottom: 40px; overflow-x: hidden; }
-        .container { max-width: 480px; margin: 0 auto; padding: 30px 15px 15px 15px; }
+        .container { max-width: 480px; margin: 0 auto; padding: 22px 15px 15px 15px; }
+        .page-back { display:inline-flex; align-items:center; gap:6px; margin:0 0 14px 2px; color:var(--text-muted); font-size:10px; text-decoration:none; }
+        .page-back svg { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+        .page-back:hover { color:var(--accent-gold); }
         /* FORM CARD (Pintu Masuk) */
         .access-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px 20px; margin-bottom: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .access-icon { font-size: 32px; margin-bottom: 15px; color: var(--accent-gold); }
@@ -101,6 +104,7 @@
 </head>
 <body>
     <div class="container">
+        <a class="page-back" href="/your-order.html" aria-label="Kembali ke Pesanan Saya"><svg viewBox="0 0 24 24"><path d="M15 18 9 12l6-6M9 12h11"/></svg><span>Pesanan Saya</span></a>
         <!-- FORM AKSES -->
         <section class="access-card">
             <div class="access-icon">🛡️</div>
