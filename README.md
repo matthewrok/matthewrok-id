@@ -83,11 +83,9 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 ## Peta aset frontend
 
 ### CSS utama
-- `style.css` — gaya dasar/beranda.
-- `blue-theme.css`, `style.css` — gaya dasar dan penyelarasan tema biru.
+- `style.css` dan `tokens.css` — gaya dasar dan token desain gelap.
 - `global-menu.css` — menu global.
 - `auth.css`, `auth-visitor.css` — autentikasi dasar dan akses visitor.
-- `login-layout.css` — tata letak login responsif, benefit member, dan akses tamu tanpa animasi dekoratif.
 - `calculator.css`, `requirements.css` — halaman tools.
 - `joki-matthew.css`, `your-order.css`, `worker-inbox.css` — layanan dan halaman terkait.
 - `admin-dashboard.css`, `tokens.css` — gaya admin dan token desain.
@@ -99,7 +97,7 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 - `home-orders.js`, `your-order.js`, `public-reviews.js` — pesanan dan ulasan.
 - `calculator.js`, `requirements.js` — tools.
 - `admin.js`, `admin-features.js`, `admin-joki-progress.js` — fitur admin.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.\n- `payment-testimonials-public.js`, `payment-testimonials-admin.js` — galeri bukti pembayaran dan watermark otomatis.
-- `inbox.js`, `worker-application.js`, `joki-matthew.js`, `floating-cs.js`, `global-menu.js` — modul fitur terkait.
+- `inbox.js`, `worker-application.js`, `joki-matthew.js`, `global-menu.js` — modul fitur terkait.
 
 Jangan menghapus modul hanya karena tidak langsung terlihat di beranda. Telusuri seluruh HTML/CSS/JS, pemanggilan dinamis, dan halaman khusus sebelum menyimpulkan file tidak dipakai.
 
