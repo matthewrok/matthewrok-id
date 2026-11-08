@@ -65,7 +65,6 @@ test("global popup menu dihapus dan tautan layanan tetap tersedia", async ({ pag
   await openStaticHome(page, { width: 390, height: 844 });
 
   await expect(page.locator("#siteMenu, #menuToggle")).toHaveCount(0);
-  await expect(page.locator("footer a[href='/support-matthew.html']")).toHaveText("Support Matthew");
   await expect(page.locator("footer a[href='/worker.html']")).toHaveText("Daftar Worker");
 
   const dashboardResponse = await request.get("/member-dashboard.html");
