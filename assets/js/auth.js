@@ -269,10 +269,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registerForm) {
     registerForm.addEventListener("submit", async event => {
       event.preventDefault(); showMessage(""); setBusy(registerForm, true, "MEMBUAT AKUN...");
-      const fullName = document.getElementById("registerName").value.trim();
-      const email = document.getElementById("registerEmail").value.trim();
-      const password = document.getElementById("registerPassword").value;
-      const confirmPassword = document.getElementById("registerConfirmPassword").value;
+      // Support both the legacy registration IDs and the Shadow Reign form IDs.
+      const fullName = (document.getElementById("nama") || document.getElementById("registerName")).value.trim();
+      const email = (document.getElementById("email") || document.getElementById("registerEmail")).value.trim();
+      const password = (document.getElementById("password") || document.getElementById("registerPassword")).value;
+      const confirmPassword = (document.getElementById("confirm-password") || document.getElementById("registerConfirmPassword")).value;
       if (password.length < 6) { showMessage("Password minimal 6 karakter.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       if (password !== confirmPassword) { showMessage("Konfirmasi password tidak sama. Periksa kembali penulisannya.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       try {
