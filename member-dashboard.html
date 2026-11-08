@@ -62,7 +62,8 @@
 
         /* MEMBERSHIP */
         .membership-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 15px; margin-bottom: 20px; }
-        .membership-top { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; color: var(--text-muted); }
+        .membership-top { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; color: var(--text-muted); }
+        .membership-next-copy { display: block; margin-bottom: 9px; color: #d4af37; font-size: 8px; line-height: 1.45; letter-spacing: .1px; }
         .progress-container { height: 4px; background: #1a1a1a; border-radius: 10px; overflow: hidden; }
         .progress-bar { height: 100%; background: var(--accent-gold); width: 0%; border-radius: 10px; transition: width 0.5s ease; }
 
@@ -162,6 +163,7 @@
                     <span id="levelDescription">WARGA BIASA</span>
                     <span id="nextLevel">0/7 Pesanan</span>
                 </div>
+                <small id="membershipNextCopy" class="membership-next-copy">WARGA BIASA ke WARGA TIDAK BIASA membutuhkan 7 Pesanan</small>
                 <div class="progress-container">
                     <div id="levelBar" class="progress-bar"></div>
                 </div>
@@ -333,8 +335,13 @@
                 document.getElementById('activeOrders').textContent = String(active);
                 document.getElementById('cancelledOrders').textContent = String(cancelled);
                 document.getElementById('levelDescription').textContent = level.name;
-                document.getElementById('levelBar').style.width = (next ? Math.min(100, Math.round(((done - level.min) / (next.min - level.min)) * 100)) : 100) + '%';
-                document.getElementById('nextLevel').textContent = next ? done + '/' + next.min + ' Pesanan' : 'Level Maksimum';
+                const levelProgress = next ? Math.max(0, Math.min(next.min - level.min, done - level.min)) : 0;
+                const levelTarget = next ? next.min - level.min : 0;
+                document.getElementById('levelBar').style.width = (next ? Math.min(100, Math.round((levelProgress / levelTarget) * 100)) : 100) + '%';
+                document.getElementById('nextLevel').textContent = next ? levelProgress + '/' + levelTarget + ' Pesanan' : 'Level Maksimum';
+                document.getElementById('membershipNextCopy').textContent = next
+                    ? level.name + ' ke ' + next.name + ' membutuhkan ' + levelTarget + ' Pesanan'
+                    : 'Kamu sudah mencapai level keanggotaan tertinggi.';
 
                 const recentOrders = document.getElementById('recentOrders');
                 recentOrders.innerHTML = orders.length ? orders.slice(0, 5).map(order =>
