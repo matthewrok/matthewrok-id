@@ -99,10 +99,15 @@ $function$;
 
 revoke all on function public.sync_warga_membership_role_from_order() from public, anon, authenticated;
 
-drop trigger if exists trg_sync_warga_membership_role on public.joki_progress;
-create trigger trg_sync_warga_membership_role
-after insert or delete or update of status, client_email
-on public.joki_progress
+drop trigger if exists trg_sync_warga_membership_role_insert_delete on public.joki_progress;
+create trigger trg_sync_warga_membership_role_insert_delete
+after insert or delete on public.joki_progress
+for each row
+execute function public.sync_warga_membership_role_from_order();
+
+drop trigger if exists trg_sync_warga_membership_role_update on public.joki_progress;
+create trigger trg_sync_warga_membership_role_update
+after update of status, client_email on public.joki_progress
 for each row
 execute function public.sync_warga_membership_role_from_order();
 
