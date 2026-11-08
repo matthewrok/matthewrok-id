@@ -313,8 +313,8 @@ test("new membership roles replace legacy profile roles", () => {
   for (const role of ["admin", "warga biasa", "warga tidak biasa", "warga sultan"]) {
     assert.ok(migration.includes("'" + role + "'"));
   }
-  assert.match(migration, /completed_orders >= 19/);
-  assert.match(migration, /completed_orders >= 7/);
+  assert.match(migration, /v_completed_orders >= 19/);
+  assert.match(migration, /v_completed_orders >= 7/);
   assert.match(migration, /create trigger .*membership_role/i);
 });
 
