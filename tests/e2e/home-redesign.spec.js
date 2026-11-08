@@ -62,7 +62,7 @@ test("global popup menu dihapus dan tautan layanan tetap tersedia", async ({ pag
   expect(dashboardResponse.ok()).toBeTruthy();
   const dashboardHtml = await dashboardResponse.text();
   expect(dashboardHtml).not.toMatch(/id=["'](?:siteMenu|menuToggle)["']/i);
-  expect(dashboardHtml).not.toMatch(/global-menu\\.(?:js|css)/i);
+  expect(dashboardHtml).not.toMatch(/global-menu\.(?:js|css)/i);
   expect(dashboardHtml).toContain('href="/support-matthew.html"');
   expect(dashboardHtml).toContain('href="/worker.html"');
   expect(dashboardHtml).toContain('id="logoutBtn"');
@@ -83,6 +83,6 @@ test("tidak ada halaman HTML yang masih memuat Global Menu", async ({ request })
     expect(response.ok(), path + " harus dapat diakses").toBeTruthy();
     const html = await response.text();
     expect(html, path + " tidak boleh memuat elemen Global Menu").not.toMatch(/id=["'](?:siteMenu|menuToggle)["']/i);
-    expect(html, path + " tidak boleh memuat asset Global Menu").not.toMatch(/global-menu\\.(?:js|css)/i);
+    expect(html, path + " tidak boleh memuat asset Global Menu").not.toMatch(/global-menu\.(?:js|css)/i);
   }
 });
