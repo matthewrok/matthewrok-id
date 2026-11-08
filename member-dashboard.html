@@ -109,6 +109,13 @@
         #loadState[hidden] { display: none !important; }
         .loading-spinner { width: 25px; height: 25px; border: 2px solid rgba(212, 175, 55, 0.2); border-top-color: var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 400px) {
+            .top-nav { padding: 12px 10px; gap: 6px; }
+            .brand { font-size: 11px; letter-spacing: .5px; }
+            .dashboard-quick-links { gap: 4px; }
+            .dashboard-quick-link { padding: 5px 6px; font-size: 8px; }
+            #logoutBtn { padding: 5px 7px; font-size: 9px; }
+        }
     </style>
 </head>
 <body>
