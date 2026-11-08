@@ -19,7 +19,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/global-menu.css?v=20261104-11">
 
     <style id="app-like-home-redesign">
         :root {
@@ -193,7 +192,10 @@
         .admin-panel th,.admin-panel td { padding: 9px; border: 1px solid var(--border-color); text-align: left; }
         .admin-panel th { color: var(--accent-gold); }
         .brand-logo { display: block; }
-        .global-menu { top: 76px !important; }
+        .nav-item { position: relative; }
+        .footer-service-links { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; font-size: 10px; letter-spacing: .3px; }
+        .footer-service-links a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; }
+        .footer-service-links a:hover { color: var(--accent-gold); }
         .bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
         @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
     </style>
@@ -213,8 +215,6 @@
             </div>
             <span id="navUser" hidden></span>
             <a id="adminNavLink" href="/admin/dashboard.html" hidden>Admin</a>
-            <button id="menuToggle" type="button" hidden aria-label="Buka menu navigasi"></button>
-            <nav id="siteMenu" hidden aria-label="Navigasi utama"></nav>
         </header>
 
         <div class="announcement-ticker" id="announcementTicker" role="region" aria-label="Pengumuman" hidden>
@@ -400,6 +400,7 @@
 
         <footer>
             © 2026 MATTHEW JOKI. ALL RIGHTS RESERVED.
+            <div class="footer-service-links"><a href="/support-matthew.html">Support Matthew</a><span aria-hidden="true">·</span><a href="/worker.html">Daftar Worker</a></div>
         </footer>
     </div>
 
@@ -447,9 +448,7 @@
     <script defer src="/assets/js/home.js?v=20261107-pr2"></script>
     <script defer src="/assets/js/home-visitor.js"></script>
     <script defer src="/assets/js/home-effects.js"></script>
-    <script defer src="/assets/js/home-navigation.js"></script>
     <script defer src="/assets/js/home-orders.js?v=20261104-5"></script>
-    <script defer src="/assets/js/global-menu.js?v=20261104-11"></script>
     <script defer src="/assets/js/floating-cs.js?v=20261104-2"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
