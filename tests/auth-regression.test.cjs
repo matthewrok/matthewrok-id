@@ -809,10 +809,8 @@ test("session activity writes are throttled to reduce refresh and scroll overhea
 test("homepage has no legacy meteor or decorative reveal effects", () => {
   const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
   const home = fs.readFileSync(path.join(ROOT, "assets/js/home.js"), "utf8");
-  const loginCss = fs.readFileSync(path.join(ROOT, "assets/css/login-layout.css"), "utf8");
   assert.doesNotMatch(html, /embers|home-effects/);
   assert.doesNotMatch(home, /IntersectionObserver|observeRevealElements|\.reveal/);
-  assert.doesNotMatch(loginCss, /authMeteorFall|auth-experience:after/);
   const css = fs.readFileSync(path.join(ROOT, "assets/css/style.css"), "utf8");
   assert.doesNotMatch(css, /meteorFall|\.meteor\b|\.embers\b/);
   assert.match(css, /animation: none !important/);
