@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let timer;
   let activeSession = false;
   let lastStorageWrite = 0;
-  const loginPage = /(?:^|\\/)login(?:\\.html|\\/)?$/.test(location.pathname);
+  const loginPage = /(?:^|\/)login(?:\.html|\/)?$/.test(location.pathname);
 
   function writeActivity(force = false) {
     const now = Date.now();
