@@ -22,7 +22,7 @@ Website resmi MATTHEW untuk profil personal, informasi layanan, alat bantu *Rise
 - **Pelacakan pesanan** — status/progres dan informasi pesanan member.
 - **Member dashboard** — ringkasan akun dan pesanan/invoice.
 - **Inbox** — pesan resmi sesuai peran dan izin akun.
-- **Support** — informasi dukungan dan halaman donasi/QRIS.\n- **Bukti Pembayaran & Testimoni** — galeri publik dengan watermark permanen dan pengelolaan upload khusus admin.
+- **Bukti Pembayaran & Testimoni** — galeri publik dengan watermark permanen dan pengelolaan upload khusus admin.
 - **Admin** — dashboard, pengelolaan progres, akun/role, pengumuman, voucher, dan aktivitas sesuai modul yang diimplementasikan.
 - **Integrasi Telegram** — Edge Functions untuk notifikasi dan proses administratif terkait pesanan.
 
