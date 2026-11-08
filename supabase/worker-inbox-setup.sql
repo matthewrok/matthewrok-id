@@ -29,7 +29,7 @@ declare
 begin
   if p_sender_id is null or not exists (
     select 1 from public.profiles p
-    where p.id = p_sender_id and p.role in ('admin', 'MATTHEW')
+    where p.id = p_sender_id and p.role = 'admin'
   ) then
     raise exception 'Not authorized';
   end if;
@@ -91,7 +91,7 @@ using (
   applicant_id = (select auth.uid())
   or exists (
     select 1 from public.profiles p
-    where p.id = (select auth.uid()) and p.role in ('admin', 'MATTHEW')
+    where p.id = (select auth.uid()) and p.role = 'admin'
   )
 );
 
@@ -120,7 +120,7 @@ begin
 
   if not exists (
     select 1 from public.profiles p
-    where p.id = p_actor_id and p.role in ('admin', 'MATTHEW')
+    where p.id = p_actor_id and p.role = 'admin'
   ) then
     raise exception 'Decision actor is not an authorized admin';
   end if;
@@ -179,7 +179,7 @@ as $$
   select exists (
     select 1 from public.profiles p
     where p.id = (select auth.uid())
-      and p.role in ('admin', 'MATTHEW')
+      and p.role = 'admin'
   );
 $$;
 revoke all on function private.is_matthew_operator() from public, anon;
