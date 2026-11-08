@@ -235,7 +235,7 @@ begin
       v_definition := pg_get_functiondef(v_oid);
       v_updated := regexp_replace(
         v_definition,
-        'v_role not in \\([^)]*\\)',
+        E'v_role not in \\([^)]*\\)',
         'v_role not in (''warga biasa'', ''warga tidak biasa'', ''warga sultan'')',
         'g'
       );
