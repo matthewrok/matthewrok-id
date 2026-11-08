@@ -78,6 +78,11 @@
 
   async function verifyAccess() {
     const currentAttempt = ++attemptId;
+    const timeout = window.setTimeout(() => {
+      if (currentAttempt === attemptId && !terminal && document.documentElement.classList.contains("access-pending")) {
+        showRetry("Server membutuhkan waktu lebih lama dari biasanya. Sesi kamu tetap disimpan; tekan Coba Lagi.");
+      }
+    }, 20000);
     try {
       const client = window.supabaseClient;
       if (!client?.auth) throw new Error("Library autentikasi belum siap. Muat ulang halaman setelah koneksi pulih.");
@@ -125,14 +130,11 @@
       if (currentAttempt !== attemptId || terminal) return;
       console.warn("[MATTHEW access guard]", error);
       showRetry("Pemeriksaan akun tertunda karena koneksi atau server belum merespons. Coba lagi tanpa perlu login ulang.");
+    } finally {
+      window.clearTimeout(timeout);
     }
   }
 
-  // Never turn a slow response into a false logout. Show a retry screen instead.
-  const timeout = window.setTimeout(() => {
-    if (!terminal && document.documentElement.classList.contains("access-pending")) {
-      showRetry("Server membutuhkan waktu lebih lama dari biasanya. Sesi kamu tetap disimpan; tekan Coba Lagi.");
-    }
-  }, 20000);
-  window.__matthewAccessReady = verifyAccess().finally(() => window.clearTimeout(timeout));
+  // A slow response never turns into a false logout.
+  window.__matthewAccessReady = verifyAccess();
 })();
