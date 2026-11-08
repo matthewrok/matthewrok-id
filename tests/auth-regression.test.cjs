@@ -435,7 +435,7 @@ test("legacy order RPC enforces the same active member-role allowlist during com
 });
 
 
-test("all website routes use the approved blue/navy browser theme colors", () => {
+test("all website routes use the approved black browser theme", () => {
   const pages = [
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
@@ -443,14 +443,13 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
     "requirements-city-hall.html", "reset-password/index.html",
     "worker.html", "your-order.html"
   ];
-  const approved = new Set(["#071326", "#071426", "#071a3a", "#050505"]);
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
-    assert.ok(approved.has(theme), page + " has non-blue theme color: " + theme);
+    assert.equal(theme, "#050505", page + " should use the black theme color");
   }
-  const shadowReign = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
-  assert.match(shadowReign, /name="theme-color" content="#050505"/);
+  const member = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  assert.match(member, /name="theme-color" content="#050505"/);
 });
 
 
@@ -525,12 +524,10 @@ test("legacy auth URLs preserve query strings and hashes when redirecting to pre
   }
 });
 
-test("shared blue theme overrides legacy red/gold surfaces on secondary pages", () => {
-  const css = fs.readFileSync(path.join(ROOT, "assets/css/blue-theme.css"), "utf8");
-  for (const selector of [".resource-card", ".tax-info", ".stats div", ".search", ".notice", ".card"]) {
-    assert.ok(css.includes(selector), "missing shared blue override for " + selector);
+test("legacy blue theme stylesheets are removed from the repository", () => {
+  for (const file of ["blue-theme.css", "auth-blue.css", "login-layout.css"]) {
+    assert.equal(fs.existsSync(path.join(ROOT, "assets/css", file)), false, file + " should be deleted");
   }
-  assert.match(css, /linear-gradient\(145deg,rgba\(15,42,73/);
 });
 
 
