@@ -193,6 +193,13 @@
         .admin-panel th { color: var(--accent-gold); }
         .brand-logo { display: block; }
         .nav-item { position: relative; }
+        .nav-tools-menu { position: relative; }
+        .nav-tools-menu > summary { cursor: pointer; list-style: none; }
+        .nav-tools-menu > summary::-webkit-details-marker { display: none; }
+        .nav-tools-menu[open] > summary { color: white; }
+        .tools-options { position: absolute; left: 50%; bottom: calc(100% + 14px); transform: translateX(-50%); display: grid; gap: 6px; width: 190px; padding: 8px; border: 1px solid var(--border-color); border-radius: 10px; background: #0a1424; box-shadow: 0 12px 32px rgba(0,0,0,.45); z-index: 1100; }
+        .tools-options a { display: block; padding: 11px 12px; border-radius: 6px; color: var(--text-main); text-decoration: none; text-align: left; font-size: 11px; font-weight: 600; }
+        .tools-options a:hover, .tools-options a:focus-visible { background: #142844; color: white; outline: none; }
         .footer-copyright { display: block; font-size: 8px; line-height: 1.5; letter-spacing: .7px; color: var(--text-muted); text-align: center; }
         .footer-service-links { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; font-size: 10px; letter-spacing: .3px; }
         .footer-service-links a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; }
@@ -357,7 +364,7 @@
 
             <!-- ADMIN DASHBOARD — existing dynamic container -->
             <section id="adminPanel" class="admin-panel hidden">
-                <h2>♛ ADMIN DASHBOARD</h2>
+                <h2>ADMIN DASHBOARD</h2>
                 <p id="memberMessage">Memuat data member...</p>
                 <div class="table-wrapper">
                     <table>
@@ -388,10 +395,16 @@
                     </svg>
                 </a>
             </div>
-            <a href="../calculator-resource.html" class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                Tools
-            </a>
+            <details class="nav-item nav-tools-menu" id="toolsMenu">
+                <summary aria-label="Buka pilihan Tools" aria-haspopup="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3 18l3 3 5.3-5.3a5 5 0 0 0 6.4-6.4l-3 3-3-3 3-3z"></path></svg>
+                    Tools
+                </summary>
+                <div class="tools-options" aria-label="Pilihan Tools">
+                    <a href="/calculator-resource.html">Resource Calculator</a>
+                    <a href="/requirements-city-hall.html">Requirements City Hall</a>
+                </div>
+            </details>
             <a href="/member-dashboard.html" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 <span class="status-dot" id="statusDot" aria-hidden="true"></span>
