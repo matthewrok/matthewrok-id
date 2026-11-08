@@ -125,3 +125,10 @@ Catatan ini berasal dari pemeriksaan definisi fungsi dan kode frontend; belum me
 - Perubahan ini hanya mengeraskan token yang dibuat melalui formulir admin manual. **Token otomatis dari `create_joki_order` belum diperbaiki** dan masih memakai format lama; lookup dan ulasan masih mencari kolom `token`. Jadi temuan utama keamanan belum dianggap selesai.
 - Perubahan berada di branch `feature/blue-login-experience`; belum masuk produksi dan belum diuji di browser.
 - Langkah berikutnya tetap migrasi terkoordinasi: token rahasia terpisah dari nomor order, cara aman mengirim token baru ke pelanggan, transisi order lama, pembaruan RPC order/review, dan pengujian akses tanpa token/role yang tidak berhak.
+
+
+## Penghapusan halaman Support Matthew
+
+- Menghapus halaman `support-matthew.html`, stylesheet khusus `assets/css/support.css`, dan aset QRIS khusus halaman tersebut.
+- Menghapus tautan Support Matthew dari footer beranda dan menghapus shortcut SUPPORT serta DAFTAR WORKER dari header dashboard member. Halaman/formulir worker tetap tersedia melalui tautan Daftar Worker di footer beranda.
+- Menghapus rute Support dari sitemap, dokumentasi struktur, dan daftar halaman pada pengujian regresi.
