@@ -18,6 +18,10 @@
     <!-- Menggunakan Font Cinzel untuk kesan Elegan & Mewah -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://aqiwrgnxwtphhwikqtmn.supabase.co" crossorigin>
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//aqiwrgnxwtphhwikqtmn.supabase.co">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style id="app-like-home-redesign">
@@ -411,9 +415,26 @@
     <div class="embers" id="embers" aria-hidden="true"></div>
 
     <!-- Original integrations and homepage scripts retained at the end of body. -->
-    <script defer src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js" crossorigin="anonymous"></script>
     <script defer src="/assets/js/sentry-config.js?v=20261107-pr3"></script>
-    <script defer src="/assets/js/monitoring.js?v=20261107-pr3"></script>
+    <script>
+      // Sentry is optional; load its bundle only when a public DSN is configured.
+      window.addEventListener("load", () => {
+        if (!String(window.MATTHEW_SENTRY_DSN || "").trim()) return;
+        const loadSentry = () => {
+          const bundle = document.createElement("script");
+          bundle.src = "https://browser.sentry-cdn.com/8.55.0/bundle.min.js";
+          bundle.crossOrigin = "anonymous";
+          bundle.onload = () => {
+            const monitor = document.createElement("script");
+            monitor.src = "/assets/js/monitoring.js?v=20261108-perf1";
+            document.head.appendChild(monitor);
+          };
+          document.head.appendChild(bundle);
+        };
+        if ("requestIdleCallback" in window) window.requestIdleCallback(loadSentry, { timeout: 2500 });
+        else window.setTimeout(loadSentry, 1200);
+      }, { once: true });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/assets/js/supabase.js?v=20261107-pr2"></script>
     <script>
