@@ -1,10 +1,10 @@
 (() => {
   "use strict";
-  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
   const roles = ["warga biasa", "warga tidak biasa", "warga sultan", "admin"];
   const rules = [
-    { test: /^\\/admin(?:\\/|$)/i, roles: ["admin"] },
-    { test: /^\\/(?:member-dashboard|worker|inbox|your-order)[.]html$/i, roles }
+    { test: /^\/admin(?:\/|$)/i, roles: ["admin"] },
+    { test: /^\/(?:member-dashboard|worker|inbox|your-order)[.]html$/i, roles }
   ];
   const rule = rules.find(item => item.test.test(path));
   if (!rule) return;
