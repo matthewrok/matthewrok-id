@@ -240,7 +240,7 @@
             const state = document.getElementById('loadState');
             const content = document.getElementById('dashboardContent');
             const money = value => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(Number(value || 0));
-            const allowedRoles = ['member', 'sultan', 'matthew', 'pelanggan', 'worker', 'macul', 'admin'];
+            const allowedRoles = ['admin', 'warga biasa', 'warga tidak biasa', 'warga sultan'];
             let stage = 'Menyiapkan koneksi akun';
 
             const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -322,24 +322,23 @@
                 const active = orders.filter(order => !isDone(order) && !isCancelled(order) && String(order.status || '').trim().toLowerCase() !== 'ditunda').length;
 
                 const levels = [
-                    { name: 'Bronze', min: 0, next: 3 },
-                    { name: 'Silver', min: 3, next: 8 },
-                    { name: 'Gold', min: 8, next: 15 },
-                    { name: 'Diamond', min: 15, next: null }
+                    { name: 'WARGA BIASA', min: 0, next: 7 },
+                    { name: 'WARGA TIDAK BIASA', min: 7, next: 19 },
+                    { name: 'WARGA SULTAN', min: 19, next: null }
                 ];
                 const level = [...levels].reverse().find(item => done >= item.min) || levels[0];
                 const next = levels.find(item => item.min === level.next);
 
                 document.getElementById('memberName').textContent = profile.full_name || user.email?.split('@')[0] || 'Member';
                 document.getElementById('profileEmail').textContent = user.email || '—';
-                document.getElementById('memberLevel').textContent = String(profile.role || 'member').toUpperCase();
+                document.getElementById('memberLevel').textContent = String(profile.role || 'warga biasa').toUpperCase();
                 const adminDashboardBtn = document.getElementById('adminDashboardBtn');
                 if (adminDashboardBtn) adminDashboardBtn.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin';
                 document.getElementById('totalOrders').textContent = String(orders.length);
                 document.getElementById('completedOrders').textContent = String(done);
                 document.getElementById('activeOrders').textContent = String(active);
                 document.getElementById('cancelledOrders').textContent = String(cancelled);
-                document.getElementById('levelDescription').textContent = 'Level ' + level.name;
+                document.getElementById('levelDescription').textContent = level.name;
                 document.getElementById('levelBar').style.width = (next ? Math.min(100, Math.round(((done - level.min) / (next.min - level.min)) * 100)) : 100) + '%';
                 document.getElementById('nextLevel').textContent = next ? done + '/' + next.min + ' Pesanan' : 'Level Maksimum';
 
