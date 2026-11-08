@@ -5,6 +5,7 @@
   const money = value => "Rp" + Number(value || 0).toLocaleString("id-ID");
   const date = value => value ? new Date(value).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}) : "—";
   const escapeText = value => String(value ?? "");
+  const actionIcon = name => ({invoice:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg>',track:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M10.5 7v4l3 2"/></svg>',reorder:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="m17 15 3 2-3 2"/></svg>',details:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>'})[name] || "";
   let loadingOrders = false;
   function setState(message, type="") {
     const el=$("ordersState"); el.textContent=message; el.className="feature-state"+(type?" "+type:"");
@@ -79,7 +80,7 @@
     const priceValue=document.createElement("strong"); priceValue.className="price-value"; priceValue.textContent=money(order.total_price);
     price.append(priceLabel,priceValue);
     const actions=document.createElement("div"); actions.className="action-buttons";
-    const invoice=document.createElement("button"); invoice.type="button"; invoice.className="btn-action"; invoice.textContent="Invoice";
+    const invoice=document.createElement("button"); invoice.type="button"; invoice.className="btn-action"; invoice.innerHTML=actionIcon("invoice")+'<span>Invoice</span>';
     invoice.addEventListener("click",()=>{
       if(order.invoice_url) window.open(order.invoice_url,"_blank","noopener,noreferrer");
       else {
@@ -89,7 +90,7 @@
     });
     actions.appendChild(invoice);
     const tracker=document.createElement("button");
-    tracker.type="button"; tracker.className="btn-action primary"; tracker.textContent="Lacak";
+    tracker.type="button"; tracker.className="btn-action primary"; tracker.innerHTML=actionIcon("track")+'<span>Lacak</span>';
     tracker.addEventListener("click",async()=>{
       const originalText=tracker.textContent;
       tracker.disabled=true; tracker.textContent="Menyiapkan token…";
@@ -108,7 +109,11 @@
     });
     actions.appendChild(tracker);
     if(completed) {
-      const reorder=document.createElement("a"); reorder.href="/index.html"; reorder.className="btn-action"; reorder.textContent="Pesan Lagi"; actions.appendChild(reorder);
+      const reorder=document.createElement("a");
+      const service=String(order.service_name||"").toLowerCase();
+      const productCode=service.includes("17")?"ch17":service.includes("13")?"ch13":service.includes("11")?"ch11":null;
+      reorder.href=productCode?"/?order="+productCode+"#produk-joki":"/#produk-joki";
+      reorder.className="btn-action"; reorder.innerHTML=actionIcon("reorder")+'<span>Pesan Lagi</span>'; actions.appendChild(reorder);
     }
     footer.append(price,actions); body.appendChild(footer); card.appendChild(body);
 
@@ -123,10 +128,13 @@
     addDetail(detailGrid,"Diskon",money(order.discount_amount));
     addDetail(detailGrid,"Pembaruan Terakhir",date(order.updated_at));
     details.appendChild(detailGrid);
-    const note=document.createElement("p"); note.textContent="Catatan admin: "+(order.progress_note||"Belum ada catatan dari admin."); details.appendChild(note);
-    const toggle=document.createElement("button"); toggle.type="button"; toggle.className="btn-action"; toggle.textContent="Lihat Rincian";
+    const note=document.createElement("p"); note.className="admin-note";
+    const noteLabel=document.createElement("strong"); noteLabel.textContent="Catatan admin";
+    const noteText=document.createElement("span"); noteText.textContent=order.progress_note||"Belum ada catatan dari admin.";
+    note.append(noteLabel,noteText); details.appendChild(note);
+    const toggle=document.createElement("button"); toggle.type="button"; toggle.className="btn-action details-toggle"; toggle.innerHTML=actionIcon("details")+'<span>Lihat Rincian</span>';
     toggle.setAttribute("aria-expanded","false");
-    toggle.addEventListener("click",()=>{details.hidden=!details.hidden;toggle.textContent=details.hidden?"Lihat Rincian":"Tutup Rincian";toggle.setAttribute("aria-expanded",String(!details.hidden));});
+    toggle.addEventListener("click",()=>{details.hidden=!details.hidden;toggle.innerHTML=actionIcon("details")+'<span>'+(details.hidden?"Lihat Rincian":"Tutup Rincian")+'</span>';toggle.setAttribute("aria-expanded",String(!details.hidden));});
     body.appendChild(toggle); card.appendChild(details);
     return card;
   }
