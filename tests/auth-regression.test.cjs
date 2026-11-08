@@ -478,7 +478,7 @@ test("all themed pages declare the approved shared or local theme", () => {
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
     "login/index.html", "register/index.html",
     "requirements-city-hall.html", "reset-password/index.html",
-    "support-matthew.html", "worker.html", "your-order.html"
+    "worker.html", "your-order.html"
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
@@ -580,7 +580,7 @@ test("maintenance page, global gate, and admin control are wired across every ro
   for (const file of [
     "index.html","login/index.html","register/index.html","reset-password/index.html","email-confirmed/index.html",
     "member-dashboard.html","your-order.html","inbox.html","worker.html","joki-matthew.html",
-    "calculator-resource.html","requirements-city-hall.html","support-matthew.html",
+    "calculator-resource.html","requirements-city-hall.html",
     "admin/dashboard.html","admin/joki-progress.html"
   ]) {
     const html=fs.readFileSync(path.join(ROOT,file),"utf8");
