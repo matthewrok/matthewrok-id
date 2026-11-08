@@ -80,7 +80,7 @@
     const priceValue=document.createElement("strong"); priceValue.className="price-value"; priceValue.textContent=money(order.total_price);
     price.append(priceLabel,priceValue);
     const actions=document.createElement("div"); actions.className="action-buttons";
-    const invoice=document.createElement("button"); invoice.type="button"; invoice.className="btn-action"; invoice.innerHTML=actionIcon("invoice")+'<span>Invoice</span>';
+    const invoice=document.createElement("button"); invoice.type="button"; invoice.className="btn-action"; invoice.textContent="Invoice";
     invoice.addEventListener("click",()=>{
       if(order.invoice_url) window.open(order.invoice_url,"_blank","noopener,noreferrer");
       else {
@@ -90,7 +90,7 @@
     });
     actions.appendChild(invoice);
     const tracker=document.createElement("button");
-    tracker.type="button"; tracker.className="btn-action primary"; tracker.innerHTML=actionIcon("track")+'<span>Lacak</span>';
+    tracker.type="button"; tracker.className="btn-action primary"; tracker.textContent="Lacak";
     tracker.addEventListener("click",async()=>{
       const originalText=tracker.textContent;
       tracker.disabled=true; tracker.textContent="Menyiapkan token…";
@@ -113,7 +113,7 @@
       const service=String(order.service_name||"").toLowerCase();
       const productCode=service.includes("17")?"ch17":service.includes("13")?"ch13":service.includes("11")?"ch11":null;
       reorder.href=productCode?"/?order="+productCode+"#produk-joki":"/#produk-joki";
-      reorder.className="btn-action"; reorder.innerHTML=actionIcon("reorder")+'<span>Pesan Lagi</span>'; actions.appendChild(reorder);
+      reorder.className="btn-action"; reorder.textContent="Pesan Lagi"; actions.appendChild(reorder);
     }
     footer.append(price,actions); body.appendChild(footer); card.appendChild(body);
 
@@ -132,9 +132,9 @@
     const noteLabel=document.createElement("strong"); noteLabel.textContent="Catatan admin";
     const noteText=document.createElement("span"); noteText.textContent=order.progress_note||"Belum ada catatan dari admin.";
     note.append(noteLabel,noteText); details.appendChild(note);
-    const toggle=document.createElement("button"); toggle.type="button"; toggle.className="btn-action details-toggle"; toggle.innerHTML=actionIcon("details")+'<span>Lihat Rincian</span>';
+    const toggle=document.createElement("button"); toggle.type="button"; toggle.className="btn-action details-toggle"; toggle.textContent="Lihat Rincian";
     toggle.setAttribute("aria-expanded","false");
-    toggle.addEventListener("click",()=>{details.hidden=!details.hidden;toggle.innerHTML=actionIcon("details")+'<span>'+(details.hidden?"Lihat Rincian":"Tutup Rincian")+'</span>';toggle.setAttribute("aria-expanded",String(!details.hidden));});
+    toggle.addEventListener("click",()=>{details.hidden=!details.hidden;toggle.textContent=details.hidden?"Lihat Rincian":"Tutup Rincian";toggle.setAttribute("aria-expanded",String(!details.hidden));});
     body.appendChild(toggle); card.appendChild(details);
     return card;
   }
