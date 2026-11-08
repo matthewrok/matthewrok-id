@@ -115,6 +115,10 @@
   $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
   modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
+  const requestedProduct=new URLSearchParams(window.location.search).get("order");
+  if(requestedProduct&&products[requestedProduct.toUpperCase()]){
+    window.addEventListener("load",()=>openOrder(requestedProduct).catch(error=>console.error("[Joki Order] Gagal membuka paket dari riwayat:",error)),{once:true});
+  }
   $("jokiOrderSubmit")?.addEventListener("click",async()=>{
     const identity=getIdentity(),p=products[selected],button=$("jokiOrderSubmit");
     if(completedWhatsappUrl){window.open(completedWhatsappUrl,"_blank","noopener");return;}
