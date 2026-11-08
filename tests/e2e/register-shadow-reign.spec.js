@@ -28,3 +28,27 @@ test("auth.js mendukung ID register Shadow Reign tanpa menghilangkan ID lama", a
   expect(source).toContain('document.getElementById("confirm-password") || document.getElementById("registerConfirmPassword")');
   expect(source).toContain('registerForm.addEventListener("submit"');
 });
+
+
+test("pesan sukses dan error autentikasi tampil pada area status yang terlihat", async ({ page }) => {
+  await page.route("**/*.js*", route => route.abort());
+  await page.goto("/register/", { waitUntil: "domcontentloaded" });
+
+  const source = page.locator("#authMessage");
+  const visibleStatus = page.locator("#error-message");
+  await source.evaluate(el => {
+    el.textContent = "Pendaftaran berhasil. Periksa email kamu.";
+    el.className = "auth-message success";
+  });
+  await expect(visibleStatus).toBeVisible();
+  await expect(visibleStatus).toHaveText("Pendaftaran berhasil. Periksa email kamu.");
+  await expect(visibleStatus).toHaveClass(/status-success/);
+
+  await source.evaluate(el => {
+    el.textContent = "Password tidak sesuai.";
+    el.className = "auth-message error";
+  });
+  await expect(visibleStatus).toHaveText("Password tidak sesuai.");
+  await expect(visibleStatus).toHaveClass(/status-error/);
+});
+
