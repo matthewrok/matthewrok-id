@@ -61,7 +61,13 @@
   async function detectSensitiveLines(bitmap) {
     setFeedback("Memindai NPWP dan nomor referensi pada gambar…");
     const Tesseract = await loadOcrEngine();
-    const ocrCanvas = document.createElement("canvas");\n    ocrCanvas.width = bitmap.width;\n    ocrCanvas.height = bitmap.height;\n    const ocrContext = ocrCanvas.getContext("2d");\n    if (!ocrContext) throw new Error("Browser tidak mendukung pemindaian teks.");\n    ocrContext.drawImage(bitmap,0,0);\n    const result = await Tesseract.recognize(ocrCanvas,"eng");
+    const ocrCanvas = document.createElement("canvas");
+    ocrCanvas.width = bitmap.width;
+    ocrCanvas.height = bitmap.height;
+    const ocrContext = ocrCanvas.getContext("2d");
+    if (!ocrContext) throw new Error("Browser tidak mendukung pemindaian teks.");
+    ocrContext.drawImage(bitmap,0,0);
+    const result = await Tesseract.recognize(ocrCanvas,"eng");
     const lines = result?.data?.lines || [];
     if (!lines.length) throw new Error("Teks pada gambar belum dapat dipindai. Upload dibatalkan demi keamanan.");
     const masks = [];
