@@ -688,8 +688,8 @@ Deno.serve(async (req: Request) => {
         await sendMessage(chatId, "Format tidak valid. Baris pertama harus judul (maks. 120 karakter), baris berikutnya isi (maks. 2.000 karakter).");
         return Response.json({ok:true});
       }
-      const creators = await adminRead("profiles","role=eq.MATTHEW&select=id&limit=1");
-      if (!creators.length) { await sendMessage(chatId,"Akun pembuat dengan role MATTHEW tidak ditemukan."); return Response.json({ok:true}); }
+      const creators = await adminRead("profiles","role=eq.admin&select=id&limit=1");
+      if (!creators.length) { await sendMessage(chatId,"Profil admin tidak ditemukan."); return Response.json({ok:true}); }
       const res = await fetch(supabaseUrl + "/rest/v1/site_notifications", {method:"POST",headers:{...baseHeaders,Prefer:"return=representation"},body:JSON.stringify({title,message,audience:"all",is_active:true,created_by:creators[0].id})});
       const created = await res.json();
       if (!res.ok || !created?.length) { console.error("Announcement creation failed",res.status,created); await sendMessage(chatId,"❌ Pengumuman gagal dibuat. Periksa izin tabel dan kolom wajib."); }
