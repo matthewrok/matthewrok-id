@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/payment-testimonials.css?v=20261108-2">
+  <link rel="stylesheet" href="/assets/css/payment-testimonials.css?v=20261108-compress2">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/supabase.js"></script>
   <script src="/assets/js/access-guard.js?v=20261108-authfix2"></script>
   <script defer src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
-  <script defer src="/assets/js/payment-testimonials-admin.js?v=20261108-2"></script>
+  <script defer src="/assets/js/payment-testimonials-admin.js?v=20261108-compress1"></script>
   <title>Kelola Testimoni Pembayaran | Admin MATTHEW JOKI</title>
 </head>
 <body class="testimonial-page admin-testimonial-page">
@@ -31,12 +31,13 @@
     <section class="upload-panel">
       <div class="panel-heading"><div><span class="eyebrow">NEW DOCUMENTATION</span><h2>Upload Bukti Pembayaran</h2></div><span class="secure-badge">ADMIN ONLY</span></div>
       <form id="testimonialUploadForm" class="upload-form">
-        <label class="file-drop" for="paymentImage"><span class="upload-icon">＋</span><strong>Pilih foto pembayaran</strong><small>JPG, PNG, atau WebP · Maksimal 10 MB</small><input id="paymentImage" name="paymentImage" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+        <label class="file-drop" for="paymentImage"><span class="upload-icon">＋</span><strong>Pilih foto pembayaran</strong><small>JPG, PNG, atau WebP · Maksimal 10 MB · Hasil otomatis dikompres ≤300 KB</small><input id="paymentImage" name="paymentImage" type="file" accept="image/jpeg,image/png,image/webp" required></label>
         <div id="imagePreviewWrap" class="image-preview-wrap" hidden><img id="imagePreview" alt="Pratinjau foto dengan watermark"><span>PREVIEW WATERMARK</span></div>
         <label class="field-label" for="paymentCaption">Keterangan transaksi <span>(opsional)</span><input id="paymentCaption" name="caption" type="text" maxlength="140" placeholder="Contoh: Pelunasan paket CH13"></label>
         <label class="field-label" for="paymentDate">Tanggal transaksi <span>(opsional)</span><input id="paymentDate" name="transactionDate" type="date"></label>
         <p class="privacy-note" style="grid-column:1/-1;margin:0;text-align:left;color:#b7a98c">Pemindaian otomatis membantu menemukan NPWP dan baris berlabel Ref/Referensi. Nomor rekening, telepon, email, saldo, QR, nama, dan data lain tetap harus diperiksa manual.</p>
-        <div class="watermark-info"><strong>Penyamaran data + watermark otomatis</strong><span>OCR berjalan di browser. Area NPWP dan baris Ref/Referensi yang terdeteksi ditutup hitam permanen, kemudian logo dan tulisan MATTHEW JOKI ditanam ke file WebP. Hasil OCR tidak selalu sempurna.</span></div>\n        <label class="privacy-review"><input id="privacyReview" type="checkbox" required><span>Saya sudah memeriksa seluruh pratinjau dan memastikan tidak ada data pribadi atau informasi transaksi sensitif lain yang masih terlihat.</span></label>
+        <div class="watermark-info"><strong>Penyamaran data + watermark otomatis</strong><span>OCR berjalan di browser. Area NPWP dan baris Ref/Referensi yang terdeteksi ditutup hitam permanen, kemudian logo dan tulisan MATTHEW JOKI ditanam ke file WebP. Foto dikompres otomatis hingga maksimal 300 KB sebelum upload. Hasil OCR tidak selalu sempurna.</span></div>
+        <label class="privacy-review"><input id="privacyReview" type="checkbox" required><span>Saya sudah memeriksa seluruh pratinjau dan memastikan tidak ada data pribadi atau informasi transaksi sensitif lain yang masih terlihat.</span></label>
         <button id="uploadPaymentButton" class="primary-button" type="submit">Proses Watermark & Publikasikan</button>
         <p id="uploadFeedback" class="form-feedback" role="status" aria-live="polite"></p>
       </form>
