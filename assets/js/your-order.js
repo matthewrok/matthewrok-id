@@ -16,6 +16,18 @@
     });
   }
   const invoiceEscape=value=>String(value??"—").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  async function waitForInvoiceLogo(image) {
+    if (!image) throw new Error("Elemen logo invoice tidak ditemukan.");
+    if (!image.complete) {
+      await new Promise((resolve,reject)=>{
+        const timeout=window.setTimeout(()=>reject(new Error("Waktu pemuatan logo Matthew habis.")),15000);
+        image.addEventListener("load",()=>{window.clearTimeout(timeout);resolve();},{once:true});
+        image.addEventListener("error",()=>{window.clearTimeout(timeout);reject(new Error("Logo Matthew gagal dimuat."));},{once:true});
+      });
+    }
+    if (!image.naturalWidth || !image.naturalHeight) throw new Error("File logo-matthew.png tidak dapat dibaca.");
+    if (typeof image.decode==="function") await image.decode();
+  }
   async function downloadInvoicePdf(order) {
     await Promise.all([
       loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js","html2canvas"),
@@ -30,7 +42,7 @@
     root.innerHTML=`
       <article style="width:794px;padding:54px 58px;background:#050505;color:#f3f4f6;font-family:Inter,Arial,sans-serif;border:1px solid #262626;box-sizing:border-box;">
         <header style="display:flex;align-items:center;gap:20px;padding-bottom:28px;border-bottom:1px solid #d4af37;">
-          <img id="invoiceBrandLogo" src="/assets/images/brand/logo-matthew.png" alt="Logo Matthew" style="width:88px;height:88px;object-fit:contain;">
+          <img id="invoiceBrandLogo" src="${new URL('/assets/images/brand/logo-matthew.png',window.location.origin).href}" alt="Logo Matthew" width="88" height="88" decoding="async" style="display:block;width:88px;height:88px;object-fit:contain;flex:0 0 88px;">
           <div style="flex:1">
             <div style="font:700 13px Inter,Arial,sans-serif;letter-spacing:3px;color:#d4af37;">MATTHEW.RMN · TRUSTED ROK SERVICE</div>
             <h1 style="font:700 31px Cinzel,Georgia,serif;letter-spacing:2px;margin:8px 0 4px;color:#fff;">MATTHEW JOKI</h1>
@@ -91,7 +103,7 @@
     try {
       await document.fonts.ready;
       const logo=root.querySelector("#invoiceBrandLogo");
-      if(logo && !logo.complete) await new Promise((resolve,reject)=>{logo.onload=resolve;logo.onerror=reject;});
+      await waitForInvoiceLogo(logo);
       const canvas=await window.html2canvas(root,{scale:2,backgroundColor:"#050505",useCORS:true,logging:false,width:794,windowWidth:794});
       const image=canvas.toDataURL("image/jpeg",0.96);
       const {jsPDF}=window.jspdf;
