@@ -43,7 +43,6 @@ Ketersediaan aksi admin bergantung pada kode, konfigurasi Supabase, izin databas
 ├── joki-matthew.html                # Informasi layanan joki
 ├── calculator-resource.html         # Kalkulator resource
 ├── requirements-city-hall.html      # Persyaratan City Hall
-├── support-matthew.html             # Support
 ├── worker.html                      # Formulir worker
 ├── admin/
 │   ├── dashboard.html               # Admin control center
@@ -52,7 +51,6 @@ Ketersediaan aksi admin bergantung pada kode, konfigurasi Supabase, izin databas
 │   ├── images/
 │   │   ├── brand/
 │   │   │   └── logo-matthew.png     # Logo/identitas brand
-│   │   └── qris-matthew.jpeg        # QRIS untuk halaman support
 │   ├── css/                         # Stylesheet halaman dan komponen
 │   └── js/                          # Modul JavaScript browser
 ├── supabase/
@@ -91,7 +89,7 @@ Gunakan nama huruf kecil yang deskriptif dengan tanda hubung, misalnya `home-ann
 - `auth.css`, `auth-visitor.css` — autentikasi dasar dan akses visitor.
 - `login-layout.css` — tata letak login responsif, benefit member, akses tamu, dan animasi meteor biru.
 - `calculator.css`, `requirements.css` — halaman tools.
-- `joki-matthew.css`, `your-order.css`, `worker-inbox.css`, `support.css` — layanan dan halaman terkait.
+- `joki-matthew.css`, `your-order.css`, `worker-inbox.css` — layanan dan halaman terkait.
 - `admin-dashboard.css`, `tokens.css`, `floating-cs.css` — admin, token desain, dan tombol CS.
 
 ### JavaScript utama
