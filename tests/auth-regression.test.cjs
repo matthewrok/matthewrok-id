@@ -735,3 +735,31 @@ test("Shadow Reign member dashboard preserves its tab layout, mapped data target
   assert.equal(inlineScripts.length, 1);
   assert.doesNotThrow(() => new Function(inlineScripts[0][1]));
 });
+
+
+test("owner-only tracking-token recovery is restricted to the authenticated order owner", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/restore-owner-tracking-token.sql"), "utf8");
+  assert.match(sql, /auth\.uid\(\)/);
+  assert.match(sql, /email_confirmed_at is not null/);
+  assert.match(sql, /lower\(trim\(coalesce\(j\.client_email/);
+  assert.match(sql, /j\.order_number = btrim\(p_order_number\)/);
+  assert.match(sql, /revoke all on function public\.get_my_joki_tracking_token\(text\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.get_my_joki_tracking_token\(text\) to authenticated/);
+  assert.match(sql, /set search_path = ''/);
+});
+
+test("Your Order retrieves the private tracking token without exposing it in order-list data or URLs", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/your-order.js"), "utf8");
+  assert.match(source, /rpc\("get_my_joki_tracking_token"/);
+  assert.match(source, /sessionStorage\.setItem\("matthewProgressToken"/);
+  assert.match(source, /window\.location\.assign\("\/joki-matthew\.html"\)/);
+  assert.doesNotMatch(source, /tracking_token/);
+});
+
+test("tracking accepts a token copied from a WhatsApp label and explains legacy order-code rotation", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/joki-matthew.js"), "utf8");
+  assert.match(source, /MJ-\[A-F0-9\]\{64\}/);
+  assert.match(source, /MJ-\\d\{6\}-\[A-F0-9\]\{8\}/);
+  assert.match(source, /Pesanan Saya/);
+  assert.match(source, /matthewProgressToken/);
+});
