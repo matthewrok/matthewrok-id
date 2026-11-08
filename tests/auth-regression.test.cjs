@@ -5,7 +5,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 const ROOT = path.resolve(__dirname, "..");
-const ROLES = ["member", "sultan", "matthew", "pelanggan", "worker", "macul", "admin"];
+const ROLES = ["warga biasa", "warga tidak biasa", "warga sultan", "admin"];
 const PRIVATE_PATHS = [
   "/worker.html",
   "/inbox.html",
