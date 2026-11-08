@@ -162,8 +162,8 @@
 
   async function loadItems() {
     const {data,error} = await db.from("payment_testimonials")
-      .select("id,image_path,caption,transaction_date,published,created_at")
-      .order("created_at",{ascending:false});
+      .select("id,image_path,caption,transaction_date,published,display_order,created_at")
+      .order("display_order",{ascending:true}).order("created_at",{ascending:false});
     if (error) throw error;
     const items = data || [];
     count.textContent = items.length + " dokumentasi";
@@ -195,7 +195,7 @@
       meta.append(title,date,status);
       const actions = document.createElement("div");
       actions.className = "row-actions";
-      actions.append(createAction(item.published ? "Sembunyikan" : "Publikasikan","",async () => {
+      actions.append(createAction("↑ Urutkan naik","",async () => {\n        try {\n          const {error:sortError} = await db.from("payment_testimonials").update({display_order:Number(item.display_order || 0)-10}).eq("id",item.id);\n          if (sortError) throw sortError;\n          await loadItems();\n          setFeedback("Urutan dokumentasi diperbarui.");\n        } catch (error) { setFeedback(error.message || "Urutan gagal diubah.",true); }\n      }));\n      actions.append(createAction("↓ Urutkan turun","",async () => {\n        try {\n          const {error:sortError} = await db.from("payment_testimonials").update({display_order:Number(item.display_order || 0)+10}).eq("id",item.id);\n          if (sortError) throw sortError;\n          await loadItems();\n          setFeedback("Urutan dokumentasi diperbarui.");\n        } catch (error) { setFeedback(error.message || "Urutan gagal diubah.",true); }\n      }));\n      actions.append(createAction(item.published ? "Sembunyikan" : "Publikasikan","",async () => {
         try {
           const {error:updateError} = await db.from("payment_testimonials").update({published:!item.published}).eq("id",item.id);
           if (updateError) throw updateError;
