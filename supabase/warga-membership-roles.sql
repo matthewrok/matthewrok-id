@@ -8,6 +8,12 @@ begin;
 
 alter table public.profiles
   drop constraint if exists profiles_role_check;
+
+-- Normalize legacy roles before enforcing the new allowlist.
+-- Historical completed-order counts are recalculated below.
+update public.profiles
+set role = 'warga biasa'
+where role is distinct from 'admin';
 alter table public.profiles
   add constraint profiles_role_check
   check (role = any (array[
