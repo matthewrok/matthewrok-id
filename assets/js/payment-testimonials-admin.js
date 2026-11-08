@@ -69,7 +69,6 @@
     ocrContext.drawImage(bitmap,0,0);
     const result = await Tesseract.recognize(ocrCanvas,"eng");
     const lines = result?.data?.lines || [];
-    if (!lines.length) throw new Error("Teks pada gambar belum dapat dipindai. Upload dibatalkan demi keamanan.");
     const masks = [];
     for (const line of lines) {
       const text = String(line.text || "").trim();
@@ -186,6 +185,7 @@
     const requestId = ++previewRequest;
     processedBlob = null;
     processedFile = null;
+    if (privacyReview) privacyReview.checked = false;
     const file = fileInput.files?.[0];
     if (!file) {
       previewWrap.hidden = true;
