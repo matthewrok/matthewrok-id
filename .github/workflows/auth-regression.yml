@@ -78,9 +78,11 @@ jobs:
           node-version: 22
       - name: Run authentication regression tests
         run: node --test tests/*.test.cjs
+      # Install Deno from the npm registry to avoid transient GitHub Release
+      # download failures (HTTP 5xx) in denoland/setup-deno.
       - name: Set up Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
+        run: |
+          npm install --global deno@2.9.6
+          deno --version
       - name: Type-check Supabase Edge Functions
         run: deno check supabase/functions/worker-application-submit/index.ts supabase/functions/telegram-order-notify/index.ts supabase/functions/inbox-send/index.ts
