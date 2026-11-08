@@ -438,7 +438,7 @@ test("all website routes use the approved blue/navy browser theme colors", () =>
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
     "login/index.html", "register/index.html",
     "requirements-city-hall.html", "reset-password/index.html",
-    "support-matthew.html", "worker.html", "your-order.html"
+    "worker.html", "your-order.html"
   ];
   const approved = new Set(["#071326", "#071426", "#071a3a", "#050505"]);
   for (const page of pages) {
@@ -478,7 +478,7 @@ test("all themed pages declare the approved shared or local theme", () => {
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
     "login/index.html", "register/index.html",
     "requirements-city-hall.html", "reset-password/index.html",
-    "support-matthew.html", "worker.html", "your-order.html"
+    "worker.html", "your-order.html"
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
@@ -580,7 +580,7 @@ test("maintenance page, global gate, and admin control are wired across every ro
   for (const file of [
     "index.html","login/index.html","register/index.html","reset-password/index.html","email-confirmed/index.html",
     "member-dashboard.html","your-order.html","inbox.html","worker.html","joki-matthew.html",
-    "calculator-resource.html","requirements-city-hall.html","support-matthew.html",
+    "calculator-resource.html","requirements-city-hall.html",
     "admin/dashboard.html","admin/joki-progress.html"
   ]) {
     const html=fs.readFileSync(path.join(ROOT,file),"utf8");
@@ -698,7 +698,7 @@ test("every public/private route loads Supabase before the maintenance gate", ()
     "admin/dashboard.html", "admin/joki-progress.html",
     "email-confirmed/index.html", "inbox.html", "index.html", "joki-matthew.html",
     "login/index.html", "member-dashboard.html", "register/index.html",
-    "requirements-city-hall.html", "reset-password/index.html", "support-matthew.html",
+    "requirements-city-hall.html", "reset-password/index.html",
     "worker.html", "your-order.html", "maintenance.html"
   ];
   for (const page of pages) {
