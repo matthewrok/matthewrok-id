@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
   const baseHeaders = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json" };
   const mainMenu = { inline_keyboard: [
     [{ text: "📦 Pesanan", callback_data: "orders" }, { text: "📊 Ringkasan", callback_data: "summary" }],
-    [{ text: "👥 Kelola Role Akun", callback_data: "roles" }],
+    [{ text: "👥 Lihat Role & Membership", callback_data: "roles" }],
     [{ text: "📣 Pengumuman", callback_data: "announcements" }, { text: "🎟️ Voucher", callback_data: "vouchers" }],
     [{ text: "👀 Pengunjung", callback_data: "visitors" }, { text: "⭐ Ulasan", callback_data: "reviews" }],
     [{ text: "🌐 Status Website", callback_data: "site_status" }],
@@ -353,8 +353,8 @@ Deno.serve(async (req: Request) => {
       ]), [{ text: "➕ Buat voucher", callback_data: "newvoucher" }], [{ text: "⬅️ Menu", callback_data: "menu" }]] };
     }
     if (kind === "roles") {
-      const rows = await adminRead("profiles", "select=id,email,full_name,role&order=created_at.desc&limit=15");
-      return { inline_keyboard: [...rows.map((x:any) => [{ text: String(x.full_name || x.email || x.id).slice(0,28)+" · "+x.role, callback_data: "roleuser|"+x.id }]), [{ text: "⬅️ Menu", callback_data: "menu" }]] };
+      const rows = await adminRead("profiles", "select=email,full_name,role&order=created_at.desc&limit=15");
+      return { inline_keyboard: [[{ text: "👥 " + rows.length + " akun · Role otomatis", callback_data: "menu" }], [{ text: "⬅️ Menu", callback_data: "menu" }]] };
     }
     if (kind === "reviews") {
       const rows = await adminRead("joki_reviews", "select=id,client_name,rating&order=created_at.desc&limit=10");
@@ -394,7 +394,7 @@ Deno.serve(async (req: Request) => {
         `   🏷️ Role: <b>${esc(p.role || "Belum ditentukan")}</b>`,
         `   🔘 Akun: ${esc(p.account_status || "Status tidak tersedia")}`
       ].join("\\n")).join("\\n\\n");
-      return ["👥 <b>DAFTAR ROLE AKUN</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada akun yang tercatat.", "", "Pilih akun pada tombol di bawah untuk melihat detail dan mengubah role."].join("\\n");
+      return ["👥 <b>DAFTAR ROLE AKUN</b>", "━━━━━━━━━━━━━━━━━━", "", body || "Belum ada akun yang tercatat.", "", "Role member berubah otomatis berdasarkan pesanan selesai. Perubahan manual dinonaktifkan."].join("\\n");
     }
     if (kind === "announcements") {
       const rows = await adminRead("site_notifications", "select=title,is_active,audience,expires_at&order=created_at.desc&limit=10");
@@ -552,35 +552,12 @@ Deno.serve(async (req: Request) => {
         await editMessage(chatId,callback.message.message_id,"✅ Data berhasil dihapus.",{reply_markup:{inline_keyboard:[[{text:"Kembali",callback_data:table==="site_notifications"?"announcements":table==="vouchers"?"vouchers":"reviews"}]]}});
         return Response.json({ok:true});
       }
-      if (data.startsWith("roleuser|")) {
-        const id=data.split("|")[1];
-        const rows=await adminRead("profiles","id=eq."+encodeURIComponent(id)+"&select=id,email,full_name,role&limit=1");
-        const p=rows[0];
-        await editMessage(chatId,callback.message.message_id,p?"👥 <b>"+esc(p.full_name||p.email)+"</b>\\nRole saat ini: <b>"+esc(p.role)+"</b>\\nPilih role baru:":"Akun tidak ditemukan.",{reply_markup:p?{inline_keyboard:[["member","PELANGGAN","SULTAN","MATTHEW"].map(v=>({text:v,callback_data:"askrole|"+id+"|"+v})) ,[{text:"⬅️ Kembali",callback_data:"roles"}]]}:mainMenu});
-        return Response.json({ok:true});
-      }
-      if (data.startsWith("askrole|")) {
-        const [,id,role]=data.split("|");
-        if(!["member","PELANGGAN","SULTAN","MATTHEW"].includes(role)) throw new Error("Invalid role");
-        const rows=await adminRead("profiles","id=eq."+encodeURIComponent(id)+"&select=id,email,full_name,role&limit=1");
-        const p=rows[0];
-        if(!p || p.role==="admin") throw new Error("Akun tidak dapat diubah melalui menu ini");
-        await editMessage(chatId,callback.message.message_id,"⚠️ <b>KONFIRMASI PERUBAHAN ROLE</b>\\n\\nAkun: <b>"+esc(p.full_name||p.email)+"</b>\\nRole saat ini: <b>"+esc(p.role)+"</b>\\nRole baru: <b>"+esc(role)+"</b>\\n\\nLanjutkan perubahan?",{reply_markup:{inline_keyboard:[[{text:"✅ Ya, ubah role",callback_data:"setrole|"+id+"|"+role},{text:"❌ Batal",callback_data:"roleuser|"+id}]]}});
-        return Response.json({ok:true});
-      }
-      if (data.startsWith("setrole|")) {
-        const [,id,role]=data.split("|");
-        if(!["member","PELANGGAN","SULTAN","MATTHEW"].includes(role)) throw new Error("Invalid role");
-        const current=await adminRead("profiles","id=eq."+encodeURIComponent(id)+"&select=id,role&limit=1");
-        if(!current.length || current[0].role==="admin") throw new Error("Admin role cannot be changed here");
-        const res=await fetch(supabaseUrl+"/rest/v1/profiles?id=eq."+encodeURIComponent(id),{method:"PATCH",headers:{...baseHeaders,Prefer:"return=representation"},body:JSON.stringify({role})});
-        const changed=await res.json(); if(!res.ok||!changed.length) throw new Error("Role update failed");
-        await fetch(supabaseUrl+"/rest/v1/profile_role_audit",{method:"POST",headers:{...baseHeaders,Prefer:"return=minimal"},body:JSON.stringify({actor_user_id:null,target_user_id:id,old_role:current[0].role,new_role:role})});
-        await editMessage(chatId,callback.message.message_id,"✅ Role akun berhasil diubah menjadi <b>"+esc(role)+"</b>.",{reply_markup:{inline_keyboard:[[{text:"Kembali",callback_data:"roles"}]]}});
-        return Response.json({ok:true});
+      if (data.startsWith("roleuser|") || data.startsWith("askrole|") || data.startsWith("setrole|")) {
+        await editMessage(chatId, callback.message.message_id, "ℹ️ Role member tidak dapat diubah manual. Sistem akan menaikkan role otomatis berdasarkan pesanan berstatus Selesai.", { reply_markup: { inline_keyboard: [[{ text: "⬅️ Kembali", callback_data: "roles" }]] } });
+        return Response.json({ ok: true });
       }
       if (data === "menu" || data === "help") {
-        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PUSAT KONTROL — MATTHEW JOKI</b>\\n━━━━━━━━━━━━━━━━━━\\n\\n📦 <b>OPERASIONAL</b>\\nKelola pesanan dan pantau ringkasan aktivitas.\\n\\n👥 <b>PENGELOLAAN AKUN & WEBSITE</b>\\nAtur role akun, pengumuman, voucher, dan status website.\\n\\n📊 <b>AKTIVITAS & MASUKAN</b>\\nPantau kunjungan website serta ulasan pelanggan.\\n\\nPilih salah satu menu di bawah. Ketik /panel kapan saja untuk membuka panel ini kembali.", { reply_markup: mainMenu });
+        await editMessage(chatId, callback.message.message_id, "🛠️ <b>PUSAT KONTROL — MATTHEW JOKI</b>\\n━━━━━━━━━━━━━━━━━━\\n\\n📦 <b>OPERASIONAL</b>\\nKelola pesanan dan pantau ringkasan aktivitas.\\n\\n👥 <b>PENGELOLAAN AKUN & WEBSITE</b>\\nPantau role otomatis, pengumuman, voucher, dan status website.\\n\\n📊 <b>AKTIVITAS & MASUKAN</b>\\nPantau kunjungan website serta ulasan pelanggan.\\n\\nPilih salah satu menu di bawah. Ketik /panel kapan saja untuk membuka panel ini kembali.", { reply_markup: mainMenu });
         return Response.json({ ok: true });
       }
       const messageId = callback.message?.message_id;
@@ -603,8 +580,8 @@ Deno.serve(async (req: Request) => {
           await editMessage(chatId, messageId, "ℹ️ Pendaftaran ini sudah diproses dengan status <b>" + esc(application.status) + "</b>. Keputusan tidak dapat diubah.", { reply_markup: mainMenu });
           return Response.json({ ok: true });
         }
-        const actors = await adminRead("profiles", "role=eq.MATTHEW&select=id&limit=1");
-        if (!actors.length) throw new Error("Akun Matthew untuk pencatatan keputusan tidak ditemukan.");
+        const actors = await adminRead("profiles", "role=eq.admin&select=id&limit=1");
+        if (!actors.length) throw new Error("Akun admin untuk pencatatan keputusan tidak ditemukan.");
         const decision = number === "a" ? "approved" : "rejected";
         const rpcResponse = await fetch(supabaseUrl + "/rest/v1/rpc/process_worker_application_decision", {
           method: "POST",
@@ -711,8 +688,8 @@ Deno.serve(async (req: Request) => {
         await sendMessage(chatId, "Format tidak valid. Baris pertama harus judul (maks. 120 karakter), baris berikutnya isi (maks. 2.000 karakter).");
         return Response.json({ok:true});
       }
-      const creators = await adminRead("profiles","role=eq.MATTHEW&select=id&limit=1");
-      if (!creators.length) { await sendMessage(chatId,"Akun pembuat dengan role MATTHEW tidak ditemukan."); return Response.json({ok:true}); }
+      const creators = await adminRead("profiles","role=eq.admin&select=id&limit=1");
+      if (!creators.length) { await sendMessage(chatId,"Profil admin tidak ditemukan."); return Response.json({ok:true}); }
       const res = await fetch(supabaseUrl + "/rest/v1/site_notifications", {method:"POST",headers:{...baseHeaders,Prefer:"return=representation"},body:JSON.stringify({title,message,audience:"all",is_active:true,created_by:creators[0].id})});
       const created = await res.json();
       if (!res.ok || !created?.length) { console.error("Announcement creation failed",res.status,created); await sendMessage(chatId,"❌ Pengumuman gagal dibuat. Periksa izin tabel dan kolom wajib."); }

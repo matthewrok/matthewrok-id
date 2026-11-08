@@ -54,7 +54,7 @@ Pemeriksaan advisor pada project menemukan beberapa hal yang perlu ditinjau terp
 - RLS aktif tanpa policy pada tabel joki_order_history dan telegram_command_state. Kondisi ini dapat disengaja jika akses memang hanya melalui backend/service role; jangan menambahkan policy publik hanya untuk menghilangkan peringatan.
 - Advisor menandai beberapa SECURITY DEFINER RPC yang dapat dipanggil oleh anon atau authenticated, termasuk fungsi publik untuk review/progress dan fungsi administratif. Periksa isi setiap fungsi, validasi token/identitas, search_path, serta kebutuhan akses sebelum mengubah EXECUTE grants. Jangan melakukan revoke massal karena beberapa fungsi memang menjadi API aplikasi.
 - Perlindungan password bocor (Have I Been Pwned) pada Supabase Auth saat audit masih nonaktif. Aktifkan melalui pengaturan Auth setelah memastikan kebijakan password yang dipakai.
-- Tabel profiles memiliki role `macul` pada satu akun saat audit. Pengguna telah mengonfirmasi bahwa `macul` adalah role petani/farmer, sedangkan `worker` adalah pembuat akun atau penjoki akun. Keduanya kini masuk allowlist halaman privat non-admin. Tidak ada akses admin yang diberikan kepada keduanya.
+- Tabel profiles memiliki role `macul` pada satu akun saat audit. Role akun kini hanya `admin`, `warga biasa`, `warga tidak biasa`, dan `warga sultan`. Jenis tugas worker (`akun`/`macul`) dan status aplikasi disimpan terpisah dari role akun.
 
 Temuan ini dicatat untuk tindak lanjut. Tidak ada perubahan skema, policy, grant, function, maupun konfigurasi Auth yang dilakukan pada database produksi dalam PR ini.
 
@@ -63,7 +63,7 @@ Temuan ini dicatat untuk tindak lanjut. Tidak ada perubahan skema, policy, grant
 
 - Pengujian otomatis tersedia di `tests/auth-regression.test.cjs` dan dijalankan GitHub Actions melalui `.github/workflows/auth-regression.yml`.
 - Cakupan tes: redirect homepage untuk seluruh role yang didukung meskipun ada parameter `next`; penolakan akun suspended/profil tidak tersedia; pembersihan sesi lokal saat pemeriksaan Auth/profil gagal; timer sesi dibersihkan setelah sign-out; serta matriks akses halaman worker/member dan admin.
-- Pemeriksaan database produksi: `public.profiles` memiliki RLS aktif dan hak `SELECT` untuk role `authenticated`. Policy SELECT mengizinkan pengguna membaca baris miliknya berdasarkan `auth.uid() = id`, serta admin/operator Matthew melalui policy khusus.
+- Pemeriksaan database produksi: `public.profiles` memiliki RLS aktif dan hak `SELECT` untuk role `authenticated`. Policy SELECT mengizinkan pengguna membaca baris miliknya berdasarkan `auth.uid() = id`, serta admin melalui policy khusus.
 - Simulasi query sebagai role PostgreSQL `authenticated` dengan JWT subject akun member menghasilkan `own_profile_visible = 1` dan `total_profiles_visible = 1` dari 6 profil. Ini mengonfirmasi RLS tidak menghalangi akun member membaca profilnya sendiri, tanpa membuka profil pengguna lain.
-- Role aktif yang saat ini ditemukan di database: `admin` (1), `macul` (1), `member` (1), dan `pelanggan` (3). Belum ada akun aktif `worker`, `sultan`, atau `matthew` untuk pengujian login langsung; role tersebut dicakup melalui fixture pengujian otomatis.
+- Model Role terbaru: `admin`, `warga biasa`, `warga tidak biasa`, dan `warga sultan`. Kenaikan otomatis dihitung dari pesanan berstatus `Selesai`; status worker disimpan terpisah dari role akun.
 - Pengujian otomatis ini menjalankan kode browser melalui mock DOM/Auth, bukan browser sungguhan. Uji login manual di browser dengan akun produksi tetap disarankan setelah deployment.

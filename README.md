@@ -185,10 +185,10 @@ File assets/js/access-guard.js dijalankan setelah inisialisasi Supabase pada hal
 | Halaman | Role yang diizinkan |
 |---|---|
 | /admin/* | admin |
-| /worker.html | member, sultan, matthew, pelanggan, worker, macul, admin |
-| /inbox.html, /your-order.html, /member-dashboard.html | Role terdaftar yang sama |
+| /worker.html | warga biasa, warga tidak biasa, warga sultan, admin |
+| /inbox.html, /your-order.html, /member-dashboard.html | warga biasa, warga tidak biasa, warga sultan, admin |
 
-Role worker memiliki dua jenis tugas: `macul` untuk petani/farmer dan `worker` untuk pembuat akun atau penjoki akun. Keduanya termasuk kelompok worker dan diizinkan membuka halaman worker, Inbox, pesanan, serta dashboard sesuai allowlist guard; keduanya tidak mendapat akses admin. Visitor menggunakan sessionStorage tersendiri dan tidak dianggap sebagai pengguna Supabase terautentikasi. Karena itu visitor tidak memenuhi pemeriksaan guard halaman privat. Setelah login berhasil, semua role selalu diarahkan ke `/index.html`; parameter `next` diabaikan sepenuhnya.
+Role akun pengguna hanya terdiri dari `warga biasa`, `warga tidak biasa`, dan `warga sultan`; akun baru dimulai sebagai `warga biasa`. Setelah 7 pesanan berstatus `Selesai`, role naik menjadi `warga tidak biasa`. Setelah 12 pesanan tambahan (19 total), role naik menjadi `warga sultan`. Pesanan dibatalkan tidak dihitung. `admin` tetap role khusus dan tidak terpengaruh oleh kenaikan otomatis. Pendaftaran worker tetap dicatat melalui tabel aplikasi dengan jenis tugas `akun` atau `macul`; persetujuan worker tidak mengubah role Warga. Visitor menggunakan sessionStorage tersendiri dan bukan pengguna Supabase terautentikasi. Setelah login berhasil, semua role diarahkan ke `/index.html`; parameter `next` diabaikan sepenuhnya.
 
 **Batas keamanan penting:** GitHub Pages menyajikan HTML dan aset sebagai file statis. Guard browser hanya mengendalikan alur tampilan; ia bukan batas keamanan server dan tidak membuat file HTML tidak dapat diunduh. Semua data dan operasi sensitif wajib tetap dilindungi oleh Supabase RLS, validasi kepemilikan, serta pemeriksaan role di RPC/Edge Functions. Jangan pernah menaruh service-role key atau secret di frontend.
 

@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const content = document.getElementById("dashboardContent");
   const welcome = document.getElementById("adminWelcome");
   const logout = document.getElementById("logoutButton");
-  const roleOptions = ["SULTAN", "MATTHEW", "PELANGGAN"];
 
   function showNotice(message, error = false) {
     notice.textContent = message;
@@ -91,62 +90,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         tr.append(cell(member.full_name), cell(member.id), cell(member.role || "member"));
         const actionCell = document.createElement("td");
 
-        if (member.role === "admin") {
-          const badge = document.createElement("span");
-          badge.className = "role-protected";
-          badge.textContent = "Admin dilindungi";
-          actionCell.append(badge);
-        } else {
-          const editor = document.createElement("div");
-          editor.className = "role-editor";
-          const select = document.createElement("select");
-          select.setAttribute("aria-label", "Pilih role untuk " + (member.full_name || member.id));
-          const placeholder = document.createElement("option");
-          placeholder.value = "";
-          placeholder.textContent = "Pilih role…";
-          placeholder.selected = true;
-          select.append(placeholder);
-          roleOptions.forEach(role => {
-            const option = document.createElement("option");
-            option.value = role;
-            option.textContent = role;
-            select.append(option);
-          });
-
-          const save = document.createElement("button");
-          save.type = "button";
-          save.className = "role-save";
-          save.textContent = "Simpan";
-          save.addEventListener("click", async () => {
-            const newRole = select.value;
-            if (!roleOptions.includes(newRole)) {
-              showNotice("Pilih salah satu role: SULTAN, MATTHEW, atau PELANGGAN.", true);
-              select.focus();
-              return;
-            }
-            const previousText = save.textContent;
-            save.disabled = true;
-            select.disabled = true;
-            save.textContent = "Menyimpan…";
-            try {
-              const { error } = await client.rpc("admin_set_member_role", {
-                p_user_id: member.id,
-                p_new_role: newRole
-              });
-              if (error) throw error;
-              showNotice("Role " + (member.full_name || "member") + " berhasil diubah menjadi " + newRole + ".");
-              await loadMembers();
-            } catch (error) {
-              console.error("Role update failed:", error);
-              showNotice("Role gagal diubah: " + (error?.message || "Kesalahan tidak diketahui") + ". Periksa detail di atas jika masih gagal.", true);
-              save.disabled = false;
-              select.disabled = false;
-              save.textContent = previousText;
-            }
-          });
-          editor.append(select, save);
-          actionCell.append(editor);
-        }
+        const badge = document.createElement("span");
+        badge.className = member.role === "admin" ? "role-protected" : "role-protected";
+        badge.textContent = member.role === "admin" ? "Admin dilindungi" : "Kenaikan otomatis";
+        actionCell.append(badge);
 
         tr.append(actionCell);
         membersBody.append(tr);
@@ -218,7 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     await loadStatisticsAndActivity();
     document.getElementById("lastUpdated").textContent = dateFormat.format(new Date());
-    showNotice("Dashboard dimuat. Admin dapat mengubah role anggota; otorisasi perubahan ditegakkan di database.");
+    showNotice("Dashboard dimuat. Role anggota diperbarui otomatis berdasarkan jumlah pesanan selesai.");
   } catch (error) {
     console.error("Admin dashboard error:", error);
     showNotice("Terjadi kesalahan saat memverifikasi atau memuat dashboard. Periksa koneksi dan kebijakan RLS Supabase.", true);

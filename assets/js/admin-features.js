@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function roleAudit(){
    const {data,error}=await db.from("profile_role_audit").select("id,actor_user_id,target_user_id,old_role,new_role,changed_at").order("changed_at",{ascending:false}).limit(100);
    const body=$("roleAuditBody");
-   if(error){empty("roleAuditBody",5,"Riwayat belum tersedia. Pastikan supabase/admin-role-management.sql sudah diterapkan.");console.warn("Role audit unavailable:",error.message);return;}
+   if(error){empty("roleAuditBody",5,"Arsip riwayat role lama belum tersedia.");console.warn("Role audit unavailable:",error.message);return;}
    body.replaceChildren();
    if(!data.length)return empty("roleAuditBody",5,"Belum ada perubahan role yang tercatat.");
    const fmt=new Intl.DateTimeFormat("id-ID",{dateStyle:"medium",timeStyle:"short"});

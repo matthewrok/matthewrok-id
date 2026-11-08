@@ -124,8 +124,8 @@
       navUser.appendChild(identity);
 
       const labels = {
-        admin: "ADMIN", member: "MEMBER", SULTAN: "SULTAN",
-        MATTHEW: "MATTHEW", PELANGGAN: "PELANGGAN"
+        admin: "ADMIN", "warga biasa": "WARGA BIASA",
+        "warga tidak biasa": "WARGA TIDAK BIASA", "warga sultan": "WARGA SULTAN"
       };
       const role = document.createElement("span");
       role.className = "nav-user-role" + (profile.role === "admin" ? " is-admin" : "");

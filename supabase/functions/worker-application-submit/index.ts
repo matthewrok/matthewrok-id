@@ -90,7 +90,7 @@ Deno.serve(async (req: Request) => {
 
   const role = String(profile?.role ?? "").trim().toLowerCase();
   const accountStatus = String(profile?.account_status ?? "").trim().toLowerCase();
-  const applicantRoles = ["member", "sultan", "matthew", "pelanggan"];
+  const applicantRoles = ["warga biasa", "warga tidak biasa", "warga sultan"];
   if (!profile || accountStatus !== "active") {
     return json({ error: "Akun belum aktif atau tidak dapat diverifikasi." }, 403);
   }

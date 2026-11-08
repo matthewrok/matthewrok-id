@@ -5,7 +5,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 const ROOT = path.resolve(__dirname, "..");
-const ROLES = ["member", "sultan", "matthew", "pelanggan", "worker", "macul", "admin"];
+const ROLES = ["warga biasa", "warga tidak biasa", "warga sultan", "admin"];
 const PRIVATE_PATHS = [
   "/worker.html",
   "/inbox.html",
@@ -206,9 +206,9 @@ test("access guard permits every active registered role on member/worker pages",
 });
 
 test("database role casing is normalized before access checks", async () => {
-  const upperCaseMacul = await runAccessGuard({ pathname: "/worker.html", role: "MACUL" });
-  assert.deepEqual(upperCaseMacul.redirects, []);
-  assert.equal(upperCaseMacul.classes.has("access-pending"), false);
+  const upperCaseWarga = await runAccessGuard({ pathname: "/worker.html", role: "WARGA SULTAN" });
+  assert.deepEqual(upperCaseWarga.redirects, []);
+  assert.equal(upperCaseWarga.classes.has("access-pending"), false);
 });
 
 test("admin pages are restricted to admin role", async t => {
@@ -300,7 +300,7 @@ test("session manager cancels inactivity timer when Auth session is cleared", as
 test("worker application Edge Function enforces active applicant roles server-side", () => {
   const source = fs.readFileSync(path.join(ROOT, "supabase/functions/worker-application-submit/index.ts"), "utf8");
   assert.match(source, /select=role,account_status/);
-  assert.match(source, /const applicantRoles = \["member", "sultan", "matthew", "pelanggan"\]/);
+  assert.match(source, /const applicantRoles = \["warga biasa", "warga tidak biasa", "warga sultan"\]/);
   assert.match(source, /applicantRoles\.includes\(role\)/);
   assert.match(source, /accountStatus !== "active"/);
   assert.match(source, /return json\(\{ error: "Hanya akun member aktif yang dapat mengajukan pendaftaran worker\." \}, 403\)/);
@@ -308,11 +308,14 @@ test("worker application Edge Function enforces active applicant roles server-si
 });
 
 
-test("role management SQL preserves all operational worker roles", () => {
-  const sql = fs.readFileSync(path.join(ROOT, "supabase/admin-role-management.sql"), "utf8");
-  for (const role of ["member", "admin", "SULTAN", "MATTHEW", "PELANGGAN", "WORKER", "MACUL", "AKUN"]) {
-    assert.match(sql, new RegExp("'" + role + "'::text"));
+test("new membership roles replace legacy profile roles", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/warga-membership-roles.sql"), "utf8");
+  for (const role of ["admin", "warga biasa", "warga tidak biasa", "warga sultan"]) {
+    assert.ok(migration.includes("'" + role + "'"));
   }
+  assert.match(migration, /v_completed_orders >= 19/);
+  assert.match(migration, /v_completed_orders >= 7/);
+  assert.match(migration, /create trigger .*membership_role/i);
 });
 
 test("worker application function preserves both configured site origins and server-side role checks", () => {
@@ -425,7 +428,7 @@ test("tracking-token rollback is pre-release only and preserves legacy order tok
 
 test("legacy order RPC enforces the same active member-role allowlist during compatibility", () => {
   const sql = fs.readFileSync(path.join(ROOT, "supabase/harden_legacy_order_rpc_role_access.sql"), "utf8");
-  assert.match(sql, /v_role not in \('member','sultan','matthew','pelanggan'\)/);
+  assert.match(sql, /v_role not in \('warga biasa','warga tidak biasa','warga sultan'\)/);
   assert.match(sql, /v_account_status is distinct from 'active'/);
   assert.match(sql, /revoke all on function public\.create_joki_order/);
   assert.match(sql, /grant execute on function public\.create_joki_order[\s\S]*to authenticated/);

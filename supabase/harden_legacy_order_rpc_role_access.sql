@@ -54,7 +54,7 @@ begin
   from public.profiles p
   where p.id = v_user_id;
 
-  if v_role not in ('member','sultan','matthew','pelanggan')
+  if v_role not in ('warga biasa','warga tidak biasa','warga sultan')
      or v_account_status is distinct from 'active' then
     raise exception 'Akun ini tidak memiliki izin untuk membuat pesanan.';
   end if;
