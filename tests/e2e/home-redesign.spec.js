@@ -32,7 +32,6 @@ test("homepage tidak memuat Global Menu lama dan shortcut layanan tetap tersedia
   await expect(page.locator("#menuToggle, #siteMenu")).toHaveCount(0);
   await expect(page.locator("#headerLoginBtn")).toHaveAttribute("href", "/login/");
   await expect(page.locator("#headerInboxBtn")).toHaveAttribute("href", "/inbox.html");
-  await expect(page.locator("footer a[href='/support-matthew.html']")).toHaveText("Support Matthew");
   await expect(page.locator("footer a[href='/worker.html']")).toHaveText("Daftar Worker");
   await expect(page.locator(".bottom-nav #statusDot")).toHaveCount(1);
 });
@@ -74,8 +73,8 @@ test("global popup menu dihapus dan tautan layanan tetap tersedia", async ({ pag
   const dashboardHtml = await dashboardResponse.text();
   expect(dashboardHtml).not.toMatch(/id=["'](?:siteMenu|menuToggle)["']/i);
   expect(dashboardHtml).not.toMatch(/global-menu\.(?:js|css)/i);
-  expect(dashboardHtml).toContain('href="/support-matthew.html"');
-  expect(dashboardHtml).toContain('href="/worker.html"');
+  expect(dashboardHtml).not.toContain("support-matthew.html");
+  expect(dashboardHtml).not.toContain('href="/worker.html"');
   expect(dashboardHtml).toContain('id="logoutBtn"');
 });
 
@@ -86,7 +85,7 @@ test("tidak ada halaman HTML yang masih memuat Global Menu", async ({ request })
     "/inbox.html", "/", "/joki-matthew.html", "/login.html", "/login/",
     "/maintenance.html", "/member-dashboard.html", "/register.html", "/register/",
     "/requirements-city-hall.html", "/reset-password.html", "/reset-password/",
-    "/support-matthew.html", "/worker.html", "/your-order.html"
+    "/worker.html", "/your-order.html"
   ];
 
   for (const path of pages) {
