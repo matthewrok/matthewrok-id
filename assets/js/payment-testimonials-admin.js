@@ -195,7 +195,23 @@
       meta.append(title,date,status);
       const actions = document.createElement("div");
       actions.className = "row-actions";
-      actions.append(createAction("↑ Urutkan naik","",async () => {\n        try {\n          const {error:sortError} = await db.from("payment_testimonials").update({display_order:Number(item.display_order || 0)-10}).eq("id",item.id);\n          if (sortError) throw sortError;\n          await loadItems();\n          setFeedback("Urutan dokumentasi diperbarui.");\n        } catch (error) { setFeedback(error.message || "Urutan gagal diubah.",true); }\n      }));\n      actions.append(createAction("↓ Urutkan turun","",async () => {\n        try {\n          const {error:sortError} = await db.from("payment_testimonials").update({display_order:Number(item.display_order || 0)+10}).eq("id",item.id);\n          if (sortError) throw sortError;\n          await loadItems();\n          setFeedback("Urutan dokumentasi diperbarui.");\n        } catch (error) { setFeedback(error.message || "Urutan gagal diubah.",true); }\n      }));\n      actions.append(createAction(item.published ? "Sembunyikan" : "Publikasikan","",async () => {
+      actions.append(createAction("↑ Urutkan naik","",async () => {
+        try {
+          const {error:sortError} = await db.from("payment_testimonials").update({display_order:Number(item.display_order || 0)-10}).eq("id",item.id);
+          if (sortError) throw sortError;
+          await loadItems();
+          setFeedback("Urutan dokumentasi diperbarui.");
+        } catch (error) { setFeedback(error.message || "Urutan gagal diubah.",true); }
+      }));
+      actions.append(createAction("↓ Urutkan turun","",async () => {
+        try {
+          const {error:sortError} = await db.from("payment_testimonials").update({display_order:Number(item.display_order || 0)+10}).eq("id",item.id);
+          if (sortError) throw sortError;
+          await loadItems();
+          setFeedback("Urutan dokumentasi diperbarui.");
+        } catch (error) { setFeedback(error.message || "Urutan gagal diubah.",true); }
+      }));
+      actions.append(createAction(item.published ? "Sembunyikan" : "Publikasikan","",async () => {
         try {
           const {error:updateError} = await db.from("payment_testimonials").update({published:!item.published}).eq("id",item.id);
           if (updateError) throw updateError;
