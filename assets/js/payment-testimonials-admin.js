@@ -62,11 +62,12 @@
     setFeedback("Memindai NPWP dan nomor referensi pada gambar…");
     const Tesseract = await loadOcrEngine();
     const ocrCanvas = document.createElement("canvas");
-    ocrCanvas.width = bitmap.width;
-    ocrCanvas.height = bitmap.height;
+    const ocrScale = Math.min(1,1920/Math.max(bitmap.width,bitmap.height));
+    ocrCanvas.width = Math.max(1,Math.round(bitmap.width*ocrScale));
+    ocrCanvas.height = Math.max(1,Math.round(bitmap.height*ocrScale));
     const ocrContext = ocrCanvas.getContext("2d");
     if (!ocrContext) throw new Error("Browser tidak mendukung pemindaian teks.");
-    ocrContext.drawImage(bitmap,0,0);
+    ocrContext.drawImage(bitmap,0,0,ocrCanvas.width,ocrCanvas.height);
     const result = await Tesseract.recognize(ocrCanvas,"eng");
     const lines = result?.data?.lines || [];
     const masks = [];
@@ -79,20 +80,20 @@
       const hasReferenceLabel = /\b(ref(?:erence)?|referensi|no\.?\s*(?:ref|referensi)|nomor\s*referensi|transaction\s*id|id\s*transaksi|no\.?\s*transaksi)\b/i.test(text);
       if (hasNpwp || hasReferenceLabel) {
         masks.push({
-          x0:Math.max(0,line.bbox.x0-8),
-          y0:Math.max(0,line.bbox.y0-5),
-          x1:Math.min(bitmap.width,line.bbox.x1+8),
-          y1:Math.min(bitmap.height,line.bbox.y1+5),
+          x0:Math.max(0,(line.bbox.x0-8)/ocrScale),
+          y0:Math.max(0,(line.bbox.y0-5)/ocrScale),
+          x1:Math.min(bitmap.width,(line.bbox.x1+8)/ocrScale),
+          y1:Math.min(bitmap.height,(line.bbox.y1+5)/ocrScale),
           type:hasNpwp ? "NPWP" : "Ref"
         });
         const labelOnly = hasReferenceLabel && !text.replace(/\\b(ref(?:erence)?|referensi|no\\.?|nomor|transaction|id|transaksi)\\b/gi,"").replace(/[\\s:：#.-]/g,"");
         const nextLine = lines[index+1];
         if (labelOnly && nextLine?.bbox) {
           masks.push({
-            x0:Math.max(0,nextLine.bbox.x0-8),
-            y0:Math.max(0,nextLine.bbox.y0-5),
-            x1:Math.min(bitmap.width,nextLine.bbox.x1+8),
-            y1:Math.min(bitmap.height,nextLine.bbox.y1+5),
+            x0:Math.max(0,(nextLine.bbox.x0-8)/ocrScale),
+            y0:Math.max(0,(nextLine.bbox.y0-5)/ocrScale),
+            x1:Math.min(bitmap.width,(nextLine.bbox.x1+8)/ocrScale),
+            y1:Math.min(bitmap.height,(nextLine.bbox.y1+5)/ocrScale),
             type:"Ref"
           });
         }
