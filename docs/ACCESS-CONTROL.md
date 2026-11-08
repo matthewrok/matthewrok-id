@@ -54,7 +54,7 @@ Pemeriksaan advisor pada project menemukan beberapa hal yang perlu ditinjau terp
 - RLS aktif tanpa policy pada tabel joki_order_history dan telegram_command_state. Kondisi ini dapat disengaja jika akses memang hanya melalui backend/service role; jangan menambahkan policy publik hanya untuk menghilangkan peringatan.
 - Advisor menandai beberapa SECURITY DEFINER RPC yang dapat dipanggil oleh anon atau authenticated, termasuk fungsi publik untuk review/progress dan fungsi administratif. Periksa isi setiap fungsi, validasi token/identitas, search_path, serta kebutuhan akses sebelum mengubah EXECUTE grants. Jangan melakukan revoke massal karena beberapa fungsi memang menjadi API aplikasi.
 - Perlindungan password bocor (Have I Been Pwned) pada Supabase Auth saat audit masih nonaktif. Aktifkan melalui pengaturan Auth setelah memastikan kebijakan password yang dipakai.
-- Tabel profiles memiliki role `macul` pada satu akun saat audit. Pengguna telah mengonfirmasi bahwa `macul` adalah role petani/farmer, sedangkan `worker` adalah pembuat akun atau penjoki akun. Keduanya kini masuk allowlist halaman privat non-admin. Tidak ada akses admin yang diberikan kepada keduanya.
+- Tabel profiles memiliki role `macul` pada satu akun saat audit. Role akun kini hanya `admin`, `warga biasa`, `warga tidak biasa`, dan `warga sultan`. Jenis tugas worker (`akun`/`macul`) dan status aplikasi disimpan terpisah dari role akun.
 
 Temuan ini dicatat untuk tindak lanjut. Tidak ada perubahan skema, policy, grant, function, maupun konfigurasi Auth yang dilakukan pada database produksi dalam PR ini.
 
