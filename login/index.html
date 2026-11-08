@@ -11,7 +11,7 @@
     <title>Login - Matthew Joki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Preserve the existing authentication, session, and monitoring integrations. -->
     <script defer src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js" crossorigin="anonymous"></script>
     <script defer src="/assets/js/sentry-config.js?v=20261107-pr3"></script>
@@ -28,8 +28,8 @@
             --text-muted: #9ca3af;
             --border-color: #262626;
             --input-bg: #121212;
-            --accent-blue: #60a5fa;
-            --font-serif: 'Playfair Display', serif;
+            --accent-blue: #d6b168;
+            --font-serif: 'Cinzel', serif;
             --font-sans: 'Inter', sans-serif;
         }
         * { box-sizing: border-box !important; margin: 0; padding: 0; }
@@ -99,7 +99,7 @@
         #authMessage { display: none !important; }
         .auth-resend-button {
             width: 100%; margin: -8px 0 18px; padding: 11px; border: 1px solid #374151;
-            border-radius: 4px; background: #111827; color: #bfdbfe; font-size: 11px;
+            border-radius: 4px; background: #111827; color: #f0d18a; font-size: 11px;
             font-weight: 600; letter-spacing: .5px; cursor: pointer;
         }
         .auth-resend-button[hidden] { display: none !important; }
@@ -163,8 +163,9 @@
             *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
     </style>
+  <link rel="stylesheet" href="/assets/css/shadow-reign-design-system.css">
 </head>
-<body>
+<body class="sr-theme">
     <header class="top-nav">
         <div class="brand">
             <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
