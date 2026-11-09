@@ -5,7 +5,7 @@
  const state=document.getElementById("loadState");
  const content=document.getElementById("dashboardContent");
  const money=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n||0));
- const roles=["member","sultan","matthew","pelanggan","worker","macul","admin"];
+ const roles=["warga_biasa","warga_tidak_biasa","warga_sultan","admin"];
  let stage="Menyiapkan koneksi akun";
  const showError=(title,detail)=>{
   state.hidden=false;content.hidden=true;
@@ -41,8 +41,9 @@
   const done=list.filter(o=>o.status==="Selesai").length;
   const cancelled=list.filter(o=>o.status==="Dibatalkan").length;
   const active=list.filter(o=>!["Selesai","Dibatalkan","Ditunda"].includes(o.status)).length;
-  const levels=[{name:"Bronze",min:0,next:3},{name:"Silver",min:3,next:8},{name:"Gold",min:8,next:15},{name:"Diamond",min:15,next:null}];
-  const level=[...levels].reverse().find(x=>done>=x.min)||levels[0],next=levels.find(x=>x.min===level.next);
+  const isAdmin=String(profile.role||"").trim().toLowerCase()==="admin";
+  const levels=[{name:"WARGA BIASA",min:0,next:7},{name:"WARGA TIDAK BIASA",min:7,next:19},{name:"WARGA SULTAN",min:19,next:null}];
+  const level=isAdmin?{name:"ADMIN",min:0,next:null}:[...levels].reverse().find(x=>done>=x.min)||levels[0],next=isAdmin?null:levels.find(x=>x.min===level.next);
   document.getElementById("memberName").textContent=profile.full_name||user.email.split("@")[0];
   document.getElementById("totalOrders").textContent=list.length;
   document.getElementById("completedOrders").textContent=done;
