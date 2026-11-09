@@ -10,6 +10,10 @@ test("halaman Member Benefits tersedia dan menampilkan tiga tingkatan warga", as
   expect(html).toContain("WARGA SULTAN");
   expect(html).toContain("SEGERA");
   expect(html).toContain("list_my_joki_orders");
+  expect(html).toContain("Voucher Mingguan MATTHEW");
+  expect(html).toContain("diskon 3%");
+  expect(html).toContain("diskon 5%");
+  expect(html).toContain("claim_weekly_voucher");
 });
 
 test("Member Center menyediakan pintasan ke Member Benefits", async ({ request }) => {
