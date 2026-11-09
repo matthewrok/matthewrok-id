@@ -12,7 +12,8 @@ create index if not exists member_package_wishlist_user_created_idx
 alter table public.member_package_wishlist enable row level security;
 revoke all on public.member_package_wishlist from public, anon, authenticated;
 
-create or replace function public.get_my_package_wishlist()
+-- Privileged implementation stays in the non-exposed private schema.
+create or replace function private.get_my_package_wishlist()
 returns table(product_code text, created_at timestamptz)
 language plpgsql
 security definer
@@ -35,7 +36,7 @@ begin
 end;
 $$;
 
-create or replace function public.add_my_package_to_wishlist(p_product_code text)
+create or replace function private.add_my_package_to_wishlist(p_product_code text)
 returns boolean
 language plpgsql
 security definer
@@ -60,7 +61,7 @@ begin
 end;
 $$;
 
-create or replace function public.remove_my_package_from_wishlist(p_product_code text)
+create or replace function private.remove_my_package_from_wishlist(p_product_code text)
 returns boolean
 language plpgsql
 security definer
@@ -74,6 +75,37 @@ begin
   return true;
 end;
 $$;
+
+-- Public RPC endpoints are SECURITY INVOKER wrappers only.
+create or replace function public.get_my_package_wishlist()
+returns table(product_code text, created_at timestamptz)
+language sql
+security invoker
+set search_path = ''
+as $$ select * from private.get_my_package_wishlist(); $$;
+
+create or replace function public.add_my_package_to_wishlist(p_product_code text)
+returns boolean
+language sql
+security invoker
+set search_path = ''
+as $$ select private.add_my_package_to_wishlist(p_product_code); $$;
+
+create or replace function public.remove_my_package_from_wishlist(p_product_code text)
+returns boolean
+language sql
+security invoker
+set search_path = ''
+as $$ select private.remove_my_package_from_wishlist(p_product_code); $$;
+
+revoke all on schema private from public, anon;
+grant usage on schema private to authenticated;
+revoke all on function private.get_my_package_wishlist() from public, anon;
+revoke all on function private.add_my_package_to_wishlist(text) from public, anon;
+revoke all on function private.remove_my_package_from_wishlist(text) from public, anon;
+grant execute on function private.get_my_package_wishlist() to authenticated;
+grant execute on function private.add_my_package_to_wishlist(text) to authenticated;
+grant execute on function private.remove_my_package_from_wishlist(text) to authenticated;
 
 revoke all on function public.get_my_package_wishlist() from public, anon;
 revoke all on function public.add_my_package_to_wishlist(text) from public, anon;
