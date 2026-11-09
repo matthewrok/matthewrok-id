@@ -34,4 +34,9 @@ test("Homepage package cards expose wishlist controls and Member Center links to
   const member = await (await request.get("/member-dashboard.html")).text();
   expect(member).toContain('href="/member-wishlist.html"');
   expect(member).toContain("WISHLIST PAKET");
+  const dashboardScript = await request.get("/assets/js/member-dashboard.js");
+  const dashboardJs = await dashboardScript.text();
+  expect(dashboardJs).toContain('"warga_biasa","warga_tidak_biasa","warga_sultan","admin"');
+  expect(dashboardJs).toContain('name:"WARGA SULTAN",min:19');
+  expect(dashboardJs).toContain("ADMIN tidak mengikuti sistem tingkatan Warga.");
 });
