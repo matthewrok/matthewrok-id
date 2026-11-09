@@ -871,7 +871,7 @@ test("Matthew Referral awards equal 100-point bonuses only after the referred me
     "status = 'successful'", "first_order_id = new.id",
     "revoke all on public.matthew_referral_codes, public.matthew_referrals"
   ]) assert.ok(sql.includes(item), "referral migration missing " + item);
-  assert.match(sql, /unique \(referred_id\)/);
+  assert.match(sql, /referred_id uuid not null unique/);
   assert.match(sql, /referrer_id <> referred_id/);
   assert.match(sql, /after insert or update of status on public\.joki_progress/);
   assert.match(register, /id="referralCode"/);
