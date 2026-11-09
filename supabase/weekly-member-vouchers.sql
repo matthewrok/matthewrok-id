@@ -67,6 +67,11 @@ create policy "Members and admins read vouchers"
             and lower(p.role) = any (audience_roles)
             and p.account_status = 'active'
         )
+        or exists (
+          select 1 from public.voucher_claims c
+          where c.voucher_id = vouchers.id
+            and c.user_id = (select auth.uid())
+        )
       )
     )
   );
@@ -141,7 +146,6 @@ set search_path = ''
 as $function$
 declare
   v_voucher public.vouchers%rowtype;
-  v_role text;
   v_user_id uuid := auth.uid();
 begin
   if nullif(upper(trim(coalesce(new.voucher_code, ''))), '') is null then
@@ -161,14 +165,6 @@ begin
 
   if v_user_id is null then
     raise exception 'Voucher mingguan hanya dapat digunakan oleh akun yang mengklaimnya.';
-  end if;
-
-  select lower(p.role) into v_role
-  from public.profiles p
-  where p.id = v_user_id and p.account_status = 'active';
-
-  if v_role is null or v_voucher.audience_roles is null or not (v_role = any(v_voucher.audience_roles)) then
-    raise exception 'Voucher ini tidak berlaku untuk tingkatan akun kamu.';
   end if;
 
   perform 1
