@@ -1,0 +1,23 @@
+.analytics-panel{margin-top:22px}
+.analytics-heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px}
+.analytics-heading h2{margin:0 0 6px}
+.analytics-heading p,.analytics-chart-card p{margin:0;color:#9db4d1;font-size:12px}
+.analytics-period{flex:0 0 auto;padding:7px 10px;border:1px solid rgba(117,184,255,.35);border-radius:999px;color:#b8d9ff;font-size:10px;font-weight:800;letter-spacing:.08em}
+.analytics-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.analytics-kpi,.analytics-chart-card{min-width:0;padding:16px;border:1px solid rgba(117,184,255,.18);border-radius:13px;background:linear-gradient(145deg,rgba(18,43,76,.82),rgba(7,18,37,.94))}
+.analytics-kpi span,.analytics-kpi small{display:block;color:#a9bfdc;font-size:11px}
+.analytics-kpi strong{display:block;margin:10px 0 6px;color:#e5f2ff;font-size:clamp(16px,2vw,23px);overflow-wrap:anywhere}
+.analytics-kpi small{font-size:10px;line-height:1.5}
+.analytics-charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.analytics-chart-card h3{margin:0 0 5px;color:#e5f2ff;font-size:14px}
+.analytics-bars{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:end;height:170px;margin-top:16px}
+.analytics-bar-item{display:flex;min-width:0;height:100%;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px}
+.analytics-bar-item strong{color:#dcecff;font-size:10px}
+.analytics-bar-track{display:flex;width:min(100%,28px);height:112px;align-items:flex-end;overflow:hidden;border-radius:7px;background:rgba(117,184,255,.1)}
+.analytics-bar-fill{display:block;width:100%;min-height:0;border-radius:7px 7px 3px 3px;background:linear-gradient(0deg,#2563c7,#8bc6ff);transition:height .25s ease}
+.analytics-bar-item small{color:#91a9c7;font-size:9px}
+.analytics-empty{grid-column:1/-1;align-self:center;color:#91a9c7;text-align:center;font-size:12px}
+.analytics-footnote{margin:12px 0 0;color:#8da8c9;font-size:10px}
+@media(max-width:760px){.analytics-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-charts{grid-template-columns:1fr}}
+@media(max-width:420px){.analytics-heading{display:block}.analytics-period{display:inline-block;margin-top:10px}.analytics-kpi{padding:12px}.analytics-kpi strong{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.analytics-bar-fill{transition:none}}
