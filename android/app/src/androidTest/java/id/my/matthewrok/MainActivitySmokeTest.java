@@ -51,7 +51,7 @@ public class MainActivitySmokeTest {
             assertEquals(Boolean.TRUE, javascriptEnabled.get());
             assertEquals(Boolean.TRUE, domStorageEnabled.get());
             assertEquals(Boolean.FALSE, fileAccessEnabled.get());
-            assertEquals(WebView.MIXED_CONTENT_NEVER_ALLOW, mixedContentMode.get().intValue());
+            assertEquals(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW, mixedContentMode.get().intValue());
             assertEquals("complete", readyState.get());
         }
     }
