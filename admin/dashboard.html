@@ -19,11 +19,13 @@
   <script src="/assets/js/access-guard.js?v=20261108-authfix2"></script>
   <script defer src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
   <script defer src="/assets/js/admin.js"></script>
+  <script defer src="/assets/js/admin-analytics.js?v=20261110-v1"></script>
   <script defer src="/assets/js/admin-features.js"></script>
   <script defer src="/assets/js/maintenance-admin.js?v=20261106-mm2"></script>
   <link rel="stylesheet" href="/assets/css/shadow-reign-design-system.css">
   <link rel="stylesheet" href="/assets/css/shadow-reign-admin.css">
   <link rel="stylesheet" href="/assets/css/admin-dashboard-v2.css?v=20261109-v2">
+  <link rel="stylesheet" href="/assets/css/admin-analytics-v2.css?v=20261110-v1">
   <style>
     .refresh-dashboard{min-height:40px;padding:9px 13px;border:1px solid rgba(117,184,255,.42);border-radius:10px;background:rgba(36,95,199,.16);color:#dcecff;font:700 12px Inter, sans-serif;cursor:pointer;transition:background .2s,border-color .2s,opacity .2s}
     .refresh-dashboard:hover{border-color:#75b8ff;background:rgba(52,120,246,.25)}
@@ -87,6 +89,20 @@
           <article class="card"><div class="label">Pesanan selesai</div><div class="value" id="orderCompleted">—</div></article>
           <article class="card"><div class="label">Ulasan client</div><div class="value" id="reviewTotal">—</div></article>
         </div>
+        <section class="section analytics-panel" id="adminAnalytics">
+          <div class="analytics-heading"><div><h2>08 · Matthew Admin Analytics</h2><p>Performa pesanan, pendapatan, dan aktivitas tujuh hari terakhir.</p></div><span class="analytics-period">7 HARI TERAKHIR</span></div>
+          <div class="analytics-kpis">
+            <article class="analytics-kpi"><span>Pendapatan pesanan selesai</span><strong id="analyticsRevenue">—</strong><small>Akumulasi total_price pesanan berstatus Selesai</small></article>
+            <article class="analytics-kpi"><span>Rata-rata nilai pesanan</span><strong id="analyticsAverage">—</strong><small>Nilai rata-rata seluruh pesanan tercatat</small></article>
+            <article class="analytics-kpi"><span>Diskon diberikan</span><strong id="analyticsDiscount">—</strong><small>Total discount_amount yang tercatat</small></article>
+            <article class="analytics-kpi"><span>Karakter dikerjakan</span><strong id="analyticsQuantity">—</strong><small>Jumlah quantity pesanan selesai</small></article>
+          </div>
+          <div class="analytics-charts">
+            <article class="analytics-chart-card"><h3>Tren pesanan</h3><p>Jumlah pesanan dibuat per hari</p><div id="analyticsOrdersChart" class="analytics-bars" role="img" aria-label="Grafik jumlah pesanan tujuh hari terakhir"><span class="analytics-empty">Memuat data…</span></div></article>
+            <article class="analytics-chart-card"><h3>Tren kunjungan</h3><p>Jumlah kunjungan tercatat per hari</p><div id="analyticsVisitorsChart" class="analytics-bars" role="img" aria-label="Grafik kunjungan tujuh hari terakhir"><span class="analytics-empty">Memuat data…</span></div></article>
+          </div>
+          <p id="analyticsUpdated" class="analytics-footnote" role="status">Analitik menunggu data dashboard.</p>
+        </section>
         <section class="section" id="activityCenter"><h2>07 · Pusat Aktivitas Terbaru</h2><p>Ringkasan perubahan terbaru pada pesanan dan pesan resmi Inbox.</p><div id="activityFeed" class="activity-feed" aria-live="polite"><p>Memuat aktivitas terbaru…</p></div></section>
       </div>
 
