@@ -47,7 +47,13 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Generate launcher icons from Matthew brand logo\n        run: |\n          python3 -m pip install --user Pillow\n          python3 android/scripts/generate_launcher_icons.py\n\n      - name: Run Android emulator smoke test
+      - name: Generate launcher icons from Matthew brand logo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pil
+          python3 android/scripts/generate_launcher_icons.py
+
+      - name: Run Android emulator smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
