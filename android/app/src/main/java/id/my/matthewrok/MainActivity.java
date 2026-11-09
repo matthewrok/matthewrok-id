@@ -1,6 +1,7 @@
 package id.my.matthewrok;
 
 import android.annotation.SuppressLint;
+import android.annotation.Nullable;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -8,8 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.CookieManager;
-import android.webkit.DownloadListener;
-import android.webkit.SafeBrowsingResponse;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -17,8 +16,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://matthewrok.my.id/";
@@ -114,7 +111,6 @@ public class MainActivity extends Activity {
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             if (request.isForMainFrame()) {
-                view.loadUrl("about:blank");
                 Toast.makeText(MainActivity.this, R.string.connection_error, Toast.LENGTH_LONG).show();
             }
         }
