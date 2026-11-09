@@ -105,7 +105,7 @@ begin
   where p.id = new.id;
 
   if v_role is null or v_status is distinct from 'active'
-     or v_role not in ('warga biasa','warga tidak biasa','warga sultan') then
+     or coalesce(v_role,'') not in ('warga biasa','warga tidak biasa','warga sultan') then
     return new;
   end if;
 
