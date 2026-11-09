@@ -98,7 +98,6 @@ security invoker
 set search_path = ''
 as $$ select private.remove_my_package_from_wishlist(p_product_code); $$;
 
-revoke all on schema private from public, anon;
 grant usage on schema private to authenticated;
 revoke all on function private.get_my_package_wishlist() from public, anon;
 revoke all on function private.add_my_package_to_wishlist(text) from public, anon;
