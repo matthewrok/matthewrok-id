@@ -35,7 +35,7 @@ foreground.alpha_composite(mark, ((432 - mark.width) // 2, (432 - mark.height) /
 anydpi = RES / "mipmap-anydpi-v26"
 anydpi.mkdir(parents=True, exist_ok=True)
 foreground.save(anydpi / "ic_launcher_foreground.png", optimize=True)
-(anydpi / "ic_launcher.xml").write_text("\\n".join([
+(anydpi / "ic_launcher.xml").write_text("\n".join([
     '<?xml version="1.0" encoding="utf-8"?>',
     '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">',
     '    <background android:drawable="@color/ic_launcher_background" />',
@@ -46,10 +46,10 @@ foreground.save(anydpi / "ic_launcher_foreground.png", optimize=True)
 values = RES / "values"
 values.mkdir(parents=True, exist_ok=True)
 colors = values / "colors.xml"
-content = colors.read_text(encoding="utf-8") if colors.exists() else "\\n".join(['<?xml version="1.0" encoding="utf-8"?>', '<resources>', '</resources>', ''])
+content = colors.read_text(encoding="utf-8") if colors.exists() else "\n".join(['<?xml version="1.0" encoding="utf-8"?>', '<resources>', '</resources>', ''])
 if "</resources>" not in content:
     raise SystemExit("Invalid colors.xml")
 if "ic_launcher_background" not in content:
-    content = content.replace("</resources>", "\\n".join(['    <color name="ic_launcher_background">#07152E</color>', '</resources>']))
+    content = content.replace("</resources>", "\n".join(['    <color name="ic_launcher_background">#07152E</color>', '</resources>']))
 colors.write_text(content, encoding="utf-8")
 print(f"Generated launcher icons from {SOURCE}")
