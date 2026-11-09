@@ -810,13 +810,13 @@ test("admin account dashboard hides member orders and membership without calling
 
 test("private member dashboard uses the shared guard result instead of repeating Auth requests", () => {
   const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
-  assert.match(html, /access-guard\.js\?v=20261108-authfix2/);
+  assert.match(html, /access-guard\\.js\\?v=20261109-member-benefits/);
   assert.match(html, /session-manager\.js\?v=20261108-authfix2/);
   assert.match(html, /await withTimeout\(window\.__matthewAccessReady/);
   assert.match(html, /window\.__matthewVerifiedUser/);
   assert.doesNotMatch(html, /location\.replace\('\/login\.html\?next=member-dashboard\.html'\)/);
   const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
-  assert.match(guard, /member-dashboard\|worker\|inbox\|your-order/);
+  assert.match(guard, /member-dashboard\\|member-benefits\\|worker\\|inbox\\|your-order/);
   assert.match(guard, /20000/);
   assert.match(guard, /Sesi kamu tetap disimpan/);
   assert.doesNotMatch(guard, /signOut\(\{ scope: "local" \}\);\s*return redirectToLogin\(\);/);
