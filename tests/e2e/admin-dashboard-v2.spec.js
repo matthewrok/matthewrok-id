@@ -32,3 +32,13 @@ test("navigasi tab dashboard tetap lengkap dan terhubung ke panel yang sesuai", 
     await expect(page.locator("#tab-" + tab)).toHaveAttribute("role", "tabpanel");
   }
 });
+
+test("dashboard menyediakan kontrol refresh yang jelas dan timestamp pembaruan", async ({ page }) => {
+  await page.route("**/*.js*", route => route.abort());
+  await page.goto("/admin/dashboard.html", { waitUntil: "domcontentloaded" });
+
+  const refresh = page.getByRole("button", { name: "↻ Perbarui data" });
+  await expect(refresh).toBeVisible();
+  await expect(refresh).toHaveAttribute("aria-controls", "dashboardContent");
+  await expect(page.locator("#lastUpdated")).toContainText("Belum dimuat");
+});
