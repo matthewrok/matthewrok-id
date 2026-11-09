@@ -36,3 +36,13 @@ test("weekly voucher automation is role-scoped, claim-based, and expires after s
   expect(sql).toContain("redeem_weekly_voucher_claim_after_order");
   expect(sql).toContain("'0 17 * * 0'");
 });
+
+test("Admin Dashboard explains weekly voucher schedule and member discounts", async ({ request }) => {
+  const response = await request.get("/admin/dashboard.html");
+  expect(response.ok()).toBeTruthy();
+  const html = await response.text();
+  expect(html).toContain("Senin pukul 00.00 WIB");
+  expect(html).toContain("Warga Tidak Biasa mendapat 3%");
+  expect(html).toContain("Warga Sultan 5%");
+  expect(html).toContain("Kategori / Target");
+});
