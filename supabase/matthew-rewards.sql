@@ -51,6 +51,12 @@ create index if not exists matthew_reward_transactions_user_created_idx
   on public.matthew_reward_transactions(user_id, created_at desc);
 create index if not exists matthew_reward_redemptions_user_created_idx
   on public.matthew_reward_redemptions(user_id, created_at desc);
+create index if not exists matthew_reward_redemptions_order_id_idx
+  on public.matthew_reward_redemptions(order_id);
+create index if not exists matthew_reward_transactions_order_id_idx
+  on public.matthew_reward_transactions(order_id);
+create index if not exists matthew_reward_transactions_redemption_id_idx
+  on public.matthew_reward_transactions(redemption_id);
 
 alter table public.matthew_reward_lots enable row level security;
 alter table public.matthew_reward_transactions enable row level security;
@@ -254,7 +260,7 @@ begin
   from public.matthew_reward_lots
   where user_id = v_user_id and expires_at > now();
   if v_balance < p_points then
-    raise exception 'Poin tidak mencukupi. Saldo tersedia: ' || v_balance::text || ' poin.';
+    raise exception using message = 'Poin tidak mencukupi. Saldo tersedia: ' || v_balance::text || ' poin.';
   end if;
 
   v_discount := p_points * 10;
@@ -391,7 +397,7 @@ begin
 
     if found then
       if v_reward.discount_amount > v_subtotal then
-        raise exception 'Subtotal pesanan harus minimal sebesar diskon reward Rp' || v_reward.discount_amount::text || '.';
+        raise exception using message = 'Subtotal pesanan harus minimal sebesar diskon reward Rp' || v_reward.discount_amount::text || '.';
       end if;
       v_discount:=v_reward.discount_amount;
       v_total:=v_subtotal-v_discount;
