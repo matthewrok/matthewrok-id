@@ -779,6 +779,20 @@ test("home Lacak navigation always opens Pesanan Saya, not the direct progress-t
 });
 
 
+test("admin account dashboard hides member orders and membership without calling order RPC", () => {
+  const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
+  const adminBranch = html.slice(html.indexOf("if (normalizedRole === 'admin')"), html.indexOf("setStage('Mengambil data pesanan...')"));
+  assert.match(adminBranch, /document\.body\.classList\.add\('admin-account'\)/);
+  assert.match(adminBranch, /return;/);
+  assert.doesNotMatch(adminBranch, /list_my_joki_orders|get_my_reviewed_order_ids|submit_member_joki_review/);
+  assert.match(html, /body\.admin-account \.stats-grid[\s\S]*?\.membership-box[\s\S]*?\.tab-menu/);
+  assert.match(html, /ADMIN · ROLE TERLINDUNGI/);
+
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/warga-membership-roles.sql"), "utf8");
+  assert.match(sql, /and p\.role <> 'admin'/);
+  assert.match(sql, /ADMIN is preserved and never changed by the membership trigger/);
+});
+
 test("private member dashboard uses the shared guard result instead of repeating Auth requests", () => {
   const html = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
   assert.match(html, /access-guard\.js\?v=20261108-authfix2/);

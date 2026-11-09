@@ -54,6 +54,13 @@
         .profile-info p { color: var(--text-muted); font-size: 11px; margin-bottom: 5px; }
         .user-role { display: inline-block; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--accent-gold); padding: 2px 8px; border-radius: 20px; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
 
+        .admin-account-note { display:none; background:linear-gradient(135deg,rgba(212,175,55,.12),rgba(10,10,10,.96)); border:1px solid rgba(212,175,55,.38); border-radius:12px; padding:18px; margin-bottom:16px; }
+        .admin-account-note strong { display:block; color:var(--accent-gold); font:700 13px var(--font-serif); letter-spacing:1px; margin-bottom:7px; }
+        .admin-account-note p { color:var(--text-muted); font-size:12px; line-height:1.7; }
+        body.admin-account .admin-account-note { display:block; }
+        body.admin-account .stats-grid, body.admin-account .membership-box, body.admin-account .tab-menu, body.admin-account .tab-content { display:none !important; }
+        body.admin-account #memberOnboarding { display:none !important; }
+
         /* STATS GRID */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
         .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 5px; text-align: center; }
@@ -148,6 +155,11 @@
                     <div class="user-role" id="memberLevel">WARGA BIASA</div>
                 </div>
             </div>
+
+            <section class="admin-account-note" aria-live="polite">
+                <strong>ADMIN · ROLE TERLINDUNGI</strong>
+                <p>Akun ini memiliki akses ADMIN. Role admin bersifat khusus, tidak mengikuti perhitungan pesanan atau kenaikan Membership Warga, dan tidak dapat diturunkan oleh sistem otomatis.</p>
+            </section>
 
             <!-- STATS GRID -->
             <div class="stats-grid">
@@ -306,6 +318,35 @@
                     return;
                 }
 
+                const normalizedRole = String(profile.role || '').trim().toLowerCase();
+                document.getElementById('memberName').textContent = profile.full_name || user.email?.split('@')[0] || 'Member';
+                document.getElementById('profileEmail').textContent = user.email || '—';
+                document.getElementById('memberLevel').textContent = normalizedRole.toUpperCase();
+                const adminDashboardBtn = document.getElementById('adminDashboardBtn');
+                if (adminDashboardBtn) adminDashboardBtn.hidden = normalizedRole !== 'admin';
+
+                // Admin adalah role khusus: jangan panggil RPC pesanan, jangan hitung statistik
+                // atau membership, dan jangan tampilkan tab member yang bergantung pada pesanan.
+                if (normalizedRole === 'admin') {
+                    document.body.classList.add('admin-account');
+                    state.hidden = true;
+                    content.hidden = false;
+                    document.getElementById('logoutBtn').addEventListener('click', async () => {
+                        const button = document.getElementById('logoutBtn');
+                        button.disabled = true;
+                        button.textContent = 'KELUAR...';
+                        const result = await client.auth.signOut({ scope: 'local' });
+                        if (result.error) {
+                            button.disabled = false;
+                            button.textContent = 'KELUAR';
+                            alert('Gagal keluar: ' + result.error.message);
+                            return;
+                        }
+                        location.replace('/login.html');
+                    });
+                    return;
+                }
+
                 setStage('Mengambil data pesanan...');
                 const orderResult = await withTimeout(client.rpc('list_my_joki_orders'), 'Pengambilan pesanan');
                 if (orderResult.error) throw new Error('Pesanan: ' + orderResult.error.message);
@@ -328,8 +369,8 @@
                 document.getElementById('memberName').textContent = profile.full_name || user.email?.split('@')[0] || 'Member';
                 document.getElementById('profileEmail').textContent = user.email || '—';
                 document.getElementById('memberLevel').textContent = String(profile.role || 'warga biasa').toUpperCase();
-                const adminDashboardBtn = document.getElementById('adminDashboardBtn');
-                if (adminDashboardBtn) adminDashboardBtn.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin';
+                const adminDashboardButton = document.getElementById('adminDashboardBtn');
+                if (adminDashboardButton) adminDashboardButton.hidden = String(profile.role || '').trim().toLowerCase() !== 'admin';
                 document.getElementById('totalOrders').textContent = String(orders.length);
                 document.getElementById('completedOrders').textContent = String(done);
                 document.getElementById('activeOrders').textContent = String(active);
