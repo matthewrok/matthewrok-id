@@ -263,7 +263,7 @@ begin
   v_redemption_id := gen_random_uuid();
   v_remaining := p_points;
   for v_lot in
-    select id,remaining_points
+    select id,remaining_points,expires_at
     from public.matthew_reward_lots
     where user_id=v_user_id and expires_at>now() and remaining_points>0
     order by expires_at asc,created_at asc
