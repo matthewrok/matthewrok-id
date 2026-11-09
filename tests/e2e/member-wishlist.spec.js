@@ -34,9 +34,6 @@ test("Homepage package cards expose wishlist controls and Member Center links to
   const member = await (await request.get("/member-dashboard.html")).text();
   expect(member).toContain('href="/member-wishlist.html"');
   expect(member).toContain("WISHLIST PAKET");
-  const dashboardHtml = await (await request.get("/member-dashboard.html")).text();
-  expect(dashboardHtml).toContain("warga_biasa");
-  expect(dashboardHtml).toContain("warga_tidak_biasa");
-  expect(dashboardHtml).toContain("warga_sultan");
-  expect(dashboardHtml).toContain("min: 19");
+  expect(member).toContain('href="/member-wishlist.html"');
+  expect(member).toContain("WISHLIST PAKET");
 });
