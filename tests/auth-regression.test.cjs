@@ -308,6 +308,20 @@ test("worker application Edge Function enforces active applicant roles server-si
 });
 
 
+test("registration creates application profile only after email verification", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/verified-email-profile-trigger.sql"), "utf8");
+  assert.match(migration, /drop trigger if exists on_auth_user_created on auth\.users/i);
+  assert.match(migration, /after insert on auth\.users[\s\S]*?when \(new\.email_confirmed_at is not null\)/i);
+  assert.match(migration, /after update of email_confirmed_at on auth\.users/i);
+  assert.match(migration, /old\.email_confirmed_at is null and new\.email_confirmed_at is not null/i);
+  assert.match(migration, /insert into public\.profiles/i);
+  assert.match(migration, /on conflict \(id\) do nothing/i);
+  assert.doesNotMatch(migration, /after insert on auth\.users[\s\S]*?insert into public\.profiles[\s\S]*?without/i);
+  const auth = fs.readFileSync(path.join(ROOT, "assets/js/auth.js"), "utf8");
+  assert.match(auth, /profil akun baru akan dibuat otomatis/i);
+  assert.match(auth, /client\.auth\.signUp/);
+});
+
 test("new membership roles replace legacy profile roles", () => {
   const migration = fs.readFileSync(path.join(ROOT, "supabase/warga-membership-roles.sql"), "utf8");
   for (const role of ["admin", "warga biasa", "warga tidak biasa", "warga sultan"]) {
