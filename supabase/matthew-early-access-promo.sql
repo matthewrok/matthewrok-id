@@ -34,6 +34,41 @@ create index if not exists early_access_campaigns_active_schedule_idx
 alter table public.early_access_campaigns enable row level security;
 revoke all on public.early_access_campaigns from public, anon, authenticated;
 
+drop policy if exists "Members and admins read vouchers" on public.vouchers;
+create policy "Members and admins read vouchers"
+  on public.vouchers for select to authenticated
+  using (
+    (select public.is_current_user_admin())
+    or (
+      is_active = true
+      and (starts_at is null or starts_at <= now())
+      and (expires_at is null or expires_at > now())
+      and (max_uses is null or used_count < max_uses)
+      and (
+        audience_roles is null
+        or exists (
+          select 1 from public.profiles p
+          where p.id = (select auth.uid())
+            and lower(p.role) = any (audience_roles)
+            and p.account_status = 'active'
+        )
+        or exists (
+          select 1 from public.voucher_claims c
+          where c.voucher_id = vouchers.id
+            and c.user_id = (select auth.uid())
+        )
+      )
+      and (
+        campaign_type <> 'early_access'
+        or exists (
+          select 1 from public.voucher_claims c
+          where c.voucher_id = vouchers.id
+            and c.user_id = (select auth.uid())
+        )
+      )
+    )
+  );
+
 create or replace function public.get_my_early_access_campaigns()
 returns jsonb
 language plpgsql
@@ -53,7 +88,7 @@ begin
   from public.profiles p
   where p.id = v_user_id and p.account_status = 'active';
 
-  if v_role not in ('warga biasa','warga tidak biasa','warga sultan') then
+  if v_role is null or v_role not in ('warga biasa','warga tidak biasa','warga sultan') then
     raise exception 'Akun ini tidak memiliki akses membership.';
   end if;
 
