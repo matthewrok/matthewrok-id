@@ -153,6 +153,7 @@ declare
   v_redeemed integer;
   v_history jsonb;
   v_codes jsonb;
+  v_expiring jsonb;
 begin
   if v_user_id is null or coalesce(auth.jwt()->>'is_anonymous','false') = 'true' then
     raise exception 'Login diperlukan untuk melihat Matthew Rewards.';
@@ -186,6 +187,15 @@ begin
     order by created_at desc limit 30
   ) h;
 
+  select coalesce(jsonb_agg(to_jsonb(e) order by e.expires_at asc),'[]'::jsonb)
+  into v_expiring
+  from (
+    select remaining_points,expires_at
+    from public.matthew_reward_lots
+    where user_id=v_user_id and remaining_points>0 and expires_at>now()
+    order by expires_at asc limit 10
+  ) e;
+
   select coalesce(jsonb_agg(to_jsonb(c) order by c.created_at desc),'[]'::jsonb)
   into v_codes
   from (
@@ -197,7 +207,7 @@ begin
 
   return jsonb_build_object(
     'role',v_role,'balance',v_balance,'total_earned',v_earned,
-    'total_redeemed',v_redeemed,'history',v_history,'redemptions',v_codes,
+    'total_redeemed',v_redeemed,'history',v_history,'redemptions',v_codes,'expiring_points',v_expiring,
     'points_per_1000',case when v_role='warga sultan' then 2 else 1 end,
     'redemption_rule','500 poin = Rp5.000'
   );
