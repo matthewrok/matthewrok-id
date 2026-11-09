@@ -6,6 +6,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
@@ -15,6 +19,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://matthewrok.my.id/";
@@ -22,6 +27,10 @@ public class MainActivity extends Activity {
 
     private WebView webView;
     private android.webkit.ValueCallback<Uri[]> filePathCallback;
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private AlertDialog offlineDialog;
+    private android.widget.Button refreshButton;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -32,6 +41,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         webView = findViewById(R.id.web_view);
+        connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        registerConnectivityListener();
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -57,13 +68,100 @@ public class MainActivity extends Activity {
             openExternal(url);
         });
 
-        if (savedInstanceState == null) {
+        if (!hasInternetConnection()) {
+            showOfflineDialog();
+        } else if (savedInstanceState == null) {
             webView.loadUrl(HOME_URL);
         } else {
             webView.restoreState(savedInstanceState);
         }
 
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
+    }
+
+    private boolean hasInternetConnection() {
+        if (connectivityManager == null) return false;
+        Network active = connectivityManager.getActiveNetwork();
+        if (active == null) return false;
+        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(active);
+        return capabilities != null
+                && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+    }
+
+    private void registerConnectivityListener() {
+        if (connectivityManager == null) return;
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                runOnUiThread(() -> updateRefreshButton());
+            }
+
+            @Override
+            public void onLost(Network network) {
+                runOnUiThread(() -> showOfflineDialog());
+            }
+
+            @Override
+            public void onCapabilitiesChanged(Network network, NetworkCapabilities capabilities) {
+                runOnUiThread(() -> updateRefreshButton());
+            }
+        };
+        try {
+            NetworkRequest request = new NetworkRequest.Builder()
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .build();
+            connectivityManager.registerNetworkCallback(request, networkCallback);
+        } catch (RuntimeException ignored) {
+            networkCallback = null;
+        }
+    }
+
+    private void showOfflineDialog() {
+        if (isFinishing() || isDestroyed() || (offlineDialog != null && offlineDialog.isShowing())) {
+            updateRefreshButton();
+            return;
+        }
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Tidak ada koneksi internet")
+                .setMessage("Login gagal diproses karena perangkat tidak terhubung ke internet. Periksa Wi-Fi atau data seluler, lalu tekan Segarkan.")
+                .setCancelable(false)
+                .setPositiveButton("↻ Segarkan", null)
+                .create();
+        offlineDialog = dialog;
+        dialog.setOnShowListener(ignored -> {
+            refreshButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            refreshButton.setOnClickListener(view -> {
+                if (!hasInternetConnection()) {
+                    Toast.makeText(this, "Koneksi internet belum tersedia.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dialog.dismiss();
+                offlineDialog = null;
+                refreshButton = null;
+                if (webView != null) {
+                    String current = webView.getUrl();
+                    if (current == null || current.isEmpty()) webView.loadUrl(HOME_URL);
+                    else webView.reload();
+                }
+            });
+            updateRefreshButton();
+        });
+        dialog.setOnDismissListener(ignored -> {
+            if (offlineDialog == dialog) {
+                offlineDialog = null;
+                refreshButton = null;
+            }
+        });
+        dialog.show();
+    }
+
+    private void updateRefreshButton() {
+        if (refreshButton != null) {
+            boolean connected = hasInternetConnection();
+            refreshButton.setEnabled(connected);
+            refreshButton.setAlpha(connected ? 1.0f : 0.55f);
+        }
     }
 
     private boolean isFirstParty(Uri uri) {
@@ -110,7 +208,11 @@ public class MainActivity extends Activity {
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             if (request.isForMainFrame()) {
-                Toast.makeText(MainActivity.this, R.string.connection_error, Toast.LENGTH_LONG).show();
+                if (!hasInternetConnection()) {
+                    showOfflineDialog();
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.connection_error, Toast.LENGTH_LONG).show();
+                }
             }
         }
 
@@ -183,6 +285,11 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if (connectivityManager != null && networkCallback != null) {
+            try { connectivityManager.unregisterNetworkCallback(networkCallback); } catch (RuntimeException ignored) { }
+            networkCallback = null;
+        }
+        if (offlineDialog != null && offlineDialog.isShowing()) offlineDialog.dismiss();
         if (filePathCallback != null) {
             filePathCallback.onReceiveValue(null);
             filePathCallback = null;
