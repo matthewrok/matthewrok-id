@@ -1,4 +1,4 @@
--- Matthew Referral System: one-time 100-point rewards for both sides after the first completed order.
+-- Matthew Referral System: one-time 499-point rewards for both sides after the first completed order.
 -- Apply only after review and merge. This migration is intentionally separate from the existing Rewards ledger.
 
 begin;
@@ -200,7 +200,7 @@ begin
     'total_referrals', v_total,
     'successful_referrals', v_successful,
     'pending_referrals', v_pending,
-    'points_per_person', 100,
+    'points_per_person', 499,
     'qualification', 'Transaksi pertama teman harus berstatus Selesai.'
   );
 end;
@@ -254,7 +254,7 @@ begin
       role_at_earning, expires_at, source_type, source_id
     )
     values (
-      v_member.id, null, 100, 100, 1,
+      v_member.id, null, 499, 499, 1,
       v_member.role, now() + interval '12 months', 'referral', v_referral.id
     )
     on conflict (user_id, source_type, source_id) where source_id is not null
@@ -266,10 +266,10 @@ begin
         user_id, points_delta, event_type, description
       )
       values (
-        v_member.id, 100, 'earned',
+        v_member.id, 499, 'earned',
         case when v_member.id = v_referral.referrer_id
-          then 'Bonus referral: teman berhasil menyelesaikan transaksi pertama (+100 poin).'
-          else 'Bonus selamat datang referral: transaksi pertama selesai (+100 poin).'
+          then 'Bonus referral: teman berhasil menyelesaikan transaksi pertama (+499 poin).'
+          else 'Bonus selamat datang referral: transaksi pertama selesai (+499 poin).'
         end
       );
     end if;
