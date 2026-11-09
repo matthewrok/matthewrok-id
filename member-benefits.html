@@ -101,9 +101,11 @@
       currentRole.textContent=roleNames[role];
       document.getElementById('currentCopy').textContent='Halo, '+(profile.full_name||user.email?.split('@')[0]||'Warga')+'. Kamu memiliki '+completed+' pesanan selesai.';
       document.getElementById('levelBadge').innerHTML=current.role==='warga sultan'?'♛<br>SULTAN':current.role==='warga tidak biasa'?'✧<br>LEVEL 02':'◇<br>LEVEL 01';
-      document.getElementById('progressCount').textContent=next?completed+'/'+next.min+' pesanan':'LEVEL MAKSIMUM';
-      document.getElementById('progressFill').style.width=next?Math.min(100,Math.round((completed/next.min)*100))+'%':'100%';
-      document.getElementById('progressHint').textContent=next?'Butuh '+Math.max(0,next.min-completed)+' pesanan selesai lagi untuk mencapai '+next.name+'.':'Kamu sudah mencapai tingkatan tertinggi.';
+      const progressDone=next?Math.max(0,completed-current.min):0;
+      const progressTarget=next?next.min-current.min:0;
+      document.getElementById('progressCount').textContent=next?Math.min(progressDone,progressTarget)+'/'+progressTarget+' pesanan':'LEVEL MAKSIMUM';
+      document.getElementById('progressFill').style.width=next?Math.min(100,Math.round((progressDone/progressTarget)*100))+'%':'100%';
+      document.getElementById('progressHint').textContent=next?'Butuh '+Math.max(0,progressTarget-progressDone)+' pesanan selesai lagi untuk mencapai '+next.name+'.':'Kamu sudah mencapai tingkatan tertinggi.';
       document.querySelectorAll('[data-tier]').forEach(card=>{if(card.dataset.tier===role){card.classList.add('current-tier');const label=document.createElement('div');label.className='soon';label.textContent='TINGKATAN KAMU';label.style.marginTop='12px';card.appendChild(label);}});
       state.hidden=true;
     }catch(error){console.error('[Member Benefits]',error);showError('Benefit belum dapat dimuat',error?.message||'Terjadi kesalahan saat mengambil data akun.');}
