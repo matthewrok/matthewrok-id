@@ -27,7 +27,7 @@ begin
   if v_user_id is null then raise exception 'Login diperlukan.'; end if;
   select lower(coalesce(p.role,'')), lower(coalesce(p.account_status,''))
     into v_role, v_status from public.profiles p where p.id=v_user_id;
-  if v_status <> 'active' or v_role not in ('warga_biasa','warga_tidak_biasa','warga_sultan') then
+  if coalesce(v_status, '') <> 'active' or coalesce(v_role, '') not in ('warga biasa','warga tidak biasa','warga sultan') then
     raise exception 'Wishlist hanya tersedia untuk member Warga aktif.';
   end if;
   return query select w.product_code,w.created_at
@@ -52,7 +52,7 @@ begin
   if v_code not in ('CH11','CH13','CH17') then raise exception 'Paket tidak valid.'; end if;
   select lower(coalesce(p.role,'')), lower(coalesce(p.account_status,''))
     into v_role, v_status from public.profiles p where p.id=v_user_id;
-  if v_status <> 'active' or v_role not in ('warga_biasa','warga_tidak_biasa','warga_sultan') then
+  if coalesce(v_status, '') <> 'active' or coalesce(v_role, '') not in ('warga biasa','warga tidak biasa','warga sultan') then
     raise exception 'Wishlist hanya tersedia untuk member Warga aktif.';
   end if;
   insert into public.member_package_wishlist(user_id,product_code)
@@ -67,9 +67,17 @@ language plpgsql
 security definer
 set search_path = ''
 as $$
-declare v_user_id uuid := auth.uid();
+declare
+  v_user_id uuid := auth.uid();
+  v_role text;
+  v_status text;
 begin
   if v_user_id is null then raise exception 'Login diperlukan.'; end if;
+  select lower(coalesce(p.role,'')), lower(coalesce(p.account_status,''))
+    into v_role, v_status from public.profiles p where p.id=v_user_id;
+  if coalesce(v_status, '') <> 'active' or coalesce(v_role, '') not in ('warga biasa','warga tidak biasa','warga sultan') then
+    raise exception 'Wishlist hanya tersedia untuk member Warga aktif.';
+  end if;
   delete from public.member_package_wishlist
     where user_id=v_user_id and product_code=upper(trim(coalesce(p_product_code,'')));
   return true;
