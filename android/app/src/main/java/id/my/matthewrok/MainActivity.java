@@ -99,7 +99,10 @@ public class MainActivity extends Activity {
 
             @Override
             public void onLost(Network network) {
-                runOnUiThread(() -> showOfflineDialog());
+                runOnUiThread(() -> {
+                    if (!hasInternetConnection()) showOfflineDialog();
+                    else updateRefreshButton();
+                });
             }
 
             @Override
