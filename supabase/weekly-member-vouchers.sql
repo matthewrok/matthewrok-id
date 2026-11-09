@@ -37,7 +37,7 @@ create table if not exists public.voucher_claims (
   order_id uuid references public.joki_progress(id) on delete set null,
   constraint voucher_claims_voucher_user_unique unique (voucher_id, user_id),
   constraint voucher_claims_redemption_pair_check
-    check ((redeemed_at is null and order_id is null) or (redeemed_at is not null and order_id is not null))
+    check ((redeemed_at is null and order_id is null) or redeemed_at is not null)
 );
 
 alter table public.voucher_claims enable row level security;
