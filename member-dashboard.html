@@ -59,7 +59,7 @@
         .admin-account-note p { color:var(--text-muted); font-size:12px; line-height:1.7; }
         body.admin-account .admin-account-note { display:block; }
         body.admin-account .stats-grid, body.admin-account .membership-box, body.admin-account .tab-menu, body.admin-account .tab-content { display:none !important; }
-        body.admin-account #memberOnboarding { display:none !important; }
+        body.admin-account #memberOnboarding, body.admin-account .membership-history-entry { display:none !important; }
 
         /* STATS GRID */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
@@ -187,6 +187,10 @@
             </div>
             <a href="/member-benefits.html" class="benefits-entry" aria-label="Lihat benefit membership warga">
                 <span><strong>MEMBER BENEFITS</strong><small>Kenali keistimewaan dan reward setiap tingkatan warga.</small></span>
+                <span aria-hidden="true">→</span>
+            </a>
+            <a href="/member-membership-history.html" class="benefits-entry membership-history-entry" aria-label="Lihat riwayat membership warga">
+                <span><strong>MEMBERSHIP HISTORY</strong><small>Lihat perjalanan level dan catatan setiap perubahan tingkatan Warga.</small></span>
                 <span aria-hidden="true">→</span>
             </a>
 
