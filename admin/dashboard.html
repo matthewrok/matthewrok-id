@@ -25,6 +25,10 @@
   <link rel="stylesheet" href="/assets/css/shadow-reign-admin.css">
   <link rel="stylesheet" href="/assets/css/admin-dashboard-v2.css?v=20261109-v2">
   <style>
+    .refresh-dashboard{min-height:40px;padding:9px 13px;border:1px solid rgba(117,184,255,.42);border-radius:10px;background:rgba(36,95,199,.16);color:#dcecff;font:700 12px Inter, sans-serif;cursor:pointer;transition:background .2s,border-color .2s,opacity .2s}
+    .refresh-dashboard:hover{border-color:#75b8ff;background:rgba(52,120,246,.25)}
+    .refresh-dashboard:disabled{opacity:.6;cursor:wait}
+    @media(max-width:600px){.actions{flex-wrap:wrap}.refresh-dashboard{flex:1 1 auto}}
     /* Tab navigation: diselaraskan dengan palet Shadow Reign obsidian dan royal gold. */
     .admin-tab-menu{display:flex;gap:9px;overflow-x:auto;padding:5px 2px 12px;margin:20px 0 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
     .admin-tab-menu::-webkit-scrollbar{display:none}
@@ -53,7 +57,7 @@
   <main class="wrap">
     <header class="top">
       <div><div class="eyebrow">MATTHEW JOKI · ADMIN CONTROL CENTER 2.0</div><h1>Pusat Kendali Admin</h1><p id="adminWelcome">Memverifikasi akses admin…</p><p class="admin-subtitle">Semua pekerjaan admin tersusun berdasarkan tugas. Pilih bagian yang ingin dikelola.</p></div>
-      <div class="actions"><a href="/index.html">← Kembali ke website</a><button class="primary" id="logoutButton" type="button">Keluar</button></div>
+      <div class="actions"><a href="/index.html">← Kembali ke website</a><button class="refresh-dashboard" id="refreshDashboardButton" type="button" aria-controls="dashboardContent">↻ Perbarui data</button><button class="primary" id="logoutButton" type="button">Keluar</button></div>
     </header>
     <div id="adminNotice" class="notice" role="status" aria-live="polite">Memeriksa sesi dan izin akun…</div>
 
