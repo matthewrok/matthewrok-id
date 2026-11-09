@@ -367,6 +367,18 @@ begin
   elsif p_product_code='CH17' then v_service:='City Hall 17/17'; v_price:=115000;
   else raise exception 'Produk tidak tersedia.'; end if;
 
+  if exists (
+    select 1 from public.site_maintenance_config m
+    where m.id = true and m.enabled
+      and (
+        m.mode = 'full'
+        or m.mode = 'orders'
+        or (m.mode = 'system' and 'orders' = any(m.affected_modules))
+      )
+  ) then
+    raise exception 'Pemesanan sedang dinonaktifkan sementara oleh admin.';
+  end if;
+
   v_subtotal:=v_price*v_qty;
   v_total:=v_subtotal;
 
