@@ -53,16 +53,8 @@ jobs:
           sudo apt-get install -y python3-pil
           python3 android/scripts/generate_launcher_icons.py
 
-      - name: Run Android emulator smoke test
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 35
-          target: google_apis
-          arch: x86_64
-          profile: pixel_2
-          disable-animations: true
-          script: cd android && gradle connectedDebugAndroidTest --no-daemon
-
+      # Build and publish the debug APK before emulator tests so a slow emulator
+      # cannot prevent the installable test artifact from being produced.
       - name: Build debug APK
         working-directory: android
         run: gradle assembleDebug --no-daemon
@@ -74,3 +66,14 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Run Android emulator smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 15
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          script: cd android && gradle connectedDebugAndroidTest --no-daemon
