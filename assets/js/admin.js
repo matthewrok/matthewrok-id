@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       if (!quiet) showNotice("Memperbarui ringkasan, pengguna, pesanan, dan kunjungan…");
       try {
-        await Promise.all([loadMembers(), loadVisitors(), loadStatisticsAndActivity()]);
+        await Promise.all([loadMembers(), loadVisitors(), loadStatisticsAndActivity(), window.refreshAdminAnalytics ? window.refreshAdminAnalytics(client) : Promise.resolve()]);
         document.getElementById("lastUpdated").textContent = dateFormat.format(new Date());
         if (!quiet) showNotice("Data dashboard berhasil diperbarui.");
         else showNotice("Dashboard aktif · data diperbarui otomatis.");
