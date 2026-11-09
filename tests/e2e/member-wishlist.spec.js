@@ -14,7 +14,7 @@ test("Member Wishlist page loads and documents supported packages", async ({ req
   expect(js).toContain("remove_my_package_from_wishlist");
 });
 
-test("Wishlist SQL restricts records to authenticated active Warga owners", async ({ request }) => {
+test("Wishlist SQL restricts records to authenticated active Warga owners and fails closed without a profile", async ({ request }) => {
   const response = await request.get("/supabase/matthew-package-wishlist.sql");
   expect(response.ok()).toBeTruthy();
   const sql = await response.text();
@@ -30,6 +30,7 @@ test("Wishlist SQL restricts records to authenticated active Warga owners", asyn
   expect(sql).toContain("warga biasa','warga tidak biasa','warga sultan");
   expect(sql).not.toContain("warga_biasa");
   expect(sql.match(/Wishlist hanya tersedia untuk member Warga aktif/g)).toHaveLength(3);
+  expect(sql.match(/coalesce\(v_status, ''\) <> 'active' or coalesce\(v_role, ''\) not in/g)).toHaveLength(3);
   expect(sql).toContain("grant execute on function public.get_my_package_wishlist() to authenticated");
 });
 
