@@ -171,14 +171,51 @@ begin
     raise exception 'Voucher ini tidak berlaku untuk tingkatan akun kamu.';
   end if;
 
-  update public.voucher_claims c
-  set redeemed_at = now(), order_id = new.id
+  perform 1
+  from public.voucher_claims c
   where c.voucher_id = v_voucher.id
     and c.user_id = v_user_id
-    and c.redeemed_at is null;
+    and c.redeemed_at is null
+  for update;
 
   if not found then
     raise exception 'Klaim voucher belum tersedia, sudah digunakan, atau sudah kedaluwarsa.';
+  end if;
+
+  return new;
+end;
+$function$;
+
+create or replace function private.redeem_weekly_voucher_claim()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  v_voucher_id uuid;
+  v_user_id uuid := auth.uid();
+begin
+  if nullif(upper(trim(coalesce(new.voucher_code, ''))), '') is null then
+    return new;
+  end if;
+
+  select v.id into v_voucher_id
+  from public.vouchers v
+  where v.code = upper(trim(new.voucher_code))
+    and v.claim_required = true
+    and v.campaign_type = 'weekly';
+
+  if v_voucher_id is not null then
+    update public.voucher_claims c
+    set redeemed_at = now(), order_id = new.id
+    where c.voucher_id = v_voucher_id
+      and c.user_id = v_user_id
+      and c.redeemed_at is null;
+
+    if not found then
+      raise exception 'Klaim voucher tidak dapat diselesaikan.';
+    end if;
   end if;
 
   return new;
@@ -191,7 +228,14 @@ create trigger enforce_weekly_voucher_claim_before_order
   for each row
   execute function private.enforce_weekly_voucher_claim();
 
+drop trigger if exists redeem_weekly_voucher_claim_after_order on public.joki_progress;
+create trigger redeem_weekly_voucher_claim_after_order
+  after insert on public.joki_progress
+  for each row
+  execute function private.redeem_weekly_voucher_claim();
+
 revoke all on function private.enforce_weekly_voucher_claim() from public, anon, authenticated;
+revoke all on function private.redeem_weekly_voucher_claim() from public, anon, authenticated;
 
 create or replace function private.generate_weekly_member_vouchers()
 returns jsonb
