@@ -5,7 +5,7 @@
  const state=document.getElementById("loadState");
  const content=document.getElementById("dashboardContent");
  const money=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n||0));
- const roles=["warga_biasa","warga_tidak_biasa","warga_sultan","admin"];
+ const roles=["member","sultan","matthew","pelanggan","worker","macul","admin"];
  let stage="Menyiapkan koneksi akun";
  const showError=(title,detail)=>{
   state.hidden=false;content.hidden=true;
@@ -41,9 +41,8 @@
   const done=list.filter(o=>o.status==="Selesai").length;
   const cancelled=list.filter(o=>o.status==="Dibatalkan").length;
   const active=list.filter(o=>!["Selesai","Dibatalkan","Ditunda"].includes(o.status)).length;
-  const isAdmin=String(profile.role||"").trim().toLowerCase()==="admin";
-  const levels=[{name:"WARGA BIASA",min:0,next:7},{name:"WARGA TIDAK BIASA",min:7,next:19},{name:"WARGA SULTAN",min:19,next:null}];
-  const level=isAdmin?{name:"ADMIN",min:0,next:null}:[...levels].reverse().find(x=>done>=x.min)||levels[0],next=isAdmin?null:levels.find(x=>x.min===level.next);
+  const levels=[{name:"Bronze",min:0,next:3},{name:"Silver",min:3,next:8},{name:"Gold",min:8,next:15},{name:"Diamond",min:15,next:null}];
+  const level=[...levels].reverse().find(x=>done>=x.min)||levels[0],next=levels.find(x=>x.min===level.next);
   document.getElementById("memberName").textContent=profile.full_name||user.email.split("@")[0];
   document.getElementById("totalOrders").textContent=list.length;
   document.getElementById("completedOrders").textContent=done;
@@ -55,9 +54,9 @@
   document.getElementById("profileRole").textContent=profile.role||"MEMBER";
   document.getElementById("profileJoined").textContent=profile.created_at?new Date(profile.created_at).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"—";
   document.getElementById("memberLevel").textContent=level.name;
-  document.getElementById("levelDescription").textContent=isAdmin?"ADMIN · tidak mengikuti progres membership.":level.name+" · dihitung dari jumlah pesanan berstatus Selesai.";
-  document.getElementById("levelBar").style.width=isAdmin?"0%":(next?Math.min(100,Math.round((done-level.min)/(next.min-level.min)*100)):100)+"%";
-  document.getElementById("nextLevel").textContent=isAdmin?"ADMIN tidak mengikuti sistem tingkatan Warga.":next?"Selesaikan "+Math.max(0,next.min-done)+" pesanan lagi untuk mencapai "+next.name+".":"Tingkatan tertinggi telah tercapai.";
+  document.getElementById("levelDescription").textContent="Level "+level.name+" · dihitung dari jumlah pesanan berstatus Selesai.";
+  document.getElementById("levelBar").style.width=(next?Math.min(100,Math.round((done-level.min)/(next.min-level.min)*100)):100)+"%";
+  document.getElementById("nextLevel").textContent=next?"Selesaikan "+Math.max(0,next.min-done)+" pesanan lagi untuk mencapai "+next.name+".":"Level tertinggi telah tercapai.";
   const recent=document.getElementById("recentOrders");
   recent.innerHTML=list.length?list.slice(0,5).map(o=>'<div class="member-order"><div><strong>'+escapeHtml(o.service_name||"Layanan")+'</strong><small>'+escapeHtml(o.order_number||"—")+' · Kingdom '+escapeHtml(o.kingdom_number||"—")+' · '+escapeHtml(o.status||"Menunggu")+' · '+money(o.total_price)+'</small></div><button type="button" data-invoice="'+escapeHtml(o.id)+'">INVOICE</button></div>').join(""):'<div class="member-empty">Belum ada pesanan.</div>';
   document.getElementById("notifications").innerHTML=list.length?list.slice().sort((a,b)=>new Date(b.updated_at||b.created_at)-new Date(a.updated_at||a.created_at)).slice(0,4).map(o=>'<div class="member-note"><strong>'+escapeHtml(o.order_number||"Pesanan")+' · '+escapeHtml(o.status||"Menunggu")+'</strong>'+escapeHtml(o.progress_note||("Status pesanan diperbarui. Progres "+(o.progress_percent||0)+"%."))+'<br><small>'+new Date(o.updated_at||o.created_at).toLocaleString("id-ID")+'</small></div>').join(""):'Belum ada pembaruan pesanan.';
