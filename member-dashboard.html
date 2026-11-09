@@ -74,6 +74,11 @@
         .progress-container { height: 4px; background: #1a1a1a; border-radius: 10px; overflow: hidden; }
         .progress-bar { height: 100%; background: var(--accent-gold); width: 0%; border-radius: 10px; transition: width 0.5s ease; }
 
+        .benefits-entry { display:flex; justify-content:space-between; align-items:center; gap:14px; margin:-7px 0 20px; padding:14px 16px; border:1px solid rgba(212,175,55,.38); border-radius:10px; background:linear-gradient(110deg,rgba(212,175,55,.12),rgba(10,10,10,.96)); color:var(--text-main); text-decoration:none; transition:border-color .2s,transform .2s; }
+        .benefits-entry:hover { border-color:var(--accent-gold); transform:translateY(-1px); }
+        .benefits-entry strong { display:block; color:var(--accent-gold); font:700 11px var(--font-serif); letter-spacing:1.2px; margin-bottom:5px; }
+        .benefits-entry small { display:block; color:var(--text-muted); font-size:10px; line-height:1.5; }
+        .benefits-entry > span:last-child { color:var(--accent-gold); font-size:22px; }
         /* TABS */
         .tab-menu { display: flex; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 4px; margin-bottom: 15px; }
         .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 10px 0; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 6px; transition: 0.3s; }
@@ -180,6 +185,10 @@
                     <div id="levelBar" class="progress-bar"></div>
                 </div>
             </div>
+            <a href="/member-benefits.html" class="benefits-entry" aria-label="Lihat benefit membership warga">
+                <span><strong>MEMBER BENEFITS</strong><small>Kenali keistimewaan dan reward setiap tingkatan warga.</small></span>
+                <span aria-hidden="true">→</span>
+            </a>
 
             <!-- TAB MENU -->
             <div class="tab-menu">
