@@ -10,7 +10,8 @@ const PRIVATE_PATHS = [
   "/worker.html",
   "/inbox.html",
   "/your-order.html",
-  "/member-dashboard.html"
+  "/member-dashboard.html",
+  "/member-benefits.html"
 ];
 
 function makeStorage() {
@@ -734,7 +735,7 @@ test("Shadow Reign member dashboard preserves its tab layout, mapped data target
   for (const source of [
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
     "/assets/js/supabase.js",
-    "/assets/js/access-guard.js?v=20261108-authfix2",
+    "/assets/js/access-guard.js?v=20261109-member-benefits",
     "/assets/js/session-manager.js?v=20261108-authfix2"
   ]) assert.ok(html.includes(source), "missing required head script " + source);
   for (const rpc of ["list_my_joki_orders", "get_my_reviewed_order_ids", "submit_member_joki_review"]) {
