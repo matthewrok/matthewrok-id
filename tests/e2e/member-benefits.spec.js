@@ -23,3 +23,16 @@ test("Member Center menyediakan pintasan ke Member Benefits", async ({ request }
   expect(html).toContain('href="/member-benefits.html"');
   expect(html).toContain("MEMBER BENEFITS");
 });
+
+test("weekly voucher automation is role-scoped, claim-based, and expires after seven days", async ({ request }) => {
+  const response = await request.get("/supabase/weekly-member-vouchers.sql");
+  expect(response.ok()).toBeTruthy();
+  const sql = await response.text();
+  expect(sql).toContain("MATTHEW-WNI-");
+  expect(sql).toContain("MATTHEW-SLT-");
+  expect(sql).toContain("v_discount := case when v_role = 'warga tidak biasa' then 3 else 5 end");
+  expect(sql).toContain("now() + interval '7 days'");
+  expect(sql).toContain("public.claim_weekly_voucher");
+  expect(sql).toContain("redeem_weekly_voucher_claim_after_order");
+  expect(sql).toContain("'0 17 * * 0'");
+});
