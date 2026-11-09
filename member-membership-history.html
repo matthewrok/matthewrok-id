@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Membership History | Matthew Joki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script src="/assets/js/access-guard.js?v=20261109-membership-history"></script>
+  <script defer src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
+  <script defer src="/assets/js/membership-history.js?v=20261109-1"></script>
+  <style>
+    :root{color-scheme:dark;--gold:#d6b168;--muted:#aaa39a;--line:#30291f;--panel:#111115}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,rgba(214,177,104,.13),transparent 42%),#070709;color:#f5f0e7;font-family:Inter,Arial,sans-serif}
+    .topbar{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px max(18px,calc((100% - 760px)/2));border-bottom:1px solid var(--line);background:rgba(7,7,9,.92);backdrop-filter:blur(14px)}
+    .brand{color:var(--gold);font:700 12px Cinzel,serif;letter-spacing:.12em}
+    .back{color:#e8d5b1;text-decoration:none;font-size:12px;font-weight:700}
+    main{width:min(760px,calc(100% - 30px));margin:0 auto;padding:34px 0 60px}
+    .eyebrow{color:var(--gold);font-size:10px;font-weight:800;letter-spacing:.24em}
+    h1{margin:10px 0 8px;font:700 clamp(27px,6vw,40px) Cinzel,serif;letter-spacing:.04em}
+    .intro{max-width:620px;color:var(--muted);font-size:13px;line-height:1.7}
+    .panel{margin-top:20px;padding:20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#17171c,#0c0c10);box-shadow:0 18px 50px #0005}
+    .current{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .label{display:block;color:var(--muted);font-size:10px;letter-spacing:.12em;font-weight:700}
+    .role{display:inline-flex;margin-top:8px;padding:7px 12px;border:1px solid #8a6a36;border-radius:999px;color:var(--gold);font:700 12px Cinzel,serif}
+    .count{text-align:right}.count strong{display:block;color:#fff;font:700 30px Cinzel,serif}.count small{color:var(--muted);font-size:10px}
+    .progress-head{display:flex;justify-content:space-between;gap:10px;margin:22px 0 9px;color:var(--muted);font-size:11px}
+    .track{height:8px;overflow:hidden;border-radius:20px;background:#29252a}.bar{height:100%;width:0;background:linear-gradient(90deg,#8b642e,var(--gold));border-radius:20px;transition:width .4s ease}
+    .next{margin:10px 0 0;color:#e7d5b4;font-size:11px;line-height:1.6}
+    .milestones{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
+    .milestone{padding:12px 10px;border:1px solid var(--line);border-radius:10px;background:#0a0a0d;text-align:center}
+    .milestone strong{display:block;color:var(--gold);font:700 16px Cinzel,serif}.milestone small{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.4}
+    h2{margin:0 0 15px;color:#f4e6cc;font:700 17px Cinzel,serif}
+    .timeline{position:relative;display:grid;gap:0}
+    .event{position:relative;display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:0 0 22px}
+    .event:not(:last-child)::before{content:"";position:absolute;left:8px;top:17px;bottom:0;width:1px;background:linear-gradient(var(--gold),#3a3024)}
+    .dot{position:relative;z-index:1;width:17px;height:17px;margin-top:2px;border:2px solid var(--gold);border-radius:50%;background:#17130d;box-shadow:0 0 0 4px #d6b16812}
+    .event h3{margin:0;color:#f4e6cc;font-size:12px}.event p{margin:5px 0;color:var(--muted);font-size:11px;line-height:1.6}.event time{color:#82796d;font-size:10px}
+    .empty{padding:22px;border:1px dashed #51422c;border-radius:10px;color:var(--muted);font-size:12px;line-height:1.7;text-align:center}
+    .notice{padding:18px;border:1px solid #5a482b;border-radius:12px;background:#141116;color:#d7c7aa;font-size:12px;line-height:1.7}
+    .notice[hidden],#content[hidden]{display:none}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions a{padding:11px 14px;border:1px solid #70552e;border-radius:9px;color:var(--gold);text-decoration:none;font-size:11px;font-weight:700}
+    footer{padding:25px 12px;color:#716b62;font-size:9px;letter-spacing:.12em;text-align:center}
+    @media(max-width:480px){.panel{padding:16px}.count strong{font-size:25px}.milestone{padding:10px 5px}.milestone small{font-size:8px}}
+    @media(prefers-reduced-motion:reduce){.bar{transition:none}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="brand">MATTHEW · MEMBER CENTER</div><a class="back" href="/akun/">← Kembali ke akun</a></header>
+  <main>
+    <div class="eyebrow">WARGA MEMBERSHIP PROGRAM</div>
+    <h1>Membership History</h1>
+    <p class="intro">Lihat perjalanan tingkatan Warga, jumlah pesanan yang telah selesai, dan setiap perubahan level akunmu.</p>
+    <div id="state" class="notice" role="status" aria-live="polite">Memuat riwayat membership…</div>
+    <section id="content" hidden>
+      <section class="panel">
+        <div class="current">
+          <div><span class="label">TINGKATAN SAAT INI</span><span class="role" id="currentRole">WARGA BIASA</span></div>
+          <div class="count"><strong id="completedOrders">0</strong><small>PESANAN SELESAI</small></div>
+        </div>
+        <div class="progress-head"><span id="progressLabel">Progres menuju level berikutnya</span><b id="progressValue">0%</b></div>
+        <div class="track" role="progressbar" aria-label="Progres membership" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><div class="bar" id="progressBar"></div></div>
+        <p class="next" id="nextCopy"></p>
+        <div class="milestones">
+          <div class="milestone"><strong>0–6</strong><small>WARGA BIASA</small></div>
+          <div class="milestone"><strong>7–18</strong><small>WARGA TIDAK BIASA</small></div>
+          <div class="milestone"><strong>19+</strong><small>WARGA SULTAN</small></div>
+        </div>
+      </section>
+      <section class="panel"><h2>Jejak Perjalanan Membership</h2><div id="timeline" class="timeline"></div></section>
+      <div class="actions"><a href="/member-benefits.html">LIHAT BENEFIT MEMBERSHIP</a><a href="/member-rewards.html">MATTHEW REWARDS</a></div>
+    </section>
+  </main>
+  <footer>MATTHEW.RMN · MEMBERSHIP HISTORY</footer>
+</body>
+</html>
