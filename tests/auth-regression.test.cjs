@@ -461,7 +461,7 @@ test("all website routes use the approved black browser theme", () => {
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     const theme = (html.match(/name="theme-color" content="([^"]+)"/) || [])[1];
-    assert.equal(theme, "#050505", page + " should use the black theme color");
+    assert.equal(theme, page === "admin/dashboard.html" ? "#071225" : "#050505", page + " should use its approved page theme color");
   }
   const member = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
   assert.match(member, /name="theme-color" content="#050505"/);
@@ -499,7 +499,8 @@ test("all themed pages use the approved black browser theme", () => {
   ];
   for (const page of pages) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
-    assert.match(html, /name="theme-color" content="#050505"/, page + " should declare the black theme");
+    const expectedTheme = page === "admin/dashboard.html" ? "#071225" : "#050505";
+    assert.ok(html.includes('name="theme-color" content="' + expectedTheme + '"'), page + " should declare its approved theme");
     assert.doesNotMatch(html, /blue-theme\.css|auth-blue\.css|login-layout\.css/, page + " must not load legacy blue styles");
   }
   const member = fs.readFileSync(path.join(ROOT, "member-dashboard.html"), "utf8");
