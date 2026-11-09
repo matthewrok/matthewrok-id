@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed/" } });
         if (error) throw error;
         if (data.session) await client.auth.signOut({ scope: "local" });
-        showMessage("Pendaftaran berhasil. Buka Gmail dan klik tombol verifikasi. Setelah email terverifikasi, kembali ke halaman login dan masuk secara manual. Jika email belum masuk, kamu bisa meminta link verifikasi baru di bawah.", "success");
+        showMessage("Pendaftaran diterima. Akun belum dimasukkan ke data member dan belum bisa digunakan sampai kamu membuka Gmail lalu menekan link verifikasi. Setelah email terverifikasi, profil akun baru akan dibuat otomatis. Kembali ke halaman login untuk masuk. Jika email belum masuk, kamu bisa meminta link verifikasi baru di bawah.", "success");
         showResendButton(email);
         registerForm.reset();
         setBusy(registerForm, false, "BUAT AKUN");
