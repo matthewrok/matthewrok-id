@@ -52,3 +52,14 @@ test("pesan sukses dan error autentikasi tampil pada area status yang terlihat",
   await expect(visibleStatus).toHaveClass(/status-error/);
 });
 
+
+
+test("registrasi menolak email terverifikasi tanpa menampilkan alur verifikasi ulang", async ({ request }) => {
+  const response = await request.get("/assets/js/auth.js?v=20261109-verified-email-guard");
+  expect(response.ok()).toBeTruthy();
+  const source = await response.text();
+  expect(source).toContain("Array.isArray(data?.user?.identities) && data.user.identities.length === 0");
+  expect(source).toContain("Gmail Sudah Di Gunakan, Harap menggunakan gmail lain.");
+  expect(source).toContain("hideResendButton();");
+  expect(source).toContain("setBusy(registerForm, false, \"BUAT AKUN\");");
+});
