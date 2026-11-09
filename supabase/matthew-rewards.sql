@@ -241,8 +241,7 @@ begin
 
   select coalesce(sum(remaining_points),0)::integer into v_balance
   from public.matthew_reward_lots
-  where user_id = v_user_id and expires_at > now()
-  for update;
+  where user_id = v_user_id and expires_at > now();
   if v_balance < p_points then
     raise exception 'Poin tidak mencukupi. Saldo tersedia: ' || v_balance::text || ' poin.';
   end if;
@@ -326,12 +325,19 @@ declare
   v_reward public.matthew_reward_redemptions%rowtype;
   v_auth_email text;
   v_user_id uuid := auth.uid();
+  v_role text;
+  v_account_status text;
 begin
   if v_user_id is null or coalesce((select auth.jwt()->>'is_anonymous'),'false')='true' then
     raise exception 'Pemesanan hanya tersedia untuk akun yang sudah login.';
   end if;
-  select lower(trim(u.email)) into v_auth_email from auth.users u where u.id=v_user_id;
-  if v_auth_email is null or v_auth_email='' then raise exception 'Email akun tidak tersedia.'; end if;
+  select lower(trim(p.role)),lower(trim(p.account_status)) into v_role,v_account_status
+  from public.profiles p where p.id=v_user_id;
+  if v_role not in ('warga biasa','warga tidak biasa','warga sultan') or v_account_status is distinct from 'active' then
+    raise exception 'Akun ini tidak memiliki izin untuk membuat pesanan.';
+  end if;
+  select lower(trim(u.email)) into v_auth_email from auth.users u where u.id=v_user_id and u.email_confirmed_at is not null;
+  if v_auth_email is null or v_auth_email='' then raise exception 'Email akun harus diverifikasi sebelum membuat pesanan.'; end if;
   if nullif(trim(coalesce(p_client_email,'')),'') is not null and lower(trim(p_client_email))<>v_auth_email then
     raise exception 'Email pesanan harus sama dengan email akun yang sedang login.';
   end if;
@@ -375,6 +381,9 @@ begin
       if v_voucher.starts_at is not null and v_voucher.starts_at>now() then raise exception 'Voucher belum mulai berlaku.'; end if;
       if v_voucher.expires_at is not null and v_voucher.expires_at<=now() then raise exception 'Voucher sudah kedaluwarsa.'; end if;
       if v_voucher.max_uses is not null and v_voucher.used_count>=v_voucher.max_uses then raise exception 'Kuota penggunaan voucher sudah habis.'; end if;
+      if v_voucher.audience_roles is not null and not (v_role=any(v_voucher.audience_roles)) then
+        raise exception 'Voucher tidak tersedia untuk tingkatan akun kamu.';
+      end if;
       if v_voucher.discount_type='percent' then v_discount:=floor(v_subtotal*least(v_voucher.discount_value,100)/100);
       elsif v_voucher.discount_type='fixed' then v_discount:=least(v_subtotal,floor(v_voucher.discount_value));
       else raise exception 'Jenis diskon voucher tidak valid.'; end if;
