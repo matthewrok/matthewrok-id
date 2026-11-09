@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Member Benefits · Matthew Joki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script src="/assets/js/access-guard.js?v=20261109-member-benefits"></script>
+  <script defer src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#050505;--panel:#0c0c0d;--panel2:#111214;--line:#292929;--text:#f5f5f5;--muted:#a1a1aa;--gold:#d4af37;--blue:#60a5fa;--green:#86efac}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#202020 0,transparent 48%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;padding-bottom:40px}
+    a{color:inherit}.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px max(18px,calc((100vw - 980px)/2));background:#080808eF;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+    .brand{font:700 13px Cinzel,serif;letter-spacing:1.8px}.back{font-size:11px;text-decoration:none;color:#d4d4d8;border:1px solid #383838;border-radius:9px;padding:9px 12px}
+    main{width:min(100% - 32px,920px);margin:0 auto}.hero{padding:34px 0 22px}.eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);font-weight:800}.hero h1{font:700 clamp(27px,6vw,42px)/1.15 Cinzel,serif;margin:12px 0 9px}.hero p{max-width:620px;color:var(--muted);font-size:13px;line-height:1.8;margin:0}
+    .current{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:20px;border:1px solid #665526;border-radius:16px;background:linear-gradient(125deg,#211b0e,#0c0c0c 70%);box-shadow:0 18px 55px #0007;margin:12px 0 25px}
+    .current small{display:block;color:#c5b47e;font-size:10px;letter-spacing:1.6px;font-weight:800}.current h2{font:700 clamp(18px,4vw,25px) Cinzel,serif;margin:7px 0}.current p{color:#c7c2b4;font-size:12px;line-height:1.6;margin:0}
+    .level-badge{min-width:94px;text-align:center;border:1px solid #b99535;background:#d4af371c;color:#f2d77e;border-radius:13px;padding:14px 10px;font-size:10px;font-weight:800;letter-spacing:1px}
+    .progress{margin-top:17px}.progress-head{display:flex;justify-content:space-between;gap:12px;color:#d4d4d8;font-size:11px;margin-bottom:8px}.track{height:7px;border-radius:20px;background:#292929;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#9c7925,#f4d77d);border-radius:20px;transition:width .35s}.hint{margin-top:8px!important;font-size:10px!important;color:#a3a3a3!important}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 13px}.section-head h2{font:600 17px Cinzel,serif;margin:0}.section-head span{color:var(--muted);font-size:10px}
+    .tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tier{position:relative;overflow:hidden;padding:17px 15px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(160deg,#141414,#090909);min-height:245px}.tier.current-tier{border-color:#b38d2e;box-shadow:inset 0 0 0 1px #b38d2e35}.tier-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.tier-number{font-size:9px;color:#a3a3a3;letter-spacing:1.5px}.tier-mark{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#ffffff0b;border:1px solid #ffffff1c;color:var(--gold);font-size:15px}.tier h3{font:700 15px Cinzel,serif;margin:14px 0 5px;line-height:1.4}.threshold{font-size:10px;color:var(--muted);margin-bottom:14px}.benefit-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}.benefit-list li{display:flex;gap:8px;align-items:flex-start;color:#d4d4d8;font-size:11px;line-height:1.55}.check{color:var(--green);font-weight:900}.soon{color:#e7c96c;font-size:9px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
+    .basic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.basic{display:flex;gap:11px;align-items:flex-start;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.basic-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;background:#ffffff0a;color:var(--gold);font-size:15px}.basic strong{display:block;font-size:11px;margin:1px 0 4px}.basic small{display:block;color:var(--muted);font-size:10px;line-height:1.55}
+    .note{margin-top:18px;padding:14px 15px;border:1px solid #333;border-radius:12px;background:#101010;color:#a1a1aa;font-size:10px;line-height:1.7}.note b{color:#e7c96c}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 36px}.action{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:9px;background:var(--gold);color:#090909;text-decoration:none;font-size:11px;font-weight:800}.action.secondary{background:transparent;color:#e5e5e5;border:1px solid #3b3b3b}
+    #state{padding:42px 12px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}#state strong{display:block;color:var(--text);font-size:14px;margin-bottom:5px}.spinner{display:inline-block;width:22px;height:22px;border:2px solid #555;border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}@keyframes spin{to{transform:rotate(360deg)}}
+    [hidden]{display:none!important}
+    @media(max-width:700px){.tiers{grid-template-columns:1fr}.tier{min-height:0}.basic-grid{grid-template-columns:1fr 1fr}.current{grid-template-columns:1fr auto;padding:16px}.level-badge{min-width:78px;padding:12px 7px}}
+    @media(max-width:420px){.basic-grid{grid-template-columns:1fr}.hero{padding-top:26px}.top{padding:13px 16px}}
+    @media(prefers-reduced-motion:reduce){.fill,.spinner{animation:none;transition:none}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="brand">MATTHEW JOKI <span style="color:var(--gold)">·</span> MEMBER BENEFITS</div><a class="back" href="/member-dashboard.html">← Kembali ke Akun</a></header>
+  <main>
+    <section class="hero"><span class="eyebrow">WARGA MEMBERSHIP PROGRAM</span><h1>Keistimewaan<br>Setiap Tingkatan.</h1><p>Setiap pesanan selesai membawamu lebih dekat ke tingkatan berikutnya. Kenali benefit yang kamu miliki dan perjalanan menuju level selanjutnya.</p></section>
+    <section class="current" aria-live="polite">
+      <div><small>TINGKATAN AKUN SAAT INI</small><h2 id="currentRole">Memeriksa akun...</h2><p id="currentCopy">Kami sedang menyiapkan ringkasan keanggotaanmu.</p>
+        <div class="progress"><div class="progress-head"><span id="progressLabel">Progres ke tingkatan berikutnya</span><b id="progressCount">—</b></div><div class="track"><div class="fill" id="progressFill"></div></div><p class="hint" id="progressHint"></p></div>
+      </div><div class="level-badge" id="levelBadge">MEMBER<br>LEVEL</div>
+    </section>
+    <div class="section-head"><h2>3 Tingkatan Warga</h2><span>Naik otomatis dari pesanan selesai</span></div>
+    <section class="tiers" aria-label="Perbandingan tingkatan membership">
+      <article class="tier" data-tier="warga biasa"><div class="tier-top"><span class="tier-number">LEVEL 01</span><span class="tier-mark">◇</span></div><h3>WARGA BIASA</h3><div class="threshold">0–6 pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Akses pemesanan layanan joki.</span></li><li><span class="check">✓</span><span>Lacak progress dan riwayat pesanan.</span></li><li><span class="check">✓</span><span>Invoice digital dan bantuan Customer Service.</span></li><li><span class="check">✓</span><span>Voucher publik yang memenuhi ketentuan.</span></li></ul></article>
+      <article class="tier" data-tier="warga tidak biasa"><div class="tier-top"><span class="tier-number">LEVEL 02</span><span class="tier-mark">✧</span></div><h3>WARGA TIDAK BIASA</h3><div class="threshold">7–18 pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Semua benefit Warga Biasa.</span></li><li><span class="check">✓</span><span>Identitas dan badge tingkatan khusus.</span></li><li><span class="soon">SEGERA</span><span>Prioritas antrean pengerjaan.</span></li><li><span class="soon">SEGERA</span><span>Akses voucher dan promo eksklusif.</span></li></ul></article>
+      <article class="tier" data-tier="warga sultan"><div class="tier-top"><span class="tier-number">LEVEL 03</span><span class="tier-mark">♛</span></div><h3>WARGA SULTAN</h3><div class="threshold">19+ pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Semua benefit Warga Tidak Biasa.</span></li><li><span class="check">✓</span><span>Badge Sultan eksklusif.</span></li><li><span class="soon">SEGERA</span><span>Prioritas antrean tertinggi.</span></li><li><span class="soon">SEGERA</span><span>Voucher khusus Sultan dan akses promo lebih awal.</span></li></ul></article>
+    </section>
+    <div class="section-head"><h2>Benefit Dasar Semua Warga</h2><span>Aktif untuk ketiga tingkatan</span></div>
+    <section class="basic-grid">
+      <article class="basic"><span class="basic-icon">⌁</span><div><strong>Tracking Pesanan</strong><small>Pantau status dan progress pengerjaan dari akun.</small></div></article>
+      <article class="basic"><span class="basic-icon">▤</span><div><strong>Invoice Digital</strong><small>Ringkasan transaksi yang bisa dicetak atau disimpan PDF.</small></div></article>
+      <article class="basic"><span class="basic-icon">✉</span><div><strong>Inbox Matthew</strong><small>Terima informasi dan pembaruan resmi akun.</small></div></article>
+      <article class="basic"><span class="basic-icon">♡</span><div><strong>Ulasan Pelanggan</strong><small>Bagikan pengalaman setelah pesanan selesai.</small></div></article>
+    </section>
+    <p class="note"><b>Catatan:</b> Status tingkatan dihitung otomatis dari jumlah pesanan berstatus <b>Selesai</b>: Warga Tidak Biasa mulai 7 pesanan dan Warga Sultan mulai 19 pesanan. Benefit bertanda <b>SEGERA</b> ditampilkan sebagai roadmap dan belum dapat diklaim atau digunakan sampai sistem pendukungnya diaktifkan. Akun ADMIN tetap memiliki pengecualian dan tidak mengikuti sistem membership.</p>
+    <div class="actions"><a class="action" href="/your-order.html">Lacak Pesanan</a><a class="action secondary" href="/member-dashboard.html">Kembali ke Member Center</a></div>
+  </main>
+  <div id="state" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span><strong>Memuat keanggotaan...</strong>Memverifikasi data akun.</div>
+  <script>
+  (async()=>{
+    const state=document.getElementById('state');
+    const currentRole=document.getElementById('currentRole');
+    const safeRole=v=>String(v||'').trim().toLowerCase();
+    const roleNames={'warga biasa':'WARGA BIASA','warga tidak biasa':'WARGA TIDAK BIASA','warga sultan':'WARGA SULTAN'};
+    const showError=(title,detail)=>{state.hidden=false;state.innerHTML='<strong>'+title+'</strong>'+detail+'<br><a href="/member-dashboard.html" style="color:#e7c96c">Kembali ke Member Center</a>';};
+    try{
+      const client=window.supabaseClient;
+      if(!client?.auth)throw new Error('Koneksi akun belum tersedia. Muat ulang halaman.');
+      if(window.__matthewAccessReady)await window.__matthewAccessReady;
+      const user=window.__matthewVerifiedUser;
+      if(!user)throw new Error('Sesi akun tidak ditemukan. Silakan login kembali.');
+      const profileResult=await client.from('profiles').select('full_name,role,account_status').eq('id',user.id).maybeSingle();
+      if(profileResult.error)throw profileResult.error;
+      const profile=profileResult.data;
+      if(!profile||String(profile.account_status||'').toLowerCase()!=='active')throw new Error('Akun tidak aktif atau profil tidak ditemukan.');
+      const role=safeRole(profile.role);
+      if(role==='admin'){
+        currentRole.textContent='ADMIN';
+        document.getElementById('currentCopy').textContent='Akun administrator dilindungi dan tidak mengikuti tingkatan maupun benefit membership warga.';
+        document.getElementById('levelBadge').innerHTML='ROLE<br>ADMIN';
+        document.getElementById('progressLabel').textContent='Status akun';
+        document.getElementById('progressCount').textContent='TERLINDUNGI';
+        document.getElementById('progressFill').style.width='100%';
+        document.getElementById('progressHint').textContent='Perhitungan pesanan dan kenaikan warga tidak berlaku untuk ADMIN.';
+        document.querySelector('.tiers').style.opacity='.55';
+        state.hidden=true;return;
+      }
+      if(!roleNames[role])throw new Error('Role akun belum dikenali. Hubungi admin Matthew.');
+      const orderResult=await client.rpc('list_my_joki_orders');
+      if(orderResult.error)throw orderResult.error;
+      const orders=Array.isArray(orderResult.data)?orderResult.data:[];
+      const completed=orders.filter(o=>String(o.status||'').trim().toLowerCase()==='selesai').length;
+      const levels=[{role:'warga biasa',name:'WARGA BIASA',min:0,next:7},{role:'warga tidak biasa',name:'WARGA TIDAK BIASA',min:7,next:19},{role:'warga sultan',name:'WARGA SULTAN',min:19,next:null}];
+      const current=levels.find(x=>x.role===role)||levels[0];
+      const next=levels.find(x=>x.min===current.next);
+      currentRole.textContent=roleNames[role];
+      document.getElementById('currentCopy').textContent='Halo, '+(profile.full_name||user.email?.split('@')[0]||'Warga')+'. Kamu memiliki '+completed+' pesanan selesai.';
+      document.getElementById('levelBadge').innerHTML=current.role==='warga sultan'?'♛<br>SULTAN':current.role==='warga tidak biasa'?'✧<br>LEVEL 02':'◇<br>LEVEL 01';
+      document.getElementById('progressCount').textContent=next?completed+'/'+next.min+' pesanan':'LEVEL MAKSIMUM';
+      document.getElementById('progressFill').style.width=next?Math.min(100,Math.round((completed/next.min)*100))+'%':'100%';
+      document.getElementById('progressHint').textContent=next?'Butuh '+Math.max(0,next.min-completed)+' pesanan selesai lagi untuk mencapai '+next.name+'.':'Kamu sudah mencapai tingkatan tertinggi.';
+      document.querySelectorAll('[data-tier]').forEach(card=>{if(card.dataset.tier===role){card.classList.add('current-tier');const label=document.createElement('div');label.className='soon';label.textContent='TINGKATAN KAMU';label.style.marginTop='12px';card.appendChild(label);}});
+      state.hidden=true;
+    }catch(error){console.error('[Member Benefits]',error);showError('Benefit belum dapat dimuat',error?.message||'Terjadi kesalahan saat mengambil data akun.');}
+  })();
+  </script>
+</body>
+</html>
