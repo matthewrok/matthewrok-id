@@ -25,6 +25,7 @@ on:
       - "email-confirmed/**"
       - "404.html"
       - "member-dashboard.html"
+      - "assets/js/member-dashboard.js"
       - "worker.html"
       - "inbox.html"
       - "your-order.html"
