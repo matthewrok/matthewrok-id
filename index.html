@@ -107,6 +107,9 @@
         .btn-outline { display: block; text-align: center; width: 100%; border: 1px solid var(--border-color); color: white; padding: 12px; text-decoration: none; border-radius: 4px; font-size: 12px; transition: 0.3s; font-weight: 600; letter-spacing: 1px; }
         .btn-outline:hover { background: white; color: black; }
 
+
+        .wishlist-toggle{display:block;width:100%;margin-top:8px;padding:10px;border:1px solid rgba(212,175,55,.45);border-radius:4px;background:transparent;color:var(--accent-gold);font-size:10px;font-weight:700;letter-spacing:.8px;cursor:pointer;transition:background .2s,border-color .2s}.wishlist-toggle:hover,.wishlist-toggle[aria-pressed="true"]{background:rgba(212,175,55,.12);border-color:var(--accent-gold)}.wishlist-toggle:disabled{opacity:.55;cursor:not-allowed}
+
         /* ================= REVIEWS ================= */
         .review-scroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 5px; }
         .review-scroll::-webkit-scrollbar { display: none; }
@@ -256,6 +259,7 @@
                             <li><span>Deadline</span> <strong>1-2 Hari</strong></li>
                         </ul>
                         <a href="#" class="btn-outline" data-order-product="ch11">PESAN PAKET</a>
+                        <button type="button" class="wishlist-toggle" data-wishlist-product="ch11" aria-pressed="false">♡ SIMPAN</button>
                     </div>
                     <div class="product-card">
                         <div class="product-tier">02 · ADVANCED</div>
@@ -267,6 +271,7 @@
                             <li><span>Deadline</span> <strong>3-5 Hari</strong></li>
                         </ul>
                         <a href="#" class="btn-outline" data-order-product="ch13">PESAN PAKET</a>
+                        <button type="button" class="wishlist-toggle" data-wishlist-product="ch13" aria-pressed="false">♡ SIMPAN</button>
                     </div>
                     <div class="product-card">
                         <div class="product-tier">03 · ELITE</div>
@@ -280,6 +285,7 @@
                             <li><span>Deadline</span> <strong>10–15 Hari</strong></li>
                         </ul>
                         <a href="#" class="btn-outline" data-order-product="ch17">PESAN PAKET</a>
+                        <button type="button" class="wishlist-toggle" data-wishlist-product="ch17" aria-pressed="false">♡ SIMPAN</button>
                     </div>
                 </div>
             </section>
@@ -470,6 +476,7 @@
     <script defer src="/assets/js/home.js?v=20261108-perf1"></script>
     <script defer src="/assets/js/home-visitor.js"></script>
     <script defer src="/assets/js/home-orders.js?v=20261104-5"></script>
+    <script defer src="/assets/js/wishlist.js?v=20261109-2"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
 </html>
