@@ -140,18 +140,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
-    const visitorsResult = await client.from("visitor_logs")
-      .select("id, visitor_name, visited_at", { count: "exact" })
-      .order("visited_at", { ascending: false })
-      .limit(10);
+    async function loadVisitors() {
+      const visitorsBody = document.getElementById("visitorsBody");
+      const visitorsResult = await client.from("visitor_logs")
+        .select("id, visitor_name, visited_at", { count: "exact" })
+        .order("visited_at", { ascending: false })
+        .limit(10);
 
-    await loadMembers();
+      if (visitorsResult.error) {
+        emptyRow(visitorsBody, 2, "Log kunjungan belum tersedia. Pastikan supabase/visitor-logs-setup.sql sudah dijalankan.");
+        document.getElementById("visitorCount").textContent = "—";
+        console.warn("Log kunjungan tidak tersedia:", visitorsResult.error.message);
+        return;
+      }
 
-    const visitorsBody = document.getElementById("visitorsBody");
-    if (visitorsResult.error) {
-      emptyRow(visitorsBody, 2, "Log kunjungan belum tersedia. Pastikan supabase/visitor-logs-setup.sql sudah dijalankan.");
-      document.getElementById("visitorCount").textContent = "—";
-    } else {
       document.getElementById("visitorCount").textContent = String(visitorsResult.count ?? visitorsResult.data.length);
       if (!visitorsResult.data.length) emptyRow(visitorsBody, 2, "Belum ada kunjungan tercatat.");
       else {
@@ -163,9 +165,43 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
       }
     }
-    await loadStatisticsAndActivity();
-    document.getElementById("lastUpdated").textContent = dateFormat.format(new Date());
-    showNotice("Dashboard dimuat. Role anggota diperbarui otomatis berdasarkan jumlah pesanan selesai.");
+
+    const refreshButton = document.getElementById("refreshDashboardButton");
+    let refreshInProgress = false;
+    async function refreshDashboard(quiet = false) {
+      if (refreshInProgress || document.visibilityState !== "visible") return;
+      refreshInProgress = true;
+      if (refreshButton) {
+        refreshButton.disabled = true;
+        refreshButton.textContent = "↻ Memperbarui…";
+      }
+      if (!quiet) showNotice("Memperbarui ringkasan, pengguna, pesanan, dan kunjungan…");
+      try {
+        await Promise.all([loadMembers(), loadVisitors(), loadStatisticsAndActivity()]);
+        document.getElementById("lastUpdated").textContent = dateFormat.format(new Date());
+        if (!quiet) showNotice("Data dashboard berhasil diperbarui.");
+        else showNotice("Dashboard aktif · data diperbarui otomatis.");
+      } catch (error) {
+        console.error("Dashboard refresh error:", error);
+        showNotice("Pembaruan data gagal. Periksa koneksi dan kebijakan RLS Supabase.", true);
+      } finally {
+        refreshInProgress = false;
+        if (refreshButton) {
+          refreshButton.disabled = false;
+          refreshButton.textContent = "↻ Perbarui data";
+        }
+      }
+    }
+
+    refreshButton?.addEventListener("click", () => refreshDashboard(false));
+    window.setInterval(() => {
+      if (document.visibilityState === "visible") refreshDashboard(true);
+    }, 60_000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") refreshDashboard(true);
+    });
+
+    await refreshDashboard(true);
   } catch (error) {
     console.error("Admin dashboard error:", error);
     showNotice("Terjadi kesalahan saat memverifikasi atau memuat dashboard. Periksa koneksi dan kebijakan RLS Supabase.", true);
