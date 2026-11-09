@@ -1,5 +1,5 @@
 -- Weekly member vouchers for Warga Tidak Biasa and Warga Sultan.
--- Run after the frontend changes are deployed. Weekly generation runs Monday 00:00 Asia/Jakarta.
+-- Apply this SQL to Supabase before publishing the frontend changes. Weekly generation runs Monday 00:00 Asia/Jakarta.
 
 create extension if not exists pg_cron with schema pg_catalog;
 create schema if not exists private;
