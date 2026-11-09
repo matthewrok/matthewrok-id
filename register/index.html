@@ -182,6 +182,16 @@
                     </div>
                 </div>
 
+                <!-- Kode Referral (opsional) -->
+                <div class="input-group">
+                    <label for="referralCode">Kode Referral (Opsional)</label>
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h16"/><circle cx="18" cy="12" r="2"/></svg>
+                        <input type="text" id="referralCode" name="referralCode" class="form-control" placeholder="Masukkan kode teman jika ada" autocomplete="off" maxlength="12" autocapitalize="characters">
+                    </div>
+                    <small style="display:block;color:#9ca3af;font-size:10px;line-height:1.5;margin:7px 2px 0">Kamu dan teman yang mengundang masing-masing mendapat 100 poin setelah transaksi pertamamu selesai.</small>
+                </div>
+
                 <!-- Password -->
                 <div class="input-group">
                     <label for="password">Password</label>
@@ -223,7 +233,7 @@
     <script defer src="/assets/js/monitoring.js?v=20261107-pr3"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="/assets/js/supabase.js"></script>
-    <script defer src="/assets/js/auth.js?v=20261109-verified-email-guard"></script>
+    <script defer src="/assets/js/auth.js?v=20261109-referral1"></script>
     <script defer src="/assets/js/session-manager.js?v=20261108-authfix2"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
     <script>
