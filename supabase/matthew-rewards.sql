@@ -36,7 +36,7 @@ create table if not exists public.matthew_reward_redemptions (
   expires_at timestamptz not null default (now() + interval '30 days'),
   used_at timestamptz,
   order_id uuid references public.joki_progress(id) on delete set null,
-  constraint matthew_reward_redemptions_use_pair check ((used_at is null and order_id is null) or (used_at is not null and order_id is not null))
+  constraint matthew_reward_redemptions_use_pair check ((used_at is null and order_id is null) or used_at is not null)
 );
 
 alter table public.matthew_reward_transactions
@@ -425,6 +425,7 @@ set search_path = ''
 as $function$
 declare
   v_result jsonb;
+  v_transactions jsonb;
 begin
   if not exists(
     select 1 from public.profiles p
@@ -446,7 +447,17 @@ begin
     group by p.id,p.full_name,u.email,p.role
   ) x;
 
-  return jsonb_build_object('members',v_result);
+  select coalesce(jsonb_agg(to_jsonb(t) order by t.created_at desc),'[]'::jsonb)
+  into v_transactions
+  from (
+    select x.id,x.user_id,p.full_name,u.email,x.points_delta,x.event_type,x.description,x.created_at
+    from public.matthew_reward_transactions x
+    join public.profiles p on p.id=x.user_id
+    join auth.users u on u.id=x.user_id
+    order by x.created_at desc limit 50
+  ) t;
+
+  return jsonb_build_object('members',v_result,'transactions',v_transactions);
 end;
 $function$;
 
