@@ -55,9 +55,9 @@
   document.getElementById("profileRole").textContent=profile.role||"MEMBER";
   document.getElementById("profileJoined").textContent=profile.created_at?new Date(profile.created_at).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"—";
   document.getElementById("memberLevel").textContent=level.name;
-  document.getElementById("levelDescription").textContent="Level "+level.name+" · dihitung dari jumlah pesanan berstatus Selesai.";
-  document.getElementById("levelBar").style.width=(next?Math.min(100,Math.round((done-level.min)/(next.min-level.min)*100)):100)+"%";
-  document.getElementById("nextLevel").textContent=next?"Selesaikan "+Math.max(0,next.min-done)+" pesanan lagi untuk mencapai "+next.name+".":"Level tertinggi telah tercapai.";
+  document.getElementById("levelDescription").textContent=isAdmin?"ADMIN · tidak mengikuti progres membership.":level.name+" · dihitung dari jumlah pesanan berstatus Selesai.";
+  document.getElementById("levelBar").style.width=isAdmin?"0%":(next?Math.min(100,Math.round((done-level.min)/(next.min-level.min)*100)):100)+"%";
+  document.getElementById("nextLevel").textContent=isAdmin?"ADMIN tidak mengikuti sistem tingkatan Warga.":next?"Selesaikan "+Math.max(0,next.min-done)+" pesanan lagi untuk mencapai "+next.name+".":"Tingkatan tertinggi telah tercapai.";
   const recent=document.getElementById("recentOrders");
   recent.innerHTML=list.length?list.slice(0,5).map(o=>'<div class="member-order"><div><strong>'+escapeHtml(o.service_name||"Layanan")+'</strong><small>'+escapeHtml(o.order_number||"—")+' · Kingdom '+escapeHtml(o.kingdom_number||"—")+' · '+escapeHtml(o.status||"Menunggu")+' · '+money(o.total_price)+'</small></div><button type="button" data-invoice="'+escapeHtml(o.id)+'">INVOICE</button></div>').join(""):'<div class="member-empty">Belum ada pesanan.</div>';
   document.getElementById("notifications").innerHTML=list.length?list.slice().sort((a,b)=>new Date(b.updated_at||b.created_at)-new Date(a.updated_at||a.created_at)).slice(0,4).map(o=>'<div class="member-note"><strong>'+escapeHtml(o.order_number||"Pesanan")+' · '+escapeHtml(o.status||"Menunggu")+'</strong>'+escapeHtml(o.progress_note||("Status pesanan diperbarui. Progres "+(o.progress_percent||0)+"%."))+'<br><small>'+new Date(o.updated_at||o.created_at).toLocaleString("id-ID")+'</small></div>').join(""):'Belum ada pembaruan pesanan.';
