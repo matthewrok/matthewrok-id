@@ -26,6 +26,10 @@
     .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 13px}.section-head h2{font:600 17px Cinzel,serif;margin:0}.section-head span{color:var(--muted);font-size:10px}
     .tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tier{position:relative;overflow:hidden;padding:17px 15px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(160deg,#141414,#090909);min-height:245px}.tier.current-tier{border-color:#b38d2e;box-shadow:inset 0 0 0 1px #b38d2e35}.tier-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.tier-number{font-size:9px;color:#a3a3a3;letter-spacing:1.5px}.tier-mark{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#ffffff0b;border:1px solid #ffffff1c;color:var(--gold);font-size:15px}.tier h3{font:700 15px Cinzel,serif;margin:14px 0 5px;line-height:1.4}.threshold{font-size:10px;color:var(--muted);margin-bottom:14px}.benefit-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}.benefit-list li{display:flex;gap:8px;align-items:flex-start;color:#d4d4d8;font-size:11px;line-height:1.55}.check{color:var(--green);font-weight:900}.soon{color:#e7c96c;font-size:9px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
     .basic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.basic{display:flex;gap:11px;align-items:flex-start;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.basic-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;background:#ffffff0a;color:var(--gold);font-size:15px}.basic strong{display:block;font-size:11px;margin:1px 0 4px}.basic small{display:block;color:var(--muted);font-size:10px;line-height:1.55}
+
+    .weekly-vouchers{margin-top:28px;padding:20px;border:1px solid #80672d;border-radius:16px;background:linear-gradient(145deg,#1d190f,#0b0b0b 68%);box-shadow:0 16px 40px #0006}.weekly-vouchers h2{font:600 18px Cinzel,serif;margin:0 0 7px;color:#f4d77d}.weekly-vouchers>p{margin:0;color:#b8b2a4;font-size:11px;line-height:1.7}.voucher-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}.weekly-voucher{padding:15px;border:1px solid #4a4029;border-radius:12px;background:#090909}.weekly-voucher strong{display:block;color:#f1d27a;font-size:12px;margin-bottom:5px}.weekly-voucher small{display:block;color:#a1a1aa;font-size:10px;line-height:1.6}.weekly-voucher code{display:inline-block;margin:10px 0;padding:8px 10px;border:1px dashed #8c7134;border-radius:8px;color:#fff1bb;font-size:12px;letter-spacing:.7px;overflow-wrap:anywhere}.claim-voucher{display:inline-flex;align-items:center;justify-content:center;min-height:37px;padding:0 13px;border:0;border-radius:8px;background:#d4af37;color:#090909;font-size:10px;font-weight:800;cursor:pointer}.claim-voucher:disabled{opacity:.55;cursor:wait}.voucher-status{margin-top:7px!important;color:#c9c1ac!important}.voucher-empty{margin-top:14px!important;padding:12px;border:1px dashed #51452b;border-radius:10px}.voucher-expiry{color:#e7c96c!important}
+    @media(max-width:600px){.voucher-grid{grid-template-columns:1fr}}
+
     .note{margin-top:18px;padding:14px 15px;border:1px solid #333;border-radius:12px;background:#101010;color:#a1a1aa;font-size:10px;line-height:1.7}.note b{color:#e7c96c}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 36px}.action{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:9px;background:var(--gold);color:#090909;text-decoration:none;font-size:11px;font-weight:800}.action.secondary{background:transparent;color:#e5e5e5;border:1px solid #3b3b3b}
     #state{padding:42px 12px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}#state strong{display:block;color:var(--text);font-size:14px;margin-bottom:5px}.spinner{display:inline-block;width:22px;height:22px;border:2px solid #555;border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}@keyframes spin{to{transform:rotate(360deg)}}
@@ -47,8 +51,8 @@
     <div class="section-head"><h2>3 Tingkatan Warga</h2><span>Naik otomatis dari pesanan selesai</span></div>
     <section class="tiers" aria-label="Perbandingan tingkatan membership">
       <article class="tier" data-tier="warga biasa"><div class="tier-top"><span class="tier-number">LEVEL 01</span><span class="tier-mark">◇</span></div><h3>WARGA BIASA</h3><div class="threshold">0–6 pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Akses pemesanan layanan joki.</span></li><li><span class="check">✓</span><span>Lacak progress dan riwayat pesanan.</span></li><li><span class="check">✓</span><span>Invoice digital dan bantuan Customer Service.</span></li><li><span class="check">✓</span><span>Voucher publik yang memenuhi ketentuan.</span></li></ul></article>
-      <article class="tier" data-tier="warga tidak biasa"><div class="tier-top"><span class="tier-number">LEVEL 02</span><span class="tier-mark">✧</span></div><h3>WARGA TIDAK BIASA</h3><div class="threshold">7–18 pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Semua benefit Warga Biasa.</span></li><li><span class="check">✓</span><span>Identitas dan badge tingkatan khusus.</span></li><li><span class="soon">SEGERA</span><span>Prioritas antrean pengerjaan.</span></li><li><span class="soon">SEGERA</span><span>Akses voucher dan promo eksklusif.</span></li></ul></article>
-      <article class="tier" data-tier="warga sultan"><div class="tier-top"><span class="tier-number">LEVEL 03</span><span class="tier-mark">♛</span></div><h3>WARGA SULTAN</h3><div class="threshold">19+ pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Semua benefit Warga Tidak Biasa.</span></li><li><span class="check">✓</span><span>Badge Sultan eksklusif.</span></li><li><span class="soon">SEGERA</span><span>Prioritas antrean tertinggi.</span></li><li><span class="soon">SEGERA</span><span>Voucher khusus Sultan dan akses promo lebih awal.</span></li></ul></article>
+      <article class="tier" data-tier="warga tidak biasa"><div class="tier-top"><span class="tier-number">LEVEL 02</span><span class="tier-mark">✧</span></div><h3>WARGA TIDAK BIASA</h3><div class="threshold">7–18 pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Semua benefit Warga Biasa.</span></li><li><span class="check">✓</span><span>Identitas dan badge tingkatan khusus.</span></li><li><span class="soon">SEGERA</span><span>Prioritas antrean pengerjaan.</span></li><li><span class="check">✓</span><span>Voucher mingguan MATTHEW dengan diskon 3% (klaim satu kali, berlaku 7 hari).</span></li><li><span class="soon">SEGERA</span><span>Akses promo 1 hari lebih awal.</span></li></ul></article>
+      <article class="tier" data-tier="warga sultan"><div class="tier-top"><span class="tier-number">LEVEL 03</span><span class="tier-mark">♛</span></div><h3>WARGA SULTAN</h3><div class="threshold">19+ pesanan selesai</div><ul class="benefit-list"><li><span class="check">✓</span><span>Semua benefit dasar Warga Tidak Biasa.</span></li><li><span class="check">✓</span><span>Badge Sultan eksklusif.</span></li><li><span class="soon">SEGERA</span><span>Prioritas antrean tertinggi.</span></li><li><span class="check">✓</span><span>Voucher mingguan MATTHEW dengan diskon 5% (klaim satu kali, berlaku 7 hari).</span></li><li><span class="soon">SEGERA</span><span>Akses promo 2 hari lebih awal.</span></li></ul></article>
     </section>
     <div class="section-head"><h2>Benefit Dasar Semua Warga</h2><span>Aktif untuk ketiga tingkatan</span></div>
     <section class="basic-grid">
@@ -57,6 +61,7 @@
       <article class="basic"><span class="basic-icon">✉</span><div><strong>Inbox Matthew</strong><small>Terima informasi dan pembaruan resmi akun.</small></div></article>
       <article class="basic"><span class="basic-icon">♡</span><div><strong>Ulasan Pelanggan</strong><small>Bagikan pengalaman setelah pesanan selesai.</small></div></article>
     </section>
+    <section class="weekly-vouchers" id="weeklyVoucherSection" hidden aria-live="polite"><h2>Voucher Mingguan MATTHEW</h2><p>Voucher khusus Warga Tidak Biasa (3%) dan Warga Sultan (5%). Klaim voucher agar masuk ke akunmu. Setiap voucher hanya dapat diklaim dan digunakan satu kali, dengan masa berlaku 7 hari sejak diterbitkan.</p><div class="voucher-grid" id="weeklyVoucherList"><p class="voucher-empty">Memeriksa voucher mingguan…</p></div></section>
     <p class="note"><b>Catatan:</b> Status tingkatan dihitung otomatis dari jumlah pesanan berstatus <b>Selesai</b>: Warga Tidak Biasa mulai 7 pesanan dan Warga Sultan mulai 19 pesanan. Benefit bertanda <b>SEGERA</b> ditampilkan sebagai roadmap dan belum dapat diklaim atau digunakan sampai sistem pendukungnya diaktifkan. Akun ADMIN tetap memiliki pengecualian dan tidak mengikuti sistem membership.</p>
     <div class="actions"><a class="action" href="/your-order.html">Lacak Pesanan</a><a class="action secondary" href="/member-dashboard.html">Kembali ke Member Center</a></div>
   </main>
@@ -68,6 +73,41 @@
     const safeRole=v=>String(v||'').trim().toLowerCase();
     const roleNames={'warga biasa':'WARGA BIASA','warga tidak biasa':'WARGA TIDAK BIASA','warga sultan':'WARGA SULTAN'};
     const showError=(title,detail)=>{state.hidden=false;state.innerHTML='<strong>'+title+'</strong>'+detail+'<br><a href="/member-dashboard.html" style="color:#e7c96c">Kembali ke Member Center</a>';};
+    async function loadWeeklyVouchers(client,role,userId){
+      const section=document.getElementById('weeklyVoucherSection');
+      const list=document.getElementById('weeklyVoucherList');
+      if(!['warga tidak biasa','warga sultan'].includes(role)){section.hidden=true;return;}
+      section.hidden=false;
+      list.replaceChildren();
+      const {data:vouchers,error}=await client.from('vouchers').select('id,code,description,discount_value,expires_at').eq('campaign_type','weekly').eq('is_active',true).order('created_at',{ascending:false}).limit(10);
+      if(error){const p=document.createElement('p');p.className='voucher-empty';p.textContent='Voucher mingguan belum dapat dimuat. Silakan coba lagi nanti.';list.append(p);console.warn('[Weekly vouchers]',error.message);return;}
+      const {data:claims,error:claimError}=await client.from('voucher_claims').select('voucher_id,claimed_at,redeemed_at').eq('user_id',userId);
+      if(claimError){const p=document.createElement('p');p.className='voucher-empty';p.textContent='Status klaim voucher belum dapat diperiksa.';list.append(p);console.warn('[Voucher claims]',claimError.message);return;}
+      const eligible=(vouchers||[]).filter(v=>Number(v.discount_value)===(role==='warga sultan'?5:3));
+      if(!eligible.length){const p=document.createElement('p');p.className='voucher-empty';p.textContent='Belum ada voucher mingguan aktif. Voucher baru akan otomatis tersedia setiap Senin pukul 00.00 WIB.';list.append(p);return;}
+      eligible.forEach(v=>{
+        const claim=(claims||[]).find(c=>c.voucher_id===v.id);
+        const card=document.createElement('article');card.className='weekly-voucher';
+        const title=document.createElement('strong');title.textContent='Diskon '+Number(v.discount_value)+'% · Voucher Mingguan';
+        const desc=document.createElement('small');desc.textContent=v.description||'Voucher khusus membership MATTHEW JOKI.';
+        const expiry=document.createElement('small');expiry.className='voucher-expiry';expiry.textContent='Berlaku sampai '+new Intl.DateTimeFormat('id-ID',{dateStyle:'medium',timeStyle:'short'}).format(new Date(v.expires_at));
+        card.append(title,desc,expiry);
+        if(claim){
+          const code=document.createElement('code');code.textContent=v.code;card.append(code);
+          const status=document.createElement('small');status.className='voucher-status';status.textContent=claim.redeemed_at?'Voucher sudah digunakan.':'Voucher berhasil diklaim dan siap digunakan saat pemesanan.';card.append(status);
+        }else{
+          const button=document.createElement('button');button.type='button';button.className='claim-voucher';button.textContent='KLAIM VOUCHER';
+          button.addEventListener('click',async()=>{
+            button.disabled=true;button.textContent='MENGKLAIM…';
+            const {error:claimRpcError}=await client.rpc('claim_weekly_voucher',{p_voucher_id:v.id});
+            if(claimRpcError){button.disabled=false;button.textContent='KLAIM VOUCHER';const status=document.createElement('small');status.className='voucher-status';status.textContent=claimRpcError.message||'Voucher gagal diklaim.';card.append(status);return;}
+            await loadWeeklyVouchers(client,role,userId);
+          });
+          card.append(button);
+        }
+        list.append(card);
+      });
+    }
     try{
       const client=window.supabaseClient;
       if(!client?.auth)throw new Error('Koneksi akun belum tersedia. Muat ulang halaman.');
@@ -107,6 +147,7 @@
       document.getElementById('progressFill').style.width=next?Math.min(100,Math.round((progressDone/progressTarget)*100))+'%':'100%';
       document.getElementById('progressHint').textContent=next?'Butuh '+Math.max(0,progressTarget-progressDone)+' pesanan selesai lagi untuk mencapai '+next.name+'.':'Kamu sudah mencapai tingkatan tertinggi.';
       document.querySelectorAll('[data-tier]').forEach(card=>{if(card.dataset.tier===role){card.classList.add('current-tier');const label=document.createElement('div');label.className='soon';label.textContent='TINGKATAN KAMU';label.style.marginTop='12px';card.appendChild(label);}});
+      await loadWeeklyVouchers(client,role,user.id);
       state.hidden=true;
     }catch(error){console.error('[Member Benefits]',error);showError('Benefit belum dapat dimuat',error?.message||'Terjadi kesalahan saat mengambil data akun.');}
   })();
