@@ -17,6 +17,7 @@ test("Member Benefits links to Matthew Rewards", async ({ request }) => {
   const html = await response.text();
   expect(html).toContain('href="/member-rewards.html"');
   expect(html).toContain("Matthew Rewards");
+  expect(html).not.toContain("</section>\\n    <section");
 });
 
 test("Rewards migration awards points only after completion and protects admin", async ({ request }) => {
@@ -31,6 +32,7 @@ test("Rewards migration awards points only after completion and protects admin",
   expect(sql).toContain("p_points % 500 <> 0");
   expect(sql).toContain("r.user_id=v_user_id");
   expect(sql).toContain("r.used_at is null and r.expires_at>now()");
+  expect(sql).toContain("site_maintenance_config");
 });
 
 test("Admin Rewards dashboard is protected by admin-only database RPC", async ({ request }) => {
