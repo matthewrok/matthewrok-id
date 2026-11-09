@@ -33,7 +33,7 @@ create table if not exists public.matthew_reward_redemptions (
   points_spent integer not null check (points_spent >= 500 and points_spent % 500 = 0),
   discount_amount integer not null check (discount_amount = points_spent * 10),
   created_at timestamptz not null default now(),
-  expires_at timestamptz not null default (now() + interval '30 days'),
+  expires_at timestamptz not null,
   used_at timestamptz,
   order_id uuid references public.joki_progress(id) on delete set null,
   constraint matthew_reward_redemptions_use_pair check ((used_at is null and order_id is null) or used_at is not null)
@@ -233,6 +233,7 @@ declare
   v_redemption_id uuid;
   v_code text;
   v_discount integer;
+  v_code_expires_at timestamptz;
 begin
   if v_user_id is null or coalesce(auth.jwt()->>'is_anonymous','false') = 'true' then
     raise exception 'Login diperlukan untuk menukarkan poin.';
@@ -259,12 +260,7 @@ begin
   v_discount := p_points * 10;
   v_code := 'MR-' || upper(substr(replace(gen_random_uuid()::text,'-',''),1,12));
 
-  insert into public.matthew_reward_redemptions(
-    user_id,code,points_spent,discount_amount,expires_at
-  )
-  values(v_user_id,v_code,p_points,v_discount,now()+interval '30 days')
-  returning id into v_redemption_id;
-
+  v_redemption_id := gen_random_uuid();
   v_remaining := p_points;
   for v_lot in
     select id,remaining_points
@@ -275,6 +271,7 @@ begin
   loop
     exit when v_remaining <= 0;
     v_take := least(v_remaining,v_lot.remaining_points);
+    v_code_expires_at := least(coalesce(v_code_expires_at,v_lot.expires_at),v_lot.expires_at);
     update public.matthew_reward_lots
     set remaining_points=remaining_points-v_take
     where id=v_lot.id;
@@ -282,6 +279,10 @@ begin
   end loop;
 
   if v_remaining <> 0 then raise exception 'Saldo poin berubah. Silakan ulangi penukaran.'; end if;
+
+  insert into public.matthew_reward_redemptions(
+    id,user_id,code,points_spent,discount_amount,expires_at
+  ) values(v_redemption_id,v_user_id,v_code,p_points,v_discount,v_code_expires_at);
 
   insert into public.matthew_reward_transactions(
     user_id,redemption_id,points_delta,event_type,description
@@ -293,7 +294,7 @@ begin
 
   return jsonb_build_object(
     'code',v_code,'points_spent',p_points,'discount_amount',v_discount,
-    'expires_at',now()+interval '30 days'
+    'expires_at',v_code_expires_at
   );
 end;
 $function$;
