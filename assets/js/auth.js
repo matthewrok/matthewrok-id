@@ -267,6 +267,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (registerForm) {
+    const referralCodeField = document.getElementById("referralCode");
+    const referralFromUrl = new URLSearchParams(window.location.search).get("ref");
+    if (referralCodeField && referralFromUrl) referralCodeField.value = referralFromUrl.trim().toUpperCase();
     registerForm.addEventListener("submit", async event => {
       event.preventDefault(); showMessage(""); setBusy(registerForm, true, "MEMBUAT AKUN...");
       // Support both the legacy registration IDs and the Shadow Reign form IDs.
@@ -277,7 +280,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (password.length < 6) { showMessage("Password minimal 6 karakter.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       if (password !== confirmPassword) { showMessage("Konfirmasi password tidak sama. Periksa kembali penulisannya.", "error"); setBusy(registerForm, false, "BUAT AKUN"); return; }
       try {
-        const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed/" } });
+        const referralCode = String(referralCodeField?.value || "").trim().toUpperCase();
+        if (referralCode) {
+          const { data: isValid, error: referralError } = await client.rpc("validate_referral_code", { p_code: referralCode });
+          if (referralError) throw referralError;
+          if (isValid !== true) {
+            showMessage("Kode referral tidak ditemukan atau pemiliknya tidak aktif. Periksa kembali kodenya.", "error");
+            setBusy(registerForm, false, "BUAT AKUN");
+            return;
+          }
+        }
+        const metadata = { full_name: fullName };
+        if (referralCode) metadata.referral_code = referralCode;
+        const { data, error } = await client.auth.signUp({ email, password, options: { data: metadata, emailRedirectTo: window.location.origin + "/email-confirmed/" } });
         if (error) throw error;
         // Supabase mengembalikan identities kosong untuk email yang sudah memiliki akun terverifikasi.
         // Hentikan alur sebelum menampilkan sukses atau menyediakan tombol kirim ulang verifikasi.

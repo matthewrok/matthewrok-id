@@ -856,3 +856,27 @@ test("homepage preconnects critical origins and loads optional Sentry only when 
   assert.match(html, /requestIdleCallback/);
   assert.doesNotMatch(html, /<script defer src="https:\/\/browser\.sentry-cdn\.com/);
 });
+
+
+test("Matthew Referral awards equal 499-point bonuses only after the referred member completes a transaction", () => {
+  const sql = fs.readFileSync(path.join(ROOT, "supabase/matthew-referral-system.sql"), "utf8");
+  const register = fs.readFileSync(path.join(ROOT, "register/index.html"), "utf8");
+  const auth = fs.readFileSync(path.join(ROOT, "assets/js/auth.js"), "utf8");
+  const rewards = fs.readFileSync(path.join(ROOT, "member-rewards.html"), "utf8");
+  for (const item of [
+    "matthew_referral_codes", "matthew_referrals",
+    "validate_referral_code", "get_my_referral_summary",
+    "process_verified_user_referral", "award_matthew_referral_points",
+    "points_earned, remaining_points, multiplier", "499, 499, 1",
+    "status = 'successful'", "first_order_id = new.id",
+    "revoke all on public.matthew_referral_codes, public.matthew_referrals"
+  ]) assert.ok(sql.includes(item), "referral migration missing " + item);
+  assert.match(sql, /referred_id uuid not null unique/);
+  assert.match(sql, /referrer_id <> referred_id/);
+  assert.match(sql, /after insert or update of status on public\.joki_progress/);
+  assert.match(register, /id="referralCode"/);
+  assert.match(auth, /validate_referral_code/);
+  assert.match(auth, /metadata\.referral_code = referralCode/);
+  assert.match(rewards, /get_my_referral_summary/);
+  assert.match(rewards, /masing-masing mendapat 499 poin/);
+});
