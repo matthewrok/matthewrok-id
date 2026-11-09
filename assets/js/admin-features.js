@@ -45,6 +45,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function vouchers(){const {data,error}=await db.from("vouchers").select("id,code,discount_type,discount_value,used_count,max_uses,is_active,campaign_type,audience_roles,expires_at").order("created_at",{ascending:false}).limit(100);if(error)throw error;const b=$("vouchersBody");b.replaceChildren();if(!data.length)return empty("vouchersBody",7,"Belum ada voucher.");const fmt=new Intl.DateTimeFormat("id-ID",{dateStyle:"medium",timeStyle:"short"});data.forEach(v=>{const tr=document.createElement("tr");const target=v.campaign_type==="weekly"?(v.audience_roles||[]).map(r=>r==="warga tidak biasa"?"Warga Tidak Biasa":r==="warga sultan"?"Warga Sultan":r).join(", "):"Publik";const expiry=v.expires_at?fmt.format(new Date(v.expires_at)):"Tidak dibatasi";tr.append(td(v.code),td(v.campaign_type==="weekly"?"Mingguan · "+target:target),td(v.discount_type==="percent"?v.discount_value+"%":"Rp "+Number(v.discount_value).toLocaleString("id-ID")),td(v.used_count+"/"+(v.max_uses??"∞")),td(expiry),td(v.is_active?"Aktif":"Nonaktif"));const ac=td("");ac.append(btn(v.is_active?"Nonaktifkan":"Aktifkan",async()=>{const {error}=await db.from("vouchers").update({is_active:!v.is_active}).eq("id",v.id);if(error)alert(error.message);else vouchers();}));tr.append(ac);b.append(tr);});}
   $("notificationForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget,d=new FormData(f),expiry=d.get("expires_at");try{const {error}=await db.from("site_notifications").insert({title:d.get("title").trim(),message:d.get("message").trim(),audience:d.get("audience"),expires_at:expiry?new Date(expiry).toISOString():null,created_by:session.user.id});if(error)throw error;f.reset();feedback("notificationFeedback","Notifikasi berhasil diterbitkan.");await notifications();}catch(x){feedback("notificationFeedback",x.message,true);}});
   $("voucherForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget,d=new FormData(f),expiry=d.get("expires_at"),max=d.get("max_uses");try{const {error}=await db.from("vouchers").insert({code:d.get("code").trim().toUpperCase(),description:d.get("description").trim()||null,discount_type:d.get("discount_type"),discount_value:Number(d.get("discount_value")),max_uses:max?Number(max):null,expires_at:expiry?new Date(expiry).toISOString():null,created_by:session.user.id});if(error)throw error;f.reset();feedback("voucherFeedback","Voucher berhasil dibuat.");await vouchers();}catch(x){feedback("voucherFeedback",x.message,true);}});
+  async function earlyAccessCampaigns(){
+   const {data,error}=await db.rpc("admin_list_early_access_campaigns");
+   if(error)throw error;
+   const body=$("earlyAccessBody");body.replaceChildren();
+   if(!data?.length)return empty("earlyAccessBody",6,"Belum ada kampanye Early Access.");
+   data.forEach(c=>{
+    const tr=document.createElement("tr");
+    const discount=c.discount_type==="percent"?c.discount_value+"%":"Rp "+Number(c.discount_value).toLocaleString("id-ID");
+    tr.append(td(c.title),td(c.code),td(discount),td(c.used_count+"/"+(c.max_uses??"∞")),td(c.is_active?"Aktif":"Nonaktif"));
+    const action=td("");
+    action.append(btn(c.is_active?"Nonaktifkan":"Aktifkan",async()=>{
+     if(!confirm((c.is_active?"Nonaktifkan ":"Aktifkan ")+c.title+"?"))return;
+     const {error:toggleError}=await db.rpc("admin_set_early_access_campaign_status",{p_campaign_id:c.id,p_is_active:!c.is_active});
+     if(toggleError)alert(toggleError.message);else await earlyAccessCampaigns();
+    },c.is_active?"danger-action":"role-save"));
+    tr.append(action);body.append(tr);
+   });
+  }
+  $("earlyAccessForm")?.addEventListener("submit",async e=>{
+   e.preventDefault();const f=e.currentTarget,d=new FormData(f);
+   const iso=name=>{const value=d.get(name);return value?new Date(value).toISOString():null;};
+   try{
+    const {error}=await db.rpc("admin_create_early_access_campaign",{
+     p_title:d.get("title").trim(),p_description:d.get("description").trim(),
+     p_code:d.get("code").trim().toUpperCase(),p_discount_type:d.get("discount_type"),
+     p_discount_value:Number(d.get("discount_value")),p_max_uses:d.get("max_uses")?Number(d.get("max_uses")):null,
+     p_sultan_opens_at:iso("sultan_opens_at"),p_tidak_biasa_opens_at:iso("tidak_biasa_opens_at"),
+     p_biasa_opens_at:iso("biasa_opens_at"),p_expires_at:iso("expires_at")
+    });
+    if(error)throw error;
+    f.reset();feedback("earlyAccessFeedback","Kampanye Early Access berhasil dibuat.");await earlyAccessCampaigns();
+   }catch(x){feedback("earlyAccessFeedback",x.message,true);}
+  });
   async function roleAudit(){
    const {data,error}=await db.from("profile_role_audit").select("id,actor_user_id,target_user_id,old_role,new_role,changed_at").order("changed_at",{ascending:false}).limit(100);
    const body=$("roleAuditBody");
@@ -58,6 +91,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     body.append(tr);
    });
   }
-  await Promise.all([members(),notifications(),vouchers(),roleAudit()]);
+  await Promise.all([members(),notifications(),vouchers(),earlyAccessCampaigns(),roleAudit()]);
  }catch(e){console.error(e);feedback("notificationFeedback","Gagal memuat fitur: "+e.message,true);}
 });

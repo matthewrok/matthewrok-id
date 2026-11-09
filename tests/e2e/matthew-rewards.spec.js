@@ -50,3 +50,30 @@ test("Admin dashboard contains shortcut to Rewards overview", async ({ request }
   expect(html).toContain('href="/admin/matthew-rewards.html"');
   expect(html).toContain("Matthew Rewards");
 });
+
+test("Matthew Early Access exposes tier-specific campaign schedules and claim flow", async ({ request }) => {
+  const response = await request.get("/member-benefits.html");
+  expect(response.ok()).toBeTruthy();
+  const html = await response.text();
+  expect(html).toContain("Matthew Early Access Promo");
+  expect(html).toContain("claim_early_access_promo");
+  expect(html).toContain("get_my_early_access_campaigns");
+  expect(html).toContain("Sultan 48 jam lebih awal");
+  expect(html).toContain("Warga Tidak Biasa 24 jam lebih awal");
+});
+
+test("Early Access migration protects claims and admin campaign management", async ({ request }) => {
+  const response = await request.get("/supabase/matthew-early-access-promo.sql");
+  expect(response.ok()).toBeTruthy();
+  const sql = await response.text();
+  expect(sql).toContain("create table if not exists public.early_access_campaigns");
+  expect(sql).toContain("public.claim_early_access_promo");
+  expect(sql).toContain("public.admin_create_early_access_campaign");
+  expect(sql).toContain("public.admin_set_early_access_campaign_status");
+  expect(sql).toContain("v_role not in ('warga biasa','warga tidak biasa','warga sultan')");
+  expect(sql).toContain("c.warga_sultan_opens_at");
+  expect(sql).toContain("c.warga_tidak_biasa_opens_at");
+  expect(sql).toContain("c.warga_biasa_opens_at");
+  expect(sql).toContain("campaign_type in ('weekly','early_access')");
+  expect(sql).toContain("revoke all on public.early_access_campaigns from public, anon, authenticated");
+});

@@ -99,6 +99,22 @@
       <!-- TAB PESAN & PROMO -->
       <div id="tab-pesan" class="tab-content" role="tabpanel" aria-labelledby="adminTabPesan" aria-hidden="true">
         <section class="section" id="notificationsManagement"><h2>05 · Pesan & Notifikasi Website</h2><p>Buat pengumuman untuk semua pengunjung atau hanya pengguna terdaftar.</p><form id="notificationForm" class="admin-form"><label>Judul<input name="title" maxlength="120" required></label><label>Pesan<textarea name="message" maxlength="2000" rows="3" required></textarea></label><label>Target<select name="audience"><option value="all">Semua pengunjung</option><option value="members">Pengguna terdaftar</option></select></label><label>Kedaluwarsa (opsional)<input name="expires_at" type="datetime-local"></label><button class="role-save" type="submit">Terbitkan Notifikasi</button><p id="notificationFeedback" class="feature-feedback" role="status"></p></form><div class="table-responsive table-wrap"><table><thead><tr><th>Judul</th><th>Target</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="notificationsBody"><tr><td colspan="4">Memuat notifikasi…</td></tr></tbody></table></div></section>
+        <section class="section" id="earlyAccessManagement"><h2>06A · Matthew Early Access Promo</h2><p>Buat promo bertahap: Warga Sultan 48 jam lebih awal, Warga Tidak Biasa 24 jam lebih awal, dan Warga Biasa saat pembukaan umum. Semua waktu mengikuti WIB.</p>
+          <form id="earlyAccessForm" class="admin-form">
+            <label>Nama kampanye<input name="title" maxlength="120" required></label>
+            <label>Deskripsi<textarea name="description" maxlength="1000" rows="2"></textarea></label>
+            <label>Kode voucher<input name="code" maxlength="24" pattern="[A-Za-z0-9-]{4,24}" required></label>
+            <label>Jenis diskon<select name="discount_type"><option value="percent">Persentase (%)</option><option value="fixed">Nominal (Rp)</option></select></label>
+            <label>Nilai diskon<input name="discount_value" type="number" min="1" step="0.01" required></label>
+            <label>Kuota klaim (opsional)<input name="max_uses" type="number" min="1" step="1"></label>
+            <label>Mulai akses Warga Sultan<input name="sultan_opens_at" type="datetime-local" required></label>
+            <label>Mulai akses Warga Tidak Biasa<input name="tidak_biasa_opens_at" type="datetime-local" required></label>
+            <label>Mulai akses Warga Biasa / Umum<input name="biasa_opens_at" type="datetime-local" required></label>
+            <label>Akhir promo<input name="expires_at" type="datetime-local" required></label>
+            <button class="role-save" type="submit">Buat Kampanye Early Access</button><p id="earlyAccessFeedback" class="feature-feedback" role="status"></p>
+          </form>
+          <div class="table-responsive table-wrap"><table><thead><tr><th>Kampanye</th><th>Kode</th><th>Diskon</th><th>Klaim</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="earlyAccessBody"><tr><td colspan="6">Memuat kampanye…</td></tr></tbody></table></div>
+        </section>
         <section class="section" id="voucherManagement"><h2>06 · Promo & Voucher</h2><p>Buat voucher manual atau pantau voucher mingguan otomatis. Voucher mingguan MATTHEW dibuat setiap Senin pukul 00.00 WIB: Warga Tidak Biasa mendapat 3% dan Warga Sultan 5%. Setiap member harus mengklaimnya sebelum digunakan; masa berlaku 7 hari.</p><form id="voucherForm" class="admin-form"><label>Kode voucher<input name="code" maxlength="24" pattern="[A-Za-z0-9-]{4,24}" required placeholder="MATTHEW10"></label><label>Deskripsi<input name="description" maxlength="200"></label><label>Jenis diskon<select name="discount_type"><option value="percent">Persentase (%)</option><option value="fixed">Nominal (Rp)</option></select></label><label>Nilai diskon<input name="discount_value" type="number" min="1" step="0.01" required></label><label>Batas penggunaan (opsional)<input name="max_uses" type="number" min="1" step="1"></label><label>Kedaluwarsa (opsional)<input name="expires_at" type="datetime-local"></label><button class="role-save" type="submit">Buat Voucher</button><p id="voucherFeedback" class="feature-feedback" role="status"></p></form><div class="table-responsive table-wrap"><table><thead><tr><th>Kode</th><th>Kategori / Target</th><th>Diskon</th><th>Penggunaan</th><th>Kedaluwarsa</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="vouchersBody"><tr><td colspan="7">Memuat voucher…</td></tr></tbody></table></div></section>
       </div>
 
