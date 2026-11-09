@@ -9,8 +9,10 @@ test("Membership History page is available and explains the Warga tiers", async 
   expect(html).toContain("WARGA BIASA");
   expect(html).toContain("WARGA TIDAK BIASA");
   expect(html).toContain("WARGA SULTAN");
-  expect(html).toContain("get_my_warga_membership_history");
   expect(html).toContain("membership-history.js");
+  const scriptResponse = await request.get("/assets/js/membership-history.js");
+  expect(scriptResponse.ok()).toBeTruthy();
+  expect(await scriptResponse.text()).toContain("get_my_warga_membership_history");
 });
 
 test("Membership History migration logs baseline and future role transitions without exposing raw table access", async ({ request }) => {
