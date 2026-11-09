@@ -23,6 +23,10 @@ test("Wishlist SQL restricts records to authenticated Warga owners", async ({ re
   expect(sql).toContain("alter table public.member_package_wishlist enable row level security");
   expect(sql).toContain("revoke all on public.member_package_wishlist from public, anon, authenticated");
   expect(sql).toContain("auth.uid()");
+  expect(sql).toContain("security invoker");
+  expect(sql).toContain("private.get_my_package_wishlist");
+  expect(sql).toContain("private.add_my_package_to_wishlist");
+  expect(sql).toContain("private.remove_my_package_from_wishlist");
   expect(sql).toContain("warga_sultan");
   expect(sql).toContain("grant execute on function public.get_my_package_wishlist() to authenticated");
 });
