@@ -34,7 +34,7 @@ on:
       - "admin/joki-progress.html"
       - "calculator-resource.html"
       - "requirements-city-hall.html"
-      - "supabase/tracking-token-v2.sql"
+      - "member-rewards.html"\n      - "supabase/matthew-referral-system.sql"\n      - "supabase/tracking-token-v2.sql"
       - "supabase/tracking-token-v2-cutover.sql"
       - "supabase/tracking-token-v2-rollback.sql"
       - "supabase/harden_remaining_rpc_search_paths.sql"
