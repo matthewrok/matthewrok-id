@@ -279,6 +279,14 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const { data, error } = await client.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/email-confirmed/" } });
         if (error) throw error;
+        // Supabase mengembalikan identities kosong untuk email yang sudah memiliki akun terverifikasi.
+        // Hentikan alur sebelum menampilkan sukses atau menyediakan tombol kirim ulang verifikasi.
+        if (Array.isArray(data?.user?.identities) && data.user.identities.length === 0) {
+          hideResendButton();
+          showMessage("Gmail Sudah Di Gunakan, Harap menggunakan gmail lain.", "error");
+          setBusy(registerForm, false, "BUAT AKUN");
+          return;
+        }
         if (data.session) await client.auth.signOut({ scope: "local" });
         showMessage("Pendaftaran diterima. Akun belum dimasukkan ke data member dan belum bisa digunakan sampai kamu membuka Gmail lalu menekan link verifikasi. Setelah email terverifikasi, profil akun baru akan dibuat otomatis. Kembali ke halaman login untuk masuk. Jika email belum masuk, kamu bisa meminta link verifikasi baru di bawah.", "success");
         showResendButton(email);
