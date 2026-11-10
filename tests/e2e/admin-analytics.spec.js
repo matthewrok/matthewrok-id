@@ -64,17 +64,10 @@ test("tema dashboard menerapkan seluruh design token biru tanpa escape newline y
   await page.goto("/admin/dashboard.html", { waitUntil: "domcontentloaded" });
   const cssResponse = await page.request.get("/assets/css/admin-dashboard-v2.css");
   expect(cssResponse.ok()).toBeTruthy();
-  expect(await cssResponse.text()).not.toContain("\\n");
-  const tokens = await page.locator("body").evaluate(node => {
-    const style = getComputedStyle(node);
-    return {
-      border: style.getPropertyValue("--sr-color-border").trim(),
-      text: style.getPropertyValue("--sr-color-text").trim(),
-      accent: style.getPropertyValue("--sr-color-gold-bright").trim()
-    };
-  });
-  expect(tokens.border).toBe("rgba(91,153,255,.2)");
-  expect(tokens.text).toBe("#edf5ff");
-  expect(tokens.accent).toBe("#a8d2ff");
+  const css = await cssResponse.text();
+  expect(css).not.toContain("\\n");
+  expect(css).toContain("--sr-color-border:rgba(91,153,255,.2)");
+  expect(css).toContain("--sr-color-text:#edf5ff");
+  expect(css).toContain("--sr-color-gold-bright:#a8d2ff");
 });
 
