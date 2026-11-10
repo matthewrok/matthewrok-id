@@ -56,7 +56,7 @@ test("Admin Analytics memuat semua halaman hingga batas aman dan menghitung KPI 
   ]);
   expect(result.revenue).toContain("1.001.000");
   expect(result.quantity).toBe("1.001");
-  expect(result.orderBars.reduce((sum, value) => sum + Number(value.replace(/\\./g, "")), 0)).toBe(1001);
+  expect(result.orderBars.reduce((sum, value) => sum + Number(value.replace(/\./g, "")), 0)).toBe(1001);
   expect(result.status).toContain("Seluruh riwayat yang tersedia telah dimuat");
 });
 
@@ -73,7 +73,7 @@ test("tema dashboard menerapkan seluruh design token biru tanpa escape newline y
       accent: style.getPropertyValue("--sr-color-gold-bright").trim()
     };
   });
-  expect(tokens.border).toBe("rgba(91, 153, 255, 0.2)");
+  expect(tokens.border).toBe("rgba(91,153,255,.2)");
   expect(tokens.text).toBe("#edf5ff");
   expect(tokens.accent).toBe("#a8d2ff");
 });
