@@ -109,4 +109,24 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: cd android && gradle connectedDebugAndroidTest --no-daemon
+          script: |
+            cd android
+            adb logcat -c
+            if gradle connectedDebugAndroidTest --no-daemon; then
+              exit 0
+            else
+              adb logcat -d -v threadtime > ../android-emulator-logcat.txt || true
+              echo "::group::Android emulator logcat (last 500 lines)"
+              tail -n 500 ../android-emulator-logcat.txt || true
+              echo "::endgroup::"
+              exit 1
+            fi
+
+      - name: Upload emulator diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-emulator-diagnostics
+          path: android-emulator-logcat.txt
+          if-no-files-found: warn
+          retention-days: 7
