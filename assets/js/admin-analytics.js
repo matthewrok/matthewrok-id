@@ -1,10 +1,48 @@
 (() => {
+  const TIME_ZONE = "Asia/Jakarta";
+  const PAGE_SIZE = 1000;
+  const MAX_ROWS = 10000;
   const money = value => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(Number(value) || 0);
   const number = value => new Intl.NumberFormat("id-ID").format(Number(value) || 0);
-  const dayKey = date => {
-    const d = new Date(date);
-    return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
+  const dateParts = value => {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date(value));
+    return Object.fromEntries(parts.filter(part => part.type !== "literal").map(part => [part.type, part.value]));
   };
+  const dayKey = value => {
+    const parts = dateParts(value);
+    return parts.year + "-" + parts.month + "-" + parts.day;
+  };
+  function buildDays(now) {
+    const today = dateParts(now);
+    const cursor = new Date(Date.UTC(Number(today.year), Number(today.month) - 1, Number(today.day)));
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(cursor);
+      date.setUTCDate(date.getUTCDate() - (6 - index));
+      const key = date.toISOString().slice(0, 10);
+      return {
+        key,
+        label: new Intl.DateTimeFormat("id-ID", { timeZone: TIME_ZONE, weekday: "short" }).format(date),
+        full: new Intl.DateTimeFormat("id-ID", { timeZone: TIME_ZONE, dateStyle: "medium" }).format(date)
+      };
+    });
+  }
+  async function fetchRows(client, table, columns) {
+    const rows = [];
+    for (let offset = 0; offset < MAX_ROWS; offset += PAGE_SIZE) {
+      const end = Math.min(offset + PAGE_SIZE, MAX_ROWS) - 1;
+      const result = await client.from(table)
+        .select(columns)
+        .order(table === "joki_progress" ? "created_at" : "visited_at", { ascending: false })
+        .range(offset, end);
+      if (result.error) throw result.error;
+      const page = result.data || [];
+      rows.push(...page);
+      if (page.length < PAGE_SIZE) return { rows, truncated: false };
+    }
+    return { rows, truncated: true };
+  }
   function renderBars(target, days, values, label) {
     if (!target) return;
     const max = Math.max(1, ...values);
@@ -31,15 +69,12 @@
     const status = document.getElementById("analyticsUpdated");
     const ids = ["analyticsRevenue", "analyticsAverage", "analyticsDiscount", "analyticsQuantity"];
     try {
-      const results = await Promise.all([
-        client.from("joki_progress").select("status,total_price,discount_amount,quantity,created_at").order("created_at", { ascending: false }).limit(10000),
-        client.from("visitor_logs").select("visited_at").order("visited_at", { ascending: false }).limit(10000)
+      const [ordersResult, visitorsResult] = await Promise.all([
+        fetchRows(client, "joki_progress", "status,total_price,discount_amount,quantity,created_at"),
+        fetchRows(client, "visitor_logs", "visited_at")
       ]);
-      const ordersResult = results[0];
-      const visitorsResult = results[1];
-      if (ordersResult.error) throw ordersResult.error;
-      if (visitorsResult.error) console.warn("Analitik kunjungan tidak tersedia:", visitorsResult.error.message);
-      const orders = ordersResult.data || [];
+      const orders = ordersResult.rows;
+      const visitors = visitorsResult.rows;
       const completed = orders.filter(row => row.status === "Selesai");
       const revenue = completed.reduce((sum, row) => sum + (Number(row.total_price) || 0), 0);
       const discount = orders.reduce((sum, row) => sum + (Number(row.discount_amount) || 0), 0);
@@ -49,20 +84,16 @@
       document.getElementById(ids[1]).textContent = money(average);
       document.getElementById(ids[2]).textContent = money(discount);
       document.getElementById(ids[3]).textContent = number(quantity);
-      const now = new Date();
-      const days = Array.from({ length: 7 }, (_, index) => {
-        const date = new Date(now);
-        date.setHours(0, 0, 0, 0);
-        date.setDate(date.getDate() - (6 - index));
-        return { key: dayKey(date), label: new Intl.DateTimeFormat("id-ID", { weekday: "short" }).format(date), full: new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(date) };
-      });
+      const days = buildDays(new Date());
       const orderCounts = new Map(days.map(day => [day.key, 0]));
       const visitorCounts = new Map(days.map(day => [day.key, 0]));
       orders.forEach(row => { const key = dayKey(row.created_at); if (orderCounts.has(key)) orderCounts.set(key, orderCounts.get(key) + 1); });
-      (visitorsResult.data || []).forEach(row => { const key = dayKey(row.visited_at); if (visitorCounts.has(key)) visitorCounts.set(key, visitorCounts.get(key) + 1); });
+      visitors.forEach(row => { const key = dayKey(row.visited_at); if (visitorCounts.has(key)) visitorCounts.set(key, visitorCounts.get(key) + 1); });
       renderBars(document.getElementById("analyticsOrdersChart"), days, days.map(day => orderCounts.get(day.key)), "pesanan");
       renderBars(document.getElementById("analyticsVisitorsChart"), days, days.map(day => visitorCounts.get(day.key)), "kunjungan");
-      status.textContent = "Diperbarui " + new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(new Date()) + " · Maksimal 10.000 baris terbaru per sumber.";
+      const capped = ordersResult.truncated || visitorsResult.truncated;
+      status.textContent = "Diperbarui " + new Intl.DateTimeFormat("id-ID", { timeZone: TIME_ZONE, dateStyle: "medium", timeStyle: "short" }).format(new Date()) +
+        (capped ? " · Data dibatasi pada 10.000 baris terbaru per sumber; total dapat belum mencakup seluruh riwayat." : " · Seluruh riwayat yang tersedia telah dimuat.");
     } catch (error) {
       console.error("Admin analytics error:", error);
       ids.forEach(id => { const node = document.getElementById(id); if (node) node.textContent = "—"; });
