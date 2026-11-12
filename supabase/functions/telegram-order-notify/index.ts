@@ -123,11 +123,12 @@ Deno.serve(async (req: Request) => {
       if (previous.progress_percent !== record.progress_percent) changes.push(`📊 <b>Progres:</b> ${esc(previous.progress_percent ?? 0)}% → <b>${esc(record.progress_percent ?? 0)}%</b>`);
       if (previous.progress_note !== record.progress_note) changes.push(`📝 <b>Catatan:</b> ${esc(record.progress_note || "—")}`);
       if (!changes.length) return Response.json({ ok: true, skipped: "no tracked changes" });
+      const isActionPoint = String(record.service_name || "").toLowerCase().includes("action point");
       const message = [
         "🔄 <b>PEMBARUAN PESANAN — MATTHEW JOKI</b>", "",
         `🧾 <b>No. Pesanan:</b> <code>${esc(record.order_number)}</code>`,
         `👤 <b>Nama:</b> ${esc(record.client_name)}`,
-        `🏰 <b>Kingdom:</b> ${esc(record.kingdom_number || "—")}`,
+        ...(isActionPoint ? [] : [`🏰 <b>Kingdom:</b> ${esc(record.kingdom_number || "—")}`]),
         ...changes, "",
         `🕒 <b>Diperbarui:</b> ${esc(record.updated_at || new Date().toISOString())}`,
       ].join("\\n");
@@ -136,6 +137,7 @@ Deno.serve(async (req: Request) => {
     }
     const record = payload?.record ?? payload?.data?.record ?? payload;
     if (!record || typeof record !== "object" || !record.order_number) return Response.json({ error: "Missing order record" }, { status: 400 });
+    const isActionPoint = String(record.service_name || "").toLowerCase().includes("action point");
     const isActionPoint = String(record.service_name || "").toLowerCase().includes("action point");
     const message = [
       "🔔 <b>PESANAN BARU — MATTHEW JOKI</b>", "",
@@ -177,22 +179,25 @@ Deno.serve(async (req: Request) => {
     if (!res.ok) { console.error("Order lookup failed", res.status, rows); throw new Error("Database read failed"); }
     return rows?.[0] ?? null;
   };
-  const formatOrder = (o: any) => [
-    "📋 <b>DETAIL PESANAN</b>", "",
-    `🧾 <b>Nomor:</b> <code>${esc(o.order_number)}</code>`,
-    `👤 <b>Nama:</b> ${esc(o.client_name)}`,
-    `🏰 <b>Kingdom:</b> ${esc(o.kingdom_number || "—")}`,
-    `📧 <b>Email:</b> ${esc(o.client_email || "Visitor")}`,
-    `🎮 <b>Paket:</b> ${esc(o.service_name)}`,
-    `📦 <b>Jumlah karakter:</b> ${esc(o.quantity)}`,
-    `🎟️ <b>Voucher:</b> ${esc(o.voucher_code || "Tidak digunakan")}`,
-    `💵 <b>Subtotal:</b> ${money(o.subtotal_price ?? (Number(o.unit_price || 0) * Number(o.quantity || 0)))}`,
-    `🏷️ <b>Diskon:</b> ${money(o.discount_amount)}`,
-    `💰 <b>Total:</b> ${money(o.total_price)}`,
-    `📌 <b>Status:</b> ${esc(o.status)}`,
-    `📊 <b>Progress:</b> ${esc(o.progress_percent)}%`,
-    `📝 <b>Catatan:</b> ${esc(o.progress_note || "-")}`
-  ].join("\n");
+  const formatOrder = (o: any) => {
+    const isActionPoint = String(o.service_name || "").toLowerCase().includes("action point");
+    return [
+      "📋 <b>DETAIL PESANAN</b>", "",
+      `🧾 <b>Nomor:</b> <code>${esc(o.order_number)}</code>`,
+      `👤 <b>Nama:</b> ${esc(o.client_name)}`,
+      ...(isActionPoint ? [] : [`🏰 <b>Kingdom:</b> ${esc(o.kingdom_number || "—")}`]),
+      `📧 <b>Email:</b> ${esc(o.client_email || "Visitor")}`,
+      `🎮 <b>Paket:</b> ${esc(o.service_name)}`,
+      ...(isActionPoint ? [`📦 <b>Jumlah Action Point:</b> ${esc(o.quantity)}K AP`] : [`📦 <b>Jumlah karakter:</b> ${esc(o.quantity)}`]),
+      `🎟️ <b>Voucher:</b> ${esc(o.voucher_code || "Tidak digunakan")}`,
+      `💵 <b>Subtotal:</b> ${money(o.subtotal_price ?? (Number(o.unit_price || 0) * Number(o.quantity || 0)))}`,
+      `🏷️ <b>Diskon:</b> ${money(o.discount_amount)}`,
+      `💰 <b>Total:</b> ${money(o.total_price)}`,
+      `📌 <b>Status:</b> ${esc(o.status)}`,
+      `📊 <b>Progress:</b> ${esc(o.progress_percent)}%`,
+      `📝 <b>Catatan:</b> ${esc(o.progress_note || "-")}`
+    ].join("\\n");
+  };
   const orderKeyboard = (number: string) => ({ inline_keyboard: [
     [{ text: "👁️ Detail", callback_data: `detail|${number}` }],
     [{ text: "📊 Ubah Progress", callback_data: `progress|${number}` }, { text: "🔄 Ubah Status", callback_data: `status|${number}` }],
