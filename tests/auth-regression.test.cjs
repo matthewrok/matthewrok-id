@@ -817,7 +817,7 @@ test("private member dashboard uses the shared guard result instead of repeating
   assert.match(html, /window\.__matthewVerifiedUser/);
   assert.doesNotMatch(html, /location\.replace\('\/login\.html\?next=member-dashboard\.html'\)/);
   const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
-  assert.ok(guard.includes("member-dashboard|member-benefits|worker|inbox|your-order"));
+  assert.ok(guard.includes("member-dashboard|member-benefits|member-rewards|member-membership-history|worker|inbox|your-order"));
   assert.match(guard, /20000/);
   assert.match(guard, /Sesi kamu tetap disimpan/);
   assert.doesNotMatch(guard, /signOut\(\{ scope: "local" \}\);\s*return redirectToLogin\(\);/);
@@ -880,4 +880,147 @@ test("Matthew Referral awards equal 499-point bonuses only after the referred me
   assert.match(auth, /metadata\.referral_code = referralCode/);
   assert.match(rewards, /get_my_referral_summary/);
   assert.match(rewards, /masing-masing mendapat 499 poin/);
+});
+
+
+test("Matthew Rewards and Membership History use the shared authenticated access guard", () => {
+  const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
+  assert.match(guard, /member-dashboard\\|member-benefits\\|member-rewards\\|member-membership-history/);
+  for (const [page, version] of [
+    ["member-rewards.html", "20261112-membership-guard"],
+    ["member-membership-history.html", "20261112-membership-guard"]
+  ]) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    assert.ok(html.includes("/assets/js/access-guard.js?v=" + version), page + " must load the updated access guard");
+  }
+  const rewards = fs.readFileSync(path.join(ROOT, "member-rewards.html"), "utf8");
+  const history = fs.readFileSync(path.join(ROOT, "assets/js/membership-history.js"), "utf8");
+  assert.match(rewards, /__matthewVerifiedUser/);
+  assert.match(history, /__matthewVerifiedUser/);
+});
+
+
+test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/ch12-order-variants.sql"), "utf8");
+  assert.match(html, /id="jokiOrderVariantField"/);
+  assert.match(html, /name="jokiOrderVariant" value="KOSONGAN"/);
+  assert.match(html, /name="jokiOrderVariant" value="ISIAN"/);
+  assert.match(html, /class="joki-order-variant-card"/);
+  assert.match(html, /Rp29\.000/);
+  assert.match(html, /Rp35\.000/);
+  assert.match(source, /selected==="CH12"\s*&&!\["KOSONGAN","ISIAN"\]\.includes\(variant\)/);
+  assert.match(source, /"CH12-"\+variant/);
+  assert.match(migration, /CH12-KOSONGAN/);
+  assert.match(migration, /CH12-ISIAN/);
+  assert.match(migration, /CH12-KOSONGAN[\s\S]*v_price:=29000/);
+  assert.match(migration, /CH12-ISIAN[\s\S]*v_price:=35000/);
+  assert.match(source, /35000/);
+  assert.match(html, /29K–35K/);
+  const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
+  assert.ok(!catalog.includes("KOSONGAN (tanpa resource): Rp29.000/char"));
+  assert.ok(!catalog.includes("ISIAN (resource 10–15M+): Rp35.000/char"));
+});
+
+
+test("ORDER REGISTRATION places quantity before Kingdom and validates both fields", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const quantityIndex = html.indexOf('id="jokiOrderQuantity"');
+  const kingdomIndex = html.indexOf('id="jokiOrderKingdom"');
+  assert.ok(quantityIndex > -1 && kingdomIndex > quantityIndex, "quantity must appear above Kingdom");
+  assert.match(html, /value="4"[^>]*inputmode="numeric"/);
+  assert.match(html, /min="4" max="12"/);
+  assert.match(html, /Minimal 4 · Maksimal 12 karakter/);
+  assert.match(html, /pattern="\[0-9\]\{4\}" minlength="4" maxlength="4"/);
+  assert.match(html, /Silahkan isi dengan Kingdom Tujuan Joki\./);
+  assert.match(html, /class="joki-required"/);
+  assert.match(html, /\.joki-required \{ color: #ff4d5e/);
+  assert.match(html, /\.joki-order-field-hint[\s\S]*font-size: 10px/);
+  assert.match(source, /if\(!isActionPoint&&!\/\^\[0-9\]\{4\}\$\/\.test\(kingdomNumber\)\)/);
+  assert.match(source, /Nomor Kingdom wajib diisi tepat 4 digit angka/);
+  assert.match(source, /requestedQty<4\|\|requestedQty>12/);
+  assert.match(source, /if\(raw===""\)\{updateTotal\(\);return;\}/);
+});
+
+
+test("all website WhatsApp contact links use Matthew's official number", () => {
+  const files = [
+    "index.html",
+    "joki-matthew.html",
+    "layanan-joki.html",
+    "member-dashboard.html",
+    "assets/js/home-orders.js"
+  ];
+  const links = files.flatMap(file => {
+    const source = fs.readFileSync(path.join(ROOT, file), "utf8");
+    return [...source.matchAll(/https?:\/\/(?:wa\.me\/|api\.whatsapp\.com\/send\?phone=)(\d+)/g)]
+      .map(match => ({ file, number: match[1] }));
+  });
+  assert.ok(links.length > 0, "expected at least one WhatsApp contact link");
+  for (const link of links) {
+    assert.equal(link.number, "6285894152856", link.file + " must use Matthew's WhatsApp number");
+  }
+});
+
+
+test("Action Point / Lohar is searchable and uses the direct K-AP order form", () => {
+  const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
+  const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const orders = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/add_action_point_lohar_orders.sql"), "utf8");
+  const history = fs.readFileSync(path.join(ROOT, "assets/js/your-order.js"), "utf8");
+  const telegram = fs.readFileSync(path.join(ROOT, "supabase/functions/telegram-order-notify/index.ts"), "utf8");
+
+  assert.match(catalog, /id="serviceSearch"/);
+  assert.match(catalog, /data-category-filter="city-hall"/);
+  assert.match(catalog, /data-category-filter="action-point"/);
+  assert.equal((catalog.match(/data-order-product="ap-lohar"/g) || []).length, 1);
+  assert.equal((catalog.match(/<h3>Joki Lohar<\/h3>/g) || []).length, 0);
+  assert.match(catalog, /data-order-product="ch11"/);
+  assert.match(catalog, /data-order-product="ch12"/);
+  assert.match(catalog, /data-order-product="ch13"/);
+  assert.match(catalog, /assets\/js\/home-orders\.js/);
+  assert.match(catalog, /id="jokiOrderModal"/);
+
+  assert.match(home, /id="jokiOrderQuantityLabel"/);
+  assert.match(home, /id="jokiOrderKingdomField"/);
+  assert.match(orders, /"AP-LOHAR":\{name:"Joki Action Point \/ Lohar",price:1000/);
+  assert.match(orders, /function parseActionPointK/);
+  assert.match(orders, /const formattedAp=\(amount\*1000\)\.toLocaleString\("id-ID"\)/);
+  assert.match(orders, /quantity\.value=formattedAp/);
+  assert.match(orders, /formattedAp\+" AP · "\+amount\+"K Action Point · Rp"/);
+  assert.match(orders, /Masukkan 1 untuk 1\.000 AP \(1K\)/);
+  assert.match(orders, /replace\(\/\[/);
+  assert.match(orders, /if\(amount%1000!==0\)return null/);
+  assert.match(orders, /quantityLabel\.textContent=isActionPoint\?"Berapa K Action Point\?"/);
+  assert.match(orders, /kingdomField\.hidden=isActionPoint/);
+  assert.match(orders, /p_kingdom_number:kingdomNumber/);
+  assert.match(orders, /Jumlah Action Point: "\+order\.quantity\+"K AP"/);
+
+  assert.match(migration, /p_product_code = 'AP-LOHAR'/);
+  assert.match(migration, /v_price := 1000/);
+  assert.match(migration, /v_kingdom := null/);
+  assert.match(history, /Jumlah Action Point/);
+  assert.match(telegram, /Jumlah Action Point/);
+});
+
+
+test("order submission redirects the active mobile tab to WhatsApp only after order creation succeeds", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(source, /await db\.rpc\("create_joki_order_secure"/);
+  assert.match(source, /window\.location\.assign\(whatsappUrl\)/);
+  assert.doesNotMatch(source, /window\.open\("about:blank"/);
+  assert.match(source, /if\(completedWhatsappUrl\)\{window\.location\.assign\(completedWhatsappUrl\);return;\}/);
+});
+
+test("CH12 selector uses accessible modern radio cards instead of a native select", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(html, /class="joki-order-variant-options" role="radiogroup"/);
+  assert.match(html, /input type="radio" name="jokiOrderVariant" value="KOSONGAN"/);
+  assert.match(html, /input type="radio" name="jokiOrderVariant" value="ISIAN"/);
+  assert.match(source, /selectedCh12Variant/);
+  assert.match(source, /input\.checked=false/);
 });

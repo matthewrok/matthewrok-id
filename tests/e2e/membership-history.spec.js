@@ -5,6 +5,8 @@ test("Membership History page is available and explains the Warga tiers", async 
   expect(response.ok()).toBeTruthy();
   const html = await response.text();
   expect(html).toContain("Membership History");
+  expect(html).toContain('href="/member-dashboard.html">← Kembali</a>');
+  expect(html).not.toContain('href="/akun/">');
   expect(html).toContain("Jejak Perjalanan Membership");
   expect(html).toContain("WARGA BIASA");
   expect(html).toContain("WARGA TIDAK BIASA");
@@ -26,6 +28,7 @@ test("Membership History migration logs baseline and future role transitions wit
   expect(sql).toContain("revoke all on public.warga_membership_history from public, anon, authenticated");
   expect(sql).toContain("grant execute on function public.get_my_warga_membership_history() to authenticated");
   expect(sql).toContain("19 - v_completed");
+  expect(sql).toContain("select id, previous_role, new_role, completed_orders, event_type, changed_at");
 });
 
 test("Member Center links to the membership timeline", async ({ request }) => {

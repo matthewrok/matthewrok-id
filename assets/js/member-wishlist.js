@@ -2,8 +2,12 @@
  const db=window.supabaseClient,$=id=>document.getElementById(id);
  const catalog={
   CH11:{name:"City Hall 11",tier:"STARTER",price:"17K/char",detail:"Siege 10K · Deadline 1–2 hari"},
-  CH13:{name:"City Hall 13/13",tier:"ADVANCED",price:"45K/char",detail:"Siege 25K · Resource 25–30M"},
-  CH17:{name:"City Hall 17/17",tier:"ELITE",price:"115K/char",detail:"Siege 80–100K · Resource 60–80M"}
+  CH12:{name:"City Hall 12",tier:"STARTER+",price:"29K–35K/char",detail:"Trading Post 12 · Vengeance Lv200 (Max) · Siege 15K+ · Resource: Dapat dipilih · Deadline 2–3 hari"},
+  CH13:{name:"City Hall 13",tier:"ADVANCED",price:"45K/char",detail:"Trading Post 13 · Vengeance Lv200 (Max) · Commander 27/27/27/27 · Siege 25K+ · Resource 25–30M · Deadline 3–5 hari"},
+  CH14:{name:"City Hall 14",tier:"ADVANCED+",price:"55K/char",detail:"Trading Post 14 · Vengeance Lv200 (Max) · Commander 27/27/27/27 · Siege 45K+ · Resource 25–30M · Deadline 4–6 hari"},
+  CH15:{name:"City Hall 15",tier:"ELITE",price:"75K/char",detail:"Trading Post 15 · Vengeance Lv200 (Max)+ · Commander 27/27/27/27 · Siege 50K+ · Resource 50M+ · Deadline 6–8 hari"},
+  CH16:{name:"City Hall 16",tier:"ELITE+",price:"85K/char",detail:"Trading Post 16 · Vengeance Lv200 (Max)+ · Commander 27/27/27/27+ · Siege 60K++ · Resource 50M+ · Deadline 7–10 hari"},
+  CH17:{name:"City Hall 17",tier:"PREMIUM",price:"120K/char",detail:"Trading Post 17 · Vengeance Lv200 (Max)++ · Commander 27/27/27/27++ · Siege 70–100K+ · Resource 60–70M+ · Deadline 10–15 hari"}
  };
  const message=(text,type="")=>{const el=$("wishlistMessage");el.textContent=text;el.className="message"+(type?" "+type:"");};
  const safe=value=>String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -12,7 +16,7 @@
   const {data:{session},error}=await db.auth.getSession();
   if(error||!session){location.replace("/login.html?next=member-wishlist.html");return;}
   const {data,error:profileError}=await db.from("profiles").select("role,account_status").eq("id",session.user.id).maybeSingle();
-  if(profileError||!data||String(data.account_status).toLowerCase()!=="active"||!["warga_biasa","warga_tidak_biasa","warga_sultan"].includes(String(data.role).toLowerCase())){
+  if(profileError||!data||String(data.account_status).toLowerCase()!=="active"||!["warga biasa","warga tidak biasa","warga sultan"].includes(String(data.role).trim().toLowerCase())){
    message("Wishlist hanya tersedia untuk akun Warga yang aktif.","error");return;
   }
   const {data:items,error:loadError}=await db.rpc("get_my_package_wishlist");

@@ -14,7 +14,7 @@ test("homepage Shadow Reign menampilkan hero, produk, ulasan, FAQ, dan modal ord
   await openStaticHome(page, { width: 390, height: 844 });
 
   await expect(page.locator("#hero-title")).toContainText("JOKI ROK");
-  await expect(page.locator("#produk-joki .product-card")).toHaveCount(3);
+  await expect(page.locator("#produk-joki .product-card")).toHaveCount(7);
   await expect(page.locator("#client-reviews .review-card")).toHaveCount(1);
   await expect(page.locator(".faq-item")).toHaveCount(2);
   await expect(page.locator("#jokiOrderModal")).toHaveCount(1);
@@ -22,7 +22,11 @@ test("homepage Shadow Reign menampilkan hero, produk, ulasan, FAQ, dan modal ord
   await expect(page.locator(".bottom-nav .nav-item")).toHaveCount(4);
   await expect(page.locator("#floatingPaymentProof")).toBeVisible();
   await expect(page.locator("#about .about-card")).toBeVisible();
-  await expect(page.locator("#produk-joki [data-order-product]")).toHaveCount(3);
+  await expect(page.locator("#produk-joki [data-order-product]")).toHaveCount(7);
+  await expect(page.locator("#produk-joki .product-card").filter({ hasText: "City Hall 12" })).toContainText("Trading Post");
+  await expect(page.locator("#produk-joki .product-card").filter({ hasText: "City Hall 13" })).toContainText("Vengeance");
+  await expect(page.locator("#produk-joki .product-card").filter({ hasText: "City Hall 16" })).toContainText("85K");
+  await expect(page.locator("#produk-joki .product-card").filter({ hasText: "City Hall 17" })).toContainText("120K");
 });
 
 

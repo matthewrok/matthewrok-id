@@ -1,7 +1,12 @@
 /* MATTHEW ADMIN DASHBOARD 2.0 — royal blue control center.
    Scoped to the admin dashboard so existing admin sub-pages remain unchanged. */
 body.sr-theme.admin-dashboard-page{
-  --sr-color-void:#071225;--sr-color-obsidian:#0a1930;--sr-color-surface:#0d1d38;--sr-color-surface-raised:#13294d;--sr-color-surface-soft:#19365f;\n  --sr-color-border:rgba(91,153,255,.2);--sr-color-border-strong:rgba(91,153,255,.42);\n  --sr-color-text:#edf5ff;--sr-color-text-muted:#a8bdd9;--sr-color-text-subtle:#7892b5;--sr-color-heading:#f4f8ff;\n  --sr-color-gold:#75b8ff;--sr-color-gold-bright:#a8d2ff;--sr-color-gold-deep:#245fc7;--sr-color-gold-wash:rgba(52,120,246,.12);\n  --sr-shadow-gold:0 0 24px rgba(52,120,246,.12);\n  --ink:#071225;
+  --sr-color-void:#071225;--sr-color-obsidian:#0a1930;--sr-color-surface:#0d1d38;--sr-color-surface-raised:#13294d;--sr-color-surface-soft:#19365f;
+  --sr-color-border:rgba(91,153,255,.2);--sr-color-border-strong:rgba(91,153,255,.42);
+  --sr-color-text:#edf5ff;--sr-color-text-muted:#a8bdd9;--sr-color-text-subtle:#7892b5;--sr-color-heading:#f4f8ff;
+  --sr-color-gold:#75b8ff;--sr-color-gold-bright:#a8d2ff;--sr-color-gold-deep:#245fc7;--sr-color-gold-wash:rgba(52,120,246,.12);
+  --sr-shadow-gold:0 0 24px rgba(52,120,246,.12);
+  --ink:#071225;
   --raise:#0d1d38;
   --raise-2:#13294d;
   --line:rgba(91,153,255,.2);
