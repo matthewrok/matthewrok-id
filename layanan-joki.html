@@ -52,6 +52,23 @@ h1{font:600 clamp(25px,8vw,34px) Cinzel,serif;letter-spacing:.5px;line-height:1.
 .catalog-order-dialog .submit{width:100%;min-height:44px;margin-top:12px;border:1px solid var(--accent-gold);border-radius:8px;background:var(--accent-gold);color:#050505;font:700 10px Inter,sans-serif}
 .catalog-order-dialog .submit:disabled{opacity:.55}
 .catalog-order-dialog .required{color:#ef4444}
+.joki-order-variant{margin:16px 0 8px;padding:14px;border:1px solid #4a3d1d;border-radius:12px;background:linear-gradient(145deg,rgba(212,175,55,.09),#0c0c0c 62%)}
+.joki-order-variant[hidden]{display:none!important}
+.joki-order-variant-heading{margin-bottom:11px}
+.joki-order-variant-kicker{display:block;color:var(--accent-gold);font:700 9px Inter,sans-serif;letter-spacing:1.7px}
+.joki-order-variant-heading p{margin:5px 0 0;color:var(--text-muted);font-size:10px;line-height:1.55}
+.joki-order-variant-options{display:grid;gap:9px}
+.joki-order-variant-option{position:relative;display:block;margin:0!important;cursor:pointer}
+.joki-order-variant-option input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.joki-order-variant-card{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:76px;padding:12px 13px;border:1px solid var(--border-color);border-radius:9px;background:#101010;transition:border-color .18s ease,background .18s ease}
+.joki-order-variant-option:hover .joki-order-variant-card{border-color:#77622b}
+.joki-order-variant-option input:checked+.joki-order-variant-card{border-color:var(--accent-gold);background:rgba(212,175,55,.10);box-shadow:0 0 0 1px rgba(212,175,55,.15),0 0 16px rgba(212,175,55,.10)}
+.joki-order-variant-option input:focus-visible+.joki-order-variant-card{outline:2px solid var(--accent-gold);outline-offset:3px}
+.joki-order-variant-copy{display:grid;gap:5px;min-width:0}
+.joki-order-variant-copy strong{color:var(--text-main);font-size:12px;letter-spacing:.5px}
+.joki-order-variant-copy small{color:var(--text-muted);font-size:10px;font-weight:400;line-height:1.4}
+.joki-order-variant-price{flex:0 0 auto;color:var(--accent-gold);font:600 15px Cinzel,serif;text-align:right}
+.joki-order-variant-price small{display:block;margin-top:3px;color:var(--text-muted);font:500 9px Inter,sans-serif}
 body.order-modal-open{overflow:hidden}
 .category-head h2{margin:0;font:600 18px Cinzel,serif;white-space:nowrap}
 .category-head:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--accent-gold),transparent);opacity:.65}
@@ -136,13 +153,27 @@ footer{text-align:center;padding:22px 0 30px;color:var(--text-muted);font:400 10
         <p class="lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
         <div class="identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
         <div class="selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
-        <div id="jokiOrderVariantField" hidden>
-          <label for="jokiOrderVariant">Tipe City Hall 12 <span class="required">*</span></label>
-          <select id="jokiOrderVariant" required>
-            <option value="" selected disabled>Pilih KOSONGAN atau ISIAN</option>
-            <option value="KOSONGAN">KOSONGAN — tanpa resource · Rp29.000/char</option>
-            <option value="ISIAN">ISIAN — resource 10–15M+ · Rp35.000/char</option>
-          </select>
+        <div id="jokiOrderVariantField" class="joki-order-variant" hidden>
+          <div class="joki-order-variant-heading">
+            <span class="joki-order-variant-kicker">KHUSUS CITY HALL 12</span>
+            <p>Pilih tipe pengerjaan sebelum melanjutkan pesanan.</p>
+          </div>
+          <div class="joki-order-variant-options" role="radiogroup" aria-label="Pilih tipe City Hall 12">
+            <label class="joki-order-variant-option">
+              <input id="jokiOrderVariant" type="radio" name="jokiOrderVariant" value="KOSONGAN" required>
+              <span class="joki-order-variant-card">
+                <span class="joki-order-variant-copy"><strong>KOSONGAN</strong><small>Tanpa tambahan resource</small></span>
+                <strong class="joki-order-variant-price">Rp29.000<small>per karakter</small></strong>
+              </span>
+            </label>
+            <label class="joki-order-variant-option">
+              <input type="radio" name="jokiOrderVariant" value="ISIAN" required>
+              <span class="joki-order-variant-card">
+                <span class="joki-order-variant-copy"><strong>ISIAN</strong><small>Termasuk resource 10–15M+</small></span>
+                <strong class="joki-order-variant-price">Rp35.000<small>per karakter</small></strong>
+              </span>
+            </label>
+          </div>
         </div>
         <label for="jokiOrderQuantity" id="jokiOrderQuantityLabel">Jumlah Karakter</label>
         <input id="jokiOrderQuantity" type="text" min="4" max="12" value="4" inputmode="numeric" autocomplete="off" required>
