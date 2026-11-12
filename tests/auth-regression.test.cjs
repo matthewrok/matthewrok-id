@@ -937,3 +937,23 @@ test("ORDER REGISTRATION places quantity before Kingdom and validates both field
   assert.match(source, /requestedQty<4\|\|requestedQty>12/);
   assert.match(source, /if\(raw===""\)\{updateTotal\(\);return;\}/);
 });
+
+
+test("all website WhatsApp contact links use Matthew's official number", () => {
+  const files = [
+    "index.html",
+    "joki-matthew.html",
+    "layanan-joki.html",
+    "member-dashboard.html",
+    "assets/js/home-orders.js"
+  ];
+  const links = files.flatMap(file => {
+    const source = fs.readFileSync(path.join(ROOT, file), "utf8");
+    return [...source.matchAll(/https?:\\/\\/(?:wa\\.me\\/|api\\.whatsapp\\.com\\/send\\?phone=)(\\d+)/g)]
+      .map(match => ({ file, number: match[1] }));
+  });
+  assert.ok(links.length > 0, "expected at least one WhatsApp contact link");
+  for (const link of links) {
+    assert.equal(link.number, "6285894152856", link.file + " must use Matthew's WhatsApp number");
+  }
+});
