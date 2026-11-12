@@ -493,6 +493,7 @@
 
             function printInvoice(order, email) {
                 const safe = escapeHtml;
+                const isActionPoint = String(order.service_name || '').toLowerCase().includes('action point');
                 const invoiceHtml = '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice ' + safe(order.order_number) + '</title><style>' +
                     '*{box-sizing:border-box}body{font:14px/1.65 Arial,sans-serif;color:#17233d;background:#eef3ff;margin:0;padding:28px 16px}' +
                     '.sheet{max-width:760px;margin:0 auto;background:#fff;border:1px solid #d9e4fa;border-radius:18px;padding:clamp(22px,5vw,48px);box-shadow:0 18px 55px #18315b18}' +
@@ -504,8 +505,8 @@
                     '@media print{body{background:white;padding:0}.sheet{box-shadow:none;border:0;border-radius:0;max-width:none}.actions{display:none}}' +
                     '</style></head><body><main class="sheet"><header><span class="eyebrow">MATTHEW.RMN · TRUSTED ROK SERVICE</span><h1>MATTHEW JOKI</h1><p><b>INVOICE PESANAN</b></p><div class="code">Kode: ' + safe(order.order_number) + '</div><small class="meta">Diterbitkan: ' + new Date().toLocaleDateString('id-ID') + '</small></header>' +
                     '<p>Nama: <b>' + safe(order.client_name || '—') + '</b><br>Email: ' + safe(email || '—') + '</p>' +
-                    '<div class="row"><span>Kingdom</span><b>' + safe(order.kingdom_number || '—') + '</b></div><div class="row"><span>Layanan</span><b>' + safe(order.service_name || '—') + '</b></div>' +
-                    '<div class="row"><span>Jumlah</span><b>' + safe(order.quantity ?? '—') + '</b></div><div class="row"><span>Harga satuan</span><b>' + money(order.unit_price) + '</b></div>' +
+                    (isActionPoint ? '' : '<div class="row"><span>Kingdom</span><b>' + safe(order.kingdom_number || '—') + '</b></div>') + '<div class="row"><span>Layanan</span><b>' + safe(order.service_name || '—') + '</b></div>' +
+                    '<div class="row"><span>' + (isActionPoint ? 'Jumlah Action Point' : 'Jumlah Karakter') + '</span><b>' + safe(isActionPoint ? (order.quantity ?? '—') + 'K AP' : (order.quantity ?? '—') + ' karakter') + '</b></div><div class="row"><span>' + (isActionPoint ? 'Harga per 1K AP' : 'Harga per karakter') + '</span><b>' + money(order.unit_price) + '</b></div>' +
                     '<div class="row"><span>Subtotal</span><b>' + money(order.subtotal_price) + '</b></div><div class="row"><span>Voucher</span><b>' + safe(order.voucher_code || '—') + '</b></div>' +
                     '<div class="row"><span>Diskon</span><b>− ' + money(order.discount_amount) + '</b></div><div class="row total"><span>Total</span><b>' + money(order.total_price) + '</b></div>' +
                     '<div class="status">Status: <b>' + safe(order.status || 'Menunggu') + '</b> · Progres: <b>' + safe(order.progress_percent ?? 0) + '%</b></div><p class="meta">Invoice ini merupakan ringkasan pesanan dari MATTHEW JOKI.</p></main>' +
