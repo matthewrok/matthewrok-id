@@ -25,7 +25,8 @@
   function normalizeQuantity(){
     if(!quantity)return;
     const raw=quantity.value.trim();
-    const qty=raw===""?1:Math.max(1,Math.min(12,Math.floor(Number(raw)||1)));
+    if(raw===""){updateTotal();return;}
+    const qty=Math.min(12,Math.max(0,Math.floor(Number(raw)||0)));
     quantity.value=String(qty);
     updateTotal();
   }
@@ -111,7 +112,7 @@
   }
   syncVisitorRestrictions();
   window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
-  quantity?.addEventListener("input",updateTotal);
+  quantity?.addEventListener("input",()=>{if(Number(quantity.value)>12)quantity.value="12";updateTotal();});
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
   quantity?.addEventListener("blur",normalizeQuantity);
@@ -135,8 +136,8 @@
     if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
     const kingdomInput=$("jokiOrderKingdom");
     const kingdomNumber=(kingdomInput?.value||"").trim();
-    if(!/^[0-9]{1,12}$/.test(kingdomNumber)){
-      $("jokiOrderMessage").textContent="Nomor Kingdom wajib diisi dengan angka (1–12 digit).";
+    if(!/^[0-9]{4}$/.test(kingdomNumber)){
+      $("jokiOrderMessage").textContent="Nomor Kingdom wajib diisi tepat 4 digit angka.";
       kingdomInput?.focus();
       return;
     }
