@@ -245,7 +245,8 @@
     if(completed) {
       const reorder=document.createElement("a");
       const service=String(order.service_name||"").toLowerCase();
-      const productCode=service.includes("17")?"ch17":service.includes("13")?"ch13":service.includes("11")?"ch11":null;
+      const cityHallMatch=service.match(/(?:city hall|ch)\s*(1[1-7])/i);
+      const productCode=cityHallMatch?"ch"+cityHallMatch[1]:null;
       reorder.href=productCode?"/?order="+productCode+"#produk-joki":"/#produk-joki";
       reorder.className="btn-action"; reorder.innerHTML=actionIcon("reorder")+'<span>Pesan Lagi</span>'; actions.appendChild(reorder);
     }
