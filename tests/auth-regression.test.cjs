@@ -897,5 +897,4 @@ test("Matthew Rewards and Membership History use the shared authenticated access
   const history = fs.readFileSync(path.join(ROOT, "assets/js/membership-history.js"), "utf8");
   assert.match(rewards, /__matthewVerifiedUser/);
   assert.match(history, /__matthewVerifiedUser/);
-  }
 });
