@@ -12,6 +12,7 @@ test("Member Wishlist page loads and documents supported packages", async ({ req
   const js = await script.text();
   expect(js).toContain("get_my_package_wishlist");
   expect(js).toContain("remove_my_package_from_wishlist");
+  expect(js).toContain('"warga biasa","warga tidak biasa","warga sultan"');
 });
 
 test("Wishlist SQL restricts records to authenticated active Warga owners and fails closed without a profile", async ({ request }) => {

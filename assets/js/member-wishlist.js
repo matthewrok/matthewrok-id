@@ -12,7 +12,7 @@
   const {data:{session},error}=await db.auth.getSession();
   if(error||!session){location.replace("/login.html?next=member-wishlist.html");return;}
   const {data,error:profileError}=await db.from("profiles").select("role,account_status").eq("id",session.user.id).maybeSingle();
-  if(profileError||!data||String(data.account_status).toLowerCase()!=="active"||!["warga_biasa","warga_tidak_biasa","warga_sultan"].includes(String(data.role).toLowerCase())){
+  if(profileError||!data||String(data.account_status).toLowerCase()!=="active"||!["warga biasa","warga tidak biasa","warga sultan"].includes(String(data.role).trim().toLowerCase())){
    message("Wishlist hanya tersedia untuk akun Warga yang aktif.","error");return;
   }
   const {data:items,error:loadError}=await db.rpc("get_my_package_wishlist");

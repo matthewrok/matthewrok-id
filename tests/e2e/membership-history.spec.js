@@ -26,6 +26,7 @@ test("Membership History migration logs baseline and future role transitions wit
   expect(sql).toContain("revoke all on public.warga_membership_history from public, anon, authenticated");
   expect(sql).toContain("grant execute on function public.get_my_warga_membership_history() to authenticated");
   expect(sql).toContain("19 - v_completed");
+  expect(sql).toContain("select id, previous_role, new_role, completed_orders, event_type, changed_at");
 });
 
 test("Member Center links to the membership timeline", async ({ request }) => {
