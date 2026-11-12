@@ -45,8 +45,11 @@
     if(selected==="AP-LOHAR"){
       const amount=parseActionPointK(raw);
       if(amount===null){$("jokiOrderQuantityHint").textContent="Masukkan jumlah valid: 1 = 1K atau 1.000 = 1K Action Point.";updateTotal();return;}
-      quantity.value=String(amount);
-      $("jokiOrderQuantityHint").textContent=""+amount+"K Action Point · Rp"+(amount*1000).toLocaleString("id-ID");
+      // Tampilkan jumlah AP aktual dengan pemisah ribuan agar pengguna langsung melihat
+      // bahwa input "1" berarti 1.000 AP (1K), bukan satu AP.
+      const formattedAp=(amount*1000).toLocaleString("id-ID");
+      quantity.value=formattedAp;
+      $("jokiOrderQuantityHint").textContent=formattedAp+" AP · "+amount+"K Action Point · Rp"+(amount*1000).toLocaleString("id-ID");
       updateTotal();return;
     }
     const qty=Math.min(12,Math.max(0,Math.floor(Number(raw)||0)));
@@ -144,7 +147,15 @@
   }
   syncVisitorRestrictions();
   window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
-  quantity?.addEventListener("input",()=>{if(selected!=="AP-LOHAR"&&Number(quantity.value)>12)quantity.value="12";updateTotal();});
+  quantity?.addEventListener("input",()=>{
+    if(selected==="AP-LOHAR"){
+      const amount=parseActionPointK(quantity.value);
+      $("jokiOrderQuantityHint").textContent=amount===null
+        ?"Masukkan 1 untuk 1.000 AP (1K), atau jumlah ribuan lainnya."
+        :(amount*1000).toLocaleString("id-ID")+" AP · "+amount+"K Action Point";
+    }else if(Number(quantity.value)>12)quantity.value="12";
+    updateTotal();
+  });
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
   quantity?.addEventListener("blur",normalizeQuantity);
