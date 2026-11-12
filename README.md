@@ -203,3 +203,8 @@ Lihat docs/ACCESS-CONTROL.md untuk skenario uji manual. Pengujian browser dengan
 - supabase/add_maintenance_foreign_key_indexes.sql — index untuk foreign key audit/config maintenance; migrasi `add_maintenance_foreign_key_indexes` sudah diterapkan.
 - supabase/harden_admin_helpers_active_status.sql — helper admin hanya mengakui akun berstatus active; migrasi `harden_admin_helpers_active_status` sudah diterapkan.
 - supabase/functions/inbox-send/index.ts — source Edge Function yang memblokir pengiriman saat Inbox/full maintenance dan mensyaratkan admin aktif; deploy setelah PR #13 dipublikasikan.
+
+
+## Aplikasi Android dan iOS
+
+Target aplikasi MATTHEW JOKI adalah Android (APK) serta iPhone/iPad (aplikasi iOS/IPA setelah signing). Implementasi Android ada di `android/`, sedangkan project SwiftUI + WKWebView iOS ada di `ios/`. Panduan platform, pengujian, dan distribusi: [docs/APPLICATIONS-ANDROID-IOS.md](docs/APPLICATIONS-ANDROID-IOS.md). Build CI iOS membutuhkan macOS/Xcode; IPA perangkat fisik memerlukan signing Apple. Emulator PC bukan target distribusi atau dukungan.
