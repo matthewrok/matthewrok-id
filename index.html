@@ -447,12 +447,14 @@
                         </select>
                         <small>KOSONGAN Rp29.000/karakter · ISIAN Rp35.000/karakter.</small>
                     </div>
-                    <label for="jokiOrderQuantity">Jumlah Karakter</label>
-                    <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" step="1" required>
-                    <small class="joki-order-field-hint">Minimal 4 · Maksimal 12 karakter</small>
-                    <label for="jokiOrderKingdom">Kingdom <span class="joki-required" aria-label="wajib diisi">*</span></label>
-                    <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" placeholder="Masukkan 4 digit nomor Kingdom" required>
-                    <small id="jokiOrderKingdomHint" class="joki-order-field-hint">Silahkan isi dengan Kingdom Tujuan Joki.</small>
+                    <label for="jokiOrderQuantity" id="jokiOrderQuantityLabel">Jumlah Karakter</label>
+                    <input id="jokiOrderQuantity" type="text" inputmode="numeric" autocomplete="off" value="4" required>
+                    <small class="joki-order-field-hint" id="jokiOrderQuantityHint">Minimal 4 · Maksimal 12 karakter</small>
+                    <div id="jokiOrderKingdomField">
+                        <label for="jokiOrderKingdom">Kingdom <span class="joki-required" aria-label="wajib diisi">*</span></label>
+                        <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" placeholder="Masukkan 4 digit nomor Kingdom" required>
+                        <small id="jokiOrderKingdomHint" class="joki-order-field-hint">Silahkan isi dengan Kingdom Tujuan Joki.</small>
+                    </div>
                     <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
                     <div class="joki-order-total"><span>Subtotal</span><strong id="jokiOrderSubtotal">Rp17.000</strong></div>
                     <div class="joki-order-total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div>
