@@ -908,8 +908,8 @@ test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () 
   assert.match(html, /name="jokiOrderVariant" value="KOSONGAN"/);
   assert.match(html, /name="jokiOrderVariant" value="ISIAN"/);
   assert.match(html, /class="joki-order-variant-card"/);
-  assert.match(html, /Rp29\\.000/);
-  assert.match(html, /Rp35\\.000/);
+  assert.match(html, /Rp29\.000/);
+  assert.match(html, /Rp35\.000/);
   assert.match(source, /selected==="CH12"\s*&&!\["KOSONGAN","ISIAN"\]\.includes\(variant\)/);
   assert.match(source, /"CH12-"\+variant/);
   assert.match(migration, /CH12-KOSONGAN/);
