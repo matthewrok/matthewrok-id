@@ -175,7 +175,7 @@
         .joki-order-identity strong,.joki-order-selected strong { color: var(--text-main); font-size: 13px; }
         .joki-order-identity small { color: var(--text-muted); overflow-wrap: anywhere; }
         .joki-order-dialog label { display: block; margin: 14px 0 7px; color: #e5e7eb; font-size: 12px; }
-        .joki-order-dialog input { width: 100%; min-height: 44px; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #121212; color: white; }
+        .joki-order-dialog input,.joki-order-dialog select { width: 100%; min-height: 44px; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #121212; color: white; }
         .joki-order-voucher-row { display: flex; align-items: center; gap: 7px; }
         .joki-order-voucher-row input { flex: 1; min-width: 0; }
         .joki-voucher-check { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; background: #1b1b1b; color: white; cursor: pointer; }
@@ -427,6 +427,15 @@
                     <p class="joki-order-lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
                     <div class="joki-order-identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
                     <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
+                    <div id="jokiOrderVariantField" hidden>
+                        <label for="jokiOrderVariant">Tipe City Hall 12 <span aria-hidden="true">*</span></label>
+                        <select id="jokiOrderVariant" required>
+                            <option value="" selected disabled>Pilih KOSONGAN atau ISIAN</option>
+                            <option value="KOSONGAN">KOSONGAN — tanpa resource</option>
+                            <option value="ISIAN">ISIAN — resource 10–15M+</option>
+                        </select>
+                        <small>Kedua pilihan memiliki harga yang sama, Rp29.000/karakter.</small>
+                    </div>
                     <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
                     <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required>
                     <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
@@ -545,7 +554,7 @@
     <script defer src="/assets/js/home-announcement.js?v=20261104"></script>
     <script defer src="/assets/js/home.js?v=20261108-perf1"></script>
     <script defer src="/assets/js/home-visitor.js"></script>
-    <script defer src="/assets/js/home-orders.js?v=20261104-5"></script>
+    <script defer src="/assets/js/home-orders.js?v=20261112-ch12-variants"></script>
     <script defer src="/assets/js/wishlist.js?v=20261109-2"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
