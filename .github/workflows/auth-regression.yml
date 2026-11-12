@@ -1,6 +1,14 @@
 name: Authentication regression tests
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/js/access-guard.js"
+      - "member-rewards.html"
+      - "member-membership-history.html"
+      - "tests/auth-regression.test.cjs"
+      - ".github/workflows/auth-regression.yml"
   pull_request:
     paths:
       - "assets/js/auth.js"
