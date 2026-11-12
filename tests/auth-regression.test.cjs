@@ -892,6 +892,10 @@ test("Matthew Rewards and Membership History use the shared authenticated access
   ]) {
     const html = fs.readFileSync(path.join(ROOT, page), "utf8");
     assert.ok(html.includes("/assets/js/access-guard.js?v=" + version), page + " must load the updated access guard");
-    assert.match(html, /__matthewVerifiedUser/);
+  }
+  const rewards = fs.readFileSync(path.join(ROOT, "member-rewards.html"), "utf8");
+  const history = fs.readFileSync(path.join(ROOT, "assets/js/membership-history.js"), "utf8");
+  assert.match(rewards, /__matthewVerifiedUser/);
+  assert.match(history, /__matthewVerifiedUser/);
   }
 });
