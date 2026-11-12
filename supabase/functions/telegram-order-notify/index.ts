@@ -138,7 +138,6 @@ Deno.serve(async (req: Request) => {
     const record = payload?.record ?? payload?.data?.record ?? payload;
     if (!record || typeof record !== "object" || !record.order_number) return Response.json({ error: "Missing order record" }, { status: 400 });
     const isActionPoint = String(record.service_name || "").toLowerCase().includes("action point");
-    const isActionPoint = String(record.service_name || "").toLowerCase().includes("action point");
     const message = [
       "🔔 <b>PESANAN BARU — MATTHEW JOKI</b>", "",
       `🧾 <b>No. Pesanan:</b> <code>${esc(record.order_number)}</code>`,
