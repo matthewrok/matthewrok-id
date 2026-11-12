@@ -7,7 +7,7 @@
   const {data:{session},error}=await db.auth.getSession();
   if(error||!session){buttons.forEach(b=>b.title="Login sebagai member untuk menyimpan paket");return;}
   const {data:profile}=await db.from("profiles").select("role,account_status").eq("id",session.user.id).maybeSingle();
-  const eligible=profile&&String(profile.account_status||"").toLowerCase()==="active"&&["warga_biasa","warga_tidak_biasa","warga_sultan"].includes(String(profile.role||"").toLowerCase());
+  const eligible=profile&&String(profile.account_status||"").toLowerCase()==="active"&&["warga biasa","warga tidak biasa","warga sultan"].includes(String(profile.role||"").trim().toLowerCase());
   if(!eligible){buttons.forEach(b=>{b.disabled=true;b.title="Wishlist hanya tersedia untuk member Warga aktif";});return;}
   const {data,error:loadError}=await db.rpc("get_my_package_wishlist");
   if(loadError){console.warn("[Wishlist] Gagal memuat status simpan:",loadError);return;}
