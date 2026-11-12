@@ -73,3 +73,8 @@ Before public distribution, test on physical Android devices:
 - Uploading payment evidence and other supported documents.
 - WhatsApp, payment-provider links, downloads, and Android back navigation.
 - Network loss/recovery and expired login sessions.
+
+
+## Target perangkat
+
+APK ditujukan untuk ponsel dan tablet Android fisik. Emulator Android yang dipakai workflow CI hanya untuk smoke test otomatis internal; BlueStacks, LDPlayer, dan MEmu bukan target dukungan atau distribusi aplikasi.
