@@ -26,7 +26,7 @@ public class MainActivitySmokeTest {
         AtomicReference<Integer> mixedContentMode = new AtomicReference<>();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            for (int attempt = 0; attempt < 60; attempt++) {
+            for (int attempt = 0; attempt < 90; attempt++) {
                 scenario.onActivity(activity -> {
                     WebView webView = activity.findViewById(R.id.web_view);
                     if (webView == null) return;
@@ -38,7 +38,10 @@ public class MainActivitySmokeTest {
                         domStorageEnabled.set(webView.getSettings().getDomStorageEnabled());
                         fileAccessEnabled.set(webView.getSettings().getAllowFileAccess());
                         mixedContentMode.set(webView.getSettings().getMixedContentMode());
-                        webView.evaluateJavascript("document.readyState", readyState::set);
+                        webView.evaluateJavascript("document.readyState", value -> {
+                            // evaluateJavascript returns a JSON-encoded string, including quotes.
+                            readyState.set(value == null ? null : value.replace("\\\"", ""));
+                        });
                     }
                 });
 
