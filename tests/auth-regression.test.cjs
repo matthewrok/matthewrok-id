@@ -911,5 +911,8 @@ test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () 
   assert.match(source, /"CH12-"\+variant/);
   assert.match(migration, /CH12-KOSONGAN/);
   assert.match(migration, /CH12-ISIAN/);
-  assert.match(migration, /v_price:=29000/);
+  assert.match(migration, /CH12-KOSONGAN[\s\S]*v_price:=29000/);
+  assert.match(migration, /CH12-ISIAN[\s\S]*v_price:=35000/);
+  assert.match(source, /35000/);
+  assert.match(html, /29K–35K/);
 });
