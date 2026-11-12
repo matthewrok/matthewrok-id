@@ -199,6 +199,24 @@ footer{text-align:center;padding:22px 0 30px;color:var(--text-muted);font:400 10
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/supabase.js"></script>
+  <script>
+    (() => {
+      const bootMemberIdentity = async () => {
+        const db=window.supabaseClient;
+        if(!db)return;
+        try{
+          const {data:{user},error}=await db.auth.getUser();
+          if(error||!user||user.is_anonymous)return;
+          const {data:profile,error:profileError}=await db.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
+          if(profileError||!profile)return;
+          window.HomeApp=window.HomeApp||{};
+          window.HomeApp.currentIdentity={name:profile.full_name||user.email||"Client",email:user.email||"",isVisitor:false};
+          document.dispatchEvent(new Event("matthew:identity-ready"));
+        }catch(error){console.warn("[Catalog auth] Gagal memuat identitas:",error);}
+      };
+      bootMemberIdentity();
+    })();
+  </script>
   <script src="/assets/js/home-orders.js?v=20261112-action-point-lohar"></script>
 </body>
 </html>
