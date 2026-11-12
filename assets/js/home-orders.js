@@ -50,10 +50,24 @@
       priceNode.innerHTML='<span class="daily-discount-original">'+original+'</span><strong class="daily-discount-current">'+discounted+' <small>'+suffix+'</small></strong>';
       priceNode.dataset.dailyDiscountApplied="true";
       card.classList.add("has-daily-discount");
+      const minimum=dailyDiscountMinimums.get(code)||4;
+      const ribbonText="DISKON "+percent+"% • MIN "+minimum+" CHAR";
       const ribbon=document.createElement("span");
       ribbon.className="daily-discount-ribbon";
-      ribbon.textContent="✦ DISKON "+percent+"% · MIN "+(dailyDiscountMinimums.get(code)||4)+" CHAR";
-      ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen, minimal "+(dailyDiscountMinimums.get(code)||4)+" karakter");
+      ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen, minimal "+minimum+" karakter");
+      const viewport=document.createElement("span");
+      viewport.className="daily-discount-marquee";
+      viewport.setAttribute("aria-hidden","true");
+      const track=document.createElement("span");
+      track.className="daily-discount-marquee-track";
+      for(let copy=0;copy<3;copy++){
+        const item=document.createElement("span");
+        item.className="daily-discount-marquee-item";
+        item.textContent=ribbonText;
+        track.appendChild(item);
+      }
+      viewport.appendChild(track);
+      ribbon.appendChild(viewport);
       card.appendChild(ribbon);
     });
   }
