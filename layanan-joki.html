@@ -145,7 +145,7 @@ footer{text-align:center;padding:22px 0 30px;color:var(--text-muted);font:400 10
           </select>
         </div>
         <label for="jokiOrderQuantity" id="jokiOrderQuantityLabel">Jumlah Karakter</label>
-        <input id="jokiOrderQuantity" type="text" inputmode="numeric" autocomplete="off" value="4" required>
+        <input id="jokiOrderQuantity" type="text" min="4" max="12" value="4" inputmode="numeric" autocomplete="off" required>
         <small class="hint" id="jokiOrderQuantityHint">Minimal 4 · Maksimal 12 karakter</small>
         <div id="jokiOrderKingdomField">
           <label for="jokiOrderKingdom">Kingdom <span class="required">*</span></label>
