@@ -982,6 +982,10 @@ test("Action Point / Lohar is searchable and uses the direct K-AP order form", (
   assert.match(home, /id="jokiOrderKingdomField"/);
   assert.match(orders, /"AP-LOHAR":\{name:"Joki Action Point \/ Lohar",price:1000/);
   assert.match(orders, /function parseActionPointK/);
+  assert.match(orders, /const formattedAp=\(amount\*1000\)\.toLocaleString\("id-ID"\)/);
+  assert.match(orders, /quantity\.value=formattedAp/);
+  assert.match(orders, /formattedAp\+" AP · "\+amount\+"K Action Point"/);
+  assert.match(orders, /Masukkan 1 untuk 1\.000 AP \(1K\)/);
   assert.match(orders, /replace\(\/\[/);
   assert.match(orders, /if\(amount%1000!==0\)return null/);
   assert.match(orders, /quantityLabel\.textContent=isActionPoint\?"Berapa K Action Point\?"/);
