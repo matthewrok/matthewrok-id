@@ -311,8 +311,7 @@
         "Token Pelacakan Rahasia: "+order.tracking_token,"",
         "Simpan token ini. Gunakan token tersebut (bukan nomor order) untuk melacak progres:",
         "https://matthewrok.my.id/joki-matthew.html","","Terima kasih."
-      ].join("
-");
+      ].join("\\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";
       const whatsappUrl="https://wa.me/6285894152856?text="+encodeURIComponent(message);
       // Tandai transaksi selesai sebelum membuka WhatsApp. Klik ulang hanya membuka tautan,
