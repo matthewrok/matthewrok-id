@@ -932,7 +932,7 @@ test("ORDER REGISTRATION places quantity before Kingdom and validates both field
   assert.match(html, /class="joki-required"/);
   assert.match(html, /\.joki-required \{ color: #ff4d5e/);
   assert.match(html, /\.joki-order-field-hint[\s\S]*font-size: 10px/);
-  assert.match(source, /if\(!\/\^\[0-9\]\{4\}\$\/\.test\(kingdomNumber\)\)/);
+  assert.match(source, /if\(!isActionPoint&&!\/\^\[0-9\]\{4\}\$\/\.test\(kingdomNumber\)\)/);
   assert.match(source, /Nomor Kingdom wajib diisi tepat 4 digit angka/);
   assert.match(source, /requestedQty<4\|\|requestedQty>12/);
   assert.match(source, /if\(raw===""\)\{updateTotal\(\);return;\}/);
@@ -982,7 +982,7 @@ test("Action Point / Lohar is searchable and uses the direct K-AP order form", (
   assert.match(home, /id="jokiOrderKingdomField"/);
   assert.match(orders, /"AP-LOHAR":\{name:"Joki Action Point \/ Lohar",price:1000/);
   assert.match(orders, /function parseActionPointK/);
-  assert.match(orders, /replace\(\/[\\s.,]\//);
+  assert.match(orders, /replace\(\/\[/);
   assert.match(orders, /if\(amount%1000!==0\)return null/);
   assert.match(orders, /quantityLabel\.textContent=isActionPoint\?"Berapa K Action Point\?"/);
   assert.match(orders, /kingdomField\.hidden=isActionPoint/);
