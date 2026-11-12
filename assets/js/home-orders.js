@@ -323,7 +323,7 @@
         "Status Awal: "+order.status,
         "Progress: 0% — Menunggu Pembayaran / Administrasi",
         "",
-        "🔐 *TOKEN PELACAKAN RAHASIA*",
+        "🔐 *Token Pelacakan Rahasia:*",
         order.tracking_token,
         "",
         "Simpan token ini. Gunakan token tersebut (bukan nomor order) untuk melacak progres:",
