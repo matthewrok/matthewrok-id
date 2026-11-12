@@ -21,6 +21,17 @@
   function getCatalogCard(button){return button.closest(".product-card, .card");}
   function renderDailyDiscounts(){
     document.querySelectorAll("[data-order-product]").forEach(button=>{
+      const card=getCatalogCard(button);
+      if(!card)return;
+      const priceNode=card.querySelector(".product-price, .price");
+      card.querySelector(".daily-discount-ribbon")?.remove();
+      card.classList.remove("has-daily-discount");
+      if(priceNode?.dataset.dailyDiscountOriginal!==undefined){
+        priceNode.innerHTML=priceNode.dataset.dailyDiscountOriginal;
+        delete priceNode.dataset.dailyDiscountApplied;
+      }
+    });
+    document.querySelectorAll("[data-order-product]").forEach(button=>{
       const card=getCatalogCard(button),code=String(button.dataset.orderProduct||"").toUpperCase();
       if(!card)return;
       const percent=dailyDiscounts.get(code);
@@ -32,6 +43,7 @@
       if(code==="CH12")discounted=money(discountedPrice(29000,percent))+"–"+money(discountedPrice(35000,percent));
       else discounted=money(discountedPrice(products[code]?.price||0,percent));
       const suffix=code==="AP-LOHAR"?"/ 1K AP":"/ char";
+      if(priceNode.dataset.dailyDiscountOriginal===undefined)priceNode.dataset.dailyDiscountOriginal=priceNode.innerHTML;
       priceNode.classList.add("daily-discount-price");
       priceNode.innerHTML='<span class="daily-discount-original">'+original+'</span><strong class="daily-discount-current">'+discounted+' <small>'+suffix+'</small></strong>';
       priceNode.dataset.dailyDiscountApplied="true";
@@ -68,7 +80,7 @@
       updateTotal();
     }catch(error){console.warn("[Daily discounts] Diskon harian belum dapat dimuat:",error);}
   }
-  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
+  // Recheck periodically so an open tab also rolls over to the next Jakarta day.\n  window.setInterval(loadDailyDiscounts,15*60*1000);\n  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
   function parseActionPointK(raw){
     const value=String(raw??"").trim().replace(/[\s.,]/g,"");
     if(!/^\d+$/.test(value))return null;
