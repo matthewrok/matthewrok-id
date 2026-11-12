@@ -16,7 +16,8 @@
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
   const dailyDiscounts=new Map();
-  const discountProducts=["CH11","CH12","CH13","CH14","CH15","CH16","CH17","AP-LOHAR"];
+  const dailyDiscountMinimums=new Map();
+  const discountProducts=["CH11","CH12","CH13","CH14","CH15","CH16","CH17"];
   const discountedPrice=(price,percent)=>Math.max(1,Math.round(Number(price)*(100-percent)/100));
   function getCatalogCard(button){return button.closest(".product-card, .card");}
   function renderDailyDiscounts(){
@@ -43,7 +44,7 @@
       let discounted;
       if(code==="CH12")discounted=money(discountedPrice(29000,percent))+"–"+money(discountedPrice(35000,percent));
       else discounted=money(discountedPrice(products[code]?.price||0,percent));
-      const suffix=code==="AP-LOHAR"?"/ 1K AP":"/ char";
+      const suffix="/ char";
       if(priceNode.dataset.dailyDiscountOriginal===undefined)priceNode.dataset.dailyDiscountOriginal=priceNode.innerHTML;
       priceNode.classList.add("daily-discount-price");
       priceNode.innerHTML='<span class="daily-discount-original">'+original+'</span><strong class="daily-discount-current">'+discounted+' <small>'+suffix+'</small></strong>';
@@ -51,19 +52,23 @@
       card.classList.add("has-daily-discount");
       const ribbon=document.createElement("span");
       ribbon.className="daily-discount-ribbon";
-      ribbon.textContent=percent+"% OFF";
-      ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen");
+      ribbon.textContent=percent+"% OFF · MIN "+(dailyDiscountMinimums.get(code)||4)+" CHAR";
+      ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen, minimal "+(dailyDiscountMinimums.get(code)||4)+" karakter");
       card.appendChild(ribbon);
     });
   }
   function updateSelectedProductSummary(){
     if(!selected||!products[selected])return;
     const p=products[selected],percent=dailyDiscounts.get(selected)||0;
-    const priceFor=base=>percent?discountedPrice(base,percent):base;
+    const minimum=Number(dailyDiscountMinimums.get(selected)||0);
+    const qty=Number(quantity?.value)||0;
+    const eligible=!!percent&&qty>=minimum;
+    const priceFor=base=>eligible?discountedPrice(base,percent):base;
     const priceText=selected==="CH12"
       ?money(priceFor(29000))+"–"+money(priceFor(35000))+"/char"
       :money(priceFor(p.price))+(selected==="AP-LOHAR"?"/1K AP":"/char");
-    $("jokiOrderProduct").textContent=p.name+" · "+priceText+(percent?" · Diskon harian "+percent+"%":"");
+    const promoNote=percent?" · Promo "+percent+"% OFF mulai "+minimum+" karakter":"";
+    $("jokiOrderProduct").textContent=p.name+" · "+priceText+promoNote;
   }
   async function loadDailyDiscounts(){
     if(!db?.rpc)return;
@@ -71,10 +76,15 @@
       const {data,error}=await db.rpc("get_daily_joki_discounts");
       if(error)throw error;
       dailyDiscounts.clear();
+      dailyDiscountMinimums.clear();
       (Array.isArray(data)?data:[]).forEach(row=>{
         const code=String(row.product_code||"").toUpperCase();
         const percent=Number(row.discount_percent);
-        if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=1&&percent<=30)dailyDiscounts.set(code,percent);
+        const minimum=Number(row.minimum_characters);
+        if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=1&&percent<=30&&[4,6,8,10].includes(minimum)){
+          dailyDiscounts.set(code,percent);
+          dailyDiscountMinimums.set(code,minimum);
+        }
       });
       renderDailyDiscounts();
       updateSelectedProductSummary();
@@ -101,11 +111,14 @@
     const qty=isActionPoint?(raw===""?0:(parseActionPointK(raw)||0)):(raw===""?0:Math.max(0,Math.min(12,Number(raw)||0)));
     const baseUnitPrice=selected==="CH12"&&selectedCh12Variant()==="ISIAN"?35000:p.price;
     const dailyPercent=dailyDiscounts.get(selected)||0;
-    const unitPrice=dailyPercent?discountedPrice(baseUnitPrice,dailyPercent):baseUnitPrice;
+    const dailyMinimum=dailyDiscountMinimums.get(selected)||0;
+    const dailyEligible=!!dailyPercent&&qty>=dailyMinimum;
+    const unitPrice=dailyEligible?discountedPrice(baseUnitPrice,dailyPercent):baseUnitPrice;
     const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0;
     $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—";
     $("jokiOrderDiscount").textContent=money(discount);
     $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
+    updateSelectedProductSummary();
   }
   function normalizeQuantity(){
     if(!quantity)return;
@@ -184,7 +197,7 @@
     const isActionPoint=code==="AP-LOHAR";
     const quantityLabel=$("jokiOrderQuantityLabel"),quantityHint=$("jokiOrderQuantityHint"),kingdomField=$("jokiOrderKingdomField"),kingdomInput=$("jokiOrderKingdom");
     if(quantityLabel)quantityLabel.textContent=isActionPoint?"Berapa K Action Point?":"Jumlah Karakter";
-    if(quantityHint)quantityHint.textContent=isActionPoint?"Isi 1 = 1K Action Point. Format 1.000 juga dihitung sebagai 1K. Harga Rp1.000 per 1K AP.":"Minimal 4 · Maksimal 12 karakter";
+    if(quantityHint)quantityHint.textContent=isActionPoint?"Isi 1 = 1K Action Point. Format 1.000 juga dihitung sebagai 1K. Harga Rp1.000 per 1K AP.":"Minimal 4 · Maksimal 12 karakter. Diskon harian hanya berlaku jika jumlah karakter memenuhi minimum promo.";
     if(kingdomField)kingdomField.hidden=isActionPoint;
     if(kingdomInput){kingdomInput.required=!isActionPoint;kingdomInput.value="";}
     quantity.value=isActionPoint?"1":"4";
@@ -289,7 +302,7 @@
         "No. Order: "+order.order_number,"Nama Client: "+order.client_name,
         ...(isActionPoint?[]:["Kingdom: "+kingdomNumber]),
         "Email: "+(order.client_email||"Visitor"),"Produk: "+order.service_name,
-        ...(dailyDiscounts.has(selected)?["Diskon harian: "+dailyDiscounts.get(selected)+"%"]:[]),
+        ...(dailyDiscounts.has(selected)&&requestedQty>=(dailyDiscountMinimums.get(selected)||99)?["Diskon harian: "+dailyDiscounts.get(selected)+"% (minimal "+dailyDiscountMinimums.get(selected)+" karakter)"]:[]),
         ...(isActionPoint?["Jumlah Action Point: "+order.quantity+"K AP","Harga per 1K AP: "+money(order.unit_price)]:["Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price)]),
         "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
         "Progress: 0% — Menunggu Pembayaran / Administrasi","",
