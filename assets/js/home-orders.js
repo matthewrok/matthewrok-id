@@ -52,7 +52,7 @@
       card.classList.add("has-daily-discount");
       const ribbon=document.createElement("span");
       ribbon.className="daily-discount-ribbon";
-      ribbon.textContent=percent+"% OFF · MIN "+(dailyDiscountMinimums.get(code)||4)+" CHAR";
+      ribbon.textContent="✦ DISKON "+percent+"% · MIN "+(dailyDiscountMinimums.get(code)||4)+" CHAR";
       ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen, minimal "+(dailyDiscountMinimums.get(code)||4)+" karakter");
       card.appendChild(ribbon);
     });
