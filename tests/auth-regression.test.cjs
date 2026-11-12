@@ -916,3 +916,24 @@ test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () 
   assert.match(source, /35000/);
   assert.match(html, /29K–35K/);
 });
+
+
+test("ORDER REGISTRATION places quantity before Kingdom and validates both fields", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const quantityIndex = html.indexOf('id="jokiOrderQuantity"');
+  const kingdomIndex = html.indexOf('id="jokiOrderKingdom"');
+  assert.ok(quantityIndex > -1 && kingdomIndex > quantityIndex, "quantity must appear above Kingdom");
+  assert.match(html, /value="4"[^>]*inputmode="numeric"/);
+  assert.match(html, /min="4" max="12"/);
+  assert.match(html, /Minimal 4 · Maksimal 12 karakter/);
+  assert.match(html, /pattern="\[0-9\]\{4\}" minlength="4" maxlength="4"/);
+  assert.match(html, /Silahkan isi dengan Kingdom Tujuan Joki\./);
+  assert.match(html, /class="joki-required"/);
+  assert.match(html, /\.joki-required \{ color: #ff4d5e/);
+  assert.match(html, /\.joki-order-field-hint[\s\S]*font-size: 10px/);
+  assert.match(source, /if\(!\/\^\[0-9\]\{4\}\$\/\.test\(kingdomNumber\)\)/);
+  assert.match(source, /Nomor Kingdom wajib diisi tepat 4 digit angka/);
+  assert.match(source, /requestedQty<4\|\|requestedQty>12/);
+  assert.match(source, /if\(raw===""\)\{updateTotal\(\);return;\}/);
+});
