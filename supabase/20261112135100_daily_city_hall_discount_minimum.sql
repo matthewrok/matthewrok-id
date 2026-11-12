@@ -48,7 +48,8 @@ declare
   v_definition text;
   v_old_select text := E'  select d.discount_percent into v_daily_discount\n  from public.get_daily_joki_discounts() d';
   v_new_select text := E'  select d.discount_percent, d.minimum_characters\n    into v_daily_discount, v_daily_minimum\n  from public.get_daily_joki_discounts() d';
-  v_old_condition text := 'if v_daily_discount is not null then';
+  v_old_condition text := 'if v_daily_discount is not null and v_daily_minimum is not null and p_quantity >= v_daily_minimum then';
+  v_legacy_condition text := 'if v_daily_discount is not null then';
   v_new_condition text := 'if p_product_code <> ''AP-LOHAR'' and v_daily_discount is not null and v_daily_minimum is not null and p_quantity >= v_daily_minimum then';
 begin
   select pg_get_functiondef(
@@ -71,10 +72,13 @@ begin
   end if;
 
   if strpos(v_definition, v_new_condition) = 0 then
-    if strpos(v_definition, v_old_condition) = 0 then
+    if strpos(v_definition, v_old_condition) > 0 then
+      v_definition := replace(v_definition, v_old_condition, v_new_condition);
+    elsif strpos(v_definition, v_legacy_condition) > 0 then
+      v_definition := replace(v_definition, v_legacy_condition, v_new_condition);
+    else
       raise exception 'Daily discount condition was not found; refusing to patch order pricing.';
     end if;
-    v_definition := replace(v_definition, v_old_condition, v_new_condition);
   end if;
 
   execute v_definition;
