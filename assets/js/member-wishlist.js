@@ -2,7 +2,7 @@
  const db=window.supabaseClient,$=id=>document.getElementById(id);
  const catalog={
   CH11:{name:"City Hall 11",tier:"STARTER",price:"17K/char",detail:"Siege 10K · Deadline 1–2 hari"},
-  CH12:{name:"City Hall 12",tier:"STARTER+",price:"29K–35K/char",detail:"Trading Post 12 · Vengeance Lv200 (Max) · Siege 15K+ · Resource: Pilihan · Deadline 2–3 hari"},
+  CH12:{name:"City Hall 12",tier:"STARTER+",price:"29K–35K/char",detail:"Trading Post 12 · Vengeance Lv200 (Max) · Siege 15K+ · Resource: Dapat dipilih · Deadline 2–3 hari"},
   CH13:{name:"City Hall 13",tier:"ADVANCED",price:"45K/char",detail:"Trading Post 13 · Vengeance Lv200 (Max) · Commander 27/27/27/27 · Siege 25K+ · Resource 25–30M · Deadline 3–5 hari"},
   CH14:{name:"City Hall 14",tier:"ADVANCED+",price:"55K/char",detail:"Trading Post 14 · Vengeance Lv200 (Max) · Commander 27/27/27/27 · Siege 45K+ · Resource 25–30M · Deadline 4–6 hari"},
   CH15:{name:"City Hall 15",tier:"ELITE",price:"75K/char",detail:"Trading Post 15 · Vengeance Lv200 (Max)+ · Commander 27/27/27/27 · Siege 50K+ · Resource 50M+ · Deadline 6–8 hari"},
