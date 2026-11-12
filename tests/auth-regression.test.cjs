@@ -1009,8 +1009,8 @@ test("Action Point / Lohar is searchable and uses the direct K-AP order form", (
 
 test("order submission closes the pre-opened blank tab when order creation fails", () => {
   const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
-  assert.match(source, /if\\(whatsappTab&&!whatsappTab\\.closed\\)\\{try\\{whatsappTab\\.close\\(\\);/);
-  assert.match(source, /whatsappTab\\.location\\.replace\\(whatsappUrl\\)/);
+  assert.match(source, /if\(whatsappTab&&!whatsappTab\.closed\)\{try\{whatsappTab\.close\(\);/);
+  assert.match(source, /whatsappTab\.location\.replace\(whatsappUrl\)/);
 });
 
 test("CH12 selector uses accessible modern radio cards instead of a native select", () => {
@@ -1020,5 +1020,5 @@ test("CH12 selector uses accessible modern radio cards instead of a native selec
   assert.match(html, /input type="radio" name="jokiOrderVariant" value="KOSONGAN"/);
   assert.match(html, /input type="radio" name="jokiOrderVariant" value="ISIAN"/);
   assert.match(source, /selectedCh12Variant/);
-  assert.match(source, /input\\.checked=false/);
+  assert.match(source, /input\.checked=false/);
 });
