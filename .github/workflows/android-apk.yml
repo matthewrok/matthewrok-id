@@ -108,6 +108,6 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_2
-          disable-animations: true
+          disable-animations: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -wipe-data -no-metrics
           script: gradle -p "$GITHUB_WORKSPACE/android" connectedDebugAndroidTest --no-daemon --stacktrace
