@@ -4,7 +4,7 @@
   const $ = id => document.getElementById(id);
   const products = {
     CH11:{name:"City Hall 11",price:17000,display:"17K/char"},
-    CH12:{name:"City Hall 12",price:29000,display:"29K/char"},
+    CH12:{name:"City Hall 12",price:29000,display:"29K–35K/char"},
     CH13:{name:"City Hall 13",price:45000,display:"45K/char"},
     CH14:{name:"City Hall 14",price:55000,display:"55K/char"},
     CH15:{name:"City Hall 15",price:75000,display:"75K/char"},
@@ -19,7 +19,8 @@
     // Jangan paksa input kembali ke 1 setiap pengguna menghapus angka.
     const raw=quantity.value.trim();
     const qty=raw===""?0:Math.max(0,Math.min(12,Number(raw)||0));
-    const subtotal=qty>0?p.price*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0; $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—"; $("jokiOrderDiscount").textContent=money(discount); $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
+    const unitPrice=selected==="CH12"&&$("jokiOrderVariant")?.value==="ISIAN"?35000:p.price;
+    const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0; $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—"; $("jokiOrderDiscount").textContent=money(discount); $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
   }
   function normalizeQuantity(){
     if(!quantity)return;
@@ -120,6 +121,7 @@
     document.body.classList.remove("order-modal-open");
   }
   $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
+  $("jokiOrderVariant")?.addEventListener("change",()=>updateTotal());
   modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   const requestedProduct=new URLSearchParams(window.location.search).get("order");
