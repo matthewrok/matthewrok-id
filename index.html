@@ -175,6 +175,8 @@
         .joki-order-identity strong,.joki-order-selected strong { color: var(--text-main); font-size: 13px; }
         .joki-order-identity small { color: var(--text-muted); overflow-wrap: anywhere; }
         .joki-order-dialog label { display: block; margin: 14px 0 7px; color: #e5e7eb; font-size: 12px; }
+        .joki-required { color: #ff4d5e; font-weight: 800; }
+        .joki-order-field-hint { display: block; margin-top: 5px; color: #9fb5d5; font-family: var(--font-sans); font-size: 10px; font-weight: 500; letter-spacing: .15px; line-height: 1.5; }
         .joki-order-dialog input,.joki-order-dialog select { width: 100%; min-height: 44px; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #121212; color: white; }
         .joki-order-voucher-row { display: flex; align-items: center; gap: 7px; }
         .joki-order-voucher-row input { flex: 1; min-width: 0; }
@@ -436,11 +438,12 @@
                         </select>
                         <small>KOSONGAN Rp29.000/karakter · ISIAN Rp35.000/karakter.</small>
                     </div>
-                    <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
-                    <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required>
-                    <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
-                    <label for="jokiOrderQuantity">Jumlah karakter (minimal 4, maksimal 12)</label>
-                    <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" required>
+                    <label for="jokiOrderQuantity">Jumlah Karakter</label>
+                    <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" step="1" required>
+                    <small class="joki-order-field-hint">Minimal 4 · Maksimal 12 karakter</small>
+                    <label for="jokiOrderKingdom">Kingdom <span class="joki-required" aria-label="wajib diisi">*</span></label>
+                    <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" placeholder="Masukkan 4 digit nomor Kingdom" required>
+                    <small id="jokiOrderKingdomHint" class="joki-order-field-hint">Silahkan isi dengan Kingdom Tujuan Joki.</small>
                     <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
                     <div class="joki-order-total"><span>Subtotal</span><strong id="jokiOrderSubtotal">Rp17.000</strong></div>
                     <div class="joki-order-total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div>
