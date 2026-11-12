@@ -987,7 +987,7 @@ test("Action Point / Lohar is searchable and uses the direct K-AP order form", (
   assert.match(orders, /quantityLabel\.textContent=isActionPoint\?"Berapa K Action Point\?"/);
   assert.match(orders, /kingdomField\.hidden=isActionPoint/);
   assert.match(orders, /p_kingdom_number:kingdomNumber/);
-  assert.match(orders, /Jumlah Action Point: \+order\.quantity\+"K AP"/);
+  assert.match(orders, /Jumlah Action Point: "\+order\.quantity\+"K AP"/);
 
   assert.match(migration, /p_product_code = 'AP-LOHAR'/);
   assert.match(migration, /v_price := 1000/);
