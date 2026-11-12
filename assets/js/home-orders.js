@@ -15,6 +15,50 @@
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
+  const dailyDiscounts=new Map();
+  const discountProducts=["CH11","CH12","CH13","CH14","CH15","CH16","CH17","AP-LOHAR"];
+  const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
+  const discountedPrice=(price,percent)=>Math.max(1,Math.round(Number(price)*(100-percent)/100));
+  function getCatalogCard(button){return button.closest(".product-card, .card");}
+  function renderDailyDiscounts(){
+    document.querySelectorAll("[data-order-product]").forEach(button=>{
+      const card=getCatalogCard(button),code=String(button.dataset.orderProduct||"").toUpperCase();
+      if(!card)return;
+      const percent=dailyDiscounts.get(code);
+      if(!percent)return;
+      const priceNode=card.querySelector(".product-price, .price");
+      if(!priceNode||priceNode.dataset.dailyDiscountApplied==="true")return;
+      const original=code==="CH12"?"Rp29.000–35.000":money(products[code]?.price||0);
+      let discounted;
+      if(code==="CH12")discounted=money(discountedPrice(29000,percent))+"–"+money(discountedPrice(35000,percent));
+      else discounted=money(discountedPrice(products[code]?.price||0,percent));
+      const suffix=code==="AP-LOHAR"?"/ 1K AP":"/ char";
+      priceNode.classList.add("daily-discount-price");
+      priceNode.innerHTML='<span class="daily-discount-original">'+original+'</span><strong class="daily-discount-current">'+discounted+' <small>'+suffix+'</small></strong>';
+      priceNode.dataset.dailyDiscountApplied="true";
+      card.classList.add("has-daily-discount");
+      const ribbon=document.createElement("span");
+      ribbon.className="daily-discount-ribbon";
+      ribbon.textContent=percent+"% OFF";
+      ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen");
+      card.appendChild(ribbon);
+    });
+  }
+  async function loadDailyDiscounts(){
+    if(!db?.rpc)return;
+    try{
+      const {data,error}=await db.rpc("get_daily_joki_discounts");
+      if(error)throw error;
+      dailyDiscounts.clear();
+      (Array.isArray(data)?data:[]).forEach(row=>{
+        const code=String(row.product_code||"").toUpperCase();
+        const percent=Number(row.discount_percent);
+        if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=1&&percent<=30)dailyDiscounts.set(code,percent);
+      });
+      renderDailyDiscounts();
+      updateTotal();
+    }catch(error){console.warn("[Daily discounts] Diskon harian belum dapat dimuat:",error);}
+  }
   const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
   function parseActionPointK(raw){
     const value=String(raw??"").trim().replace(/[\s.,]/g,"");
@@ -33,7 +77,9 @@
     const raw=quantity.value.trim();
     const isActionPoint=selected==="AP-LOHAR";
     const qty=isActionPoint?(raw===""?0:(parseActionPointK(raw)||0)):(raw===""?0:Math.max(0,Math.min(12,Number(raw)||0)));
-    const unitPrice=selected==="CH12"&&selectedCh12Variant()==="ISIAN"?35000:p.price;
+    const baseUnitPrice=selected==="CH12"&&selectedCh12Variant()==="ISIAN"?35000:p.price;
+    const dailyPercent=dailyDiscounts.get(selected)||0;
+    const unitPrice=dailyPercent?discountedPrice(baseUnitPrice,dailyPercent):baseUnitPrice;
     const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0;
     $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—";
     $("jokiOrderDiscount").textContent=money(discount);
@@ -148,6 +194,7 @@
     if(voucherButton){voucherButton.disabled=visitor;voucherButton.title=visitor?"Voucher hanya untuk member":"Cek voucher";}
   }
   syncVisitorRestrictions();
+  loadDailyDiscounts();
   window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
   quantity?.addEventListener("input",()=>{
     if(selected==="AP-LOHAR"){
