@@ -9,23 +9,49 @@
     CH14:{name:"City Hall 14",price:55000,display:"55K/char"},
     CH15:{name:"City Hall 15",price:75000,display:"75K/char"},
     CH16:{name:"City Hall 16",price:85000,display:"85K/char"},
-    CH17:{name:"City Hall 17",price:120000,display:"120K/char"}
+    CH17:{name:"City Hall 17",price:120000,display:"120K/char"},
+    "AP-LOHAR":{name:"Joki Action Point / Lohar",price:1000,display:"Rp1.000/1K AP"}
   };
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
+  function parseActionPointK(raw){
+    const value=String(raw??"").trim().replace(/[\s.,]/g,"");
+    if(!/^\d+$/.test(value))return null;
+    let amount=Number(value);
+    if(!Number.isSafeInteger(amount)||amount<1)return null;
+    // Terima format 1 (= 1K), 1.000 (= 1K), maupun 1000 (= 1K).
+    if(amount>=1000){
+      if(amount%1000!==0)return null;
+      amount/=1000;
+    }
+    return amount<=1000000?amount:null;
+  }
   function updateTotal(){
     const p=products[selected]; if(!p||!quantity)return;
-    // Jangan paksa input kembali ke 1 setiap pengguna menghapus angka.
     const raw=quantity.value.trim();
-    const qty=raw===""?0:Math.max(0,Math.min(12,Number(raw)||0));
+    const isActionPoint=selected==="AP-LOHAR";
+    const qty=isActionPoint?(raw===""?0:(parseActionPointK(raw)||0)):(raw===""?0:Math.max(0,Math.min(12,Number(raw)||0)));
     const unitPrice=selected==="CH12"&&$("jokiOrderVariant")?.value==="ISIAN"?35000:p.price;
-    const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0; $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—"; $("jokiOrderDiscount").textContent=money(discount); $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
+    const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0;
+    $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—";
+    $("jokiOrderDiscount").textContent=money(discount);
+    $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
   }
   function normalizeQuantity(){
     if(!quantity)return;
     const raw=quantity.value.trim();
     if(raw===""){updateTotal();return;}
+    if(selected==="AP-LOHAR"){
+      const amount=parseActionPointK(raw);
+      if(amount===null){$("jokiOrderQuantityHint").textContent="Masukkan jumlah valid: 1 = 1K atau 1.000 = 1K Action Point.";updateTotal();return;}
+      // Tampilkan jumlah AP aktual dengan pemisah ribuan agar pengguna langsung melihat
+      // bahwa input "1" berarti 1.000 AP (1K), bukan satu AP.
+      const formattedAp=(amount*1000).toLocaleString("id-ID");
+      quantity.value=formattedAp;
+      $("jokiOrderQuantityHint").textContent=formattedAp+" AP · "+amount+"K Action Point · Rp"+(amount*1000).toLocaleString("id-ID");
+      updateTotal();return;
+    }
     const qty=Math.min(12,Math.max(0,Math.floor(Number(raw)||0)));
     quantity.value=String(qty);
     updateTotal();
@@ -85,7 +111,16 @@
     const variantField=$("jokiOrderVariantField"),variantSelect=$("jokiOrderVariant");
     if(variantField)variantField.hidden=code!=="CH12";
     if(variantSelect)variantSelect.value="";
-    quantity.value="4";$("jokiOrderKingdom").value="";$("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
+    const isActionPoint=code==="AP-LOHAR";
+    const quantityLabel=$("jokiOrderQuantityLabel"),quantityHint=$("jokiOrderQuantityHint"),kingdomField=$("jokiOrderKingdomField"),kingdomInput=$("jokiOrderKingdom");
+    if(quantityLabel)quantityLabel.textContent=isActionPoint?"Berapa K Action Point?":"Jumlah Karakter";
+    if(quantityHint)quantityHint.textContent=isActionPoint?"Isi 1 = 1K Action Point. Format 1.000 juga dihitung sebagai 1K. Harga Rp1.000 per 1K AP.":"Minimal 4 · Maksimal 12 karakter";
+    if(kingdomField)kingdomField.hidden=isActionPoint;
+    if(kingdomInput){kingdomInput.required=!isActionPoint;kingdomInput.value="";}
+    quantity.value=isActionPoint?"1":"4";
+    quantity.placeholder=isActionPoint?"Contoh: 1 atau 1.000":"Masukkan jumlah karakter";
+    quantity.type="text";
+    $("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
     const submit=$("jokiOrderSubmit");
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
     updateTotal();document.body.classList.add("order-modal-open");modal?.classList.remove("hidden");$("jokiOrderClose")?.focus();
@@ -112,7 +147,15 @@
   }
   syncVisitorRestrictions();
   window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
-  quantity?.addEventListener("input",()=>{if(Number(quantity.value)>12)quantity.value="12";updateTotal();});
+  quantity?.addEventListener("input",()=>{
+    if(selected==="AP-LOHAR"){
+      const amount=parseActionPointK(quantity.value);
+      $("jokiOrderQuantityHint").textContent=amount===null
+        ?"Masukkan 1 untuk 1.000 AP (1K), atau jumlah ribuan lainnya."
+        :(amount*1000).toLocaleString("id-ID")+" AP · "+amount+"K Action Point";
+    }else if(Number(quantity.value)>12)quantity.value="12";
+    updateTotal();
+  });
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
   quantity?.addEventListener("blur",normalizeQuantity);
@@ -134,9 +177,10 @@
     if(completedWhatsappUrl){window.open(completedWhatsappUrl,"_blank","noopener");return;}
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
     if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
+    const isActionPoint=selected==="AP-LOHAR";
     const kingdomInput=$("jokiOrderKingdom");
-    const kingdomNumber=(kingdomInput?.value||"").trim();
-    if(!/^[0-9]{4}$/.test(kingdomNumber)){
+    const kingdomNumber=isActionPoint?null:(kingdomInput?.value||"").trim();
+    if(!isActionPoint&&!/^[0-9]{4}$/.test(kingdomNumber)){
       $("jokiOrderMessage").textContent="Nomor Kingdom wajib diisi tepat 4 digit angka.";
       kingdomInput?.focus();
       return;
@@ -148,9 +192,9 @@
       return;
     }
     normalizeQuantity();
-    const requestedQty=Number(quantity.value);
-    if(!Number.isInteger(requestedQty)||requestedQty<4||requestedQty>12){
-      $("jokiOrderMessage").textContent="Jumlah karakter harus minimal 4 dan maksimal 12.";
+    const requestedQty=isActionPoint?parseActionPointK(quantity.value):Number(quantity.value);
+    if(isActionPoint?!Number.isInteger(requestedQty)||requestedQty<1||requestedQty>1000000:!Number.isInteger(requestedQty)||requestedQty<4||requestedQty>12){
+      $("jokiOrderMessage").textContent=isActionPoint?"Jumlah Action Point tidak valid. Gunakan 1 untuk 1K atau 1.000 untuk 1K.":"Jumlah karakter harus minimal 4 dan maksimal 12.";
       return;
     }
     // Buka tab kosong saat klik masih dianggap interaksi pengguna oleh browser mobile.
@@ -172,9 +216,9 @@
         "HALO MATTHEW, SAYA INGIN KONFIRMASI PESANAN JOKI.","",
         "=== DETAIL PESANAN MATTHEW JOKI ===",
         "No. Order: "+order.order_number,"Nama Client: "+order.client_name,
-        "Kingdom: "+kingdomNumber,
+        ...(isActionPoint?[]:["Kingdom: "+kingdomNumber]),
         "Email: "+(order.client_email||"Visitor"),"Produk: "+order.service_name,
-        "Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price),
+        ...(isActionPoint?["Jumlah Action Point: "+order.quantity+"K AP","Harga per 1K AP: "+money(order.unit_price)]:["Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price)]),
         "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
         "Progress: 0% — Menunggu Pembayaran / Administrasi","",
         "Token Pelacakan Rahasia: "+order.tracking_token,"",

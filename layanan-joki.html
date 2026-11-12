@@ -24,7 +24,35 @@ header{position:sticky;top:0;z-index:5;background:rgba(5,5,5,.94);backdrop-filte
 .hero{text-align:center;padding:38px 0 24px}.eyebrow{font:600 9px Inter,sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent-gold)}
 h1{font:600 clamp(25px,8vw,34px) Cinzel,serif;letter-spacing:.5px;line-height:1.25;margin:12px 0}
 .intro{max-width:420px;margin:0 auto;color:var(--text-muted);font:400 12px/1.8 Inter,sans-serif}
-.category{padding:18px 0 26px;scroll-margin-top:78px}.category-head{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.category{padding:18px 0 26px;scroll-margin-top:150px}.category-head{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.catalog-tools{position:sticky;top:64px;z-index:4;margin:0 -1px 8px;padding:10px 0 12px;background:rgba(5,5,5,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-color)}
+.search-row{display:flex;gap:8px}.service-search{width:100%;min-width:0;min-height:43px;padding:11px 13px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);color:var(--text-main);font:500 12px Inter,sans-serif;outline:none}.service-search:focus{border-color:var(--accent-gold);box-shadow:0 0 0 2px rgba(212,175,55,.12)}
+.search-button{min-width:72px;border:1px solid var(--accent-gold);border-radius:8px;background:var(--accent-gold);color:#050505;font:700 10px Inter,sans-serif;padding:0 12px}
+.filter-chips{display:flex;gap:7px;overflow-x:auto;padding-top:9px;scrollbar-width:none}.filter-chips::-webkit-scrollbar{display:none}
+.filter-chip{flex:0 0 auto;border:1px solid var(--border-color);border-radius:20px;background:transparent;color:var(--text-muted);padding:8px 11px;font:600 9px Inter,sans-serif}
+.filter-chip[aria-pressed=true]{border-color:var(--accent-gold);background:rgba(212,175,55,.1);color:var(--accent-gold)}
+.no-results{display:none;margin:14px 0;padding:20px;border:1px dashed var(--border-color);border-radius:10px;text-align:center;color:var(--text-muted);font:500 12px/1.6 Inter,sans-serif}
+.no-results.show{display:block}
+.catalog-order-modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:15px;background:rgba(0,0,0,.86);backdrop-filter:blur(12px)}
+.catalog-order-modal.hidden{display:none!important}
+.catalog-order-dialog{position:relative;width:min(100%,480px);max-height:90svh;overflow:auto;padding:24px 18px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-card);box-shadow:0 28px 90px #000b}
+.catalog-order-dialog h2{font:600 20px Cinzel,serif;margin:8px 40px 8px 0}
+.catalog-order-dialog .lead,.catalog-order-dialog .hint,.catalog-order-dialog .message{color:var(--text-muted);font:400 11px/1.7 Inter,sans-serif}
+.catalog-order-dialog .identity,.catalog-order-dialog .selected,.catalog-order-dialog .total{display:grid;gap:5px;margin:12px 0;padding:12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input)}
+.catalog-order-dialog .identity span,.catalog-order-dialog .selected span,.catalog-order-dialog .total span{color:var(--text-muted);font-size:11px}
+.catalog-order-dialog .identity strong,.catalog-order-dialog .selected strong{font-size:13px}
+.catalog-order-dialog label{display:block;margin:13px 0 7px;font:600 11px Inter,sans-serif}
+.catalog-order-dialog input,.catalog-order-dialog select{width:100%;min-height:43px;padding:11px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);color:var(--text-main);font:500 12px Inter,sans-serif}
+.catalog-order-dialog input:focus,.catalog-order-dialog select:focus{outline:none;border-color:var(--accent-gold)}
+.catalog-order-dialog .voucher-row{display:flex;gap:7px}.catalog-order-dialog .voucher-row input{min-width:0;flex:1}
+.catalog-order-dialog .voucher-row button,.catalog-order-dialog .close{border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);color:var(--text-main);padding:10px}
+.catalog-order-dialog .close{position:absolute;top:10px;right:10px;width:34px;height:34px;font-size:22px}
+.catalog-order-dialog .total{display:flex;justify-content:space-between;align-items:center}
+.catalog-order-dialog .total strong{color:var(--accent-gold);font:600 16px Cinzel,serif}
+.catalog-order-dialog .submit{width:100%;min-height:44px;margin-top:12px;border:1px solid var(--accent-gold);border-radius:8px;background:var(--accent-gold);color:#050505;font:700 10px Inter,sans-serif}
+.catalog-order-dialog .submit:disabled{opacity:.55}
+.catalog-order-dialog .required{color:#ef4444}
+body.order-modal-open{overflow:hidden}
 .category-head h2{margin:0;font:600 18px Cinzel,serif;white-space:nowrap}
 .category-head:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--accent-gold),transparent);opacity:.65}
 .grid{display:grid;grid-template-columns:1fr;gap:14px}
@@ -59,28 +87,136 @@ footer{text-align:center;padding:22px 0 30px;color:var(--text-muted);font:400 10
       <p class="intro">Jelajahi katalog layanan Matthew. Pilih kategori dan paket yang sesuai dengan kebutuhan akun Rise of Kingdoms kamu.</p>
     </section>
 
-    <section class="category" id="city-hall">
+    <div class="catalog-tools" aria-label="Pencarian dan filter layanan">
+      <div class="search-row">
+        <input id="serviceSearch" class="service-search" type="search" placeholder="Cari City Hall, Action Point, Lohar..." autocomplete="off" aria-label="Cari layanan joki">
+        <button id="serviceSearchButton" class="search-button" type="button">CARI</button>
+      </div>
+      <div class="filter-chips" role="group" aria-label="Filter kategori">
+        <button class="filter-chip" type="button" data-category-filter="all" aria-pressed="true">SEMUA</button>
+        <button class="filter-chip" type="button" data-category-filter="city-hall" aria-pressed="false">CITY HALL</button>
+        <button class="filter-chip" type="button" data-category-filter="action-point" aria-pressed="false">ACTION POINT / LOHAR</button>
+      </div>
+    </div>
+    <p id="noServiceResults" class="no-results" role="status">Layanan tidak ditemukan. Coba kata kunci lain.</p>
+
+    <section class="category" id="city-hall" data-service-category="city-hall">
       <div class="category-head"><h2>🏰 CITY HALL</h2></div>
       <div class="grid">
-        <article class="card"><div class="tier">01 · STARTER</div><h3>City Hall 11</h3><p class="price">Rp17.000 <small>/ char</small></p><ul><li><span>City Hall</span><strong>Lv11</strong></li><li><span>Siege</span><strong>10K</strong></li><li><span>Deadline</span><strong>1–2 Hari</strong></li></ul><div class="actions"><a class="btn primary" href="/#produk">LIHAT PAKET</a></div></article>
-        <article class="card"><div class="tier">02 · STARTER+</div><h3>City Hall 12</h3><p class="price">Rp29.000–35.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>12</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>15K+</strong></li><li><span>Resource</span><strong>Dapat dipilih</strong></li><li><span>Deadline</span><strong>2–3 Hari</strong></li></ul><p class="note">KOSONGAN (tanpa resource): Rp29.000/char · ISIAN (resource 10–15M+): Rp35.000/char.</p><div class="actions"><a class="btn primary" href="/#produk">PILIH KOSONGAN / ISIAN</a></div></article>
-        <article class="card"><div class="tier">03 · ADVANCED</div><h3>City Hall 13</h3><p class="price">Rp45.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>13</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>25K+</strong></li><li><span>Resource</span><strong>25–30M</strong></li><li><span>Deadline</span><strong>3–5 Hari</strong></li></ul><div class="actions"><a class="btn primary" href="/#produk">LIHAT PAKET</a></div></article>
-        <article class="card"><div class="tier">04 · ADVANCED+</div><h3>City Hall 14</h3><p class="price">Rp55.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>14</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>45K+</strong></li><li><span>Resource</span><strong>25–30M</strong></li><li><span>Deadline</span><strong>4–6 Hari</strong></li></ul><div class="actions"><a class="btn primary" href="/#produk">LIHAT PAKET</a></div></article>
-        <article class="card"><div class="tier">05 · ELITE</div><h3>City Hall 15</h3><p class="price">Rp75.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>15</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)+</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>50K+</strong></li><li><span>Resource</span><strong>50M+</strong></li><li><span>Deadline</span><strong>6–8 Hari</strong></li></ul><div class="actions"><a class="btn primary" href="/#produk">LIHAT PAKET</a></div></article>
-        <article class="card"><div class="tier">06 · ELITE+</div><h3>City Hall 16</h3><p class="price">Rp85.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>16</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)+</strong></li><li><span>Commander</span><strong>27/27/27/27+</strong></li><li><span>Siege</span><strong>60K++</strong></li><li><span>Resource</span><strong>50M+</strong></li><li><span>Deadline</span><strong>7–10 Hari</strong></li></ul><div class="actions"><a class="btn primary" href="/#produk">LIHAT PAKET</a></div></article>
-        <article class="card"><div class="tier">07 · PREMIUM</div><h3>City Hall 17</h3><p class="price">Rp120.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>17</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)++</strong></li><li><span>Commander</span><strong>27/27/27/27++</strong></li><li><span>Siege</span><strong>70–100K+</strong></li><li><span>Resource</span><strong>60–70M+</strong></li><li><span>Deadline</span><strong>10–15 Hari</strong></li></ul><div class="actions"><a class="btn primary" href="/#produk">LIHAT PAKET</a></div></article>
+        <article class="card"><div class="tier">01 · STARTER</div><h3>City Hall 11</h3><p class="price">Rp17.000 <small>/ char</small></p><ul><li><span>City Hall</span><strong>Lv11</strong></li><li><span>Siege</span><strong>10K</strong></li><li><span>Deadline</span><strong>1–2 Hari</strong></li></ul><div class="actions"><button class="btn primary" type="button" data-order-product="ch11">PESAN SEKARANG</button></div></article>
+        <article class="card"><div class="tier">02 · STARTER+</div><h3>City Hall 12</h3><p class="price">Rp29.000–35.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>12</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>15K+</strong></li><li><span>Resource</span><strong>Dapat dipilih</strong></li><li><span>Deadline</span><strong>2–3 Hari</strong></li></ul><p class="note">KOSONGAN (tanpa resource): Rp29.000/char · ISIAN (resource 10–15M+): Rp35.000/char.</p><div class="actions"><button class="btn primary" type="button" data-order-product="ch12">PESAN KOSONGAN / ISIAN</button></div></article>
+        <article class="card"><div class="tier">03 · ADVANCED</div><h3>City Hall 13</h3><p class="price">Rp45.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>13</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>25K+</strong></li><li><span>Resource</span><strong>25–30M</strong></li><li><span>Deadline</span><strong>3–5 Hari</strong></li></ul><div class="actions"><button class="btn primary" type="button" data-order-product="ch13">PESAN SEKARANG</button></div></article>
+        <article class="card"><div class="tier">04 · ADVANCED+</div><h3>City Hall 14</h3><p class="price">Rp55.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>14</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>45K+</strong></li><li><span>Resource</span><strong>25–30M</strong></li><li><span>Deadline</span><strong>4–6 Hari</strong></li></ul><div class="actions"><button class="btn primary" type="button" data-order-product="ch14">PESAN SEKARANG</button></div></article>
+        <article class="card"><div class="tier">05 · ELITE</div><h3>City Hall 15</h3><p class="price">Rp75.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>15</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)+</strong></li><li><span>Commander</span><strong>27/27/27/27</strong></li><li><span>Siege</span><strong>50K+</strong></li><li><span>Resource</span><strong>50M+</strong></li><li><span>Deadline</span><strong>6–8 Hari</strong></li></ul><div class="actions"><button class="btn primary" type="button" data-order-product="ch15">PESAN SEKARANG</button></div></article>
+        <article class="card"><div class="tier">06 · ELITE+</div><h3>City Hall 16</h3><p class="price">Rp85.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>16</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)+</strong></li><li><span>Commander</span><strong>27/27/27/27+</strong></li><li><span>Siege</span><strong>60K++</strong></li><li><span>Resource</span><strong>50M+</strong></li><li><span>Deadline</span><strong>7–10 Hari</strong></li></ul><div class="actions"><button class="btn primary" type="button" data-order-product="ch16">PESAN SEKARANG</button></div></article>
+        <article class="card"><div class="tier">07 · PREMIUM</div><h3>City Hall 17</h3><p class="price">Rp120.000 <small>/ char</small></p><ul><li><span>Trading Post</span><strong>17</strong></li><li><span>Vengeance</span><strong>Lv200 (Max)++</strong></li><li><span>Commander</span><strong>27/27/27/27++</strong></li><li><span>Siege</span><strong>70–100K+</strong></li><li><span>Resource</span><strong>60–70M+</strong></li><li><span>Deadline</span><strong>10–15 Hari</strong></li></ul><div class="actions"><button class="btn primary" type="button" data-order-product="ch17">PESAN SEKARANG</button></div></article>
       </div>
     </section>
 
-    <section class="category" id="action-point-lohar">
+    <section class="category" id="action-point-lohar" data-service-category="action-point">
       <div class="category-head"><h2>⚔️ JOKI ACTION POINT / LOHAR</h2></div>
       <div class="grid">
-        <article class="card"><div class="tier">ACTION POINT</div><h3>Joki Action Point (AP)</h3><p class="price">Rp1.000 <small>/ 1.000 AP</small></p><span class="badge">Harga berdasarkan jumlah AP</span><p class="note">Layanan penghabisan Action Point sesuai jumlah yang disepakati. Cantumkan jumlah AP saat menghubungi admin.</p><div class="actions"><a class="btn primary" href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20memesan%20Joki%20Action%20Point.%20Jumlah%20AP%3A%20">PESAN ACTION POINT</a></div></article>
-        <article class="card"><div class="tier">LOHAR</div><h3>Joki Lohar</h3><span class="badge">Layanan tersedia</span><p class="note">Hubungi admin untuk mendiskusikan jumlah target, ketentuan pengerjaan, dan penawaran harga Joki Lohar.</p><div class="actions"><a class="btn primary" href="https://wa.me/6285894152856?text=Halo%20Matthew%2C%20saya%20ingin%20bertanya%20tentang%20Joki%20Lohar.">TANYAKAN LOHAR</a></div></article>
+        <article class="card">
+          <div class="tier">ACTION POINT · LOHAR</div>
+          <h3>Joki Action Point / Lohar</h3>
+          <p class="price">Rp1.000 <small>/ 1K AP</small></p>
+          <span class="badge">Pemesanan langsung tersedia</span>
+          <p class="note">Pesan layanan Action Point untuk pengerjaan Lohar. Masukkan jumlah dalam satuan K. Contoh: 1 berarti 1K Action Point; 1.000 juga dihitung sebagai 1K Action Point.</p>
+          <ul><li><span>Harga</span><strong>Rp1.000 / 1K AP</strong></li><li><span>Jumlah</span><strong>Mulai 1K AP</strong></li><li><span>Kingdom</span><strong>Tidak diperlukan</strong></li></ul>
+          <div class="actions"><button class="btn primary" type="button" data-order-product="ap-lohar">PESAN SEKARANG</button></div>
+        </article>
       </div>
     </section>
   </main>
+    <div id="jokiOrderModal" class="catalog-order-modal hidden" role="dialog" aria-modal="true" aria-labelledby="jokiOrderTitle">
+      <div class="catalog-order-dialog">
+        <button type="button" class="close" id="jokiOrderClose" aria-label="Tutup">×</button>
+        <p class="eyebrow">ORDER REGISTRATION</p>
+        <h2 id="jokiOrderTitle">BUAT PESANAN JOKI</h2>
+        <p class="lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
+        <div class="identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
+        <div class="selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
+        <div id="jokiOrderVariantField" hidden>
+          <label for="jokiOrderVariant">Tipe City Hall 12 <span class="required">*</span></label>
+          <select id="jokiOrderVariant" required>
+            <option value="" selected disabled>Pilih KOSONGAN atau ISIAN</option>
+            <option value="KOSONGAN">KOSONGAN — tanpa resource · Rp29.000/char</option>
+            <option value="ISIAN">ISIAN — resource 10–15M+ · Rp35.000/char</option>
+          </select>
+        </div>
+        <label for="jokiOrderQuantity" id="jokiOrderQuantityLabel">Jumlah Karakter</label>
+        <input id="jokiOrderQuantity" type="text" min="4" max="12" value="4" inputmode="numeric" autocomplete="off" required>
+        <small class="hint" id="jokiOrderQuantityHint">Minimal 4 · Maksimal 12 karakter</small>
+        <div id="jokiOrderKingdomField">
+          <label for="jokiOrderKingdom">Kingdom <span class="required">*</span></label>
+          <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" placeholder="Masukkan 4 digit nomor Kingdom" required>
+          <small class="hint" id="jokiOrderKingdomHint">Silahkan isi dengan Kingdom Tujuan Joki.</small>
+        </div>
+        <div class="voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher">Cek</button></div><p id="jokiVoucherMessage" class="message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
+        <div class="total"><span>Subtotal</span><strong id="jokiOrderSubtotal">—</strong></div>
+        <div class="total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div>
+        <div class="total"><span>Total estimasi</span><strong id="jokiOrderTotal">—</strong></div>
+        <p class="hint">Setelah dibuat, sistem menyimpan nomor order dan status awal Menunggu Pembayaran / Administrasi. Pembayaran belum otomatis terkonfirmasi.</p>
+        <button type="button" class="submit" id="jokiOrderSubmit">BUAT PESANAN & LANJUT WHATSAPP ↗</button>
+        <p id="jokiOrderMessage" class="message" aria-live="polite"></p>
+      </div>
+    </div>
   <footer>© <span id="year"></span> MATTHEW JOKI · Semua layanan dalam satu katalog.</footer>
-  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+  <script>
+    document.getElementById('year').textContent=new Date().getFullYear();
+    (() => {
+      const search=document.getElementById('serviceSearch');
+      const searchButton=document.getElementById('serviceSearchButton');
+      const chips=[...document.querySelectorAll('[data-category-filter]')];
+      const sections=[...document.querySelectorAll('[data-service-category]')];
+      const empty=document.getElementById('noServiceResults');
+      let category='all';
+      const apply=()=>{
+        const query=(search?.value||'').trim().toLocaleLowerCase('id');
+        let visible=0,first=null;
+        sections.forEach(section=>{
+          let sectionCount=0;
+          section.querySelectorAll('.card').forEach(card=>{
+            const show=(category==='all'||section.dataset.serviceCategory===category)&&(!query||card.textContent.toLocaleLowerCase('id').includes(query));
+            card.hidden=!show;
+            if(show){sectionCount++;visible++;first ||= card;}
+          });
+          section.hidden=sectionCount===0;
+        });
+        empty?.classList.toggle('show',visible===0);
+        return first;
+      };
+      chips.forEach(chip=>chip.addEventListener('click',()=>{
+        category=chip.dataset.categoryFilter;
+        chips.forEach(item=>item.setAttribute('aria-pressed',String(item===chip)));
+        apply();
+      }));
+      search?.addEventListener('input',apply);
+      searchButton?.addEventListener('click',()=>{const first=apply();if(first)first.scrollIntoView({behavior:'smooth',block:'center'});});
+      search?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();const first=apply();if(first)first.scrollIntoView({behavior:'smooth',block:'center'});}});
+      apply();
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script>
+    (() => {
+      const bootMemberIdentity = async () => {
+        const db=window.supabaseClient;
+        if(!db)return;
+        try{
+          const {data:{user},error}=await db.auth.getUser();
+          if(error||!user||user.is_anonymous)return;
+          const {data:profile,error:profileError}=await db.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
+          if(profileError||!profile)return;
+          window.HomeApp=window.HomeApp||{};
+          window.HomeApp.currentIdentity={name:profile.full_name||user.email||"Client",email:user.email||"",isVisitor:false};
+          document.dispatchEvent(new Event("matthew:identity-ready"));
+        }catch(error){console.warn("[Catalog auth] Gagal memuat identitas:",error);}
+      };
+      bootMemberIdentity();
+    })();
+  </script>
+  <script src="/assets/js/home-orders.js?v=20261112-action-point-lohar"></script>
 </body>
 </html>

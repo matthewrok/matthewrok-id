@@ -85,11 +85,11 @@
         <div style="background:#101010;border:1px solid #292929;border-radius:8px;padding:18px 20px;margin-bottom:22px;">
           <div style="font-size:10px;letter-spacing:1.5px;color:#d4af37;margin-bottom:8px;">DETAIL LAYANAN</div>
           <div style="font:700 18px Cinzel,Georgia,serif;color:#fff;">${invoiceEscape(order.service_name||"Layanan Joki")}</div>
-          <div style="font-size:12px;color:#9ca3af;margin-top:7px;">Jumlah karakter: ${invoiceEscape(order.quantity??"—")} karakter</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:7px;">${(order.service_name||"").toLowerCase().includes("action point")?"Jumlah Action Point: "+invoiceEscape(order.quantity??"—")+"K AP":"Jumlah karakter: "+invoiceEscape(order.quantity??"—")+" karakter"}</div>
         </div>
         <table style="width:100%;border-collapse:collapse;font-size:12px;">
           <tbody>
-            <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Harga per karakter</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${amount(order.unit_price)}</td></tr>
+            <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">${(order.service_name||"").toLowerCase().includes("action point")?"Harga per 1K AP":"Harga per karakter"}</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${amount(order.unit_price)}</td></tr>
             <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Subtotal</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${amount(subtotal)}</td></tr>
             <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Kode voucher</td><td style="padding:12px 4px;text-align:right;color:#f3f4f6;border-bottom:1px solid #292929;">${invoiceEscape(order.voucher_code||"Tidak digunakan")}</td></tr>
             <tr><td style="padding:12px 4px;color:#9ca3af;border-bottom:1px solid #292929;">Diskon</td><td style="padding:12px 4px;text-align:right;color:#d4af37;border-bottom:1px solid #292929;">− ${amount(discount)}</td></tr>
@@ -201,8 +201,9 @@
     const body=document.createElement("div"); body.className="card-body";
     const grid=document.createElement("div"); grid.className="details-grid";
     addDetail(grid,"Kode Pesanan",order.order_number||"—");
-    addDetail(grid,"Kingdom",order.kingdom_number||"—");
-    addDetail(grid,"Jumlah Karakter",Number(order.quantity||0)+" karakter");
+    const isActionPoint=(order.service_name||"").toLowerCase().includes("action point");
+    if(!isActionPoint)addDetail(grid,"Kingdom",order.kingdom_number||"—");
+    addDetail(grid,isActionPoint?"Jumlah Action Point":"Jumlah Karakter",isActionPoint?Number(order.quantity||0)+"K AP":Number(order.quantity||0)+" karakter");
     addDetail(grid,"Tanggal Pesanan",date(order.created_at));
     body.appendChild(grid);
 
