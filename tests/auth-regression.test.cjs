@@ -817,7 +817,7 @@ test("private member dashboard uses the shared guard result instead of repeating
   assert.match(html, /window\.__matthewVerifiedUser/);
   assert.doesNotMatch(html, /location\.replace\('\/login\.html\?next=member-dashboard\.html'\)/);
   const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
-  assert.ok(guard.includes("member-dashboard|member-benefits|worker|inbox|your-order"));
+  assert.ok(guard.includes("member-dashboard|member-benefits|member-rewards|member-membership-history|worker|inbox|your-order"));
   assert.match(guard, /20000/);
   assert.match(guard, /Sesi kamu tetap disimpan/);
   assert.doesNotMatch(guard, /signOut\(\{ scope: "local" \}\);\s*return redirectToLogin\(\);/);
@@ -880,4 +880,18 @@ test("Matthew Referral awards equal 499-point bonuses only after the referred me
   assert.match(auth, /metadata\.referral_code = referralCode/);
   assert.match(rewards, /get_my_referral_summary/);
   assert.match(rewards, /masing-masing mendapat 499 poin/);
+});
+
+
+test("Matthew Rewards and Membership History use the shared authenticated access guard", () => {
+  const guard = fs.readFileSync(path.join(ROOT, "assets/js/access-guard.js"), "utf8");
+  assert.match(guard, /member-dashboard\\|member-benefits\\|member-rewards\\|member-membership-history/);
+  for (const [page, version] of [
+    ["member-rewards.html", "20261112-membership-guard"],
+    ["member-membership-history.html", "20261112-membership-guard"]
+  ]) {
+    const html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    assert.ok(html.includes("/assets/js/access-guard.js?v=" + version), page + " must load the updated access guard");
+    assert.match(html, /__matthewVerifiedUser/);
+  }
 });
