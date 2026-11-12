@@ -949,7 +949,7 @@ test("all website WhatsApp contact links use Matthew's official number", () => {
   ];
   const links = files.flatMap(file => {
     const source = fs.readFileSync(path.join(ROOT, file), "utf8");
-    return [...source.matchAll(/https?:\\/\\/(?:wa\\.me\\/|api\\.whatsapp\\.com\\/send\\?phone=)(\\d+)/g)]
+    return [...source.matchAll(/https?:\/\/(?:wa\.me\/|api\.whatsapp\.com\/send\?phone=)(\d+)/g)]
       .map(match => ({ file, number: match[1] }));
   });
   assert.ok(links.length > 0, "expected at least one WhatsApp contact link");
