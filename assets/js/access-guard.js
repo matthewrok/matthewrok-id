@@ -4,7 +4,7 @@
   const roles = ["warga biasa", "warga tidak biasa", "warga sultan", "admin"];
   const rules = [
     { test: /^\/admin(?:\/|$)/i, roles: ["admin"] },
-    { test: /^\/(?:member-dashboard|member-benefits|worker|inbox|your-order)[.]html$/i, roles }
+    { test: /^\/(?:member-dashboard|member-benefits|member-rewards|member-membership-history|worker|inbox|your-order)[.]html$/i, roles }
   ];
   const rule = rules.find(item => item.test.test(path));
   if (!rule) return;
