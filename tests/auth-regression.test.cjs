@@ -915,6 +915,9 @@ test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () 
   assert.match(migration, /CH12-ISIAN[\s\S]*v_price:=35000/);
   assert.match(source, /35000/);
   assert.match(html, /29K–35K/);
+  const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
+  assert.doesNotMatch(catalog, /KOSONGAN \\(tanpa resource\\): Rp29\\.000\\/char/);
+  assert.doesNotMatch(catalog, /ISIAN \\(resource 10–15M\\+\\): Rp35\\.000\\/char/);
 });
 
 
@@ -998,4 +1001,21 @@ test("Action Point / Lohar is searchable and uses the direct K-AP order form", (
   assert.match(migration, /v_kingdom := null/);
   assert.match(history, /Jumlah Action Point/);
   assert.match(telegram, /Jumlah Action Point/);
+});
+
+
+test("order submission closes the pre-opened blank tab when order creation fails", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(source, /if\\(whatsappTab&&!whatsappTab\\.closed\\)\\{try\\{whatsappTab\\.close\\(\\);/);
+  assert.match(source, /whatsappTab\\.location\\.replace\\(whatsappUrl\\)/);
+});
+
+test("CH12 selector uses accessible modern radio cards instead of a native select", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  assert.match(html, /class="joki-order-variant-options" role="radiogroup"/);
+  assert.match(html, /input type="radio" name="jokiOrderVariant" value="KOSONGAN"/);
+  assert.match(html, /input type="radio" name="jokiOrderVariant" value="ISIAN"/);
+  assert.match(source, /selectedCh12Variant/);
+  assert.match(source, /input\\.checked=false/);
 });
