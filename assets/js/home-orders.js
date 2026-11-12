@@ -80,6 +80,9 @@
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
     $("jokiOrderProduct").textContent=p.name+" · "+p.display;
+    const variantField=$("jokiOrderVariantField"),variantSelect=$("jokiOrderVariant");
+    if(variantField)variantField.hidden=code!=="CH12";
+    if(variantSelect)variantSelect.value="";
     quantity.value="4";$("jokiOrderKingdom").value="";$("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
     const submit=$("jokiOrderSubmit");
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
@@ -135,6 +138,12 @@
       kingdomInput?.focus();
       return;
     }
+    const variant=$("jokiOrderVariant")?.value||"";
+    if(selected==="CH12"&&!["KOSONGAN","ISIAN"].includes(variant)){
+      $("jokiOrderMessage").textContent="Pilih tipe City Hall 12: KOSONGAN atau ISIAN.";
+      $("jokiOrderVariant")?.focus();
+      return;
+    }
     normalizeQuantity();
     const requestedQty=Number(quantity.value);
     if(!Number.isInteger(requestedQty)||requestedQty<4||requestedQty>12){
@@ -150,7 +159,7 @@
     try{
       const {data,error}=await db.rpc("create_joki_order_secure",{
         p_client_name:identity.name,p_client_email:identity.email||"",
-        p_product_code:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null,
+        p_product_code:selected==="CH12"?"CH12-"+variant:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null,
         p_kingdom_number:kingdomNumber
       });
       if(error)throw error;
