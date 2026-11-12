@@ -16,8 +16,8 @@
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
   function parseActionPointK(raw){
-    const value=String(raw??"").trim().replace(/[\\s.,]/g,"");
-    if(!/^\\d+$/.test(value))return null;
+    const value=String(raw??"").trim().replace(/[\s.,]/g,"");
+    if(!/^\d+$/.test(value))return null;
     let amount=Number(value);
     if(!Number.isSafeInteger(amount)||amount<1)return null;
     // Terima format 1 (= 1K), 1.000 (= 1K), maupun 1000 (= 1K).
