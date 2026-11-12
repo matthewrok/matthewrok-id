@@ -111,12 +111,11 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -wipe-data
           script: |
-            cd android
             adb logcat -c
             adb logcat -v threadtime > ../android-emulator-logcat.txt &
             LOGCAT_PID=$!
             set +e
-            gradle connectedDebugAndroidTest --no-daemon --stacktrace
+            gradle -p "$GITHUB_WORKSPACE/android" connectedDebugAndroidTest --no-daemon --stacktrace
             TEST_EXIT_CODE=$?
             set -e
             kill "$LOGCAT_PID" 2>/dev/null || true
