@@ -15,7 +15,83 @@
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
-  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||"";
+  const dailyDiscounts=new Map();
+  const dailyDiscountMinimums=new Map();
+  const discountProducts=["CH11","CH12","CH13","CH14","CH15","CH16","CH17"];
+  const discountedPrice=(price,percent)=>Math.max(1,Math.round(Number(price)*(100-percent)/100));
+  function getCatalogCard(button){return button.closest(".product-card, .card");}
+  function renderDailyDiscounts(){
+    document.querySelectorAll("[data-order-product]").forEach(button=>{
+      const card=getCatalogCard(button);
+      if(!card)return;
+      const priceNode=card.querySelector(".product-price, .price");
+      card.querySelector(".daily-discount-ribbon")?.remove();
+      card.classList.remove("has-daily-discount");
+      if(priceNode?.dataset.dailyDiscountOriginal!==undefined){
+        priceNode.innerHTML=priceNode.dataset.dailyDiscountOriginal;
+        priceNode.classList.remove("daily-discount-price");
+        delete priceNode.dataset.dailyDiscountApplied;
+      }
+    });
+    document.querySelectorAll("[data-order-product]").forEach(button=>{
+      const card=getCatalogCard(button),code=String(button.dataset.orderProduct||"").toUpperCase();
+      if(!card)return;
+      const percent=dailyDiscounts.get(code);
+      if(!percent)return;
+      const priceNode=card.querySelector(".product-price, .price");
+      if(!priceNode||priceNode.dataset.dailyDiscountApplied==="true")return;
+      const original=code==="CH12"?"Rp29.000–35.000":money(products[code]?.price||0);
+      let discounted;
+      if(code==="CH12")discounted=money(discountedPrice(29000,percent))+"–"+money(discountedPrice(35000,percent));
+      else discounted=money(discountedPrice(products[code]?.price||0,percent));
+      const suffix="/ char";
+      if(priceNode.dataset.dailyDiscountOriginal===undefined)priceNode.dataset.dailyDiscountOriginal=priceNode.innerHTML;
+      priceNode.classList.add("daily-discount-price");
+      priceNode.innerHTML='<span class="daily-discount-original">'+original+'</span><strong class="daily-discount-current">'+discounted+' <small>'+suffix+'</small></strong>';
+      priceNode.dataset.dailyDiscountApplied="true";
+      card.classList.add("has-daily-discount");
+      const ribbon=document.createElement("span");
+      ribbon.className="daily-discount-ribbon";
+      ribbon.textContent=percent+"% OFF · MIN "+(dailyDiscountMinimums.get(code)||4)+" CHAR";
+      ribbon.setAttribute("aria-label","Diskon harian "+percent+" persen, minimal "+(dailyDiscountMinimums.get(code)||4)+" karakter");
+      card.appendChild(ribbon);
+    });
+  }
+  function updateSelectedProductSummary(){
+    if(!selected||!products[selected])return;
+    const p=products[selected],percent=dailyDiscounts.get(selected)||0;
+    const minimum=Number(dailyDiscountMinimums.get(selected)||0);
+    const qty=Number(quantity?.value)||0;
+    const eligible=!!percent&&qty>=minimum;
+    const priceFor=base=>eligible?discountedPrice(base,percent):base;
+    const priceText=selected==="CH12"
+      ?money(priceFor(29000))+"–"+money(priceFor(35000))+"/char"
+      :money(priceFor(p.price))+(selected==="AP-LOHAR"?"/1K AP":"/char");
+    const promoNote=percent?" · Promo "+percent+"% OFF mulai "+minimum+" karakter":"";
+    $("jokiOrderProduct").textContent=p.name+" · "+priceText+promoNote;
+  }
+  async function loadDailyDiscounts(){
+    if(!db?.rpc)return;
+    try{
+      const {data,error}=await db.rpc("get_daily_joki_discounts");
+      if(error)throw error;
+      dailyDiscounts.clear();
+      dailyDiscountMinimums.clear();
+      (Array.isArray(data)?data:[]).forEach(row=>{
+        const code=String(row.product_code||"").toUpperCase();
+        const percent=Number(row.discount_percent);
+        const minimum=Number(row.minimum_characters);
+        if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=1&&percent<=30&&[4,6,8,10].includes(minimum)){
+          dailyDiscounts.set(code,percent);
+          dailyDiscountMinimums.set(code,minimum);
+        }
+      });
+      renderDailyDiscounts();
+      updateSelectedProductSummary();
+      updateTotal();
+    }catch(error){console.warn("[Daily discounts] Diskon harian belum dapat dimuat:",error);}
+  }
+  // Recheck periodically so an open tab also rolls over to the next Jakarta day.\n  window.setInterval(loadDailyDiscounts,15*60*1000);\n  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
   function parseActionPointK(raw){
     const value=String(raw??"").trim().replace(/[\s.,]/g,"");
     if(!/^\d+$/.test(value))return null;
@@ -33,11 +109,16 @@
     const raw=quantity.value.trim();
     const isActionPoint=selected==="AP-LOHAR";
     const qty=isActionPoint?(raw===""?0:(parseActionPointK(raw)||0)):(raw===""?0:Math.max(0,Math.min(12,Number(raw)||0)));
-    const unitPrice=selected==="CH12"&&selectedCh12Variant()==="ISIAN"?35000:p.price;
+    const baseUnitPrice=selected==="CH12"&&selectedCh12Variant()==="ISIAN"?35000:p.price;
+    const dailyPercent=dailyDiscounts.get(selected)||0;
+    const dailyMinimum=dailyDiscountMinimums.get(selected)||0;
+    const dailyEligible=!!dailyPercent&&qty>=dailyMinimum;
+    const unitPrice=dailyEligible?discountedPrice(baseUnitPrice,dailyPercent):baseUnitPrice;
     const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0;
     $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—";
     $("jokiOrderDiscount").textContent=money(discount);
     $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
+    updateSelectedProductSummary();
   }
   function normalizeQuantity(){
     if(!quantity)return;
@@ -108,14 +189,15 @@
     completedWhatsappUrl=null;
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
-    $("jokiOrderProduct").textContent=p.name+" · "+p.display;
+    updateSelectedProductSummary();
     const variantField=$("jokiOrderVariantField");
     if(variantField)variantField.hidden=code!=="CH12";
     document.querySelectorAll('input[name="jokiOrderVariant"]').forEach(input=>{input.checked=false;});
+    const variantSelect=$("jokiOrderVariant");if(variantSelect?.tagName==="SELECT")variantSelect.value="";
     const isActionPoint=code==="AP-LOHAR";
     const quantityLabel=$("jokiOrderQuantityLabel"),quantityHint=$("jokiOrderQuantityHint"),kingdomField=$("jokiOrderKingdomField"),kingdomInput=$("jokiOrderKingdom");
     if(quantityLabel)quantityLabel.textContent=isActionPoint?"Berapa K Action Point?":"Jumlah Karakter";
-    if(quantityHint)quantityHint.textContent=isActionPoint?"Isi 1 = 1K Action Point. Format 1.000 juga dihitung sebagai 1K. Harga Rp1.000 per 1K AP.":"Minimal 4 · Maksimal 12 karakter";
+    if(quantityHint)quantityHint.textContent=isActionPoint?"Isi 1 = 1K Action Point. Format 1.000 juga dihitung sebagai 1K. Harga Rp1.000 per 1K AP.":"Minimal 4 · Maksimal 12 karakter. Diskon harian hanya berlaku jika jumlah karakter memenuhi minimum promo.";
     if(kingdomField)kingdomField.hidden=isActionPoint;
     if(kingdomInput){kingdomInput.required=!isActionPoint;kingdomInput.value="";}
     quantity.value=isActionPoint?"1":"4";
@@ -147,6 +229,7 @@
     if(voucherButton){voucherButton.disabled=visitor;voucherButton.title=visitor?"Voucher hanya untuk member":"Cek voucher";}
   }
   syncVisitorRestrictions();
+  loadDailyDiscounts();
   window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
   quantity?.addEventListener("input",()=>{
     if(selected==="AP-LOHAR"){
@@ -166,7 +249,7 @@
     document.body.classList.remove("order-modal-open");
   }
   $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
-  document.addEventListener("change",event=>{if(event.target.matches('input[name="jokiOrderVariant"]'))updateTotal();});
+  document.addEventListener("change",event=>{if(event.target.matches('input[name="jokiOrderVariant"],#jokiOrderVariant'))updateTotal();});
   modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   const requestedProduct=new URLSearchParams(window.location.search).get("order");
@@ -219,6 +302,7 @@
         "No. Order: "+order.order_number,"Nama Client: "+order.client_name,
         ...(isActionPoint?[]:["Kingdom: "+kingdomNumber]),
         "Email: "+(order.client_email||"Visitor"),"Produk: "+order.service_name,
+        ...(dailyDiscounts.has(selected)&&requestedQty>=(dailyDiscountMinimums.get(selected)||99)?["Diskon harian: "+dailyDiscounts.get(selected)+"% (minimal "+dailyDiscountMinimums.get(selected)+" karakter)"]:[]),
         ...(isActionPoint?["Jumlah Action Point: "+order.quantity+"K AP","Harga per 1K AP: "+money(order.unit_price)]:["Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price)]),
         "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
         "Progress: 0% — Menunggu Pembayaran / Administrasi","",
