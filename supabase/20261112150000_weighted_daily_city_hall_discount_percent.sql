@@ -1,6 +1,7 @@
--- Weighted daily City Hall discount percentages.
--- 5=20%, 6=18%, 7=16%, 8=14%, 9=12%, 10=9%, 11=7%, 12=4%.
--- Product count remains: 1=38%, 2=27%, 3=19%, 4=13%, 5=2%, 6=1%.
+-- Conservative weighted daily City Hall discounts.
+-- Discount rates: 3=30%, 4=25%, 5=20%, 6=12%, 7=8%, 8=5%.
+-- Product count: 1=45%, 2=30%, 3=17%, 4=6%, 5=1.5%, 6=0.5%.
+-- Minimum characters: 4=10%, 6=25%, 8=35%, 10=30%.
 -- Only CH11-CH17 are eligible; Action Point / Lohar is always excluded.
 -- Offers remain deterministic for each Asia/Jakarta calendar day.
 
@@ -25,11 +26,16 @@ as $function$
   daily_count as (
     select d.discount_date,
       case
-        when get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) % 100 < 38 then 1
-        when get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) % 100 < 65 then 2
-        when get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) % 100 < 84 then 3
-        when get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) % 100 < 97 then 4
-        when get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) % 100 < 99 then 5
+        when (get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) * 256
+          + get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 1)) % 1000 < 450 then 1
+        when (get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) * 256
+          + get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 1)) % 1000 < 750 then 2
+        when (get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) * 256
+          + get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 1)) % 1000 < 920 then 3
+        when (get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) * 256
+          + get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 1)) % 1000 < 980 then 4
+        when (get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 0) * 256
+          + get_byte(decode(md5(d.discount_date::text || ':daily-count'), 'hex'), 1)) % 1000 < 995 then 5
         else 6
       end as product_count
     from local_day d
@@ -46,23 +52,30 @@ as $function$
   ),
   selected as (
     select s.*,
-      get_byte(decode(md5(s.discount_date::text || ':' || s.product_code || ':discount-percent'), 'hex'), 0) % 100 as discount_roll
+      (get_byte(decode(md5(s.discount_date::text || ':' || s.product_code || ':discount-percent'), 'hex'), 0) * 256
+        + get_byte(decode(md5(s.discount_date::text || ':' || s.product_code || ':discount-percent'), 'hex'), 1)) % 10000 as discount_roll
     from scored s
     where s.daily_rank <= s.product_count
   )
   select
     s.product_code,
     case
-      when s.discount_roll < 20 then 5
-      when s.discount_roll < 38 then 6
-      when s.discount_roll < 54 then 7
-      when s.discount_roll < 68 then 8
-      when s.discount_roll < 80 then 9
-      when s.discount_roll < 89 then 10
-      when s.discount_roll < 96 then 11
-      else 12
+      when s.discount_roll < 3000 then 3
+      when s.discount_roll < 5500 then 4
+      when s.discount_roll < 7500 then 5
+      when s.discount_roll < 8700 then 6
+      when s.discount_roll < 9500 then 7
+      else 8
     end::integer as discount_percent,
-    (array[4,6,8,10])[(get_byte(decode(s.seed, 'hex'), 5) % 4) + 1]::integer,
+    case
+      when (get_byte(decode(s.seed, 'hex'), 6) * 256
+        + get_byte(decode(s.seed, 'hex'), 7)) % 100 < 10 then 4
+      when (get_byte(decode(s.seed, 'hex'), 6) * 256
+        + get_byte(decode(s.seed, 'hex'), 7)) % 100 < 35 then 6
+      when (get_byte(decode(s.seed, 'hex'), 6) * 256
+        + get_byte(decode(s.seed, 'hex'), 7)) % 100 < 70 then 8
+      else 10
+    end::integer,
     s.discount_date
   from selected s;
 $function$;
