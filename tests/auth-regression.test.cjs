@@ -905,8 +905,11 @@ test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () 
   const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
   const migration = fs.readFileSync(path.join(ROOT, "supabase/ch12-order-variants.sql"), "utf8");
   assert.match(html, /id="jokiOrderVariantField"/);
-  assert.match(html, /value="KOSONGAN">KOSONGAN — tanpa resource/);
-  assert.match(html, /value="ISIAN">ISIAN — resource 10–15M\+/);
+  assert.match(html, /name="jokiOrderVariant" value="KOSONGAN"/);
+  assert.match(html, /name="jokiOrderVariant" value="ISIAN"/);
+  assert.match(html, /class="joki-order-variant-card"/);
+  assert.match(html, /Rp29\\.000/);
+  assert.match(html, /Rp35\\.000/);
   assert.match(source, /selected==="CH12"\s*&&!\["KOSONGAN","ISIAN"\]\.includes\(variant\)/);
   assert.match(source, /"CH12-"\+variant/);
   assert.match(migration, /CH12-KOSONGAN/);
@@ -916,8 +919,8 @@ test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () 
   assert.match(source, /35000/);
   assert.match(html, /29K–35K/);
   const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
-  assert.doesNotMatch(catalog, /KOSONGAN \\(tanpa resource\\): Rp29\\.000\\/char/);
-  assert.doesNotMatch(catalog, /ISIAN \\(resource 10–15M\\+\\): Rp35\\.000\\/char/);
+  assert.ok(!catalog.includes("KOSONGAN (tanpa resource): Rp29.000/char"));
+  assert.ok(!catalog.includes("ISIAN (resource 10–15M+): Rp35.000/char"));
 });
 
 
