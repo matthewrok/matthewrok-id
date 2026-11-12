@@ -110,40 +110,4 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -wipe-data -no-metrics
-          script: |
-            adb wait-for-device
-            BOOT_COMPLETED=""
-            for attempt in $(seq 1 60); do
-              BOOT_COMPLETED="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
-              [ "$BOOT_COMPLETED" = "1" ] && break
-              sleep 2
-            done
-            if [ "$BOOT_COMPLETED" != "1" ]; then
-              echo "Android emulator did not finish booting."
-              adb devices -l || true
-              adb shell getprop || true
-              exit 1
-            fi
-            adb logcat -c
-            adb logcat -v threadtime > "$GITHUB_WORKSPACE/android-emulator-logcat.txt" &
-            LOGCAT_PID=$!
-            trap 'kill "$LOGCAT_PID" 2>/dev/null || true; wait "$LOGCAT_PID" 2>/dev/null || true' EXIT
-            set +e
-            gradle -p "$GITHUB_WORKSPACE/android" connectedDebugAndroidTest --no-daemon --stacktrace
-            TEST_EXIT_CODE=$?
-            set -e
-            if [ "$TEST_EXIT_CODE" -ne 0 ]; then
-              echo "::group::Android emulator diagnostics (crash and instrumentation events)"
-              grep -Ei "FATAL EXCEPTION|AndroidRuntime|Process:|INSTRUMENTATION|Instrumentation|am_crash|am_anr|Process .* has died|crash_dump" "$GITHUB_WORKSPACE/android-emulator-logcat.txt" | tail -n 300 || true
-              echo "::endgroup::"
-              exit "$TEST_EXIT_CODE"
-            fi
-
-      - name: Upload emulator diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-emulator-diagnostics
-          path: android-emulator-logcat.txt
-          if-no-files-found: ignore
-          retention-days: 7
+          script: gradle -p "$GITHUB_WORKSPACE/android" connectedDebugAndroidTest --no-daemon --stacktrace
