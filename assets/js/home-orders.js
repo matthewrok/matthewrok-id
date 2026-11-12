@@ -28,6 +28,7 @@
       card.classList.remove("has-daily-discount");
       if(priceNode?.dataset.dailyDiscountOriginal!==undefined){
         priceNode.innerHTML=priceNode.dataset.dailyDiscountOriginal;
+        priceNode.classList.remove("daily-discount-price");
         delete priceNode.dataset.dailyDiscountApplied;
       }
     });
