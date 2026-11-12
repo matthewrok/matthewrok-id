@@ -898,3 +898,18 @@ test("Matthew Rewards and Membership History use the shared authenticated access
   assert.match(rewards, /__matthewVerifiedUser/);
   assert.match(history, /__matthewVerifiedUser/);
 });
+
+
+test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/ch12-order-variants.sql"), "utf8");
+  assert.match(html, /id="jokiOrderVariantField"/);
+  assert.match(html, /value="KOSONGAN">KOSONGAN — tanpa resource/);
+  assert.match(html, /value="ISIAN">ISIAN — resource 10–15M\+/);
+  assert.match(source, /selected==="CH12"\s*&&!\["KOSONGAN","ISIAN"\]\.includes\(variant\)/);
+  assert.match(source, /"CH12-"\+variant/);
+  assert.match(migration, /CH12-KOSONGAN/);
+  assert.match(migration, /CH12-ISIAN/);
+  assert.match(migration, /v_price:=29000/);
+});
