@@ -4,8 +4,12 @@
   const $ = id => document.getElementById(id);
   const products = {
     CH11:{name:"City Hall 11",price:17000,display:"17K/char"},
-    CH13:{name:"City Hall 13/13",price:45000,display:"45K/char"},
-    CH17:{name:"City Hall 17/17",price:115000,display:"115K/char"}
+    CH12:{name:"City Hall 12",price:29000,display:"29K/char"},
+    CH13:{name:"City Hall 13",price:45000,display:"45K/char"},
+    CH14:{name:"City Hall 14",price:55000,display:"55K/char"},
+    CH15:{name:"City Hall 15",price:75000,display:"75K/char"},
+    CH16:{name:"City Hall 16",price:85000,display:"85K/char"},
+    CH17:{name:"City Hall 17",price:120000,display:"120K/char"}
   };
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
