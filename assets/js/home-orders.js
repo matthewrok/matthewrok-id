@@ -91,7 +91,9 @@
       updateTotal();
     }catch(error){console.warn("[Daily discounts] Diskon harian belum dapat dimuat:",error);}
   }
-  // Recheck periodically so an open tab also rolls over to the next Jakarta day.\n  window.setInterval(loadDailyDiscounts,15*60*1000);\n  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
+  // Recheck periodically so an open tab also rolls over to the next Jakarta day.
+  window.setInterval(loadDailyDiscounts,15*60*1000);
+  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
   function parseActionPointK(raw){
     const value=String(raw??"").trim().replace(/[\s.,]/g,"");
     if(!/^\d+$/.test(value))return null;
@@ -309,7 +311,7 @@
         "Token Pelacakan Rahasia: "+order.tracking_token,"",
         "Simpan token ini. Gunakan token tersebut (bukan nomor order) untuk melacak progres:",
         "https://matthewrok.my.id/joki-matthew.html","","Terima kasih."
-      ].join("\n");
+      ].join("\\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";
       const whatsappUrl="https://wa.me/6285894152856?text="+encodeURIComponent(message);
       // Tandai transaksi selesai sebelum membuka WhatsApp. Klik ulang hanya membuka tautan,
