@@ -7,7 +7,7 @@
         A10000000000000000000003 = { isa = PBXGroup; children = (A10000000000000000000006, A10000000000000000000007, A10000000000000000000004); sourceTree = "<group>"; };
         A10000000000000000000004 = { isa = PBXGroup; children = (A10000000000000000000009,); name = Products; sourceTree = "<group>"; };
         A10000000000000000000006 = { isa = PBXGroup; children = (A10000000000000000000010, A10000000000000000000011); path = App; sourceTree = "<group>"; };
-        A10000000000000000000007 = { isa = PBXGroup; children = (A10000000000000000000012,); name = "Supporting Files"; sourceTree = "<group>"; };
+        A10000000000000000000007 = { isa = PBXGroup; children = (A10000000000000000000012,); name = "Supporting Files"; path = MATTHEWJOKI; sourceTree = "<group>"; };
         A10000000000000000000009 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MATTHEWJOKI.app; sourceTree = BUILT_PRODUCTS_DIR; };
         A10000000000000000000010 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MATTHEWJOKIApp.swift; sourceTree = "<group>"; };
         A10000000000000000000011 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
