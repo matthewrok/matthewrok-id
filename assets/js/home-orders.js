@@ -4,7 +4,7 @@
   const $ = id => document.getElementById(id);
   const products = {
     CH11:{name:"City Hall 11",price:17000,display:"17K/char"},
-    CH12:{name:"City Hall 12",price:29000,display:"29K/char"},
+    CH12:{name:"City Hall 12",price:29000,display:"29K–35K/char"},
     CH13:{name:"City Hall 13",price:45000,display:"45K/char"},
     CH14:{name:"City Hall 14",price:55000,display:"55K/char"},
     CH15:{name:"City Hall 15",price:75000,display:"75K/char"},
@@ -19,12 +19,14 @@
     // Jangan paksa input kembali ke 1 setiap pengguna menghapus angka.
     const raw=quantity.value.trim();
     const qty=raw===""?0:Math.max(0,Math.min(12,Number(raw)||0));
-    const subtotal=qty>0?p.price*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0; $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—"; $("jokiOrderDiscount").textContent=money(discount); $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
+    const unitPrice=selected==="CH12"&&$("jokiOrderVariant")?.value==="ISIAN"?35000:p.price;
+    const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0; $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—"; $("jokiOrderDiscount").textContent=money(discount); $("jokiOrderTotal").textContent=qty>0?money(subtotal-discount):"Masukkan jumlah";
   }
   function normalizeQuantity(){
     if(!quantity)return;
     const raw=quantity.value.trim();
-    const qty=raw===""?1:Math.max(1,Math.min(12,Math.floor(Number(raw)||1)));
+    if(raw===""){updateTotal();return;}
+    const qty=Math.min(12,Math.max(0,Math.floor(Number(raw)||0)));
     quantity.value=String(qty);
     updateTotal();
   }
@@ -80,6 +82,9 @@
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
     $("jokiOrderProduct").textContent=p.name+" · "+p.display;
+    const variantField=$("jokiOrderVariantField"),variantSelect=$("jokiOrderVariant");
+    if(variantField)variantField.hidden=code!=="CH12";
+    if(variantSelect)variantSelect.value="";
     quantity.value="4";$("jokiOrderKingdom").value="";$("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
     const submit=$("jokiOrderSubmit");
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
@@ -107,7 +112,7 @@
   }
   syncVisitorRestrictions();
   window.addEventListener("matthew:identity-ready",syncVisitorRestrictions);
-  quantity?.addEventListener("input",updateTotal);
+  quantity?.addEventListener("input",()=>{if(Number(quantity.value)>12)quantity.value="12";updateTotal();});
   $("jokiApplyVoucher")?.addEventListener("click",applyVoucher);
   $("jokiOrderVoucher")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyVoucher();}});
   quantity?.addEventListener("blur",normalizeQuantity);
@@ -117,6 +122,7 @@
     document.body.classList.remove("order-modal-open");
   }
   $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
+  $("jokiOrderVariant")?.addEventListener("change",()=>updateTotal());
   modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   const requestedProduct=new URLSearchParams(window.location.search).get("order");
@@ -130,9 +136,15 @@
     if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
     const kingdomInput=$("jokiOrderKingdom");
     const kingdomNumber=(kingdomInput?.value||"").trim();
-    if(!/^[0-9]{1,12}$/.test(kingdomNumber)){
-      $("jokiOrderMessage").textContent="Nomor Kingdom wajib diisi dengan angka (1–12 digit).";
+    if(!/^[0-9]{4}$/.test(kingdomNumber)){
+      $("jokiOrderMessage").textContent="Nomor Kingdom wajib diisi tepat 4 digit angka.";
       kingdomInput?.focus();
+      return;
+    }
+    const variant=$("jokiOrderVariant")?.value||"";
+    if(selected==="CH12"&&!["KOSONGAN","ISIAN"].includes(variant)){
+      $("jokiOrderMessage").textContent="Pilih tipe City Hall 12: KOSONGAN atau ISIAN.";
+      $("jokiOrderVariant")?.focus();
       return;
     }
     normalizeQuantity();
@@ -150,7 +162,7 @@
     try{
       const {data,error}=await db.rpc("create_joki_order_secure",{
         p_client_name:identity.name,p_client_email:identity.email||"",
-        p_product_code:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null,
+        p_product_code:selected==="CH12"?"CH12-"+variant:selected,p_quantity:requestedQty,p_voucher_code:appliedVoucher?.code||null,
         p_kingdom_number:kingdomNumber
       });
       if(error)throw error;

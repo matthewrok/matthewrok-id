@@ -898,3 +898,62 @@ test("Matthew Rewards and Membership History use the shared authenticated access
   assert.match(rewards, /__matthewVerifiedUser/);
   assert.match(history, /__matthewVerifiedUser/);
 });
+
+
+test("CH12 order registration requires a KOSONGAN or ISIAN resource option", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/ch12-order-variants.sql"), "utf8");
+  assert.match(html, /id="jokiOrderVariantField"/);
+  assert.match(html, /value="KOSONGAN">KOSONGAN — tanpa resource/);
+  assert.match(html, /value="ISIAN">ISIAN — resource 10–15M\+/);
+  assert.match(source, /selected==="CH12"\s*&&!\["KOSONGAN","ISIAN"\]\.includes\(variant\)/);
+  assert.match(source, /"CH12-"\+variant/);
+  assert.match(migration, /CH12-KOSONGAN/);
+  assert.match(migration, /CH12-ISIAN/);
+  assert.match(migration, /CH12-KOSONGAN[\s\S]*v_price:=29000/);
+  assert.match(migration, /CH12-ISIAN[\s\S]*v_price:=35000/);
+  assert.match(source, /35000/);
+  assert.match(html, /29K–35K/);
+});
+
+
+test("ORDER REGISTRATION places quantity before Kingdom and validates both fields", () => {
+  const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const quantityIndex = html.indexOf('id="jokiOrderQuantity"');
+  const kingdomIndex = html.indexOf('id="jokiOrderKingdom"');
+  assert.ok(quantityIndex > -1 && kingdomIndex > quantityIndex, "quantity must appear above Kingdom");
+  assert.match(html, /value="4"[^>]*inputmode="numeric"/);
+  assert.match(html, /min="4" max="12"/);
+  assert.match(html, /Minimal 4 · Maksimal 12 karakter/);
+  assert.match(html, /pattern="\[0-9\]\{4\}" minlength="4" maxlength="4"/);
+  assert.match(html, /Silahkan isi dengan Kingdom Tujuan Joki\./);
+  assert.match(html, /class="joki-required"/);
+  assert.match(html, /\.joki-required \{ color: #ff4d5e/);
+  assert.match(html, /\.joki-order-field-hint[\s\S]*font-size: 10px/);
+  assert.match(source, /if\(!\/\^\[0-9\]\{4\}\$\/\.test\(kingdomNumber\)\)/);
+  assert.match(source, /Nomor Kingdom wajib diisi tepat 4 digit angka/);
+  assert.match(source, /requestedQty<4\|\|requestedQty>12/);
+  assert.match(source, /if\(raw===""\)\{updateTotal\(\);return;\}/);
+});
+
+
+test("all website WhatsApp contact links use Matthew's official number", () => {
+  const files = [
+    "index.html",
+    "joki-matthew.html",
+    "layanan-joki.html",
+    "member-dashboard.html",
+    "assets/js/home-orders.js"
+  ];
+  const links = files.flatMap(file => {
+    const source = fs.readFileSync(path.join(ROOT, file), "utf8");
+    return [...source.matchAll(/https?:\/\/(?:wa\.me\/|api\.whatsapp\.com\/send\?phone=)(\d+)/g)]
+      .map(match => ({ file, number: match[1] }));
+  });
+  assert.ok(links.length > 0, "expected at least one WhatsApp contact link");
+  for (const link of links) {
+    assert.equal(link.number, "6285894152856", link.file + " must use Matthew's WhatsApp number");
+  }
+});

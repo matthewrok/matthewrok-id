@@ -152,6 +152,12 @@
 
         .nav-fab { position: absolute; top: -22px; width: 52px; height: 52px; background: white; color: black; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; text-decoration: none; box-shadow: 0 5px 15px rgba(255,255,255,0.15); border: 4px solid var(--bg-main); transition: 0.3s; }
         .nav-fab:hover { transform: scale(1.1); }
+
+        .product-heading-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+        .product-heading-row .section-title{margin:0;text-align:left}
+        .all-services-link{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid rgba(59,130,246,.55);border-radius:6px;color:#bfdbfe;text-decoration:none;font-size:10px;font-weight:700;letter-spacing:.2px;white-space:nowrap;transition:background .2s,border-color .2s}
+        .all-services-link:hover{background:rgba(37,99,235,.16);border-color:#60a5fa}
+        @media(max-width:380px){.product-heading-row{align-items:flex-start;flex-direction:column}.product-heading-row .section-title{font-size:20px}}
     </style>
 
     <!-- Styling limited to existing functional overlays and dynamic containers. -->
@@ -175,7 +181,9 @@
         .joki-order-identity strong,.joki-order-selected strong { color: var(--text-main); font-size: 13px; }
         .joki-order-identity small { color: var(--text-muted); overflow-wrap: anywhere; }
         .joki-order-dialog label { display: block; margin: 14px 0 7px; color: #e5e7eb; font-size: 12px; }
-        .joki-order-dialog input { width: 100%; min-height: 44px; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #121212; color: white; }
+        .joki-required { color: #ff4d5e; font-weight: 800; }
+        .joki-order-field-hint { display: block; margin-top: 5px; color: #9fb5d5; font-family: var(--font-sans); font-size: 10px; font-weight: 500; letter-spacing: .15px; line-height: 1.5; }
+        .joki-order-dialog input,.joki-order-dialog select { width: 100%; min-height: 44px; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #121212; color: white; }
         .joki-order-voucher-row { display: flex; align-items: center; gap: 7px; }
         .joki-order-voucher-row input { flex: 1; min-width: 0; }
         .joki-voucher-check { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; background: #1b1b1b; color: white; cursor: pointer; }
@@ -247,7 +255,10 @@
             <!-- PRODUK JOKI -->
             <section id="produk">
                 <div class="section-eyebrow">Pilihan Layanan</div>
-                <h2 class="section-title" id="jokiProductsTitle">Daftar Produk Joki</h2>
+                <div class="product-heading-row">
+                    <h2 class="section-title" id="jokiProductsTitle">Daftar Produk Joki</h2>
+                    <a class="all-services-link" href="/layanan-joki.html">Lihat Semua Layanan Joki <span aria-hidden="true">→</span></a>
+                </div>
                 <div class="product-scroll" id="produk-joki">
                     <div class="product-card">
                         <div class="product-tier">01 · STARTER</div>
@@ -264,14 +275,14 @@
                     <div class="product-card">
                         <div class="product-tier">02 · STARTER+</div>
                         <div class="product-title">City Hall 12</div>
-                        <div class="product-price">29K <span>/char</span></div>
+                        <div class="product-price">29K–35K <span>/char</span></div>
                         <ul class="product-specs">
                             <li><span>City Hall</span> <strong>Lv12</strong></li>
                             <li><span>Trading Post</span> <strong>12</strong></li>
                             <li><span>Vengeance</span> <strong>Lv200 (Max)</strong></li>
                             <li><span>Commander</span> <strong>27/27/27/27</strong></li>
                             <li><span>Siege</span> <strong>15K+</strong></li>
-                            <li><span>Resource</span> <strong>25–30M</strong></li>
+                            <li><span>Resource</span> <strong>Dapat dipilih</strong></li>
                             <li><span>Deadline</span> <strong>2–3 Hari</strong></li>
                         </ul>
                         <a href="#" class="btn-outline" data-order-product="ch12">PESAN PAKET</a>
@@ -427,11 +438,21 @@
                     <p class="joki-order-lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
                     <div class="joki-order-identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
                     <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
-                    <label for="jokiOrderKingdom">Kingdom <span aria-hidden="true">*</span></label>
-                    <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" autocomplete="off" placeholder="Masukkan nomor Kingdom (angka saja)" required>
-                    <small id="jokiOrderKingdomHint">Wajib diisi dengan angka Kingdom kamu.</small>
-                    <label for="jokiOrderQuantity">Jumlah karakter (minimal 4, maksimal 12)</label>
-                    <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" required>
+                    <div id="jokiOrderVariantField" hidden>
+                        <label for="jokiOrderVariant">Tipe City Hall 12 <span aria-hidden="true">*</span></label>
+                        <select id="jokiOrderVariant" required>
+                            <option value="" selected disabled>Pilih KOSONGAN atau ISIAN</option>
+                            <option value="KOSONGAN">KOSONGAN — tanpa resource · Rp29.000/char</option>
+                            <option value="ISIAN">ISIAN — resource 10–15M+ · Rp35.000/char</option>
+                        </select>
+                        <small>KOSONGAN Rp29.000/karakter · ISIAN Rp35.000/karakter.</small>
+                    </div>
+                    <label for="jokiOrderQuantity">Jumlah Karakter</label>
+                    <input id="jokiOrderQuantity" type="number" min="4" max="12" value="4" inputmode="numeric" step="1" required>
+                    <small class="joki-order-field-hint">Minimal 4 · Maksimal 12 karakter</small>
+                    <label for="jokiOrderKingdom">Kingdom <span class="joki-required" aria-label="wajib diisi">*</span></label>
+                    <input id="jokiOrderKingdom" name="kingdomNumber" type="text" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" placeholder="Masukkan 4 digit nomor Kingdom" required>
+                    <small id="jokiOrderKingdomHint" class="joki-order-field-hint">Silahkan isi dengan Kingdom Tujuan Joki.</small>
                     <div class="joki-order-voucher"><label for="jokiOrderVoucher">Kode voucher (opsional)</label><div class="joki-order-voucher-row"><input id="jokiOrderVoucher" type="password" maxlength="40" autocomplete="off" placeholder="Masukkan kode voucher"><button type="button" id="jokiApplyVoucher" class="joki-voucher-check">Cek</button></div><p id="jokiVoucherMessage" class="joki-order-message" aria-live="polite">Masukkan kode jika kamu memiliki voucher.</p></div>
                     <div class="joki-order-total"><span>Subtotal</span><strong id="jokiOrderSubtotal">Rp17.000</strong></div>
                     <div class="joki-order-total"><span>Diskon voucher</span><strong id="jokiOrderDiscount">Rp0</strong></div>
@@ -545,7 +566,7 @@
     <script defer src="/assets/js/home-announcement.js?v=20261104"></script>
     <script defer src="/assets/js/home.js?v=20261108-perf1"></script>
     <script defer src="/assets/js/home-visitor.js"></script>
-    <script defer src="/assets/js/home-orders.js?v=20261104-5"></script>
+    <script defer src="/assets/js/home-orders.js?v=20261112-ch12-variant-pricing"></script>
     <script defer src="/assets/js/wishlist.js?v=20261109-2"></script>
     <script defer src="/assets/js/maintenance-status.js?v=20261106-mm2"></script>
 </body>
