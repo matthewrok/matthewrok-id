@@ -68,7 +68,7 @@
       ?money(priceFor(29000))+"–"+money(priceFor(35000))+"/char"
       :money(priceFor(p.price))+(selected==="AP-LOHAR"?"/1K AP":"/char");
     const promoNote=percent?" · Promo "+percent+"% OFF mulai "+minimum+" karakter":"";
-    $("jokiOrderProduct").textContent=p.name+" · "+priceText+promoNote;
+    const productNode=$("jokiOrderProduct");if(productNode)productNode.textContent=p.name+" · "+priceText+promoNote;
   }
   async function loadDailyDiscounts(){
     if(!db?.rpc)return;
@@ -185,11 +185,13 @@
     if(identity.isVisitor){alert("Visitor hanya dapat melihat produk. Login dengan akun terverifikasi untuk memesan.");return;}
     const maintenanceMessage=await getOrderMaintenanceMessage();
     if(maintenanceMessage){alert(maintenanceMessage);return;}
+    const requiredNodes=["jokiOrderModal","jokiOrderQuantity","jokiOrderName","jokiOrderEmail","jokiOrderMessage","jokiOrderVoucher","jokiVoucherMessage","jokiOrderSubmit","jokiOrderSubtotal","jokiOrderDiscount","jokiOrderTotal"];
+    const missingNodes=requiredNodes.filter(id=>!$(id));
+    if(missingNodes.length){console.error("[Joki Order] Elemen formulir tidak ditemukan:",missingNodes);alert("Formulir belum termuat sempurna. Muat ulang halaman lalu coba lagi.");return;}
     selected=code;
     completedWhatsappUrl=null;
     $("jokiOrderName").textContent=identity.name;
-    $("jokiOrderEmail").textContent=identity.email||"Visitor";
-    updateSelectedProductSummary();
+    $("jokiOrderEmail").textContent=identity.email||"Member";
     const variantField=$("jokiOrderVariantField");
     if(variantField)variantField.hidden=code!=="CH12";
     document.querySelectorAll('input[name="jokiOrderVariant"]').forEach(input=>{input.checked=false;});
@@ -206,7 +208,7 @@
     $("jokiOrderMessage").textContent="";$("jokiOrderVoucher").value="";$("jokiVoucherMessage").textContent="Masukkan kode jika kamu memiliki voucher.";appliedVoucher=null;
     const submit=$("jokiOrderSubmit");
     submit.disabled=false;submit.textContent="BUAT PESANAN & LANJUT WHATSAPP ↗";
-    updateTotal();document.body.classList.add("order-modal-open");modal?.classList.remove("hidden");$("jokiOrderClose")?.focus();
+    updateTotal();updateSelectedProductSummary();document.body.classList.add("order-modal-open");$("jokiOrderModal").classList.remove("hidden");$("jokiOrderClose")?.focus();
   }
   document.addEventListener("click",event=>{
     const button=event.target.closest("[data-order-product]");
@@ -258,7 +260,7 @@
   }
   $("jokiOrderSubmit")?.addEventListener("click",async()=>{
     const identity=getIdentity(),p=products[selected],button=$("jokiOrderSubmit");
-    if(completedWhatsappUrl){window.open(completedWhatsappUrl,"_blank","noopener");return;}
+    if(completedWhatsappUrl){window.location.assign(completedWhatsappUrl);return;}
     if(!db||!identity?.name||!p){$("jokiOrderMessage").textContent="Identitas atau layanan belum siap. Muat ulang halaman dan coba lagi.";return;}
     if(identity.isVisitor){$("jokiOrderMessage").textContent="Visitor tidak dapat membuat pesanan. Silakan login dengan akun terverifikasi.";return;}
     const isActionPoint=selected==="AP-LOHAR";
@@ -281,10 +283,8 @@
       $("jokiOrderMessage").textContent=isActionPoint?"Jumlah Action Point tidak valid. Gunakan 1 untuk 1K atau 1.000 untuk 1K.":"Jumlah karakter harus minimal 4 dan maksimal 12.";
       return;
     }
-    // Buka tab kosong saat klik masih dianggap interaksi pengguna oleh browser mobile.
-    // URL WhatsApp baru diisi setelah RPC selesai agar tidak diblokir popup blocker.
-    let whatsappTab=null;
-    try{whatsappTab=window.open("about:blank","_blank");}catch(_e){}
+    // Simpan dahulu, lalu arahkan tab aktif ke wa.me. Cara ini lebih andal
+    // pada Chrome Android daripada membuka tab kosong yang sering tertahan popup blocker.
     button.disabled=true;button.textContent="MENYIMPAN PESANAN...";
     $("jokiOrderMessage").textContent="Membuat nomor order dan token pelacakan rahasia...";
     try{
@@ -315,17 +315,11 @@
       // Tandai transaksi selesai sebelum membuka WhatsApp. Klik ulang hanya membuka tautan,
       // tidak pernah memanggil RPC pembuatan order untuk kedua kalinya.
       completedWhatsappUrl=whatsappUrl;
-      if(whatsappTab&&!whatsappTab.closed){
-        try{whatsappTab.location.replace(whatsappUrl);}catch(navigationError){console.warn("[Joki Order] Tab WhatsApp tidak dapat diarahkan:",navigationError);try{whatsappTab.close();}catch(_e){}}
-        $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. Jika WhatsApp belum terbuka, gunakan tombol di bawah.";
-        button.disabled=false;button.textContent="BUKA WHATSAPP ↗";
-      }else{
-        // Fallback same-tab jika browser menolak tab baru.
-        $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. Mengalihkan ke WhatsApp...";
-        window.location.assign(whatsappUrl);
-      }
+      $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. Mengalihkan ke WhatsApp...";
+      // Navigasi pada tab yang sama menjaga gesture klik asli dan memicu aplikasi
+      // WhatsApp pada Android bila terpasang. Pesanan sudah tersimpan sebelum redirect.
+      window.location.assign(whatsappUrl);
     }catch(error){
-      if(whatsappTab&&!whatsappTab.closed){try{whatsappTab.close();}catch(_e){}}
       console.error("[Joki Order]",error);
       $("jokiOrderMessage").textContent=error.message||"Pesanan gagal dibuat. Silakan coba kembali.";
       if(completedWhatsappUrl){button.disabled=false;button.textContent="BUKA WHATSAPP ↗";}
