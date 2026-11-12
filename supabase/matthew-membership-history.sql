@@ -189,7 +189,7 @@ begin
   select coalesce(jsonb_agg(to_jsonb(h) order by h.changed_at desc, h.id desc), '[]'::jsonb)
     into v_history
   from (
-    select previous_role, new_role, completed_orders, event_type, changed_at
+    select id, previous_role, new_role, completed_orders, event_type, changed_at
     from public.warga_membership_history
     where user_id = v_user_id
     order by changed_at desc, id desc
