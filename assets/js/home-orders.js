@@ -15,7 +15,7 @@
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
-  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||"";
+  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||$("jokiOrderVariant")?.value||"";
   function parseActionPointK(raw){
     const value=String(raw??"").trim().replace(/[\s.,]/g,"");
     if(!/^\d+$/.test(value))return null;
@@ -112,6 +112,7 @@
     const variantField=$("jokiOrderVariantField");
     if(variantField)variantField.hidden=code!=="CH12";
     document.querySelectorAll('input[name="jokiOrderVariant"]').forEach(input=>{input.checked=false;});
+    const variantSelect=$("jokiOrderVariant");if(variantSelect?.tagName==="SELECT")variantSelect.value="";
     const isActionPoint=code==="AP-LOHAR";
     const quantityLabel=$("jokiOrderQuantityLabel"),quantityHint=$("jokiOrderQuantityHint"),kingdomField=$("jokiOrderKingdomField"),kingdomInput=$("jokiOrderKingdom");
     if(quantityLabel)quantityLabel.textContent=isActionPoint?"Berapa K Action Point?":"Jumlah Karakter";
@@ -166,7 +167,7 @@
     document.body.classList.remove("order-modal-open");
   }
   $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
-  document.addEventListener("change",event=>{if(event.target.matches('input[name="jokiOrderVariant"]'))updateTotal();});
+  document.addEventListener("change",event=>{if(event.target.matches('input[name="jokiOrderVariant"],#jokiOrderVariant'))updateTotal();});
   modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   const requestedProduct=new URLSearchParams(window.location.search).get("order");
