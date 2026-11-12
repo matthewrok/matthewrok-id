@@ -330,7 +330,7 @@
         "https://matthewrok.my.id/joki-matthew.html",
         "",
         "Terima kasih telah mempercayakan pesanan kepada Matthew Joki. 🙏"
-      ].join("\\n");
+      ].join("\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";
       const whatsappUrl="https://wa.me/6285894152856?text="+encodeURIComponent(message);
       // Tandai transaksi selesai sebelum membuka WhatsApp. Klik ulang hanya membuka tautan,
