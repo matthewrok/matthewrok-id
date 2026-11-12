@@ -201,8 +201,8 @@
     const body=document.createElement("div"); body.className="card-body";
     const grid=document.createElement("div"); grid.className="details-grid";
     addDetail(grid,"Kode Pesanan",order.order_number||"—");
-    addDetail(grid,"Kingdom",order.kingdom_number||"—");
     const isActionPoint=(order.service_name||"").toLowerCase().includes("action point");
+    if(!isActionPoint)addDetail(grid,"Kingdom",order.kingdom_number||"—");
     addDetail(grid,isActionPoint?"Jumlah Action Point":"Jumlah Karakter",isActionPoint?Number(order.quantity||0)+"K AP":Number(order.quantity||0)+" karakter");
     addDetail(grid,"Tanggal Pesanan",date(order.created_at));
     body.appendChild(grid);
