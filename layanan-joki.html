@@ -90,6 +90,13 @@ li strong{color:var(--text-main);text-align:right;font-weight:600}
 footer{text-align:center;padding:22px 0 30px;color:var(--text-muted);font:400 10px/1.7 Inter,sans-serif;border-top:1px solid var(--border-color)}
 @media(min-width:700px){.page,.nav{width:min(100% - 40px,480px)}.hero{padding-top:48px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+/* Daily randomized product discounts */
+.daily-discount-ribbon{position:absolute;top:0;right:0;z-index:2;padding:7px 12px 7px 15px;background:#dc2626;color:#fff;font:800 10px Inter,sans-serif;letter-spacing:.55px;box-shadow:0 4px 12px #0005;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px)}
+.daily-discount-price{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:0 0 14px}
+.daily-discount-original{color:#777!important;font:500 12px Inter,sans-serif!important;text-decoration:line-through;text-decoration-thickness:1.5px}
+.daily-discount-current{color:#d4af37!important;font:700 1em Cinzel,serif!important;line-height:1.2}
+.daily-discount-current small{font:500 10px Inter,sans-serif;color:var(--text-muted)}
+.product-card.has-daily-discount,.card.has-daily-discount{padding-top:35px}
 </style>
 </head>
 <body>
@@ -248,6 +255,6 @@ footer{text-align:center;padding:22px 0 30px;color:var(--text-muted);font:400 10
       bootMemberIdentity();
     })();
   </script>
-  <script src="/assets/js/home-orders.js?v=20261112-action-point-lohar"></script>
+  <script src="/assets/js/home-orders.js?v=20261112-daily-discounts"></script>
 </body>
 </html>
