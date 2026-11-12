@@ -957,3 +957,41 @@ test("all website WhatsApp contact links use Matthew's official number", () => {
     assert.equal(link.number, "6285894152856", link.file + " must use Matthew's WhatsApp number");
   }
 });
+
+
+test("Action Point / Lohar is searchable and uses the direct K-AP order form", () => {
+  const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
+  const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const orders = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/add_action_point_lohar_orders.sql"), "utf8");
+  const history = fs.readFileSync(path.join(ROOT, "assets/js/your-order.js"), "utf8");
+  const telegram = fs.readFileSync(path.join(ROOT, "supabase/functions/telegram-order-notify/index.ts"), "utf8");
+
+  assert.match(catalog, /id="serviceSearch"/);
+  assert.match(catalog, /data-category-filter="city-hall"/);
+  assert.match(catalog, /data-category-filter="action-point"/);
+  assert.equal((catalog.match(/data-order-product="ap-lohar"/g) || []).length, 1);
+  assert.equal((catalog.match(/<h3>Joki Lohar<\/h3>/g) || []).length, 0);
+  assert.match(catalog, /data-order-product="ch11"/);
+  assert.match(catalog, /data-order-product="ch12"/);
+  assert.match(catalog, /data-order-product="ch13"/);
+  assert.match(catalog, /assets\/js\/home-orders\.js/);
+  assert.match(catalog, /id="jokiOrderModal"/);
+
+  assert.match(home, /id="jokiOrderQuantityLabel"/);
+  assert.match(home, /id="jokiOrderKingdomField"/);
+  assert.match(orders, /"AP-LOHAR":\{name:"Joki Action Point \/ Lohar",price:1000/);
+  assert.match(orders, /function parseActionPointK/);
+  assert.match(orders, /replace\(\/[\\s.,]\//);
+  assert.match(orders, /if\(amount%1000!==0\)return null/);
+  assert.match(orders, /quantityLabel\.textContent=isActionPoint\?"Berapa K Action Point\?"/);
+  assert.match(orders, /kingdomField\.hidden=isActionPoint/);
+  assert.match(orders, /p_kingdom_number:kingdomNumber/);
+  assert.match(orders, /Jumlah Action Point: \+order\.quantity\+"K AP"/);
+
+  assert.match(migration, /p_product_code = 'AP-LOHAR'/);
+  assert.match(migration, /v_price := 1000/);
+  assert.match(migration, /v_kingdom := null/);
+  assert.match(history, /Jumlah Action Point/);
+  assert.match(telegram, /Jumlah Action Point/);
+});
