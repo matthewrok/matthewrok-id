@@ -17,7 +17,6 @@
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
   const dailyDiscounts=new Map();
   const discountProducts=["CH11","CH12","CH13","CH14","CH15","CH16","CH17","AP-LOHAR"];
-  const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
   const discountedPrice=(price,percent)=>Math.max(1,Math.round(Number(price)*(100-percent)/100));
   function getCatalogCard(button){return button.closest(".product-card, .card");}
   function renderDailyDiscounts(){
@@ -44,6 +43,15 @@
       card.appendChild(ribbon);
     });
   }
+  function updateSelectedProductSummary(){
+    if(!selected||!products[selected])return;
+    const p=products[selected],percent=dailyDiscounts.get(selected)||0;
+    const priceFor=base=>percent?discountedPrice(base,percent):base;
+    const priceText=selected==="CH12"
+      ?money(priceFor(29000))+"–"+money(priceFor(35000))+"/char"
+      :money(priceFor(p.price))+(selected==="AP-LOHAR"?"/1K AP":"/char");
+    $("jokiOrderProduct").textContent=p.name+" · "+priceText+(percent?" · Diskon harian "+percent+"%":"");
+  }
   async function loadDailyDiscounts(){
     if(!db?.rpc)return;
     try{
@@ -56,6 +64,7 @@
         if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=1&&percent<=30)dailyDiscounts.set(code,percent);
       });
       renderDailyDiscounts();
+      updateSelectedProductSummary();
       updateTotal();
     }catch(error){console.warn("[Daily discounts] Diskon harian belum dapat dimuat:",error);}
   }
@@ -154,7 +163,7 @@
     completedWhatsappUrl=null;
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
-    $("jokiOrderProduct").textContent=p.name+" · "+p.display;
+    updateSelectedProductSummary();
     const variantField=$("jokiOrderVariantField");
     if(variantField)variantField.hidden=code!=="CH12";
     document.querySelectorAll('input[name="jokiOrderVariant"]').forEach(input=>{input.checked=false;});
@@ -267,6 +276,7 @@
         "No. Order: "+order.order_number,"Nama Client: "+order.client_name,
         ...(isActionPoint?[]:["Kingdom: "+kingdomNumber]),
         "Email: "+(order.client_email||"Visitor"),"Produk: "+order.service_name,
+        ...(dailyDiscounts.has(selected)?["Diskon harian: "+dailyDiscounts.get(selected)+"%"]:[]),
         ...(isActionPoint?["Jumlah Action Point: "+order.quantity+"K AP","Harga per 1K AP: "+money(order.unit_price)]:["Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price)]),
         "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
         "Progress: 0% — Menunggu Pembayaran / Administrasi","",
