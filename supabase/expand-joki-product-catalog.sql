@@ -5,7 +5,8 @@ begin;
 do $migration$
 declare
   v_definition text;
-  v_old text := $old$elsif p_product_code='CH17' then v_service:='City Hall 17/17'; v_price:=115000;$old$;
+  v_old text := $old$elsif p_product_code='CH13' then v_service:='City Hall 13/13'; v_price:=45000;
+  elsif p_product_code='CH17' then v_service:='City Hall 17/17'; v_price:=115000;$old$;
   v_new text := $new$
   elsif p_product_code='CH12' then v_service:='City Hall 12'; v_price:=29000;
   elsif p_product_code='CH13' then v_service:='City Hall 13'; v_price:=45000;
