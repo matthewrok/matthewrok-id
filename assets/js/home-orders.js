@@ -299,18 +299,37 @@
       const order=Array.isArray(data)?data[0]:data;
       if(!order?.order_number||!order?.tracking_token)throw new Error("Nomor order atau token pelacakan belum berhasil dibuat.");
       const message=[
-        "HALO MATTHEW, SAYA INGIN KONFIRMASI PESANAN JOKI.","",
-        "=== DETAIL PESANAN MATTHEW JOKI ===",
-        "No. Order: "+order.order_number,"Nama Client: "+order.client_name,
+        "Halo Matthew, saya ingin konfirmasi pesanan joki.",
+        "",
+        "✦ *MATTHEW JOKI* ✦",
+        "━━━━━━━━━━━━━━━━━━━━",
+        "📦 *DETAIL PESANAN*",
+        "No. Order: "+order.order_number,
+        "Nama Client: "+order.client_name,
         ...(isActionPoint?[]:["Kingdom: "+kingdomNumber]),
-        "Email: "+(order.client_email||"Visitor"),"Produk: "+order.service_name,
-        ...(dailyDiscounts.has(selected)&&requestedQty>=(dailyDiscountMinimums.get(selected)||99)?["Diskon harian: "+dailyDiscounts.get(selected)+"% (minimal "+dailyDiscountMinimums.get(selected)+" karakter)"]:[]),
+        "Email: "+(order.client_email||"Visitor"),
+        "Produk: "+order.service_name,
+        ...(dailyDiscounts.has(selected)&&requestedQty>=(dailyDiscountMinimums.get(selected)||99)?["🏷️ Diskon harian: "+dailyDiscounts.get(selected)+"% (minimal "+dailyDiscountMinimums.get(selected)+" karakter)"]:[]),
         ...(isActionPoint?["Jumlah Action Point: "+order.quantity+"K AP","Harga per 1K AP: "+money(order.unit_price)]:["Jumlah Karakter: "+order.quantity,"Harga per Karakter: "+money(order.unit_price)]),
-        "Subtotal: "+money(order.subtotal_price??order.total_price),"Voucher: "+(order.voucher_code||"Tidak ada"),"Diskon: "+money(order.discount_amount||0),"TOTAL PESANAN: "+money(order.total_price),"","Status Awal: "+order.status,
-        "Progress: 0% — Menunggu Pembayaran / Administrasi","",
-        "Token Pelacakan Rahasia: "+order.tracking_token,"",
+        "",
+        "💰 *RINGKASAN PEMBAYARAN*",
+        "Subtotal: "+money(order.subtotal_price??order.total_price),
+        "Voucher: "+(order.voucher_code||"Tidak ada"),
+        "Potongan voucher: "+money(order.discount_amount||0),
+        "━━━━━━━━━━━━━━━━━━━━",
+        "💎 *TOTAL PESANAN: "+money(order.total_price)+"*",
+        "",
+        "🕒 *STATUS PESANAN*",
+        "Status Awal: "+order.status,
+        "Progress: 0% — Menunggu Pembayaran / Administrasi",
+        "",
+        "🔐 *TOKEN PELACAKAN RAHASIA*",
+        order.tracking_token,
+        "",
         "Simpan token ini. Gunakan token tersebut (bukan nomor order) untuk melacak progres:",
-        "https://matthewrok.my.id/joki-matthew.html","","Terima kasih."
+        "https://matthewrok.my.id/joki-matthew.html",
+        "",
+        "Terima kasih telah mempercayakan pesanan kepada Matthew Joki. 🙏"
       ].join("\\n");
       $("jokiOrderMessage").textContent="Nomor order "+order.order_number+" berhasil dibuat. Mengalihkan ke WhatsApp...";
       const whatsappUrl="https://wa.me/6285894152856?text="+encodeURIComponent(message);
