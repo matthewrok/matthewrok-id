@@ -103,13 +103,13 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         timeout-minutes: 25
         with:
-          api-level: 35
+          api-level: 30
           emulator-boot-timeout: 900
-          target: google_apis
+          target: default
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -wipe-data
           script: |
             cd android
             adb logcat -c
@@ -129,10 +129,10 @@ jobs:
             fi
 
       - name: Upload emulator diagnostics
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: android-emulator-diagnostics
           path: android-emulator-logcat.txt
-          if-no-files-found: warn
+          if-no-files-found: ignore
           retention-days: 7
