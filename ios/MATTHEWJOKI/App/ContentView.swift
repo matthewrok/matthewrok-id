@@ -54,7 +54,9 @@ private struct WebView: UIViewRepresentable {
             if isOfficial(url) {
                 decisionHandler(.allow)
             } else {
-                if navigationAction.navigationType == .linkActivated || url.scheme != "https" {
+                // External HTTPS destinations and app links are handed to iOS.
+                let scheme = url.scheme?.lowercased()
+                if scheme == "https" || scheme == "http" || scheme == "tel" || scheme == "mailto" || scheme == "whatsapp" {
                     openExternally(url)
                 }
                 decisionHandler(.cancel)
