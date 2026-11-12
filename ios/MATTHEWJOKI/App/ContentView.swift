@@ -1,5 +1,6 @@
 import SwiftUI
 import WebKit
+import UIKit
 
 private let websiteURL = URL(string: "https://matthewrok.my.id/")!
 private let officialHost = "matthewrok.my.id"
@@ -8,7 +9,7 @@ struct ContentView: View {
     var body: some View {
         WebView()
             .ignoresSafeArea(edges: .bottom)
-            .background(Color(red: 7 / 255, green: 21 / 255, blue: 46 / 255))
+            .background(Color(red: 7.0 / 255.0, green: 21.0 / 255.0, blue: 46.0 / 255.0))
     }
 }
 
@@ -22,7 +23,7 @@ private struct WebView: UIViewRepresentable {
         webView.allowsBackForwardNavigationGestures = true
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.isOpaque = false
-        webView.backgroundColor = UIColor(red: 7 / 255, green: 21 / 255, blue: 46 / 255, alpha: 1)
+        webView.backgroundColor = UIColor(red: 7.0 / 255.0, green: 21.0 / 255.0, blue: 46.0 / 255.0, alpha: 1)
         webView.scrollView.backgroundColor = webView.backgroundColor
         webView.load(URLRequest(url: websiteURL, timeoutInterval: 30))
         return webView
