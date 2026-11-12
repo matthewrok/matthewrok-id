@@ -40,7 +40,7 @@ public class MainActivitySmokeTest {
                         mixedContentMode.set(webView.getSettings().getMixedContentMode());
                         webView.evaluateJavascript("document.readyState", value -> {
                             // evaluateJavascript returns a JSON-encoded string, including quotes.
-                            readyState.set(value == null ? null : value.replace("\\\"", ""));
+                            readyState.set(value != null && value.length() >= 2 ? value.substring(1, value.length() - 1) : value);
                         });
                     }
                 });
