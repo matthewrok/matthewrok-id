@@ -184,6 +184,23 @@
         .joki-required { color: #ff4d5e; font-weight: 800; }
         .joki-order-field-hint { display: block; margin-top: 5px; color: #9fb5d5; font-family: var(--font-sans); font-size: 10px; font-weight: 500; letter-spacing: .15px; line-height: 1.5; }
         .joki-order-dialog input,.joki-order-dialog select { width: 100%; min-height: 44px; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #121212; color: white; }
+        .joki-order-variant { margin: 16px 0 8px; padding: 14px; border: 1px solid #4a3d1d; border-radius: 12px; background: linear-gradient(145deg,rgba(212,175,55,.09),#0c0c0c 62%); }
+        .joki-order-variant[hidden] { display: none !important; }
+        .joki-order-variant-heading { margin-bottom: 11px; }
+        .joki-order-variant-kicker { display: block; color: var(--accent-gold); font: 700 9px var(--font-sans); letter-spacing: 1.7px; }
+        .joki-order-variant-heading p { margin: 5px 0 0; color: var(--text-muted); font-size: 10px; line-height: 1.55; }
+        .joki-order-variant-options { display: grid; gap: 9px; }
+        .joki-order-variant-option { position: relative; display: block; margin: 0 !important; cursor: pointer; }
+        .joki-order-variant-option input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+        .joki-order-variant-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 76px; padding: 12px 13px; border: 1px solid var(--border-color); border-radius: 9px; background: #101010; transition: border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease; }
+        .joki-order-variant-option:hover .joki-order-variant-card { transform: translateY(-1px); border-color: #77622b; }
+        .joki-order-variant-option input:checked + .joki-order-variant-card { border-color: var(--accent-gold); background: rgba(212,175,55,.10); box-shadow: 0 0 0 1px rgba(212,175,55,.15),0 0 16px rgba(212,175,55,.10); }
+        .joki-order-variant-option input:focus-visible + .joki-order-variant-card { outline: 2px solid var(--accent-gold); outline-offset: 3px; }
+        .joki-order-variant-copy { display: grid; gap: 5px; min-width: 0; }
+        .joki-order-variant-copy strong { color: var(--text-main); font-size: 12px; letter-spacing: .5px; }
+        .joki-order-variant-copy small { color: var(--text-muted); font-size: 10px; font-weight: 400; line-height: 1.4; }
+        .joki-order-variant-price { flex: 0 0 auto; color: var(--accent-gold); font: 600 15px var(--font-serif); text-align: right; }
+        .joki-order-variant-price small { display: block; margin-top: 3px; color: var(--text-muted); font: 500 9px var(--font-sans); }
         .joki-order-voucher-row { display: flex; align-items: center; gap: 7px; }
         .joki-order-voucher-row input { flex: 1; min-width: 0; }
         .joki-voucher-check { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; background: #1b1b1b; color: white; cursor: pointer; }
@@ -438,14 +455,27 @@
                     <p class="joki-order-lead">Identitas diambil otomatis dari akun yang sedang digunakan.</p>
                     <div class="joki-order-identity"><span>Nama pemesan</span><strong id="jokiOrderName">-</strong><small id="jokiOrderEmail"></small></div>
                     <div class="joki-order-selected"><span>Paket dipilih</span><strong id="jokiOrderProduct">-</strong></div>
-                    <div id="jokiOrderVariantField" hidden>
-                        <label for="jokiOrderVariant">Tipe City Hall 12 <span aria-hidden="true">*</span></label>
-                        <select id="jokiOrderVariant" required>
-                            <option value="" selected disabled>Pilih KOSONGAN atau ISIAN</option>
-                            <option value="KOSONGAN">KOSONGAN — tanpa resource · Rp29.000/char</option>
-                            <option value="ISIAN">ISIAN — resource 10–15M+ · Rp35.000/char</option>
-                        </select>
-                        <small>KOSONGAN Rp29.000/karakter · ISIAN Rp35.000/karakter.</small>
+                    <div id="jokiOrderVariantField" class="joki-order-variant" hidden>
+                        <div class="joki-order-variant-heading">
+                            <span class="joki-order-variant-kicker">KHUSUS CITY HALL 12</span>
+                            <p>Pilih jenis pengerjaan yang sesuai dengan kebutuhan akunmu.</p>
+                        </div>
+                        <div class="joki-order-variant-options" role="radiogroup" aria-label="Pilih tipe City Hall 12">
+                            <label class="joki-order-variant-option">
+                                <input type="radio" name="jokiOrderVariant" value="KOSONGAN" required>
+                                <span class="joki-order-variant-card">
+                                    <span class="joki-order-variant-copy"><strong>KOSONGAN</strong><small>Tanpa tambahan resource</small></span>
+                                    <strong class="joki-order-variant-price">Rp29.000<small>per karakter</small></strong>
+                                </span>
+                            </label>
+                            <label class="joki-order-variant-option">
+                                <input type="radio" name="jokiOrderVariant" value="ISIAN" required>
+                                <span class="joki-order-variant-card">
+                                    <span class="joki-order-variant-copy"><strong>ISIAN</strong><small>Termasuk resource 10–15M+</small></span>
+                                    <strong class="joki-order-variant-price">Rp35.000<small>per karakter</small></strong>
+                                </span>
+                            </label>
+                        </div>
                     </div>
                     <label for="jokiOrderQuantity" id="jokiOrderQuantityLabel">Jumlah Karakter</label>
                     <input id="jokiOrderQuantity" type="text" min="4" max="12" value="4" inputmode="numeric" autocomplete="off" required>

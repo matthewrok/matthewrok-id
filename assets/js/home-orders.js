@@ -15,6 +15,7 @@
   const modal=$("jokiOrderModal"), quantity=$("jokiOrderQuantity");
   let selected=null, appliedVoucher=null, completedWhatsappUrl=null;
   const money=n=>"Rp"+Number(n).toLocaleString("id-ID");
+  const selectedCh12Variant=()=>document.querySelector('input[name="jokiOrderVariant"]:checked')?.value||"";
   function parseActionPointK(raw){
     const value=String(raw??"").trim().replace(/[\s.,]/g,"");
     if(!/^\d+$/.test(value))return null;
@@ -32,7 +33,7 @@
     const raw=quantity.value.trim();
     const isActionPoint=selected==="AP-LOHAR";
     const qty=isActionPoint?(raw===""?0:(parseActionPointK(raw)||0)):(raw===""?0:Math.max(0,Math.min(12,Number(raw)||0)));
-    const unitPrice=selected==="CH12"&&$("jokiOrderVariant")?.value==="ISIAN"?35000:p.price;
+    const unitPrice=selected==="CH12"&&selectedCh12Variant()==="ISIAN"?35000:p.price;
     const subtotal=qty>0?unitPrice*qty:0; const discount=appliedVoucher&&qty>0?calculateDiscount(appliedVoucher,subtotal):0;
     $("jokiOrderSubtotal").textContent=qty>0?money(subtotal):"—";
     $("jokiOrderDiscount").textContent=money(discount);
@@ -108,9 +109,9 @@
     $("jokiOrderName").textContent=identity.name;
     $("jokiOrderEmail").textContent=identity.email||"Visitor";
     $("jokiOrderProduct").textContent=p.name+" · "+p.display;
-    const variantField=$("jokiOrderVariantField"),variantSelect=$("jokiOrderVariant");
+    const variantField=$("jokiOrderVariantField");
     if(variantField)variantField.hidden=code!=="CH12";
-    if(variantSelect)variantSelect.value="";
+    document.querySelectorAll('input[name="jokiOrderVariant"]').forEach(input=>{input.checked=false;});
     const isActionPoint=code==="AP-LOHAR";
     const quantityLabel=$("jokiOrderQuantityLabel"),quantityHint=$("jokiOrderQuantityHint"),kingdomField=$("jokiOrderKingdomField"),kingdomInput=$("jokiOrderKingdom");
     if(quantityLabel)quantityLabel.textContent=isActionPoint?"Berapa K Action Point?":"Jumlah Karakter";
@@ -165,7 +166,7 @@
     document.body.classList.remove("order-modal-open");
   }
   $("jokiOrderClose")?.addEventListener("click",closeOrderModal);
-  $("jokiOrderVariant")?.addEventListener("change",()=>updateTotal());
+  document.addEventListener("change",event=>{if(event.target.matches('input[name="jokiOrderVariant"]'))updateTotal();});
   modal?.addEventListener("click",event=>{if(event.target===modal)closeOrderModal();});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!modal?.classList.contains("hidden"))closeOrderModal();});
   const requestedProduct=new URLSearchParams(window.location.search).get("order");
@@ -185,7 +186,7 @@
       kingdomInput?.focus();
       return;
     }
-    const variant=$("jokiOrderVariant")?.value||"";
+    const variant=selectedCh12Variant();
     if(selected==="CH12"&&!["KOSONGAN","ISIAN"].includes(variant)){
       $("jokiOrderMessage").textContent="Pilih tipe City Hall 12: KOSONGAN atau ISIAN.";
       $("jokiOrderVariant")?.focus();
@@ -231,8 +232,8 @@
       // tidak pernah memanggil RPC pembuatan order untuk kedua kalinya.
       completedWhatsappUrl=whatsappUrl;
       if(whatsappTab&&!whatsappTab.closed){
-        whatsappTab.location.href=whatsappUrl;
-        $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. WhatsApp dibuka di tab baru. Jika belum terbuka, gunakan tombol di bawah.";
+        try{whatsappTab.location.replace(whatsappUrl);}catch(navigationError){console.warn("[Joki Order] Tab WhatsApp tidak dapat diarahkan:",navigationError);try{whatsappTab.close();}catch(_e){}}
+        $("jokiOrderMessage").textContent="Pesanan berhasil dibuat. Jika WhatsApp belum terbuka, gunakan tombol di bawah.";
         button.disabled=false;button.textContent="BUKA WHATSAPP ↗";
       }else{
         // Fallback same-tab jika browser menolak tab baru.
@@ -240,6 +241,7 @@
         window.location.assign(whatsappUrl);
       }
     }catch(error){
+      if(whatsappTab&&!whatsappTab.closed){try{whatsappTab.close();}catch(_e){}}
       console.error("[Joki Order]",error);
       $("jokiOrderMessage").textContent=error.message||"Pesanan gagal dibuat. Silakan coba kembali.";
       if(completedWhatsappUrl){button.disabled=false;button.textContent="BUKA WHATSAPP ↗";}
