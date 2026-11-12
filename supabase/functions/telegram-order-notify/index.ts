@@ -136,14 +136,15 @@ Deno.serve(async (req: Request) => {
     }
     const record = payload?.record ?? payload?.data?.record ?? payload;
     if (!record || typeof record !== "object" || !record.order_number) return Response.json({ error: "Missing order record" }, { status: 400 });
+    const isActionPoint = String(record.service_name || "").toLowerCase().includes("action point");
     const message = [
       "🔔 <b>PESANAN BARU — MATTHEW JOKI</b>", "",
       `🧾 <b>No. Pesanan:</b> <code>${esc(record.order_number)}</code>`,
       `👤 <b>Nama:</b> ${esc(record.client_name)}`,
-      `🏰 <b>Kingdom:</b> ${esc(record.kingdom_number || "—")}`,
+      ...(isActionPoint ? [] : [`🏰 <b>Kingdom:</b> ${esc(record.kingdom_number || "—")}`]),
       `📧 <b>Email:</b> ${esc(record.client_email || "Visitor")}`,
       `🎮 <b>Paket:</b> ${esc(record.service_name)}`,
-      `📦 <b>Jumlah karakter:</b> ${esc(record.quantity)}`,
+      ...(isActionPoint ? [`📦 <b>Jumlah Action Point:</b> ${esc(record.quantity)}K AP`] : [`📦 <b>Jumlah karakter:</b> ${esc(record.quantity)}`]),
       `🎟️ <b>Kode voucher:</b> ${esc(record.voucher_code || "Tidak digunakan")}`,
       `💵 <b>Subtotal:</b> ${money(record.subtotal_price ?? (Number(record.unit_price || 0) * Number(record.quantity || 0)))}`,
       `🏷️ <b>Diskon:</b> ${money(record.discount_amount)}`,
