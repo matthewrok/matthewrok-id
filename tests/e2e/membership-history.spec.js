@@ -5,6 +5,8 @@ test("Membership History page is available and explains the Warga tiers", async 
   expect(response.ok()).toBeTruthy();
   const html = await response.text();
   expect(html).toContain("Membership History");
+  expect(html).toContain('href="/member-dashboard.html">← Kembali</a>');
+  expect(html).not.toContain('href="/akun/">');
   expect(html).toContain("Jejak Perjalanan Membership");
   expect(html).toContain("WARGA BIASA");
   expect(html).toContain("WARGA TIDAK BIASA");
