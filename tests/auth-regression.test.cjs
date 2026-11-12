@@ -1007,10 +1007,12 @@ test("Action Point / Lohar is searchable and uses the direct K-AP order form", (
 });
 
 
-test("order submission closes the pre-opened blank tab when order creation fails", () => {
+test("order submission redirects the active mobile tab to WhatsApp only after order creation succeeds", () => {
   const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
-  assert.match(source, /if\(whatsappTab&&!whatsappTab\.closed\)\{try\{whatsappTab\.close\(\);/);
-  assert.match(source, /whatsappTab\.location\.replace\(whatsappUrl\)/);
+  assert.match(source, /await db\.rpc\("create_joki_order_secure"/);
+  assert.match(source, /window\.location\.assign\(whatsappUrl\)/);
+  assert.doesNotMatch(source, /window\.open\("about:blank"/);
+  assert.match(source, /if\(completedWhatsappUrl\)\{window\.location\.assign\(completedWhatsappUrl\);return;\}/);
 });
 
 test("CH12 selector uses accessible modern radio cards instead of a native select", () => {
