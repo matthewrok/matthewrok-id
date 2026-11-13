@@ -1053,3 +1053,14 @@ test("daily discount migration guards authoritative checkout and secure RPC dele
   assert.match(migration, /public\.create_joki_order\(/);
   assert.match(migration, /refusing deployment/);
 });
+
+
+test("homepage and full joki services page load the same current discount/order engine", () => {
+  const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
+  const expected = /\/assets\/js\/home-orders\.js\?v=20261114-discount-cap8/;
+  assert.match(home, expected, "homepage must load the current discount engine");
+  assert.match(catalog, expected, "full joki services page must load the current discount engine");
+  assert.match(home, /id="produk-joki"/, "homepage product cards must be present");
+  assert.match(catalog, /data-order-product=/, "joki service product cards must be present");
+});
