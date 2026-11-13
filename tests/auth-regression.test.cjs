@@ -1040,3 +1040,16 @@ test("daily City Hall discounts are capped at 8 percent in the client and canoni
   assert.doesNotMatch(migration, /5 \+ \(get_byte\(decode\(s\.seed/);
   assert.match(migration, /create or replace function public\.get_daily_joki_discounts/);
 });
+
+
+test("daily discount migration guards authoritative checkout and secure RPC delegation", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/20261114000100_enforce_daily_discount_cap.sql"), "utf8");
+  assert.match(migration, /pg_get_functiondef\([\s\S]*public\.create_joki_order\(text,text,text,integer,text,text\)/);
+  assert.match(migration, /public\.get_daily_joki_discounts\(\)/);
+  assert.match(migration, /d\.minimum_characters/);
+  assert.match(migration, /p_quantity >= v_daily_minimum/);
+  assert.match(migration, /p_product_code <> ''ap-lohar''/);
+  assert.match(migration, /public\.create_joki_order_secure\(text,text,text,integer,text,text\)/);
+  assert.match(migration, /public\.create_joki_order\(/);
+  assert.match(migration, /refusing deployment/);
+});
