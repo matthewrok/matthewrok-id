@@ -85,3 +85,31 @@ $function$;
 
 revoke all on function public.get_daily_joki_discounts() from public;
 grant execute on function public.get_daily_joki_discounts() to anon, authenticated;
+
+-- Fail closed if checkout no longer consumes the canonical daily discount RPC.
+-- create_joki_order_secure delegates to this function, so this guards both checkout entry points.
+do $checkout_guard$
+declare
+  v_definition text;
+  v_secure_definition text;
+begin
+  select pg_get_functiondef(
+    'public.create_joki_order(text,text,text,integer,text,text)'::regprocedure
+  ) into v_definition;
+
+  if position('public.get_daily_joki_discounts()' in lower(v_definition)) = 0
+     or position('d.minimum_characters' in lower(v_definition)) = 0
+     or position('p_quantity >= v_daily_minimum' in lower(v_definition)) = 0
+     or position('p_product_code <> ''ap-lohar''' in lower(v_definition)) = 0 then
+    raise exception 'Checkout pricing is not wired to the canonical daily discount RPC and minimum; refusing deployment.';
+  end if;
+
+  select pg_get_functiondef(
+    'public.create_joki_order_secure(text,text,text,integer,text,text)'::regprocedure
+  ) into v_secure_definition;
+
+  if position('public.create_joki_order(' in lower(v_secure_definition)) = 0 then
+    raise exception 'Secure checkout no longer delegates to the validated order function; refusing deployment.';
+  end if;
+end;
+$checkout_guard$;
