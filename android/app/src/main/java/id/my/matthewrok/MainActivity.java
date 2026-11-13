@@ -68,12 +68,18 @@ public class MainActivity extends Activity {
             openExternal(url);
         });
 
-        if (!hasInternetConnection()) {
-            showOfflineDialog();
-        } else if (savedInstanceState == null) {
-            webView.loadUrl(HOME_URL);
-        } else {
-            webView.restoreState(savedInstanceState);
+        // Instrumentation smoke tests can verify native WebView configuration without
+        // depending on external DNS, TLS, or the production website being reachable.
+        boolean skipInitialLoadForTest = BuildConfig.DEBUG
+                && getIntent().getBooleanExtra("id.my.matthewrok.SKIP_INITIAL_LOAD_FOR_TESTS", false);
+        if (!skipInitialLoadForTest) {
+            if (!hasInternetConnection()) {
+                showOfflineDialog();
+            } else if (savedInstanceState == null) {
+                webView.loadUrl(HOME_URL);
+            } else {
+                webView.restoreState(savedInstanceState);
+            }
         }
 
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
