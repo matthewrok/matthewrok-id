@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MATTHEW JOKI</string>
+    <string name="connection_error">Koneksi bermasalah. Periksa internet lalu muat ulang halaman.</string>
+    <string name="file_picker_unavailable">Pemilih file tidak tersedia di perangkat ini.</string>
+    <string name="no_app_found">Tidak ada aplikasi yang dapat membuka tautan ini.</string>
+</resources>

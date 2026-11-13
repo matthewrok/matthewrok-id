@@ -54,3 +54,8 @@ Website dipublikasikan melalui GitHub Pages. Fitur dinamis menggunakan Supabase;
 
 ---
 **MATTHEW JOKI** · https://matthewrok.my.id/
+
+
+## Aplikasi Android dan iOS
+
+Target aplikasi MATTHEW JOKI adalah Android (APK) serta iPhone/iPad (aplikasi iOS/IPA setelah signing). Implementasi Android ada di folder android/, sedangkan project SwiftUI + WKWebView iOS ada di folder ios/. Panduan platform, pengujian, dan distribusi: [docs/APPLICATIONS-ANDROID-IOS.md](docs/APPLICATIONS-ANDROID-IOS.md). Build CI iOS membutuhkan macOS/Xcode; IPA perangkat fisik memerlukan signing Apple. Emulator PC bukan target distribusi atau dukungan.
