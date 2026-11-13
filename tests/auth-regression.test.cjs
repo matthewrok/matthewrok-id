@@ -1024,3 +1024,43 @@ test("CH12 selector uses accessible modern radio cards instead of a native selec
   assert.match(source, /selectedCh12Variant/);
   assert.match(source, /input\.checked=false/);
 });
+
+
+test("daily City Hall discounts are capped at 8 percent in the client and canonical database function", () => {
+  const source = fs.readFileSync(path.join(ROOT, "assets/js/home-orders.js"), "utf8");
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/20261114000100_enforce_daily_discount_cap.sql"), "utf8");
+  assert.match(source, /percent>=3&&percent<=8/);
+  assert.doesNotMatch(source, /percent>=1&&percent<=30/);
+  assert.match(migration, /when s\.discount_roll < 3000 then 3/);
+  assert.match(migration, /when s\.discount_roll < 5500 then 4/);
+  assert.match(migration, /when s\.discount_roll < 7500 then 5/);
+  assert.match(migration, /when s\.discount_roll < 8700 then 6/);
+  assert.match(migration, /when s\.discount_roll < 9500 then 7/);
+  assert.match(migration, /else 8/);
+  assert.doesNotMatch(migration, /5 \+ \(get_byte\(decode\(s\.seed/);
+  assert.match(migration, /create or replace function public\.get_daily_joki_discounts/);
+});
+
+
+test("daily discount migration guards authoritative checkout and secure RPC delegation", () => {
+  const migration = fs.readFileSync(path.join(ROOT, "supabase/20261114000100_enforce_daily_discount_cap.sql"), "utf8");
+  assert.match(migration, /pg_get_functiondef\([\s\S]*public\.create_joki_order\(text,text,text,integer,text,text\)/);
+  assert.match(migration, /public\.get_daily_joki_discounts\(\)/);
+  assert.match(migration, /d\.minimum_characters/);
+  assert.match(migration, /p_quantity >= v_daily_minimum/);
+  assert.match(migration, /p_product_code <> ''ap-lohar''/);
+  assert.match(migration, /public\.create_joki_order_secure\(text,text,text,integer,text,text\)/);
+  assert.match(migration, /public\.create_joki_order\(/);
+  assert.match(migration, /refusing deployment/);
+});
+
+
+test("homepage and full joki services page load the same current discount/order engine", () => {
+  const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const catalog = fs.readFileSync(path.join(ROOT, "layanan-joki.html"), "utf8");
+  const expected = /\/assets\/js\/home-orders\.js\?v=20261114-discount-cap8/;
+  assert.match(home, expected, "homepage must load the current discount engine");
+  assert.match(catalog, expected, "full joki services page must load the current discount engine");
+  assert.match(home, /id="produk-joki"/, "homepage product cards must be present");
+  assert.match(catalog, /data-order-product=/, "joki service product cards must be present");
+});

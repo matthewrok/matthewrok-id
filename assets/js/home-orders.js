@@ -95,7 +95,7 @@
         const code=String(row.product_code||"").toUpperCase();
         const percent=Number(row.discount_percent);
         const minimum=Number(row.minimum_characters);
-        if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=1&&percent<=30&&[4,6,8,10].includes(minimum)){
+        if(discountProducts.includes(code)&&Number.isInteger(percent)&&percent>=3&&percent<=8&&[4,6,8,10].includes(minimum)){
           dailyDiscounts.set(code,percent);
           dailyDiscountMinimums.set(code,minimum);
         }
